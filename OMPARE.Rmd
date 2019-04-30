@@ -1,0 +1,358 @@
+---
+title: "PNOC008 Report"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    theme: cosmo
+---
+```{r include=FALSE}
+knitr::opts_chunk$set(comment = NA)
+```
+
+```{r}
+source("code/driver.R")
+library("knitr")
+library("plotly")
+library("kableExtra");
+
+```
+
+
+Key Clinical Findings (P1)
+===================================== 
+    
+Row Page 1 {data-height=100}
+-------------------------------------
+   
+### {data-width=300}
+
+```{r, echo=FALSE, out.width = '100%'}
+knitr::include_graphics("figures/d3b_Logo.png")
+```   
+ 
+### Patient Name
+    
+```{r}
+cat(getPatientName());
+```
+
+### Report Date
+
+```{r}
+cat(getReportDate());
+```   
+ 
+### Report Version
+    
+```{r}
+cat(getReportVersion());
+```
+
+Row {data-height=200}
+-------------------------------------
+    
+### Patient & Sample Information
+
+```{r}
+x=kable(patientSampleInfo(), format="html") %>%
+    kable_styling(bootstrap_options = c("bordered", "condensed", "responsive")) %>% column_spec(c(1,3,5), bold=T, border_left = "2px solid gray", border_right = "2px solid gray")
+gsub("<thead>.*</thead>", "", x)
+```
+
+
+Row {data-height=500}
+-------------------------------------
+    
+### Key Clinical Findings
+    
+```{r}
+datatable(keyClinicalFindingsTable(), rownames=F);
+```
+
+Row {data-height=300}
+-------------------------------------
+    
+### Disease Specific Information
+    
+```{r}
+x2=kable(diseaseSpecificInformation(), format="html") %>%
+    kable_styling(bootstrap_options = c("bordered", "condensed", "responsive")) %>% column_spec(c(1), bold=T, border_left = "2px solid gray",
+            border_right = "2px solid gray")
+gsub("<thead>.*</thead>", "", x2)
+
+```
+
+### Genomic Summary
+    
+```{r}
+
+x2=kable(genomicSummary(), format="html") %>%
+    kable_styling(bootstrap_options = c("bordered", "condensed", "responsive")) %>% column_spec(c(1), bold=T, border_left = "2px solid gray",
+            border_right = "2px solid gray")
+gsub("<thead>.*</thead>", "", x2)
+
+```
+
+   
+High Confidence Alterations (P2)
+=====================================     
+
+Row Page 2  {data-height=100}
+-------------------------------------
+   
+### {data-width=300}
+
+```{r, echo=FALSE, out.width = '100%'}
+knitr::include_graphics("figures/d3b_Logo.png")
+```   
+ 
+### Patient Name
+    
+```{r}
+cat(getPatientName());
+```
+
+### Report Date
+
+```{r}
+cat(getReportDate());
+```   
+ 
+### Report Version
+    
+```{r}
+cat(getReportVersion());
+```
+
+Row
+-------------------------------------
+### High Confidence Genomic Findings
+    
+```{r}
+datatable(highConfidenceFindingsTable(), rownames=F);
+```
+
+Row 
+-------------------------------------
+    
+### Transcriptome-Proteome Alterations
+    
+```{r}
+ggplotly(plotGenes());
+```
+
+### Pathway Alterations
+
+    
+```{r}
+#Bar chart of genes
+ggplotly(plotPathway());
+```
+
+Immune/Tumor Signatures (P3)
+=====================================     
+
+Row Page 3  {data-height=100}
+-------------------------------------
+   
+### {data-width=300}
+
+```{r, echo=FALSE, out.width = '100%'}
+knitr::include_graphics("figures/d3b_Logo.png")
+```   
+ 
+### Patient Name
+    
+```{r}
+cat(getPatientName());
+```
+
+### Report Date
+
+```{r}
+cat(getReportDate());
+```   
+ 
+### Report Version
+    
+```{r}
+cat(getReportVersion());
+```
+
+Row
+-------------------------------------
+### Tumor Mutational Signatures
+    
+```{r}
+```
+
+
+### Cancer Germline Variants
+    
+```{r}
+```
+
+Row 
+-------------------------------------
+    
+### Immune Profile & Tumor Purity
+    
+```{r fig.width = 28, fig.height=14}
+ggplotly(ImmuneProfile())
+```
+
+Row 
+-------------------------------------
+    
+### Tumor Mutational Burden
+    
+```{r}
+```
+
+Genomically Similar Samples (P4)
+=====================================     
+
+Row Page 4  {data-height=100}
+-------------------------------------
+   
+   
+### {data-width=300}
+
+```{r, echo=FALSE, out.width = '100%'}
+knitr::include_graphics("figures/d3b_Logo.png")
+```   
+ 
+### Patient Name
+    
+```{r}
+cat(getPatientName());
+```
+
+### Report Date
+
+```{r}
+cat(getReportDate());
+```   
+ 
+### Report Version
+    
+```{r}
+cat(getReportVersion());
+```
+
+Row
+-------------------------------------
+### Nearest-Neighbor Analysis
+    
+```{r}
+ggplotly(getTSNEPlot())
+```
+
+
+Row 
+-------------------------------------
+    
+### Survival
+    
+```{r fig.width = 6}
+getKMPlot();
+```
+
+### Treatment/Outcomes - Genomically Similar Patients
+    
+```{r}
+datatable(getSimilarPatients(), rownames=F, escape=F);
+```
+
+
+All Findings (P5)
+=====================================     
+
+Row Page 5  {data-height=100}
+-------------------------------------
+   
+### {data-width=300}
+
+```{r, echo=FALSE, out.width = '100%'}
+knitr::include_graphics("figures/d3b_Logo.png")
+```   
+ 
+### Patient Name
+    
+```{r}
+cat(getPatientName());
+```
+
+### Report Date
+
+```{r}
+cat(getReportDate());
+```   
+ 
+### Report Version
+    
+```{r}
+cat(getReportVersion());
+```
+
+Row {data-height=900}
+-------------------------------------
+### All Findings
+    
+```{r}
+datatable(allFindingsTable(), rownames=F, options = list(pageLength = 50));
+```
+
+Genomic Landscape (P6)
+=====================================     
+
+Row Page 6  {data-height=100}
+-------------------------------------
+   
+### {data-width=300}
+
+```{r, echo=FALSE, out.width = '100%'}
+knitr::include_graphics("figures/d3b_Logo.png")
+```   
+ 
+### Patient Name
+    
+```{r}
+cat(getPatientName());
+```
+
+### Report Date
+
+```{r}
+cat(getReportDate());
+```   
+ 
+### Report Version
+    
+```{r}
+cat(getReportVersion());
+```
+
+Row
+-------------------------------------
+### Circos
+    
+```{r fig.width = 6, fig.height=6}
+knitr::include_graphics("tmpRCircos.png")
+```
+
+### Network View
+    
+```{r fig.width = 9, fig.height=6}
+plotNetwork()
+```
+
+Row 
+-------------------------------------
+    
+### Genome CNA View
+    
+```{r fig.width = 20}
+#Plot Genome Wide CNV
+plotCNV()
+```
