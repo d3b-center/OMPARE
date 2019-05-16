@@ -7,21 +7,21 @@
 #All hardcoded, in future will read from somewhere and set
 
 #Set variables
-patientName <- "John Doe";
-reportDate <- "2/11/2019"
+patientName <- " n/a ";
+reportDate <- "5/07/2019"
 reportVersion <- "V1.01"
 primRelapse <- "Primary"
-tumorType <- "Medulloblastoma"
+tumorType <- "High-grade glioma/astrocytoma (WHO grade III/IV)"
 tumorLocation <- "Brain"
-collectionDate <- "2/01/2019"
-labDirector <- "Jane Doe"
-pathologist <- "Jim Doe"
-primPhysician <- "Jackie Doe"
-medicalFacility <- "CHOP"
-ethnicity <- "Asian"
-dob <- "2/11/2015"
+collectionDate <- "3/08/2019"
+labDirector <- "n/a"
+pathologist <- "n/a"
+primPhysician <- "n/a"
+medicalFacility <- "UCSF"
+ethnicity <- "Unknown"
+dob <- "n/a"
 sex <- "Male"
-subjectID <- "C1822"
+subjectID <- "PNOC008-2"
 
 ##################
 #Header Information

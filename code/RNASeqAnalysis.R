@@ -15,6 +15,7 @@ runRNASeqAnalysis <- function(expData=NULL)
   library("tidyverse")
   library("GSVA");
   library("GSEABase");
+#  library("preprocessCore")
 
   #############################
   #-End Load packages & source
@@ -48,12 +49,18 @@ runRNASeqAnalysis <- function(expData=NULL)
   #Merge & Normalize Data-
   #############################
 
+  
+  remDotStuff <- function(x)
+  {
+    out <- strsplit(x, "\\.")[[1]][1]
+  }
+  gtexData[,1] <- sapply(as.character(gtexData[,1]), FUN=remDotStuff)
   rownames(gtexData) <- gtexData[,1];
   gtexData <- gtexData[-1];
-  rownames(expData) <- expData[,1];
 
   #Merge
-  mergeDF <- cbind(gtexData, expData[rownames(gtexData),"FPKM"])
+  intGenesTmp <- intersect(rownames(gtexData), rownames(expData))
+  mergeDF <- cbind(gtexData[intGenesTmp,], expData[intGenesTmp,"FPKM"])
 
   #Collapse to Gene
   gtexGeneAnnot <- unique(gtexGeneAnnot[1:2])
@@ -76,7 +83,12 @@ runRNASeqAnalysis <- function(expData=NULL)
   #############################
   getAllOutliers <- function(myMergeDF=mergeDF, getTop=20)
   {
-    myMergeDF <- myMergeDF[myMergeDF[,"SampleX"]>20,]
+#    myMergeDFNQ <- normalize.quantiles(as.matrix(myMergeDF));
+#    myMergeDFNQ <- data.frame(myMergeDFNQ);
+#    rownames(myMergeDFNQ) <- rownames(myMergeDF);
+#    colnames(myMergeDFNQ) <- colnames(myMergeDF);
+    myMergeDF <- myMergeDF[myMergeDF[,"SampleX"]>10,]
+#    myMergeDFNQ <- myMergeDFNQ[rownames(myMergeDF),]
     #FPKM Filter
     getZ <- function(x)
     {
@@ -84,7 +96,9 @@ runRNASeqAnalysis <- function(expData=NULL)
       out <- (x-mean(x))/sd(x)
       return(out[length(out)]);
     }
+ #   output <- apply(myMergeDFNQ, FUN=getZ, MARGIN=1);
     output <- apply(myMergeDF, FUN=getZ, MARGIN=1);
+    
     outputCanc <- output[intersect(names(output), cancerGenes)];
     outputDown <- sort(outputCanc)[1:getTop];
     outputUp <- sort(outputCanc, T)[1:getTop];
@@ -107,20 +121,21 @@ runRNASeqAnalysis <- function(expData=NULL)
   #Currently use Enrichment, but moving forward will use GSVA
 
   #Set Threshold
-  thresh <- 2
+  thresh <- 1.5
   
   #Get Up and Down Genes
-  upGenes <- names(geneAnalysisOut[[1]][geneAnalysisOut[[1]]>thresh])
-  downGenes <- names(geneAnalysisOut[[1]][geneAnalysisOut[[1]]<(-1*thresh)])
+  tmpghj <- geneAnalysisOut[[1]];
+  upGenes <- names(tmpghj)[which(geneAnalysisOut[[1]]>thresh)]
+  downGenes <- names(tmpghj)[which(geneAnalysisOut[[1]]<(-1*thresh))];
   
-  #If not enough genes take top 500 
-  if(length(upGenes)<500)
+  #If not enough genes take top 1000 
+  if(length(upGenes)<1000)
   {
-    upGenes <- names(sort(geneAnalysisOut[[1]], T))[1:500]
+    upGenes <- names(sort(geneAnalysisOut[[1]], T))[1:1000]
   }
-  if(length(downGenes)<500)
+  if(length(downGenes)<1000)
   {
-    downGenes <- names(sort(geneAnalysisOut[[1]], F))[1:500]
+    downGenes <- names(sort(geneAnalysisOut[[1]], F))[1:1000]
   }
   
   #Code to run pathway analysis
