@@ -67,7 +67,7 @@ Input Parameters:
 
 	# run with custom parameter values
 	rmarkdown::render(input = 'OMPARE.Rmd', 
-                  	  params = list(topDir = 'data/PNOC008/',
-                  	  		   fusion_method = 'arriba',
-                               set_title = 'PNOC008 Report'))
+                  	  params = list(topDir = 'data/PNOC008/', 
+                  	  fusion_method = 'arriba',
+                  	  set_title = 'PNOC008 Report'))
 
