@@ -1,3 +1,7 @@
+########################
+# All requisite packages
+########################
+
 BiocManager::install("DT")
 BiocManager::install("GSEABase")
 BiocManager::install("GSVA")
@@ -20,7 +24,10 @@ BiocManager::install("stringr")
 BiocManager::install("survival")
 BiocManager::install("survminer")
 BiocManager::install("tidyverse")
-BiocManager::install("xCell")
+devtools::install_github('dviraran/xCell')
 BiocManager::install("ggthemes")
 BiocManager::install("grid")
 BiocManager::install("scales")
+BiocManager::install("intergraph")
+BiocManager::install("kableExtra")
+BiocManager::install("flexdashboard")
