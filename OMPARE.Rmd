@@ -1,20 +1,37 @@
 ---
-title: "PNOC008 Report"
-output: 
+output:
   flexdashboard::flex_dashboard:
     orientation: rows
     theme: cosmo
+params: 
+  topDir: 
+    value: 'data/PNOC008/'
+  fusion_method:
+    value: 'arriba'
+  set_title:
+    value: 'Patient Report'
+---
+---
+title: `r params$set_title`
 ---
 ```{r include=FALSE}
 knitr::opts_chunk$set(comment = NA)
 ```
 
 ```{r}
-source("code/driver.R")
-library("knitr")
-library("plotly")
-library("kableExtra");
+suppressPackageStartupMessages(library(knitr))
+suppressPackageStartupMessages(library(plotly))
+suppressPackageStartupMessages(library(kableExtra))
+suppressPackageStartupMessages(library(flexdashboard))
 
+# read input files
+source("code/readData.R")
+topDir <- params$topDir
+fusion_method <- params$fusion_method
+readData(topDir = topDir, fusion_method = fusion_method)
+
+# call driver to load other libraries/code
+source("code/driver.R")
 ```
 
 
@@ -75,9 +92,9 @@ Row {data-height=300}
 ### Disease Specific Information
     
 ```{r}
-x2=kable(diseaseSpecificInformation(), format="html") %>%
-    kable_styling(bootstrap_options = c("bordered", "condensed", "responsive")) %>% column_spec(c(1), bold=T, border_left = "2px solid gray",
-            border_right = "2px solid gray")
+x2=kable(diseaseSpecificInformation(), format="html") %>% 
+  kable_styling(bootstrap_options = c("bordered", "condensed", "responsive")) %>% 
+  column_spec(c(1), bold=T, border_left = "2px solid gray", border_right = "2px solid gray")
 gsub("<thead>.*</thead>", "", x2)
 
 ```
@@ -87,8 +104,8 @@ gsub("<thead>.*</thead>", "", x2)
 ```{r}
 
 x2=kable(genomicSummary(), format="html") %>%
-    kable_styling(bootstrap_options = c("bordered", "condensed", "responsive")) %>% column_spec(c(1), bold=T, border_left = "2px solid gray",
-            border_right = "2px solid gray")
+  kable_styling(bootstrap_options = c("bordered", "condensed", "responsive")) %>% 
+  column_spec(c(1), bold=T, border_left = "2px solid gray", border_right = "2px solid gray")
 gsub("<thead>.*</thead>", "", x2)
 
 ```
@@ -198,7 +215,7 @@ Row
 ### Immune Profile & Tumor Purity
     
 ```{r fig.width = 28, fig.height=14}
-ggplotly(ImmuneProfile())
+ggplotly(ImmuneProfile(topDir = topDir))
 ```
 
 Row 
@@ -300,7 +317,7 @@ Row {data-height=900}
 ### All Findings
     
 ```{r}
-datatable(allFindingsTable(), rownames=F, options = list(pageLength = 50));
+datatable(allFindingsTable(), rownames=F, options = list(pageLength = 10));
 ```
 
 Genomic Landscape (P6)
@@ -338,7 +355,7 @@ Row
 ### Circos
     
 ```{r fig.width = 6, fig.height=6}
-knitr::include_graphics("tmpRCircos.png")
+knitr::include_graphics(paste0(topDir, "/tmpRCircos.png"))
 ```
 
 ### Network View
@@ -353,6 +370,8 @@ Row
 ### Genome CNA View
     
 ```{r fig.width = 20}
-#Plot Genome Wide CNV
-plotCNV()
+# Plot Genome Wide CNV
+if(exists("cnvData")){
+  plotCNV()
+}
 ```
