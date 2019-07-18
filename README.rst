@@ -14,10 +14,60 @@ Omics Patient Report
    :keywords: omics, report, flexboard, 2019
    :description: Omics Patient Report
 
-Instructions
-============
+Prerequisites
+=============
 
-.. code-block:: language
+.. code-block:: bash
 
 	# install packages
 	Rscript code/install_pkgs.R
+
+Input files
+===========
+
+Instructions:
+	
+- Create project folder under *data/*. 
+- Keep the subdirectory names and file extensions consistent.
+- *tmpRCircos.png* is created upon execution.
+- *ImmuneScores/rawScores.txt* is created once upon execution.
+
+.. code-block:: bash
+
+	# Directory structure:
+	data/PNOC008
+	├── CNV
+	│   └── 8a03c927-7f37-4605-ba6e-73a885cade6c.CNVs
+	├── Clinical
+	│   └── patient_report.txt
+	├── ExpressionGene
+	│   └── 7316-903_577716.genes.results
+	├── Fusions
+	│   ├── 7316-535.local.transcript.converted.pe.star-fusion.fusion_candidates.final
+	│   └── eb06d52a-110b-4c0e-9e90-94ea68d2f698.arriba.fusions.tsv
+	├── ImmuneScores
+	│   └── rawScores.txt
+	├── MutationsMAF
+	│   ├── 5c3eace5-950a-4a05-81ed-5c04b4a0a367.strelka.vep.maf
+	│   ├── 8a03c927-7f37-4605-ba6e-73a885cade6c.strelka.vep.maf
+	│   └── ae4ce725-d3c4-455d-822e-6c5067444b5e.strelka.vep.maf
+	└── tmpRCircos.png
+
+
+Running the code
+================
+
+Input Parameters: 
+
+- *topDir* is your project directory. 
+- *fusion_method* is the fusion method, currently only one is used. Allowed values: *star* or *arriba* 
+- *set_title* is the title for the report.
+
+.. code-block:: bash
+
+	# run with custom parameter values
+	rmarkdown::render(input = 'OMPARE.Rmd', 
+                  	  params = list(topDir = 'data/PNOC008/',
+                  	  		   fusion_method = 'arriba',
+                               set_title = 'PNOC008 Report'))
+
