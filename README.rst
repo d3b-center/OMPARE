@@ -29,8 +29,6 @@ Instructions:
 	
 - Create project folder under *data/*. 
 - Keep the subdirectory names and file extensions consistent.
-- *tmpRCircos.png* is created upon execution.
-- *ImmuneScores/rawScores.txt* is created once upon execution.
 
 .. code-block:: bash
 
@@ -53,15 +51,28 @@ Instructions:
 	│   └── ae4ce725-d3c4-455d-822e-6c5067444b5e.strelka.vep.maf
 	└── tmpRCircos.png
 
+- Files provided by user:
+
+    + CNV/\*.CNVs (Optional)
+    + Clinical/patient_report.txt (Optional)
+    + ExpressionGene/\*.genes.results (Required)
+    + Fusions/\*.arriba.fusions.tsv (Optional)
+    + Fusions/\*.star-fusion.fusion_candidates.final (Optional)
+    + MutationsMAF/\*.maf (Optional)
+
+- Files created upon execution:
+
+    + *tmpRCircos.png*. Requires Fusion data. 
+    + *ImmuneScores/rawScores.txt*. Requires Expression data.
 
 Running the code
 ================
 
 Input Parameters: 
 
-- *topDir* is your project directory. 
-- *fusion_method* is the fusion method, currently only one is used. Allowed values: *star* or *arriba* 
-- *set_title* is the title for the report.
+- *topDir* is your project directory. (Required)
+- *fusion_method* is the fusion method, currently only one is used. Allowed values: *star* or *arriba*. (Optional) 
+- *set_title* is the title for the report. (Optional)
 
 .. code-block:: bash
 
