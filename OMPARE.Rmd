@@ -5,7 +5,7 @@ output:
     theme: cosmo
 params: 
   topDir: 
-    value: 'data/PNOC008/'
+    value: 'data/Test/'
   fusion_method:
     value: 'arriba'
   set_title:
@@ -215,7 +215,8 @@ Row
 ### Immune Profile & Tumor Purity
     
 ```{r fig.width = 28, fig.height=14}
-ggplotly(ImmuneProfile(topDir = topDir))
+p <- ImmuneProfile(topDir = topDir)
+ggplotly(p)
 ```
 
 Row 
@@ -355,7 +356,9 @@ Row
 ### Circos
     
 ```{r fig.width = 6, fig.height=6}
-knitr::include_graphics(paste0(topDir, "/tmpRCircos.png"))
+if(exists('fusData')){
+ knitr::include_graphics(paste0(topDir, "/tmpRCircos.png")) 
+}
 ```
 
 ### Network View
