@@ -5,8 +5,7 @@ filterFusions_star <- function(myFusData=fusData, myCancerGenes=cancerGenes, myJ
   fusDataFilt <- myFusData
   
   #FunctionToSplitGenes
-  splitMyGene <- function(x)
-  {
+  splitMyGene <- function(x) {
     x <- strsplit(x, split="\\^")[[1]][1]
     return(x)
   }

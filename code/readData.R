@@ -8,9 +8,18 @@ source('code/helper.R')
 
 readData <- function(topDir, fusion_method = c("star","arriba")){
   
-  # patient sample info (at least one with .txt extension)
+  # patient sample info (at most one with .txt extension)
   sampleInfo <- list.files(path = paste0(topDir, "Clinical"), pattern = "*.txt", full.names = T)
-  sampleInfo <- read.delim(sampleInfo, stringsAsFactors = F)
+  if(length(sampleInfo) == 1){
+    sampleInfo <- read.delim(sampleInfo, stringsAsFactors = F)
+  } else {
+    # assign n/a if no clinical info is present
+    sampleInfo <- setNames(data.frame(t(rep("n/a", 15)), stringsAsFactors = F), 
+                           nm = c("patientName","reportDate","reportVersion","primRelapse",
+                                  "tumorType","tumorLocation","collectionDate","labDirector",
+                                  "pathologist","primPhysician","medicalFacility","ethnicity",
+                                  "dob","sex","subjectID"))
+  }
   assign("sampleInfo", sampleInfo, envir = globalenv())
   
   # mutation data (can be multiple with .maf extension)

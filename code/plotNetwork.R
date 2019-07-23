@@ -3,9 +3,14 @@
 ###########################
 
 plotNetwork <- function(numGenes = 250) {
+  nodeGenesMut <- ''
   # Let's build all our nodes
-  nodeGenesMut <- as.character(filterMutations()[,1]) #Mutations
-  nodeGenesMut <- c(nodeGenesMut, c(filterFusions_aribba()[,"HeadGene"]), c(filterFusions_aribba()[,"TailGene"])) #Fusions
+  if(exists('mutData')){
+    nodeGenesMut <- as.character(filterMutations()[,1]) #Mutations
+  }
+  if(exists('fusData')){
+    nodeGenesMut <- c(nodeGenesMut, c(filterFusions_aribba()[,"HeadGene"]), c(filterFusions_aribba()[,"TailGene"])) #Fusions
+  }
   rnaGenes <-RNASeqAnalysisOut[[1]][[1]]
   rnaGenes <- data.frame(names(rnaGenes), rnaGenes)
   upGenes <- as.character(rnaGenes[order(-rnaGenes[,2]),][1:numGenes,1])

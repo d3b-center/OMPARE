@@ -83,5 +83,14 @@ source('code/allFindingsTable.R')
 
 # Genomic Landscape P7
 source('code/genomic_landscape.R')
-plotCircos(topDir = topDir)
-plotNetwork()
+
+# only run if fusion data is present
+if(exists('fusData')){
+  plotCircos(topDir = topDir)
+}
+
+# only run if fusion or mutation data is present
+if(exists('mutData') | exists('fusData')){
+  plotNetwork()
+}
+

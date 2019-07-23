@@ -1,6 +1,6 @@
 # generate patient report
 rmarkdown::render(input = 'OMPARE.Rmd', 
-                  params = list(topDir = 'data/PNOC008/',
+                  params = list(topDir = 'data/Test/',
                                 fusion_method = 'arriba',
-                                set_title = 'PNOC008 Report'))
+                                set_title = 'Test Report'))
 

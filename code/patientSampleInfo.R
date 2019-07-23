@@ -2,7 +2,7 @@
 # Code to pull sample/patient info
 ##################################
 
-# assign to global env
+# assign patient clinical info to global env
 lapply(colnames(sampleInfo), FUN = function(x) assign(x, sampleInfo[,x], envir = globalenv()))
 
 ##################
