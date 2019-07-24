@@ -55,7 +55,9 @@ source("code/runRNASeqAnalysis.R")              # RNA-seq analysis
 # Code Blocks
 #############################
 # Function to get RNA-Seq and Pathway Analysis
-RNASeqAnalysisOut <- runRNASeqAnalysis(expData) # *Run in driver
+if(exists('expData')){
+  RNASeqAnalysisOut <- runRNASeqAnalysis(expData) # *Run in driver
+}
 source('code/plotGenes.R')
 source('code/plotPathway.R')
 
@@ -73,7 +75,9 @@ source('code/tmbProfile.R')
 source('code/tumorSignaturePlot.R')
 
 # Genomically Similar Samples P5
-source('code/cleanData_p5.R')                   # *Run in driver
+if(exists('expData')){
+  source('code/cleanData_p5.R')                   # *Run in driver
+}
 source('code/getTSNEPlot.R')
 source('code/getKMPlot.R')
 source('code/getSimilarPatients.R')

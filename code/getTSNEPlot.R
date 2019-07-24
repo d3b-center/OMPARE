@@ -1,5 +1,4 @@
 getTSNEPlot <- function() {
-  
   tsneOut <- Rtsne(t(log2(resTmp+1)), initial_dims=100, perplexity=30, check_duplicates = FALSE)
   tsneData <- data.frame(tsneOut$Y, colnames(resTmp))
   tsneData <- cbind(clinData, tsneData)

@@ -62,7 +62,7 @@ allFindingsTable <- function() {
   }
   
   # Now Expression
-  if(exists('RNASeqAnalysisOut')){
+  if(exists('expData')){
     tmpExp <- RNASeqAnalysisOut[[1]][[2]]
     tmpExp[,"Abberation"] <-rownames(tmpExp)
     tmpExp[,"Type"] <- c(rep("Outlier-High (mRNA)", 20), rep("Outlier-Low (mRNA)", 20))
@@ -76,7 +76,7 @@ allFindingsTable <- function() {
   }
   
   # Now Pathway
-  if(exists('RNASeqAnalysisOut')){
+  if(exists('expData')){
     tmpPath <- RNASeqAnalysisOut[[2]][[2]]
     tmpPathUp <- tmpPath[tmpPath[,"Direction"]=="Up",][1:20,]
     tmpPathDown <- tmpPath[tmpPath[,"Direction"]=="Down",][1:20,]
@@ -94,11 +94,6 @@ allFindingsTable <- function() {
   }
   
   # Now Merge Together
-  # if(exists('tmpCnv')){
-  #   allFindingsDF <- rbind(tmpMut, tmpFus, tmpCnv, tmpExp, tmpPath)
-  # } else {
-  #   allFindingsDF <- rbind(tmpMut, tmpFus, tmpExp, tmpPath)
-  # }
   allFindingsDF <- rbind(tmpMut, tmpFus, tmpCnv, tmpExp, tmpPath)
   if(nrow(allFindingsDF) > 0){
     allFindingsDF[is.na(allFindingsDF[,"Drugs"]),"Drugs"]<- "None"
