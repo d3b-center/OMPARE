@@ -14,8 +14,8 @@ getGeneFromMut <- function(x) {
 }
 
 getGeneFromFus <- function(x) {
-  myGene1 <-strsplit(x, "-")[[1]][[1]]
-  myGene2 <-strsplit(x, "-")[[1]][[2]]
+  myGene1 <-strsplit(x, "_")[[1]][[1]]
+  myGene2 <-strsplit(x, "_")[[1]][[2]]
   return(c(myGene1, myGene2))
 }
 

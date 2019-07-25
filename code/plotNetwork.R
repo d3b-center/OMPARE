@@ -9,7 +9,7 @@ plotNetwork <- function(numGenes = 250) {
     nodeGenesMut <- as.character(filterMutations()[,1]) #Mutations
   }
   if(exists('fusData')){
-    nodeGenesMut <- c(nodeGenesMut, c(filterFusions_aribba()[,"HeadGene"]), c(filterFusions_aribba()[,"TailGene"])) #Fusions
+    nodeGenesMut <- c(nodeGenesMut, c(fusData[,"HeadGene"]), c(fusData[,"TailGene"])) #Fusions
   }
   rnaGenes <-RNASeqAnalysisOut[[1]][[1]]
   rnaGenes <- data.frame(names(rnaGenes), rnaGenes)

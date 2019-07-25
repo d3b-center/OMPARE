@@ -5,6 +5,7 @@
 
 source('code/createCopyNumber.R')
 source('code/helper.R')
+source('code/filterFusions.R')
 
 readData <- function(topDir, fusion_method = c("star","arriba")){
   
@@ -40,15 +41,19 @@ readData <- function(topDir, fusion_method = c("star","arriba")){
     assign("cnvData", cnvData, envir = globalenv())
   }
   
-  # fusion data (currently either star or arriba implemented)
+  # fusion data (chose either star or arriba or both)
+  # fusion_method determines the pattern to be searched
   if(fusion_method == "star"){
     fusPattern = "*star-fusion.fusion_candidates.final"
   } else if(fusion_method == "arriba") {
     fusPattern = "*.arriba.fusions.tsv"
+  } else {
+    fusPattern = "*star-fusion.fusion_candidates.final|*.arriba.fusions.tsv"
   }
+  # read fusion files/filter them/merge them
   fusFiles <- list.files(path = topDir, pattern = fusPattern, recursive = TRUE, full.names = T)
   if(length(fusFiles) >= 1){
-    fusFiles <- lapply(fusFiles, read.delim)
+    fusFiles <- lapply(fusFiles, filterFusions)
     fusData <- do.call('rbind', fusFiles)
     fusData <- unique(fusData)
     assign("fusData", fusData, envir = globalenv())

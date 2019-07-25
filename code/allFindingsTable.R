@@ -27,20 +27,16 @@ allFindingsTable <- function() {
   
   # Now Fusions
   if(exists('fusData')){
-    if(fusion_method == "arriba"){
-      tmpFus <- filterFusions_aribba()
-      tmpFus[,"Abberation"] <- gsub("--", "-", tmpFus[,"X.fusion_name"])
-      tmpFus[,"Type"] <- "Fusion"
-      tmpFus[,"Details"] <- paste("Fusion Type: ",tmpFus[,"Splice_type"], sep="")
-      tmpFus[,"Score"] <- "None"
-      tmpFus[,"Trials"] <- "None"
-      tmpFus <- merge(tmpFus, drugData, by.x="HeadGene", by.y="gene_name", all.x=T)
-      tmpFus <- merge(tmpFus, drugData, by.x="TailGene", by.y="gene_name", all.x=T)
-      tmpFus[,"Drugs"] <- paste(tmpFus[,"Drugs.x"], tmpFus[,"Drugs.y"], sep=", ")
-      tmpFus <- tmpFus[,c("Abberation", "Type", "Details", "Score", "Drugs", "Trials")]
-    } else if(fusion_method == "star") {
-      tmpFus <- filterFusions_star()
-    }
+    tmpFus <- fusData
+    tmpFus[,"Abberation"] <- tmpFus[,"X.fusion_name"]
+    tmpFus[,"Type"] <- "Fusion"
+    tmpFus[,"Details"] <- paste0("Fusion Type: ",tmpFus[,"Splice_type"])
+    tmpFus[,"Score"] <- "None"
+    tmpFus[,"Trials"] <- "None"
+    tmpFus <- merge(tmpFus, drugData, by.x="HeadGene", by.y="gene_name", all.x=T)
+    tmpFus <- merge(tmpFus, drugData, by.x="TailGene", by.y="gene_name", all.x=T)
+    tmpFus[,"Drugs"] <- paste(tmpFus[,"Drugs.x"], tmpFus[,"Drugs.y"], sep=", ")
+    tmpFus <- tmpFus[,c("Abberation", "Type", "Details", "Score", "Drugs", "Trials")]
   } else {
     tmpFus <- data.frame()
   }
