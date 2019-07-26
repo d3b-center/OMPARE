@@ -1,4 +1,4 @@
-# generate patient report
+# Step2: generate patient report
 
 # parameter info:
 # fusion_method can be either arriba, star, both or not specified
