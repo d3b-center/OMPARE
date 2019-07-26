@@ -32,7 +32,7 @@ highConfidenceFindingsTable <- function(delRPKM=10) {
     
     # Get only significant sets
     sigGeneSets <- RNASeqAnalysisOut[[2]][[2]]
-    sigGeneSets <- sigGeneSets[sigGeneSets[,"P_VAL"]<0.01,]
+    sigGeneSets <- sigGeneSets[which(sigGeneSets[,"P_VAL"]<0.01),]
     sigGeneSets <- sigGeneSets[,c("Pathway", "Direction")]
     hallMarkSetsTS <- merge(hallMarkSetsTS, sigGeneSets, by.x="ind", by.y="Pathway")
     hallMarkSetsTS[,"ind"] <- paste(hallMarkSetsTS[,"ind"], "(",hallMarkSetsTS[,"Direction"], ")", sep="")
@@ -45,7 +45,7 @@ highConfidenceFindingsTable <- function(delRPKM=10) {
     if(nrow(myTableDel) > 0){
       myTableDel <- merge(myTableDel, rnaEvidence, by.x="Abberation", by.y="Gene", all.x=T)
       myTableDel <- merge(myTableDel, hallMarkSetsTS, by.x="Abberation", by.y="values", all.x=T)
-      myTableDel <- myTableDel[myTableDel[,"SampleX"]<10,]
+      myTableDel <- myTableDel[which(myTableDel[,"SampleX"]<10),]
       if(nrow(myTableDel)>0) {
         myTableDel[,"SupportEv"] <- paste("FPKM=", myTableDel[,"SampleX"], ifelse(is.na(myTableDel[,"ind"]), "", paste(", Pathway: ", myTableDel[,"ind"], sep="")), sep="")
         myTableDel <- myTableDel[,c("Abberation", "Type", "Details", "Score", "Drugs", "Trials", "SupportEv")]
@@ -61,7 +61,8 @@ highConfidenceFindingsTable <- function(delRPKM=10) {
     myTableAmp <- myTable[myTable[,2]=="Amplification",]
     if(nrow(myTableAmp) > 0){
       myTableAmp <- merge(myTableAmp, rnaEvidence, by.x="Abberation", by.y="Gene", all.x=T)
-      myTableAmp <- myTableAmp[myTableAmp[,"SampleX"]>100,]
+      myTableAmp <- merge(myTableAmp, hallMarkSetsTS, by.x="Abberation", by.y="values", all.x=T)
+      myTableAmp <- myTableAmp[which(myTableAmp[,"SampleX"]>100),]
       if(nrow(myTableAmp)>0) {
         myTableAmp[,"SupportEv"] <- paste("FPKM=", myTableAmp[,"SampleX"], ifelse(is.na(myTableAmp[,"ind"]), "", paste(", Pathway: ", myTableAmp[,"ind"], sep="")), sep="")
         myTableAmp <- myTableAmp[,c("Abberation", "Type", "Details", "Score", "Drugs", "Trials", "SupportEv")]

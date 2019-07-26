@@ -58,6 +58,7 @@ plotCircos <- function(topDir = topDir) {
   
   # Add Fusions
   myFus <- fusData
+  # fusData <- fusData[which(fusData$HeadGene %in% chrMap$HGNC.symbol & fusData$TailGene %in% chrMap$HGNC.symbol),]
   RCircos.Link.Data.tmp.h <- chrMap[chrMap[,1]%in%myFus[,"HeadGene"],]
   RCircos.Link.Data.tmp.h <- RCircos.Link.Data.tmp.h[!grepl("CHR_", RCircos.Link.Data.tmp.h[,"Chromosome.scaffold.name"]),]
   RCircos.Link.Data.tmp.h <- RCircos.Link.Data.tmp.h[,c(4,2,3,1)]

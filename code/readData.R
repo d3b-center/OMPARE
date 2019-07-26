@@ -24,7 +24,8 @@ readData <- function(topDir, fusion_method = c("star","arriba")){
   assign("sampleInfo", sampleInfo, envir = globalenv())
   
   # mutation data (can be multiple with .maf extension)
-  mutFiles <- list.files(path = topDir, pattern = "*.maf", recursive = TRUE, full.names = T)
+  somatic.mut.pattern <- 'mutect*|strelka*'
+  mutFiles <- list.files(path = topDir, pattern = somatic.mut.pattern, recursive = TRUE, full.names = T)
   if(length(mutFiles) >= 1){
     mutFiles <- lapply(mutFiles, data.table::fread, skip = 1, stringsAsFactors = F)
     mutData <- data.table::rbindlist(mutFiles)
@@ -34,7 +35,7 @@ readData <- function(topDir, fusion_method = c("star","arriba")){
   } 
   
   # copy number (only 1 per patient with .CNVs extension)
-  cnvData <- list.files(path = topDir, pattern = "*.CNVs", recursive = TRUE, full.names = T)
+  cnvData <- list.files(path = topDir, pattern = "*.CNVs$", recursive = TRUE, full.names = T)
   if(length(cnvData) == 1){
     cnvData <- data.table::fread(cnvData, header = F)
     cnvData <- as.data.frame(cnvData)
@@ -60,7 +61,7 @@ readData <- function(topDir, fusion_method = c("star","arriba")){
   }
   
   # expression data (can be only 1 per patient with .genes.results)
-  expDat <- list.files(path = topDir, pattern = "*.genes.results", recursive = TRUE, full.names = T)
+  expDat <- list.files(path = topDir, pattern = "*.genes.results*", recursive = TRUE, full.names = T)
   if(length(expDat) == 1){
     expData <- read.delim(expDat)
     expData[,"gene_id"] <- sapply(as.character(expData[,1]), FUN = getEns)
