@@ -55,7 +55,7 @@ Instructions:
 
     + CNV/\*.CNVs (Optional)
     + Clinical/patient_report.txt (Optional)
-    + ExpressionGene/\*.genes.results (Required)
+    + ExpressionGene/\*.genes.results (Optional)
     + Fusions/\*.arriba.fusions.tsv (Optional)
     + Fusions/\*.star-fusion.fusion_candidates.final (Optional)
     + MutationsMAF/\*.maf (Optional)
@@ -71,7 +71,7 @@ Running the code
 Input Parameters: 
 
 - *topDir* is your project directory. (Required)
-- *fusion_method* is the fusion method, currently only one is used. Allowed values: *star* or *arriba*. (Optional) 
+- *fusion_method* is the fusion method. Allowed values: *star*, *arriba*, *both* or not specified. (Optional) 
 - *set_title* is the title for the report. (Optional)
 
 .. code-block:: bash
