@@ -29,8 +29,13 @@ Instructions:
 	
 - Create project folder under *data/*. 
 - Keep the subdirectory names and file extensions consistent.
+- Run script to create and organize project folder:
 
 .. code-block:: bash
+
+	Rscript create_project.R <path to project directory with all files>
+
+	# This should create a folder structure as shown below:
 
 	# Directory structure:
 	data/PNOC008
