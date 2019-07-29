@@ -40,6 +40,15 @@ readData <- function(topDir, fusion_method = c("star","arriba")){
     cnvData <- data.table::fread(cnvData, header = F)
     cnvData <- as.data.frame(cnvData)
     assign("cnvData", cnvData, envir = globalenv())
+  } else {
+    # try to read p-value data if available
+    cnvData <- list.files(path = topDir, pattern = "*.CNVs.p.value.txt", recursive = TRUE, full.names = T)
+    if(length(cnvData) == 1){
+      cnvData <- data.table::fread(cnvData, skip = 1, header = F)
+      cnvData <- cnvData[,1:5]
+      cnvData <- as.data.frame(cnvData)
+      assign("cnvData", cnvData, envir = globalenv())
+    }
   }
   
   # fusion data (chose either star or arriba or both)
