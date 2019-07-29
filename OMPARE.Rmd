@@ -23,6 +23,7 @@ suppressPackageStartupMessages(library(knitr))
 suppressPackageStartupMessages(library(plotly))
 suppressPackageStartupMessages(library(kableExtra))
 suppressPackageStartupMessages(library(flexdashboard))
+suppressPackageStartupMessages(library(tidyverse))
 
 # read input files
 source("code/readData.R")
