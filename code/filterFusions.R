@@ -17,16 +17,16 @@ filterFusions <- function(myFusFile = fusFile, myCancerGenes = cancerGenes, myJu
   fusDataFilt <- myFusData
   
   # separate comma separated gene names (arriba)
-  fusDataFilt <- fusDataFilt %>% 
-    mutate(X.gene1 = strsplit(as.character(X.gene1), ",")) %>% 
-    unnest(X.gene1) %>%
-    as.data.frame()
-  fusDataFilt <- fusDataFilt %>% 
-    mutate(gene2 = strsplit(as.character(gene2), ",")) %>% 
-    unnest(gene2) %>%
-    as.data.frame()
-  fusDataFilt$X.gene1 <- gsub('[(].*','',fusDataFilt$X.gene1)
-  fusDataFilt$gene2 <- gsub('[(].*','',fusDataFilt$gene2)
+  # fusDataFilt <- fusDataFilt %>% 
+  #   mutate(X.gene1 = strsplit(as.character(X.gene1), ",")) %>% 
+  #   unnest(X.gene1) %>%
+  #   as.data.frame()
+  # fusDataFilt <- fusDataFilt %>% 
+  #   mutate(gene2 = strsplit(as.character(gene2), ",")) %>% 
+  #   unnest(gene2) %>%
+  #   as.data.frame()
+  # fusDataFilt$X.gene1 <- gsub('[(].*','',fusDataFilt$X.gene1)
+  # fusDataFilt$gene2 <- gsub('[(].*','',fusDataFilt$gene2)
   
   if(method == "star"){
     fusDataFilt[,'X.fusion_name'] <- gsub('--','_',fusDataFilt[,'X.fusion_name'])
