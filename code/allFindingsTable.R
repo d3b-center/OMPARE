@@ -6,6 +6,7 @@ source('code/filterDruggability.R')
 source('code/filterFusions.R')
 source('code/filterCNV.R')
 source('code/filterMutations.R')
+source('code/createCopyNumber.R')
 
 allFindingsTable <- function() {
   # Druggability
