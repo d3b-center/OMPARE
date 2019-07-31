@@ -76,6 +76,8 @@ plotCircos <- function(topDir = topDir) {
   
   # Add Fusions (added on 07/31/2019)
   myFus <- fusData
+  myFus <- myFus[!grepl(",", myFus[,"TailGene"]),] # remove intergenic fusions from arriba
+  myFus <- myFus[!grepl(",", myFus[,"HeadGene"]),] # remove intergenic fusions from arriba
   
   RCircos.Link.Data.tmp <- chrMap[chrMap[,1] %in% myFus[,"HeadGene"],];
   RCircos.Link.Data.tmp <- merge(myFus, chrMap, by.x="HeadGene", by.y="HGNC.symbol");
