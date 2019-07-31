@@ -103,6 +103,15 @@ if(nrow(dsi) > 0){
 
 ```
 
+### Cancer Germline Variants
+
+```{r}
+# x2=kable(germlineOut, format="html") %>%
+#   kable_styling(bootstrap_options = c("bordered", "condensed", "responsive")) %>% 
+#   column_spec(c(1), bold=T, border_left = "2px solid gray", border_right = "2px solid gray")
+# gsub("<thead>.*</thead>", "", x2)
+```
+
 ### Genomic Summary
     
 ```{r genomic_summary}
@@ -175,7 +184,7 @@ if(exists('expData')){
 }
 ```
 
-Immune/Tumor Signatures (P3)
+Tumor Burden/Signatures (P3)
 =====================================     
 
 Row Page 3  {data-height=100}
@@ -210,38 +219,64 @@ Row
 ### Tumor Mutational Signatures
     
 ```{r}
+if(exists('mutData')){
+  ggplotly(tumorSignaturePlot())
+}
 ```
 
+### Tumor Mutational Burden
+    
+```{r fig.width = 11, fig.height=7}
+ggplotly(tmbProfile())
+```
 
-### Cancer Germline Variants
+Tumor Purity (P4)
+=====================================     
+
+Row Page 4  {data-height=100}
+-------------------------------------
+   
+### {data-width=300}
+
+```{r, echo=FALSE, out.width = '100%'}
+knitr::include_graphics("figures/d3b_Logo.png")
+```   
+ 
+### Patient Name
     
 ```{r}
+cat(getPatientName());
+```
+
+### Report Date
+
+```{r}
+cat(getReportDate());
+```   
+ 
+### Report Version
+    
+```{r}
+cat(getReportVersion());
 ```
 
 Row 
 -------------------------------------
     
-### Immune Profile & Tumor Purity
+### Immune Profile
     
 ```{r immune_profile, fig.width = 28, fig.height=14}
 if(exists('expData')){
-  p <- ImmuneProfile(topDir = topDir)
+  p <- ImmuneProfile()
   ggplotly(p)
 }
 ```
 
-Row 
--------------------------------------
-    
-### Tumor Mutational Burden
-    
-```{r}
-```
 
-Genomically Similar Samples (P4)
+Genomically Similar Samples (P5)
 =====================================     
 
-Row Page 4  {data-height=100}
+Row Page 5  {data-height=100}
 -------------------------------------
    
    
@@ -298,10 +333,10 @@ datatable(getSimilarPatients(), rownames=F, escape=F);
 ```
 
 
-All Findings (P5)
+All Findings (P6)
 =====================================     
 
-Row Page 5  {data-height=100}
+Row Page 6  {data-height=100}
 -------------------------------------
    
 ### {data-width=300}
@@ -336,10 +371,10 @@ Row {data-height=900}
 datatable(allFindingsTable(), rownames=F, options = list(pageLength = 10));
 ```
 
-Genomic Landscape (P6)
+Genomic Landscape (P7)
 =====================================     
 
-Row Page 6  {data-height=100}
+Row Page 7  {data-height=100}
 -------------------------------------
    
 ### {data-width=300}
