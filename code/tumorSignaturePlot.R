@@ -1,4 +1,4 @@
-tumorSignaturePlot <- function(x, topDir, signatures) {
+tumorSignaturePlot <- function() {
   
   # Have to write out to read in?
   mpfData <- mutData[, c("Chromosome", "Start_Position", "Match_Norm_Seq_Allele1", "Tumor_Seq_Allele2")]
