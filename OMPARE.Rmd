@@ -405,7 +405,7 @@ Row
 -------------------------------------
 ### Circos
     
-```{r circos, fig.width = 6, fig.height=6}
+```{r circos, fig.width = 7, fig.height = 6}
 if(exists('fusData')){
  knitr::include_graphics(paste0(topDir, "/tmpRCircos.png")) 
 }
@@ -413,7 +413,7 @@ if(exists('fusData')){
 
 ### Network View
     
-```{r plot_network, fig.width = 9, fig.height=6}
+```{r plot_network, fig.width = 8, fig.height = 6}
 if(exists('expData')){
   plotNetwork()
 }
