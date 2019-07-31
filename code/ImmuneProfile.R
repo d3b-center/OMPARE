@@ -32,8 +32,9 @@ calc.immune.scores <- function(fname){
   return(raw.scores)
 }
 
-ImmuneProfile <- function(topDir) {
+ImmuneProfile <- function() {
   fname <- paste0(topDir,'/ImmuneScores/rawScores.txt')
+  # if file does not exist, create one
   if(!file.exists(fname)){
     calc.immune.scores(fname)
   } 
