@@ -3,7 +3,6 @@
 # Save all data to global env
 #############################
 
-source('code/createCopyNumber.R')
 source('code/helper.R')
 source('code/filterFusions.R')
 
