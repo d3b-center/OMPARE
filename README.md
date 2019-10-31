@@ -1,2 +1,0 @@
-# OMPARE
-Omics Patient Report

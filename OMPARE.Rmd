@@ -1,20 +1,38 @@
 ---
-title: "PNOC008 Report"
-output: 
+output:
   flexdashboard::flex_dashboard:
     orientation: rows
     theme: cosmo
+params: 
+  topDir: 
+    value: 'data/Test/'
+  fusion_method:
+    value: 'arriba'
+  set_title:
+    value: 'Patient Report'
+---
+---
+title: `r params$set_title`
 ---
 ```{r include=FALSE}
 knitr::opts_chunk$set(comment = NA)
 ```
 
-```{r}
-source("code/driver.R")
-library("knitr")
-library("plotly")
-library("kableExtra");
+```{r read_data}
+suppressPackageStartupMessages(library(knitr))
+suppressPackageStartupMessages(library(plotly))
+suppressPackageStartupMessages(library(kableExtra))
+suppressPackageStartupMessages(library(flexdashboard))
+suppressPackageStartupMessages(library(tidyverse))
 
+# read input files
+source("code/readData.R")
+topDir <- params$topDir
+fusion_method <- params$fusion_method
+readData(topDir = topDir, fusion_method = fusion_method)
+
+# call driver to load other libraries/code
+source("code/driver.R")
 ```
 
 
@@ -53,7 +71,7 @@ Row {data-height=200}
     
 ### Patient & Sample Information
 
-```{r}
+```{r patient_info}
 x=kable(patientSampleInfo(), format="html") %>%
     kable_styling(bootstrap_options = c("bordered", "condensed", "responsive")) %>% column_spec(c(1,3,5), bold=T, border_left = "2px solid gray", border_right = "2px solid gray")
 gsub("<thead>.*</thead>", "", x)
@@ -65,7 +83,7 @@ Row {data-height=500}
     
 ### Key Clinical Findings
     
-```{r}
+```{r key_findings}
 datatable(keyClinicalFindingsTable(), rownames=F);
 ```
 
@@ -74,23 +92,36 @@ Row {data-height=300}
     
 ### Disease Specific Information
     
-```{r}
-x2=kable(diseaseSpecificInformation(), format="html") %>%
-    kable_styling(bootstrap_options = c("bordered", "condensed", "responsive")) %>% column_spec(c(1), bold=T, border_left = "2px solid gray",
-            border_right = "2px solid gray")
-gsub("<thead>.*</thead>", "", x2)
+```{r disease_specific_info}
+dsi <- diseaseSpecificInformation()
+if(nrow(dsi) > 0){
+  x2=kable(diseaseSpecificInformation(), format="html") %>% 
+    kable_styling(bootstrap_options = c("bordered", "condensed", "responsive")) %>% 
+    column_spec(c(1), bold=T, border_left = "2px solid gray", border_right = "2px solid gray")
+  gsub("<thead>.*</thead>", "", x2)
+}
 
+```
+
+### Cancer Germline Variants
+
+```{r}
+# x2=kable(germlineOut, format="html") %>%
+#   kable_styling(bootstrap_options = c("bordered", "condensed", "responsive")) %>% 
+#   column_spec(c(1), bold=T, border_left = "2px solid gray", border_right = "2px solid gray")
+# gsub("<thead>.*</thead>", "", x2)
 ```
 
 ### Genomic Summary
     
-```{r}
-
-x2=kable(genomicSummary(), format="html") %>%
-    kable_styling(bootstrap_options = c("bordered", "condensed", "responsive")) %>% column_spec(c(1), bold=T, border_left = "2px solid gray",
-            border_right = "2px solid gray")
-gsub("<thead>.*</thead>", "", x2)
-
+```{r genomic_summary}
+gs <- genomicSummary()
+if(nrow(gs) > 0){
+  x2=kable(genomicSummary(), format="html") %>%
+    kable_styling(bootstrap_options = c("bordered", "condensed", "responsive")) %>% 
+    column_spec(c(1), bold=T, border_left = "2px solid gray", border_right = "2px solid gray")
+  gsub("<thead>.*</thead>", "", x2)
+}
 ```
 
    
@@ -137,19 +168,23 @@ Row
     
 ### Transcriptome-Proteome Alterations
     
-```{r}
-ggplotly(plotGenes());
+```{r plot_genes}
+if(exists('expData')){
+  ggplotly(plotGenes()); 
+}
 ```
 
 ### Pathway Alterations
 
     
-```{r}
+```{r plot_pathway}
 #Bar chart of genes
-ggplotly(plotPathway());
+if(exists('expData')){
+  ggplotly(plotPathway());
+}
 ```
 
-Immune/Tumor Signatures (P3)
+Tumor Burden/Signatures (P3)
 =====================================     
 
 Row Page 3  {data-height=100}
@@ -184,35 +219,64 @@ Row
 ### Tumor Mutational Signatures
     
 ```{r}
+if(exists('mutData')){
+  ggplotly(tumorSignaturePlot())
+}
 ```
 
-
-### Cancer Germline Variants
-    
-```{r}
-```
-
-Row 
--------------------------------------
-    
-### Immune Profile & Tumor Purity
-    
-```{r fig.width = 28, fig.height=14}
-ggplotly(ImmuneProfile())
-```
-
-Row 
--------------------------------------
-    
 ### Tumor Mutational Burden
     
-```{r}
+```{r fig.width = 11, fig.height=7}
+ggplotly(tmbProfile())
 ```
 
-Genomically Similar Samples (P4)
+Tumor Purity (P4)
 =====================================     
 
 Row Page 4  {data-height=100}
+-------------------------------------
+   
+### {data-width=300}
+
+```{r, echo=FALSE, out.width = '100%'}
+knitr::include_graphics("figures/d3b_Logo.png")
+```   
+ 
+### Patient Name
+    
+```{r}
+cat(getPatientName());
+```
+
+### Report Date
+
+```{r}
+cat(getReportDate());
+```   
+ 
+### Report Version
+    
+```{r}
+cat(getReportVersion());
+```
+
+Row 
+-------------------------------------
+    
+### Immune Profile
+    
+```{r immune_profile, fig.width = 28, fig.height=14}
+if(exists('expData')){
+  p <- ImmuneProfile()
+  ggplotly(p)
+}
+```
+
+
+Genomically Similar Samples (P5)
+=====================================     
+
+Row Page 5  {data-height=100}
 -------------------------------------
    
    
@@ -244,8 +308,10 @@ Row
 -------------------------------------
 ### Nearest-Neighbor Analysis
     
-```{r}
-ggplotly(getTSNEPlot())
+```{r tsne_plot}
+if(exists('expData')){
+  ggplotly(getTSNEPlot())
+}
 ```
 
 
@@ -254,21 +320,23 @@ Row
     
 ### Survival
     
-```{r fig.width = 6}
-getKMPlot();
+```{r km_plot, fig.width = 6}
+if(exists('expData')){
+  getKMPlot();
+}
 ```
 
 ### Treatment/Outcomes - Genomically Similar Patients
     
-```{r}
+```{r similar_patients}
 datatable(getSimilarPatients(), rownames=F, escape=F);
 ```
 
 
-All Findings (P5)
+All Findings (P6)
 =====================================     
 
-Row Page 5  {data-height=100}
+Row Page 6  {data-height=100}
 -------------------------------------
    
 ### {data-width=300}
@@ -299,14 +367,14 @@ Row {data-height=900}
 -------------------------------------
 ### All Findings
     
-```{r}
-datatable(allFindingsTable(), rownames=F, options = list(pageLength = 50));
+```{r all_findings}
+datatable(allFindingsTable(), rownames=F, options = list(pageLength = 10));
 ```
 
-Genomic Landscape (P6)
+Genomic Landscape (P7)
 =====================================     
 
-Row Page 6  {data-height=100}
+Row Page 7  {data-height=100}
 -------------------------------------
    
 ### {data-width=300}
@@ -337,14 +405,18 @@ Row
 -------------------------------------
 ### Circos
     
-```{r fig.width = 6, fig.height=6}
-knitr::include_graphics("tmpRCircos.png")
+```{r circos, fig.width = 7, fig.height = 6}
+if(exists('fusData')){
+ knitr::include_graphics(paste0(topDir, "/tmpRCircos.png")) 
+}
 ```
 
 ### Network View
     
-```{r fig.width = 9, fig.height=6}
-plotNetwork()
+```{r plot_network, fig.width = 8, fig.height = 6}
+if(exists('expData')){
+  plotNetwork()
+}
 ```
 
 Row 
@@ -352,7 +424,9 @@ Row
     
 ### Genome CNA View
     
-```{r fig.width = 20}
-#Plot Genome Wide CNV
-plotCNV()
+```{r plot_cnv, fig.width = 20}
+# Plot Genome Wide CNV
+if(exists("cnvData")){
+  plotCNV()
+}
 ```
