@@ -6,16 +6,21 @@ plotNetwork <- function(numGenes = 250) {
   nodeGenesMut <- ''
   # Let's build all our nodes
   if(exists('mutData')){
-    nodeGenesMut <- as.character(filterMutations()[,1]) #Mutations
+    nodeGenesMut <- as.character(filterMutations()[,1]) # Mutations
   }
   if(exists('fusData')){
-    nodeGenesMut <- c(nodeGenesMut, c(fusData[,"HeadGene"]), c(fusData[,"TailGene"])) #Fusions
+    nodeGenesMut <- c(nodeGenesMut, c(fusData[,"HeadGene"]), c(fusData[,"TailGene"])) # Fusions
   }
-  rnaGenes <-RNASeqAnalysisOut[[1]][[1]]
-  rnaGenes <- data.frame(names(rnaGenes), rnaGenes)
-  upGenes <- as.character(rnaGenes[order(-rnaGenes[,2]),][1:numGenes,1])
-  downGenes <- as.character(rnaGenes[order(rnaGenes[,2]),][1:numGenes,1])
-  nodeGenes <- c(nodeGenesMut, upGenes, downGenes)
+  if(exists('expData')){
+    rnaGenes <-RNASeqAnalysisOut[[1]][[1]]
+    rnaGenes <- data.frame(names(rnaGenes), rnaGenes)
+    upGenes <- as.character(rnaGenes[order(-rnaGenes[,2]),][1:numGenes,1])
+    downGenes <- as.character(rnaGenes[order(rnaGenes[,2]),][1:numGenes,1])
+    nodeGenes <- c(nodeGenesMut, upGenes, downGenes)
+  } else {
+    nodeGenes <- c(nodeGenesMut)
+  }
+
   tmpGeneMania <- geneMania[geneMania[,"Gene_A_EntrezGeneName"]%in%nodeGenes,]
   tmpGeneMania <- tmpGeneMania[tmpGeneMania[,"Gene_B_EntrezGeneName"]%in%nodeGenes,]
   tmpGeneMania <- tmpGeneMania[tmpGeneMania[,"Network_Group_Name"]%in%c("Co-localization", "Genetic Interactions", "Pathway", "Physical Interactions"),]

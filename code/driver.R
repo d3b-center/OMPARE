@@ -94,7 +94,8 @@ if(exists('fusData')){
 }
 
 # only run if fusion or mutation data is present
-if(exists('mutData') | exists('fusData')){
-  plotNetwork()
+if(exists('expData')){
+  if(exists('mutData') | exists('fusData')){
+    plotNetwork()
+  }
 }
-
