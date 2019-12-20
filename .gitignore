@@ -3,5 +3,7 @@
 .RData
 .Ruserdata
 data/*
+!data/Reference/*.txt
+!data/Reference/*.tsv
 figures/*
 *.html
