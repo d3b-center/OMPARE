@@ -3,7 +3,8 @@
 .RData
 .Ruserdata
 data/*
-!data/Reference/*.txt
-!data/Reference/*.tsv
+!data/Reference
+data/Reference/cbttc_genes_fpkm_1110.RData
+data/Reference/GTEx/GTEx_fullExpr_matrix.RDS
 figures/*
 *.html
