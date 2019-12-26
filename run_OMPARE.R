@@ -31,3 +31,20 @@ rmarkdown::render(input = 'OMPARE.Rmd',
 rmarkdown::render(input = 'OMPARE.Rmd', 
                   params = list(topDir = 'data/PNOC008/',
                                 set_title = 'Patient Report'))
+
+# PNOC008-04
+# only consensus calls
+rmarkdown::render(input = 'OMPARE.Rmd', 
+                  params = list(topDir = 'data/PNOC008-04/',
+                                fusion_method = 'arriba',
+                                set_title = 'PNOC008-04 Patient Report',
+                                snv_consensus = TRUE),
+                  output_file = 'PNOC008_04_consensus.html')
+
+# all four callers
+rmarkdown::render(input = 'OMPARE.Rmd', 
+                  params = list(topDir = 'data/PNOC008-04/',
+                                fusion_method = 'arriba',
+                                set_title = 'PNOC008-04 Patient Report',
+                                snv_consensus = FALSE),
+                  output_file = 'PNOC008_04.html')

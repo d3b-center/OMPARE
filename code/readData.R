@@ -6,7 +6,7 @@
 source('code/helper.R')
 source('code/filterFusions.R')
 
-readData <- function(topDir, fusion_method = c("star","arriba")){
+readData <- function(topDir, fusion_method = c("star","arriba"), snv_consensus = FALSE){
   
   # patient sample info (at most one with .txt extension)
   sampleInfo <- list.files(path = paste0(topDir, "Clinical"), pattern = "*.txt", full.names = T)
@@ -23,8 +23,13 @@ readData <- function(topDir, fusion_method = c("star","arriba")){
   assign("sampleInfo", sampleInfo, envir = globalenv())
   
   # mutation data (can be multiple with .maf extension)
-  somatic.mut.pattern <- 'mutect*|strelka*'
+  somatic.mut.pattern <- '*.maf'
   mutFiles <- list.files(path = topDir, pattern = somatic.mut.pattern, recursive = TRUE, full.names = T)
+  if(snv_consensus){
+    mutFiles <- grep('consensus', mutFiles, value = TRUE)
+  } else {
+    mutFiles <- grep('consensus', mutFiles, invert = TRUE, value = TRUE)
+  }
   if(length(mutFiles) >= 1){
     mutFiles <- lapply(mutFiles, data.table::fread, skip = 1, stringsAsFactors = F)
     mutData <- data.table::rbindlist(mutFiles)
@@ -65,7 +70,9 @@ readData <- function(topDir, fusion_method = c("star","arriba")){
     fusFiles <- lapply(fusFiles, filterFusions)
     fusData <- do.call('rbind', fusFiles)
     fusData <- unique(fusData)
-    assign("fusData", fusData, envir = globalenv())
+    if(nrow(fusData) >= 1){
+      assign("fusData", fusData, envir = globalenv())
+    }
   }
   
   # expression data (can be only 1 per patient with .genes.results)

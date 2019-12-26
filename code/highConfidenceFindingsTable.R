@@ -37,7 +37,9 @@ highConfidenceFindingsTable <- function(delRPKM=10) {
     hallMarkSetsTS <- merge(hallMarkSetsTS, sigGeneSets, by.x="ind", by.y="Pathway")
     hallMarkSetsTS[,"ind"] <- paste(hallMarkSetsTS[,"ind"], "(",hallMarkSetsTS[,"Direction"], ")", sep="")
     hallMarkSetsTS <- hallMarkSetsTS[,c("ind", "values")]
-    hallMarkSetsTS <- hallMarkSetsTS %>% group_by(values) %>% summarize(ind=paste(ind, collapse=","))
+    hallMarkSetsTS <- hallMarkSetsTS %>% 
+      group_by(values) %>% 
+      dplyr::summarize(ind=paste(ind, collapse=","))
     hallMarkSetsTS <- data.frame(hallMarkSetsTS)
     
     # Supporting Evidence for Deletions

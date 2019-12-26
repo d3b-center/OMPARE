@@ -10,7 +10,9 @@ filterDruggability <- function(data = dgidb) {
   data <- data[data[,"interaction_types"]!="",]
   data <- data[data[,"drug_name"]!="",]
   data <- unique(data[,c("gene_name", "drug_name")]);
-  dataOut <- data %>% group_by(gene_name) %>% summarize(Drugs=paste(drug_name, collapse=", "))
+  dataOut <- data %>% 
+    group_by(gene_name) %>% 
+    dplyr::summarize(Drugs=paste(drug_name, collapse=", "))
   dataOut <- data.frame(dataOut);
   return(dataOut);
   

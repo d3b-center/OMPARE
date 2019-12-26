@@ -11,8 +11,8 @@ createCopyNumber <- function(){
     tmpStart <- as.numeric(trimws(x[[2]]));
     tmpEnd <- as.numeric(trimws(x[[3]]));
     tmpValue <- as.numeric(trimws(x[[4]]));
-    tmpCNA <- chrMap[chrMap[,"Chromosome.scaffold.name"]==tmpChr,];
-    tmpCNA <- tmpCNA[((tmpCNA[,2]>tmpStart)&(tmpCNA[,2]<tmpEnd)),1]
+    tmpCNA <- chrMap[chrMap[,"Chromosome.scaffold.name"] == tmpChr,];
+    tmpCNA <- tmpCNA[((tmpCNA[,2] > tmpStart) & (tmpCNA[,2] < tmpEnd)),1]
     if(length(tmpCNA)>0) {
       tmpCNA <- data.frame(tmpCNA, tmpValue);
     }

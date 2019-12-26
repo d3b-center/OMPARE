@@ -15,13 +15,17 @@ allFindingsTable <- function() {
   # First Get Mutations
   if(exists('mutData')){
     tmpMut <- filterMutations()
-    tmpMut[,"Abberation"] <- ifelse(tmpMut[,"HGVSp_Short"]!="", paste(tmpMut[,"Hugo_Symbol"], tmpMut[,"HGVSp_Short"], sep=": "), as.character(tmpMut[,"Hugo_Symbol"]))
-    tmpMut[,"Type"] <- "Mutation"
-    tmpMut[,"Details"] <- paste("Mutation Type: ", tmpMut[,"Variant_Classification"], sep="")
-    tmpMut[,"Score"] <- "None"
-    tmpMut[,"Trials"] <- "None"
-    tmpMut <- merge(tmpMut, drugData, by.x="Hugo_Symbol", by.y="gene_name", all.x=T)
-    tmpMut <- tmpMut[,c("Abberation", "Type", "Details", "Score", "Drugs", "Trials")]
+    if(nrow(tmpMut) > 0){
+      tmpMut[,"Abberation"] <- ifelse(tmpMut[,"HGVSp_Short"]!="", paste(tmpMut[,"Hugo_Symbol"], tmpMut[,"HGVSp_Short"], sep=": "), as.character(tmpMut[,"Hugo_Symbol"]))
+      tmpMut[,"Type"] <- "Mutation"
+      tmpMut[,"Details"] <- paste("Mutation Type: ", tmpMut[,"Variant_Classification"], sep="")
+      tmpMut[,"Score"] <- "None"
+      tmpMut[,"Trials"] <- "None"
+      tmpMut <- merge(tmpMut, drugData, by.x="Hugo_Symbol", by.y="gene_name", all.x=T)
+      tmpMut <- tmpMut[,c("Abberation", "Type", "Details", "Score", "Drugs", "Trials")]
+    } else {
+      tmpMut <- data.frame()
+    }
   } else {
     tmpMut <- data.frame()
   }
@@ -47,13 +51,17 @@ allFindingsTable <- function() {
     cnvGenes <- createCopyNumber()
     assign("cnvGenes", cnvGenes, envir = globalenv())
     tmpCnv <- filterCNV()
-    tmpCnv[,"Abberation"] <- tmpCnv[,1]
-    tmpCnv[,"Type"] <- ifelse(tmpCnv[,2]>2, "Amplification", "Deletion")
-    tmpCnv[,"Details"] <- paste("Copy Number Value: ",tmpCnv[,2], sep="")
-    tmpCnv[,"Score"] <- "None"
-    tmpCnv[,"Trials"] <- "None"
-    tmpCnv <- merge(tmpCnv, drugData, by.x="Gene", by.y="gene_name", all.x=T)
-    tmpCnv <- tmpCnv[,c("Abberation", "Type", "Details", "Score", "Drugs", "Trials")]
+    if(nrow(tmpCnv) >= 1){
+      tmpCnv[,"Abberation"] <- tmpCnv[,1]
+      tmpCnv[,"Type"] <- ifelse(tmpCnv[,2]>2, "Amplification", "Deletion")
+      tmpCnv[,"Details"] <- paste("Copy Number Value: ",tmpCnv[,2], sep="")
+      tmpCnv[,"Score"] <- "None"
+      tmpCnv[,"Trials"] <- "None"
+      tmpCnv <- merge(tmpCnv, drugData, by.x="Gene", by.y="gene_name", all.x=T)
+      tmpCnv <- tmpCnv[,c("Abberation", "Type", "Details", "Score", "Drugs", "Trials")]
+    }  else {
+      tmpCnv <- data.frame()
+    }
   } else {
     tmpCnv <- data.frame()
   }

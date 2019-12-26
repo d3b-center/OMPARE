@@ -6,7 +6,7 @@
 gtexData <- readRDS("data/Reference/GTEx/GTEx_fullExpr_matrix.RDS")
 # Read GTEx Annotation
 gtexGeneAnnot <- read.delim("data/Reference/GTEx/gencode.v23.annotation.gi_ti_gs.txt", stringsAsFactors =F)
-cancerGenes <- read.delim("data/Reference/CancerGeneList.tsv", stringsAsFactors = F)
+# cancerGenes <- read.delim("data/Reference/CancerGeneList.tsv", stringsAsFactors = F)
 tsgGenes <- read.delim("data/Reference/Human_TSGs.txt", stringsAsFactors = F)
 chrMap <- read.delim("data/Reference/mart_export_genechr_mapping.txt", stringsAsFactors =F)
 geneMania <- read.delim("data/Reference/GeneManiaNetwork.txt", stringsAsFactors =F)

@@ -10,6 +10,8 @@ params:
     value: 'arriba'
   set_title:
     value: 'Patient Report'
+  snv_consensus:
+    value: FALSE
 ---
 ---
 title: `r params$set_title`
@@ -29,7 +31,10 @@ suppressPackageStartupMessages(library(tidyverse))
 source("code/readData.R")
 topDir <- params$topDir
 fusion_method <- params$fusion_method
-readData(topDir = topDir, fusion_method = fusion_method)
+snv_consensus <- params$snv_consensus
+readData(topDir = topDir, 
+         fusion_method = fusion_method, 
+         snv_consensus = snv_consensus)
 
 # call driver to load other libraries/code
 source("code/driver.R")
