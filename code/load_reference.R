@@ -2,6 +2,7 @@
 # Load all reference data
 #########################
 
+# GTEx (7859 samples)
 # Read GTEx Expression Data
 gtexData <- readRDS("data/Reference/GTEx/GTEx_fullExpr_matrix.RDS")
 # Read GTEx Annotation

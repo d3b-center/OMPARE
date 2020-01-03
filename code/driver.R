@@ -37,14 +37,14 @@ suppressPackageStartupMessages(library(stringr))
 # Source all code 
 #############################
 # sourced in order of requirement
-source('code/helper.R')
-source('code/createCopyNumber.R') 
+source('code/helper.R')                         # load misc functions
+source('code/createCopyNumber.R')               
 source('code/filterDruggability.R')
 source('code/parseSurvival.R')
 source('code/germlineAnalysis.R')
 source('code/patientSampleInfo.R')              # load patient info
 source('code/pubTheme.R')                       # plot theme
-source('code/load_reference.R')                 # load reference data
+source('code/load_reference.R')                 # load all reference data
 source('code/filterCNV.R')                      # filter CNV
 source('code/filterFusions.R')                  # filter Fusions
 source('code/filterMutations.R')                # filter Mutations

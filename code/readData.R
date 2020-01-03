@@ -6,14 +6,14 @@
 source('code/helper.R')
 source('code/filterFusions.R')
 
-readData <- function(topDir, fusion_method = c("star","arriba"), snv_consensus = FALSE){
+readData <- function(topDir, fusion_method = c("star","arriba"), snv_pattern = "all"){
   
   # patient sample info (at most one with .txt extension)
+  # assign n/a if no clinical info is present
   sampleInfo <- list.files(path = paste0(topDir, "Clinical"), pattern = "*.txt", full.names = T)
   if(length(sampleInfo) == 1){
     sampleInfo <- read.delim(sampleInfo, stringsAsFactors = F)
   } else {
-    # assign n/a if no clinical info is present
     sampleInfo <- setNames(data.frame(t(rep("n/a", 15)), stringsAsFactors = F), 
                            nm = c("patientName","reportDate","reportVersion","primRelapse",
                                   "tumorType","tumorLocation","collectionDate","labDirector",
@@ -23,12 +23,13 @@ readData <- function(topDir, fusion_method = c("star","arriba"), snv_consensus =
   assign("sampleInfo", sampleInfo, envir = globalenv())
   
   # mutation data (can be multiple with .maf extension)
+  # if snv_pattern is all, then use all files except consensus
   somatic.mut.pattern <- '*.maf'
   mutFiles <- list.files(path = topDir, pattern = somatic.mut.pattern, recursive = TRUE, full.names = T)
-  if(snv_consensus){
-    mutFiles <- grep('consensus', mutFiles, value = TRUE)
-  } else {
+  if(snv_pattern == "all"){ 
     mutFiles <- grep('consensus', mutFiles, invert = TRUE, value = TRUE)
+  } else {
+    mutFiles <- grep(snv_pattern, mutFiles, value = TRUE)
   }
   if(length(mutFiles) >= 1){
     mutFiles <- lapply(mutFiles, data.table::fread, skip = 1, stringsAsFactors = F)

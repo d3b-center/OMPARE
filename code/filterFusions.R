@@ -31,29 +31,34 @@ filterFusions <- function(myFusFile = fusFile, myCancerGenes = cancerGenes, myJu
   # fusDataFilt$X.gene1 <- gsub('[(].*','',fusDataFilt$X.gene1)
   # fusDataFilt$gene2 <- gsub('[(].*','',fusDataFilt$gene2)
   
+  # Format column names
   if(method == "star"){
-    fusDataFilt[,'X.fusion_name'] <- gsub('--','_',fusDataFilt[,'X.fusion_name'])
-    fusDataFilt[,"HeadGene"] <- gsub('_.*','',fusDataFilt[,'X.fusion_name'])
-    fusDataFilt[,"TailGene"] <- gsub('.*_','',fusDataFilt[,'X.fusion_name'])
+    fusDataFilt <- fusDataFilt %>%
+      mutate(X.fusion_name = gsub('--','_', X.fusion_name),
+             HeadGene = gsub('_.*','', X.fusion_name),
+             TailGene = gsub('.*_','', X.fusion_name))
   } else {
-    fusDataFilt[,"X.fusion_name"] <- paste0(as.character(fusDataFilt[,"X.gene1"]), "_", as.character(fusDataFilt[,"gene2"]))
-    fusDataFilt[,"Splice_type"] <- fusDataFilt[,"type"]
-    fusDataFilt[,"HeadGene"] <- as.character(fusDataFilt[,"X.gene1"])
-    fusDataFilt[,"TailGene"] <- as.character(fusDataFilt[,"gene2"])
+    fusDataFilt <- fusDataFilt %>%
+      mutate(X.fusion_name = paste0(as.character(X.gene1), "_", as.character(gene2)),
+             Splice_type = type,
+             HeadGene = X.gene1,
+             TailGene = gene2)
   }
   
-  # Filter by Number of Reads
+  # Filter by Number of Reads (STAR) or by Confidence (Arriba)
   if(method == "star"){
-    fusDataFilt <- fusDataFilt[fusDataFilt[,"JunctionReads"] > myJunctionReads,]
+    fusDataFilt <- fusDataFilt %>% 
+      filter(JunctionReads > myJunctionReads)
   } else {
-    fusDataFilt <- fusDataFilt[fusDataFilt[,"confidence"] != "low",]
+    fusDataFilt <- fusDataFilt %>%
+      filter(confidence != "low")
   }
   
-  # Filter by Cancer Gene Census
-  myCancerGenes <- as.character(myCancerGenes[,1])
-  fusDataFilt <- fusDataFilt[fusDataFilt[,"HeadGene"] %in% myCancerGenes | fusDataFilt[,"TailGene"] %in% myCancerGenes,]
-  
-  # Subset to required columns only
-  fusDataFilt <- fusDataFilt[,c('X.fusion_name','Splice_type','HeadGene','TailGene')]
+  # Filter by Cancer Gene List (Annofuse)
+  myCancerGenes <- as.character(myCancerGenes$Gene_Symbol)
+  fusDataFilt <- fusDataFilt %>%
+    filter(HeadGene %in% myCancerGenes | TailGene %in% myCancerGenes) %>%
+    dplyr::select(X.fusion_name, Splice_type, HeadGene, TailGene)
+    
   return(fusDataFilt)
 }

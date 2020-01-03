@@ -10,8 +10,10 @@ params:
     value: 'arriba'
   set_title:
     value: 'Patient Report'
-  snv_consensus:
-    value: FALSE
+  snv_pattern:
+    value: NULL
+editor_options: 
+  chunk_output_type: console
 ---
 ---
 title: `r params$set_title`
@@ -31,10 +33,10 @@ suppressPackageStartupMessages(library(tidyverse))
 source("code/readData.R")
 topDir <- params$topDir
 fusion_method <- params$fusion_method
-snv_consensus <- params$snv_consensus
+snv_pattern <- params$snv_pattern
 readData(topDir = topDir, 
          fusion_method = fusion_method, 
-         snv_consensus = snv_consensus)
+         snv_pattern = snv_pattern)
 
 # call driver to load other libraries/code
 source("code/driver.R")

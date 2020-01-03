@@ -34,10 +34,11 @@ calc.immune.scores <- function(fname){
 
 ImmuneProfile <- function() {
   fname <- paste0(topDir,'/ImmuneScores/rawScores.txt')
+  calc.immune.scores(fname)
   # if file does not exist, create one
-  if(!file.exists(fname)){
-    calc.immune.scores(fname)
-  } 
+  # if(!file.exists(fname)){
+  #   calc.immune.scores(fname)
+  # } 
   raw.scores <- read.delim(fname, check.names = F)
   raw.scores[,"CellType"] <- raw.scores[,1]
   raw.scores[,1] <- NULL

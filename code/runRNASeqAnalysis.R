@@ -3,59 +3,58 @@
 ##########################################
 
 # Function to return all results from RNA-Seq Analysis
-library("tidyverse")
-library("GSVA")
-library("GSEABase")
-# library("preprocessCore")
+suppressPackageStartupMessages(library(GSVA))
+suppressPackageStartupMessages(library(GSEABase))
 
-runRNASeqAnalysis <- function(expData=NULL) {
+cancerGenes <- read.delim("data/Reference/CancerGeneList.tsv", stringsAsFactors = F)
+
+runRNASeqAnalysis <- function(expData = NULL) {
   
-  # Merge & Normalize Data-
-  gtexData[,1] <- sapply(as.character(gtexData[,1]), FUN=remDotStuff)
-  rownames(gtexData) <- gtexData[,1]
+  # Format gtex data ensembl ids
+  gtexData$gene_id <- sapply(as.character(gtexData$gene_id), FUN=remDotStuff)
+  rownames(gtexData) <- gtexData$gene_id
   gtexData <- gtexData[-1]
 
-  # Merge
+  # Merge GTEx and Patient data on common genes
   intGenesTmp <- intersect(rownames(gtexData), rownames(expData))
   mergeDF <- cbind(gtexData[intGenesTmp,], expData[intGenesTmp,"FPKM"])
 
-  # Collapse to Gene
-  gtexGeneAnnot <- unique(gtexGeneAnnot[1:2])
-  rownames(gtexGeneAnnot) <- gtexGeneAnnot[,1]
+  # Collapse to unique gene symbols
+  # Matrix of GTEx and Patient FPKM data
+  gtexGeneAnnot <- unique(gtexGeneAnnot[c("gene_id","gene_symbol")])
+  gtexGeneAnnot$gene_id <- sapply(as.character(gtexGeneAnnot$gene_id), FUN=remDotStuff)
+  rownames(gtexGeneAnnot) <- gtexGeneAnnot$gene_id
   mergeDF <- cbind(gtexGeneAnnot[rownames(mergeDF),2], mergeDF)
-  mergeDF[,"meanExp"] <- rowMeans(mergeDF[-1])
+  mergeDF[,"meanExp"] <- rowMeans(mergeDF[-1]) 
   mergeDF <- mergeDF[order(-mergeDF[,"meanExp"]),]
   mergeDF <- mergeDF[!duplicated(mergeDF[,1]),]
-  rownames(mergeDF) <- mergeDF[,1]
+  rownames(mergeDF) <- mergeDF[,1] 
   mergeDF <- mergeDF[-1]
-  mergeDF <- mergeDF[-ncol(mergeDF)]
-  colnames(mergeDF)[ncol(mergeDF)]<- "SampleX"
+  mergeDF <- mergeDF[-ncol(mergeDF)] 
+  colnames(mergeDF)[ncol(mergeDF)] <- "SampleX"
 
-  # Calculate Gene Outliers
-  getAllOutliers <- function(myMergeDF=mergeDF, getTop=20, cancerGeneNames = cancerGenes[,1]) {
-    # myMergeDFNQ <- normalize.quantiles(as.matrix(myMergeDF))
-    # myMergeDFNQ <- data.frame(myMergeDFNQ)
-    # rownames(myMergeDFNQ) <- rownames(myMergeDF)
-    # colnames(myMergeDFNQ) <- colnames(myMergeDF)
-    myMergeDF <- myMergeDF[myMergeDF[,"SampleX"]>10,]
-    # myMergeDFNQ <- myMergeDFNQ[rownames(myMergeDF),]
-    # FPKM Filter
+  # Calculate Gene Outliers in Patient (top 20 Up and Down)
+  getAllOutliers <- function(myMergeDF = mergeDF, getTop = 20, cancerGeneNames = cancerGenes$Gene) {
+    
+    # Filter in Patient: FPKM > 10 
+    myMergeDF <- myMergeDF[myMergeDF$SampleX > 10,]
+    
+    # z-score and return only patient's value
     getZ <- function(x) {
       x <- log2(x+1)
       out <- (x-mean(x))/sd(x)
       return(out[length(out)])
     }
-    # output <- apply(myMergeDFNQ, FUN=getZ, MARGIN=1)
     output <- apply(myMergeDF, FUN=getZ, MARGIN=1)
-    
-    outputCanc <- output[intersect(names(output), cancerGeneNames)]
-    outputDown <- sort(outputCanc)[1:getTop]
-    outputUp <- sort(outputCanc, T)[1:getTop]
+    outputCanc <- output[intersect(names(output), cancerGeneNames)] # filter to cancer gene list
+    outputDown <- sort(outputCanc)[1:getTop] # top 20 down
+    outputUp <- sort(outputCanc, T)[1:getTop] # top 20 up
     
     outputUpDF <- data.frame(outputUp, myMergeDF[names(outputUp),"SampleX"])
-    outputDownDF <- data.frame(outputDown, myMergeDF[names(outputDown),"SampleX"])
     colnames(outputUpDF) <- c("Z_Score", "FPKM")
+    outputDownDF <- data.frame(outputDown, myMergeDF[names(outputDown),"SampleX"])
     colnames(outputDownDF) <- c("Z_Score", "FPKM")
+    
     return(list(output, rbind(outputUpDF, outputDownDF)))
   }
   geneAnalysisOut <- getAllOutliers()
@@ -66,21 +65,21 @@ runRNASeqAnalysis <- function(expData=NULL) {
   # Set Threshold
   thresh <- 1.5
   
-  #Get Up and Down Genes
+  # Get Up and Down Genes
   tmpghj <- geneAnalysisOut[[1]]
-  upGenes <- names(tmpghj)[which(geneAnalysisOut[[1]]>thresh)]
-  downGenes <- names(tmpghj)[which(geneAnalysisOut[[1]]<(-1*thresh))]
+  upGenes <- names(tmpghj)[which(geneAnalysisOut[[1]] > thresh)]
+  downGenes <- names(tmpghj)[which(geneAnalysisOut[[1]] < (-1*thresh))]
   
   # If not enough genes take top 1000 
-  if(length(upGenes)<1000) {
-    upGenes <- names(sort(geneAnalysisOut[[1]], T))[1:1000]
+  if(length(upGenes) < 1000) {
+    upGenes <- names(sort(geneAnalysisOut[[1]], decreasing = TRUE))[1:1000]
   }
-  if(length(downGenes)<1000) {
-    downGenes <- names(sort(geneAnalysisOut[[1]], F))[1:1000]
+  if(length(downGenes) < 1000) {
+    downGenes <- names(sort(geneAnalysisOut[[1]], decreasing = FALSE))[1:1000]
   }
   
   # Code to run pathway analysis
-  runHypGeom <- function(set, genes,n=20000, universe=NULL) {
+  runHypGeom <- function(set, genes, n = 20000, universe = NULL) {
     
     if(!is.null(universe)) {
       set <- intersect(set, universe)
@@ -97,7 +96,6 @@ runRNASeqAnalysis <- function(expData=NULL) {
     # balls drawn from the urn 
     k <- length(set)
     
-    
     out <- phyper(x-1, m, n2, k, lower.tail=F)
     setSize <- k
     overLap <- x
@@ -105,8 +103,8 @@ runRNASeqAnalysis <- function(expData=NULL) {
     
     myRet <- c(setSize, numGenes, overLap, out) 
     return(myRet)
-    
   }
+  
   # Accessory for functional enrichment
   funcEnrichment <- function(genes, sets, qval=.25, numRet=5, myN=20000, myUniverse=NULL) {
     
@@ -120,16 +118,16 @@ runRNASeqAnalysis <- function(expData=NULL) {
   }
   
   upPathways <- funcEnrichment(upGenes, hallMarkSets, qval=1, myN=25000, myUniverse=rownames(mergeDF))
-  upPathways <- upPathways[order(upPathways[,"P_VAL"]),]
+  upPathways <- upPathways[order(upPathways$P_VAL),]
   upPathways[,"Direction"] <- "Up"
   upPathways[,"Pathway"] <- rownames(upPathways)
   
   downPathways <- funcEnrichment(downGenes, hallMarkSets, qval=1, myN=25000, myUniverse=rownames(mergeDF))
-  downPathways <- downPathways[order(downPathways[,"P_VAL"]),]
+  downPathways <- downPathways[order(downPathways$P_VAL),]
   downPathways[,"Direction"] <- "Down"
   downPathways[,"Pathway"] <- rownames(downPathways)
   
-  pathwayAnalysisOut <- list(list("UpGenes"=upGenes, "DownGenes"=downGenes), rbind(upPathways, downPathways))
+  pathwayAnalysisOut <- list(list("UpGenes" = upGenes, "DownGenes" = downGenes), rbind(upPathways, downPathways))
 
   # Final Output
   finalOut <- list()
