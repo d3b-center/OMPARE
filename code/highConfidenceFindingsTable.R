@@ -45,14 +45,14 @@ highConfidenceFindingsTable <- function(delRPKM=10) {
     # Supporting Evidence for Deletions
     myTableDel <- myTable[myTable[,2]=="Deletion",]
     if(nrow(myTableDel) > 0){
-      myTableDel <- merge(myTableDel, rnaEvidence, by.x="Abberation", by.y="Gene", all.x=T)
-      myTableDel <- merge(myTableDel, hallMarkSetsTS, by.x="Abberation", by.y="values", all.x=T)
+      myTableDel <- merge(myTableDel, rnaEvidence, by.x="Aberration", by.y="Gene", all.x=T)
+      myTableDel <- merge(myTableDel, hallMarkSetsTS, by.x="Aberration", by.y="values", all.x=T)
       myTableDel <- myTableDel[which(myTableDel[,"SampleX"]<10),]
       if(nrow(myTableDel)>0) {
         myTableDel[,"SupportEv"] <- paste("FPKM=", myTableDel[,"SampleX"], ifelse(is.na(myTableDel[,"ind"]), "", paste(", Pathway: ", myTableDel[,"ind"], sep="")), sep="")
-        myTableDel <- myTableDel[,c("Abberation", "Type", "Details", "Score", "Drugs", "Trials", "SupportEv")]
+        myTableDel <- myTableDel[,c("Aberration", "Type", "Details", "Score", "Drugs", "Trials", "SupportEv")]
       } else {
-        colnames(myTableDel) <- c("Abberation", "Type", "Details", "Score", "Drugs", "Trials", "SupportEv")
+        colnames(myTableDel) <- c("Aberration", "Type", "Details", "Score", "Drugs", "Trials", "SupportEv")
       }
     } else {
       myTableDel <- data.frame()
@@ -62,14 +62,14 @@ highConfidenceFindingsTable <- function(delRPKM=10) {
     # Supporting Evidence for Amplifications
     myTableAmp <- myTable[myTable[,2]=="Amplification",]
     if(nrow(myTableAmp) > 0){
-      myTableAmp <- merge(myTableAmp, rnaEvidence, by.x="Abberation", by.y="Gene", all.x=T)
-      myTableAmp <- merge(myTableAmp, hallMarkSetsTS, by.x="Abberation", by.y="values", all.x=T)
+      myTableAmp <- merge(myTableAmp, rnaEvidence, by.x="Aberration", by.y="Gene", all.x=T)
+      myTableAmp <- merge(myTableAmp, hallMarkSetsTS, by.x="Aberration", by.y="values", all.x=T)
       myTableAmp <- myTableAmp[which(myTableAmp[,"SampleX"]>100),]
       if(nrow(myTableAmp)>0) {
         myTableAmp[,"SupportEv"] <- paste("FPKM=", myTableAmp[,"SampleX"], ifelse(is.na(myTableAmp[,"ind"]), "", paste(", Pathway: ", myTableAmp[,"ind"], sep="")), sep="")
-        myTableAmp <- myTableAmp[,c("Abberation", "Type", "Details", "Score", "Drugs", "Trials", "SupportEv")]
+        myTableAmp <- myTableAmp[,c("Aberration", "Type", "Details", "Score", "Drugs", "Trials", "SupportEv")]
       } else {
-        colnames(myTableAmp) <- c("Abberation", "Type", "Details", "Score", "Drugs", "Trials", "SupportEv")
+        colnames(myTableAmp) <- c("Aberration", "Type", "Details", "Score", "Drugs", "Trials", "SupportEv")
       }
     } else {
       myTableAmp <- data.frame()
@@ -79,11 +79,11 @@ highConfidenceFindingsTable <- function(delRPKM=10) {
     # Supporting Evidence for Mutations Oncogene - Expression is listed, Pathway is significant
     myTableMut <- myTable[myTable[,2]=="Mutation",]
     if(nrow(myTableMut) > 0){
-      myTableMut[,"Gene"] <- sapply(myTableMut[,"Abberation"], FUN=getGeneFromMut)
+      myTableMut[,"Gene"] <- sapply(myTableMut[,"Aberration"], FUN=getGeneFromMut)
       myTableMut <- merge(myTableMut, rnaEvidence, by.x="Gene", by.y="Gene", all.x=T)
       myTableMut <- merge(myTableMut, hallMarkSetsTS, by.x="Gene", by.y="values", all.x=T)
       myTableMut[,"SupportEv"] <- paste("FPKM=", myTableMut[,"SampleX"], ifelse(is.na(myTableMut[,"ind"]), "", paste(", Pathway: ", myTableMut[,"ind"], sep="")), sep="")
-      myTableMut <- myTableMut[,c("Abberation", "Type", "Details", "Score", "Drugs", "Trials", "SupportEv")]
+      myTableMut <- myTableMut[,c("Aberration", "Type", "Details", "Score", "Drugs", "Trials", "SupportEv")]
     } else {
       myTableMut <- data.frame()
     }
@@ -92,7 +92,7 @@ highConfidenceFindingsTable <- function(delRPKM=10) {
     # Supporting Evidence for Mutations Oncogene - Expression is listed, Pathway is significant
     myTableFus <- myTable[myTable[,2]=="Fusion",]
     if(nrow(myTableFus) > 0){
-      myTableFus[,c("Gene1", "Gene2")] <- sapply(myTableFus[,"Abberation"], FUN=getGeneFromFus)
+      myTableFus[,c("Gene1", "Gene2")] <- sapply(myTableFus[,"Aberration"], FUN=getGeneFromFus)
       myTableFus <- merge(myTableFus, rnaEvidence, by.x="Gene1", by.y="Gene", all.x=T)
       myTableFus <- merge(myTableFus, rnaEvidence, by.x="Gene2", by.y="Gene", all.x=T)
       myTableFus <- merge(myTableFus, hallMarkSetsTS, by.x="Gene1", by.y="values", all.x=T)
@@ -102,7 +102,7 @@ highConfidenceFindingsTable <- function(delRPKM=10) {
                                         myTableFus[,"SampleX.y"],
                                         ifelse(is.na(myTableFus[,"ind.x"]), "", paste(", Pathway: ", myTableFus[,"ind.x"], ",", sep="")),
                                         ifelse(is.na(myTableFus[,"ind.y"]), "", paste("", myTableFus[,"ind.y"], sep="")), sep="")
-      myTableFus <- myTableFus[,c("Abberation", "Type", "Details", "Score", "Drugs", "Trials", "SupportEv")]
+      myTableFus <- myTableFus[,c("Aberration", "Type", "Details", "Score", "Drugs", "Trials", "SupportEv")]
     } else {
       myTableFus <- data.frame()
     }

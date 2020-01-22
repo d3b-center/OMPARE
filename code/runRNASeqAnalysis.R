@@ -6,8 +6,6 @@
 suppressPackageStartupMessages(library(GSVA))
 suppressPackageStartupMessages(library(GSEABase))
 
-cancerGenes <- read.delim("data/Reference/CancerGeneList.tsv", stringsAsFactors = F)
-
 runRNASeqAnalysis <- function(expData = NULL) {
   
   # Format gtex data ensembl ids
@@ -34,7 +32,7 @@ runRNASeqAnalysis <- function(expData = NULL) {
   colnames(mergeDF)[ncol(mergeDF)] <- "SampleX"
 
   # Calculate Gene Outliers in Patient (top 20 Up and Down)
-  getAllOutliers <- function(myMergeDF = mergeDF, getTop = 20, cancerGeneNames = cancerGenes$Gene) {
+  getAllOutliers <- function(myMergeDF = mergeDF, getTop = 20, cancerGeneNames = cancerGenes$Gene_Symbol) {
     
     # Filter in Patient: FPKM > 10 
     myMergeDF <- myMergeDF[myMergeDF$SampleX > 10,]

@@ -54,7 +54,8 @@ pbta.hist <- pbta.hist %>%
 pbta.hgg <- pbta.full[,colnames(pbta.full) %in% pbta.hist$Kids_First_Biospecimen_ID]
 
 # Cancer Genes
-cancerGenes <- read.delim("data/Reference/CancerGeneList.tsv", stringsAsFactors = F)
+cancerGenes <- read.delim("data/Reference/genelistreference.txt", stringsAsFactors = F)
+cancerGenes <- subset(cancerGenes, type == "TumorSuppressorGene" | type == "CosmicCensus" | type == "Oncogene")
 
 # Genesets
 hallMarkSets <- getGmt("data/Reference/mSigDB/h.all.v6.2.symbols.gmt", collectionType=BroadCollection(), geneIdType= SymbolIdentifier())
@@ -98,7 +99,7 @@ runRNASeqAnalysis <- function(expData = NULL, refData = gtexData, refAnnot = gte
   colnames(mergeDF)[ncol(mergeDF)] <- "SampleX"
   
   # Calculate Gene Outliers in Patient (top 20 Up and Down)
-  getAllOutliers <- function(myMergeDF = mergeDF, getTop = 20, cancerGeneNames = cancerGenes$Gene) {
+  getAllOutliers <- function(myMergeDF = mergeDF, getTop = 20, cancerGeneNames = cancerGenes$Gene_Symbol) {
     
     # Filter in Patient: FPKM > 10 
     myMergeDF <- myMergeDF[myMergeDF$SampleX > 10,]
