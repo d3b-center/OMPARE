@@ -39,6 +39,25 @@ readData <- function(topDir, fusion_method = c("star","arriba"), snv_pattern = "
     assign("mutData", mutData, envir = globalenv())
   } 
   
+  # TMB scores
+  TMBScores <- list.files(path = topDir, pattern = "TMB", recursive = T, full.names = T)
+  pedTMB <- grep('TCGA', TMBScores, invert = T, value = T)
+  pedTMB <- data.table::fread(pedTMB)
+  assign("pedTMB", pedTMB, envir = globalenv())
+  adultTMB <- grep('TCGA', TMBScores, value = T)
+  adultTMB <- data.table::fread(adultTMB)
+  assign("adultTMB", adultTMB, envir = globalenv())
+  
+  # germline data
+  mutFiles <- list.files(path = topDir, pattern = 'hg38_multianno.txt.gz', recursive = TRUE, full.names = T)
+  if(length(mutFiles) >= 1){
+    mutFiles <- lapply(mutFiles, data.table::fread, stringsAsFactors = F)
+    mutData.germ <- data.table::rbindlist(mutFiles)
+    mutData.germ <- as.data.frame(mutData.germ)
+    mutData.germ <- unique(mutData.germ)
+    assign("mutData.germ", mutData.germ, envir = globalenv())
+  } 
+  
   # copy number (only 1 per patient with .CNVs extension)
   cnvData <- list.files(path = topDir, pattern = "*.CNVs$", recursive = TRUE, full.names = T)
   if(length(cnvData) == 1){
