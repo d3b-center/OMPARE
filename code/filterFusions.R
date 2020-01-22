@@ -2,8 +2,6 @@
 # Universal Function to filter fusions
 ######################################
 
-# For fusion filtering, use annoFuse gene list instead 
-# cancerGenes <- read.delim("data/Reference/CancerGeneList.tsv", stringsAsFactors = F)
 cancerGenes <- read.delim("data/Reference/genelistreference.txt", stringsAsFactors = F)
 cancerGenes <- subset(cancerGenes, type == "TumorSuppressorGene" | type == "CosmicCensus" | type == "Oncogene")
 

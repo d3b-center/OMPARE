@@ -2,13 +2,11 @@
 # Function to filter mutations-
 ####################################################
 
-cancerGenes <- read.delim("data/Reference/CancerGeneList.tsv", stringsAsFactors = F)
-
 filterMutations <- function(myMutData = mutData, myCancerGenes = cancerGenes) {
   mutDataFilt <- myMutData
   keepVC <- c("Missense_Mutation", "Splice_Region", "3'UTR", "5'UTR", "In_Frame_Del")
   keepVI <- c("MODIFIER", "MODERATE", "HIGH")
-  myCancerGenes <- as.character(myCancerGenes$Gene)
+  myCancerGenes <- as.character(myCancerGenes$Gene_Symbol)
   
   # Filter by Biotype, Variant class, IMPACT and Cancer gene list
   mutDataFilt <- mutDataFilt %>%
