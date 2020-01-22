@@ -243,7 +243,7 @@ runRNASeqAnalysis <- function(expData = NULL, refData = gtexData, refAnnot = gte
 }
 
 # output filename
-outdir <- paste0(topDir, "summary")
+outdir <- paste0(topDir, "Summary")
 system(paste0('mkdir -p ', outdir))
 fname <- "PNOC008_04_summary.xlsx"
 fname <- paste0(outdir, "/", fname)
