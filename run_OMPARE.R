@@ -14,6 +14,7 @@ for(i in 1:length(callers)) {
                     params = list(topDir = 'data/PNOC008-04/',
                                   fusion_method = 'arriba',
                                   set_title = 'PNOC008-04 Patient Report',
-                                  snv_pattern = callers[i]),
+                                  snv_pattern = callers[i],
+                                  tmb = 77.46),
                     output_file = outputfile)
 }
