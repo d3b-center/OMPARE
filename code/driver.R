@@ -37,7 +37,6 @@ suppressPackageStartupMessages(library(stringr))
 # Source all code 
 #############################
 # sourced in order of requirement
-source('code/viewDataTable.R')                  # data table customization
 source('code/helper.R')                         # load misc functions
 source('code/createCopyNumber.R')               
 source('code/filterDruggability.R')
