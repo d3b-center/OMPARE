@@ -14,7 +14,7 @@ annotateMutations <- function(myMutData = mutData, myCancerGenes = cancerGenes) 
     filter(BIOTYPE == "protein_coding" &
              Variant_Classification %in% keepVC &
              IMPACT %in% keepVI) %>%
-    mutate(Type = ifelse(Hugo_Symbol %in% myCancerGenes, "Significant", "VUS"))
+    mutate(Type = ifelse(Hugo_Symbol %in% myCancerGenes, "Mutation", "VUS"))
   
   return(mutDataFilt)
 }

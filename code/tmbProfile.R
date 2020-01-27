@@ -2,8 +2,27 @@
 # TMB Profile
 ############################
 
+tmb.calculate <- function(myTMB = TMBFileBED, myMutData = mutect2Data) {
+  
+  # filter to nonsense and missense
+  myMutData <- myMutData %>%
+    filter(Variant_Classification %in% c("Missense_Mutation", "Nonsense_Mutation")) %>%
+    dplyr::select(Hugo_Symbol, Variant_Classification, Chromosome, Start_Position, End_Position)
+  
+  # intersect with bed file
+  subject <- with(myTMB, GRanges(chr, IRanges(start = start, end = end)))
+  query <- with(myMutData, GRanges(Chromosome, IRanges(start = Start_Position, end = End_Position, names = Hugo_Symbol)))
+  res <- findOverlaps(query = query, subject = subject, type = "within")
+  res <- data.frame(myMutData[queryHits(res),], myTMB[subjectHits(res),])
+  
+  # return the number of missense+nonsense overlapping with the bed file
+  return(nrow(res))
+}
+
+
 tmbProfile <- function(pedTMBScores = pedTMB, adultTMBScores = adultTMB, TMB) {
   
+  TMB <- tmb.calculate()/TMB
   pedTMBScores$Type <- "Pediatric"
   adultTMBScores$Type <- "Adult"
   tmbScores <- rbind(pedTMBScores, adultTMBScores)
@@ -27,6 +46,9 @@ tmbProfile <- function(pedTMBScores = pedTMB, adultTMBScores = adultTMB, TMB) {
     scale_fill_manual(values = c("blue", "red")) + 
     xlab("Disease") + ylab("Mutations per MB") + 
     theme(axis.text.x = element_text(angle = -90, hjust = (0))) +
-    geom_hline(yintercept = TMB, linetype = 2)
+    geom_hline(yintercept = TMB, linetype = 2, color = 'gray30') +
+    annotate("text", x = 35, y = max(tmbScores$TMBscore) - 50, 
+             label = "- - - Patient TMB", size = 4, 
+             fontface = 'italic', color = "gray30")
   return(p)
 }

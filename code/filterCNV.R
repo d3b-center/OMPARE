@@ -11,7 +11,7 @@ filterCNV <- function(myCNVData = cnvGenes, myCancerGenes = cancerGenes, myTSGen
     .$Gene_Symbol %>%
     unique()
   myOncogenes <- cancerGenes %>%
-    filter(type == "Oncogene") %>%
+    filter(type %in% c("Oncogene", "OncoKB")) %>%
     .$Gene_Symbol %>%
     unique()
   myOncogenes <- setdiff(myOncogenes, myTSGenes)

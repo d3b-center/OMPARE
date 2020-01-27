@@ -20,23 +20,13 @@ editor_options:
 ---
 title: `r params$set_title`
 ---
-<style type="text/css">
 
-.chart-title {  /* chart_title  */
-   font-size: 14px;
-   font-face: bold;
-
-</style>
 ```{r include=FALSE}
 knitr::opts_chunk$set(comment = NA)
 ```
 
 ```{r read_data}
-suppressPackageStartupMessages(library(knitr))
-suppressPackageStartupMessages(library(plotly))
-suppressPackageStartupMessages(library(kableExtra))
-suppressPackageStartupMessages(library(flexdashboard))
-suppressPackageStartupMessages(library(tidyverse))
+source('code/load_libraries.R')
 
 # read input files
 source("code/readData.R")

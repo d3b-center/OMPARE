@@ -2,8 +2,8 @@
 # Universal Function to filter fusions
 ######################################
 
-cancerGenes <- read.delim("data/Reference/genelistreference.txt", stringsAsFactors = F)
-cancerGenes <- subset(cancerGenes, type == "TumorSuppressorGene" | type == "CosmicCensus" | type == "Oncogene")
+# cancerGenes <- read.delim("data/Reference/genelistreference.txt", stringsAsFactors = F)
+# cancerGenes <- subset(cancerGenes, type == "TumorSuppressorGene" | type == "CosmicCensus" | type == "Oncogene")
 
 filterFusions <- function(myFusFile = fusFile, myCancerGenes = cancerGenes, myJunctionReads = 2) {
   
