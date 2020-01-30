@@ -1,10 +1,25 @@
 tumorSignaturePlot <- function() {
   
   # Have to write out to read in?
-  mpfData <- mutData[, c("Chromosome", "Start_Position", "Match_Norm_Seq_Allele1", "Tumor_Seq_Allele2")]
-  mpfData <- data.frame("Patient", mpfData)
   fname <- paste0(topDir, '/MutationsMAF/mpfDataFormat.txt')
-  write.table(mpfData, fname, sep="\t", row.names=F, quote=F, col.names=F)
+  if(!file.exists(fname)){
+    
+    # read "all" for mutational signatures
+    somatic.mut.pattern <- '*.maf'
+    mutFiles <- list.files(path = topDir, pattern = somatic.mut.pattern, recursive = TRUE, full.names = T)
+    mutFiles <- grep('consensus', mutFiles, invert = TRUE, value = TRUE)
+    if(length(mutFiles) >= 1){
+      mutFiles <- lapply(mutFiles, data.table::fread, skip = 1, stringsAsFactors = F)
+      mutData.all <- data.table::rbindlist(mutFiles)
+      mutData.all <- as.data.frame(mutData.all)
+      mutData.all <- unique(mutData.all)
+      # assign("mutData.all", mutData.all, envir = globalenv())
+    }
+    
+    mpfData <- mutData.all[, c("Chromosome", "Start_Position", "Match_Norm_Seq_Allele1", "Tumor_Seq_Allele2")]
+    mpfData <- data.frame("Patient", mpfData)
+    write.table(mpfData, fname, sep="\t", row.names=F, quote=F, col.names=F)
+  }
   
   # load the reference genome and the transcript annotation database
   refGenome <- BSgenome.Hsapiens.UCSC.hg38::BSgenome.Hsapiens.UCSC.hg38
