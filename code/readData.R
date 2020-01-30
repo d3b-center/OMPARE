@@ -40,36 +40,24 @@ readData <- function(topDir, fusion_method = c("star","arriba"), snv_pattern = "
     assign("mutData", mutData, envir = globalenv())
   } 
   
-  # also read mutect2 for all reports for TMB profile
-  somatic.mut.pattern <- '*.maf'
-  mutFiles <- list.files(path = topDir, pattern = somatic.mut.pattern, recursive = TRUE, full.names = T)
-  mutFiles <- grep("mutect2", mutFiles, value = TRUE)
-  if(length(mutFiles) >= 1){
-    mutFiles <- lapply(mutFiles, data.table::fread, skip = 1, stringsAsFactors = F)
-    mutect2Data <- data.table::rbindlist(mutFiles)
-    mutect2Data <- as.data.frame(mutect2Data)
-    mutect2Data <- unique(mutect2Data)
-    assign("mutect2Data", mutect2Data, envir = globalenv())
-  }
-  
-  # TMB scores
-  TMBFiles <- list.files(path = topDir, pattern = "TMB", recursive = T, full.names = T)
-  if(length(TMBFiles) == 2) {
-    pedTMB <- grep('TCGA', TMBFiles, invert = T, value = T)
-    pedTMB <- data.table::fread(pedTMB)
-    assign("pedTMB", pedTMB, envir = globalenv())
-    adultTMB <- grep('TCGA', TMBFiles, value = T)
-    adultTMB <- data.table::fread(adultTMB)
-    assign("adultTMB", adultTMB, envir = globalenv())
-  }
-  
-  # TMB bedfile
-  TMBFileBED <- list.files(path = topDir, pattern = ".bed$", recursive = T, full.names = T)
-  if(length(TMBFileBED) == 1) {
-    TMBFileBED <- data.table::fread(TMBFileBED)
-    colnames(TMBFileBED)  <- c("chr", "start", "end")
-    assign("TMBFileBED", TMBFileBED, envir = globalenv())
-  }
+  # # TMB scores
+  # TMBFiles <- list.files(path = topDir, pattern = "TMB", recursive = T, full.names = T)
+  # if(length(TMBFiles) == 2) {
+  #   pedTMB <- grep('TCGA', TMBFiles, invert = T, value = T)
+  #   pedTMB <- data.table::fread(pedTMB)
+  #   assign("pedTMB", pedTMB, envir = globalenv())
+  #   adultTMB <- grep('TCGA', TMBFiles, value = T)
+  #   adultTMB <- data.table::fread(adultTMB)
+  #   assign("adultTMB", adultTMB, envir = globalenv())
+  # }
+  # 
+  # # TMB bedfile
+  # TMBFileBED <- list.files(path = topDir, pattern = ".bed$", recursive = T, full.names = T)
+  # if(length(TMBFileBED) == 1) {
+  #   TMBFileBED <- data.table::fread(TMBFileBED)
+  #   colnames(TMBFileBED)  <- c("chr", "start", "end")
+  #   assign("TMBFileBED", TMBFileBED, envir = globalenv())
+  # }
   
   # germline data
   mutFiles <- list.files(path = topDir, pattern = 'hg38_multianno.txt.gz', recursive = TRUE, full.names = T)

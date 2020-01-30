@@ -28,6 +28,6 @@ for(i in 1:length(callers)) {
                                   fusion_method = 'arriba',
                                   set_title = 'PNOC008-02 Patient Report',
                                   snv_pattern = callers[i],
-                                  tmb = NULL),
+                                  tmb = 77.46),
                     output_file = outputfile)
 }
