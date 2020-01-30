@@ -19,6 +19,7 @@ exprdir <- paste0(topDir, 'ExpressionGene')
 fusionsdir <- paste0(topDir, 'Fusions')
 immunescores <- paste0(topDir, 'ImmuneScores')
 mutdir <- paste0(topDir, 'MutationsMAF')
+reports <- paste0(topDir, 'Reports')
 
 # create directories
 system(paste0('mkdir -p ', cnvdir))
@@ -27,6 +28,7 @@ system(paste0('mkdir -p ', exprdir))
 system(paste0('mkdir -p ', fusionsdir))
 system(paste0('mkdir -p ', immunescores))
 system(paste0('mkdir -p ', mutdir))
+system(paste0('mkdir -p ', reports))
 
 # organize data
 cmd <- paste0('mv ', topDir, '*CNVs* ', cnvdir)

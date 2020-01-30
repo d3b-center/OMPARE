@@ -41,7 +41,9 @@ suppressPackageStartupMessages(library(GenomicRanges))
 source('code/createCopyNumber.R')               
 source('code/filterDruggability.R')
 source('code/parseSurvival.R')
-source('code/germlineAnalysis.R')
+if(exists('mutData.germ')){
+  source('code/germlineAnalysis.R')
+}
 source('code/patientSampleInfo.R')              # load patient info
 source('code/pubTheme.R')                       # plot theme
 # source('code/load_reference.R')                 # load all reference data
@@ -71,7 +73,9 @@ source('code/highConfidenceFindingsTable.R')
 source('code/ImmuneProfile.R')
 
 # TMB Tumor Signatures P4
-source('code/tmbProfile.R')
+if(!is.null(tmb)){
+  source('code/tmbProfile.R')
+}
 source('code/tumorSignaturePlot.R')
 
 # Genomically Similar Samples P5

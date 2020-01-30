@@ -13,7 +13,7 @@ params:
   snv_pattern:
     value: NULL
   tmb:
-    value: 0
+    value: NULL
 editor_options: 
   chunk_output_type: console
 ---
@@ -113,10 +113,12 @@ if(nrow(dsi) > 0){
 ### Cancer Germline Variants
 
 ```{r}
-germlineOut <- germlineAnalysis()
-kable(germlineOut, format="html") %>%
+if(exists('mutData.germ')){
+  germlineOut <- germlineAnalysis()
+  kable(germlineOut, format="html") %>%
   kable_styling(bootstrap_options = c("bordered", "condensed", "responsive")) %>%
   column_spec(c(1), bold=T, border_left = "2px solid gray", border_right = "2px solid gray")
+}
 # gsub("<thead>.*</thead>", "", x2)
 ```
 
@@ -235,7 +237,9 @@ if(exists('mutData')){
 ### Tumor Mutational Burden
     
 ```{r fig.width = 11, fig.height=7}
-ggplotly(tmbProfile(TMB = tmb))
+if(!is.null(tmb)){
+  ggplotly(tmbProfile(TMB = tmb))  
+}
 ```
 
 Tumor Purity (P4)
