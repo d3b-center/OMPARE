@@ -2,10 +2,22 @@
 # TMB Profile
 ############################
 
-tmb.calculate <- function(myTMB = TMBFileBED, myMutData = mutect2Data) {
+tmb.calculate <- function(myTMB = TMBFileBED) {
+  
+  # read mutect2 for TMB profile
+  somatic.mut.pattern <- '*.maf'
+  mutFiles <- list.files(path = topDir, pattern = somatic.mut.pattern, recursive = TRUE, full.names = T)
+  mutFiles <- grep("mutect2", mutFiles, value = TRUE)
+  if(length(mutFiles) >= 1){
+    mutFiles <- lapply(mutFiles, data.table::fread, skip = 1, stringsAsFactors = F)
+    mutData.mutect2 <- data.table::rbindlist(mutFiles)
+    mutData.mutect2 <- as.data.frame(mutData.mutect2)
+    mutData.mutect2 <- unique(mutData.mutect2)
+    # assign("mutData.mutect2", mutData.mutect2, envir = globalenv())
+  }
   
   # filter to nonsense and missense
-  myMutData <- myMutData %>%
+  myMutData <- mutData.mutect2 %>%
     filter(Variant_Classification %in% c("Missense_Mutation", "Nonsense_Mutation")) %>%
     dplyr::select(Hugo_Symbol, Variant_Classification, Chromosome, Start_Position, End_Position)
   
