@@ -23,9 +23,9 @@ diseaseSpecificInformation <- function() {
     
     # Check everything
     getStatus <- function(x) {
-      tmpGenes <- x[[3]]
+      tmpGenes <- as.character(x[[3]])
       tmpGenes <- trimws(strsplit(tmpGenes, ",")[[1]])
-      tmpOut <- sapply(tmpGenes, FUN=grepl, x=tmpGeneFindings[,1])
+      tmpOut <- sapply(paste0('^', tmpGenes), FUN = grepl, x=tmpGeneFindings[,1])
       paste(paste(tmpGeneFindings[as.logical(rowSums(tmpOut)),1], ":", tmpGeneFindings[as.logical(rowSums(tmpOut)),2], sep=""), collapse=", ")
     }
     
