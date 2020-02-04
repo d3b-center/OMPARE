@@ -4,7 +4,11 @@
 
 filterMutations <- function(myMutData = mutData, myCancerGenes = cancerGenes) {
   mutDataFilt <- myMutData
-  keepVC <- c("Nonsense_Mutation", "Missense_Mutation", "Splice_Region", "3'UTR", "5'UTR", "In_Frame_Del")
+  keepVC <- c("Nonsense_Mutation", "Missense_Mutation", 
+              "Splice_Region", "Splice_Site",
+              "3'UTR", "5'UTR", 
+              "In_Frame_Ins", "In_Frame_Del",
+              "Frame_Shift_Ins", "Frame_Shift_Del")
   keepVI <- c("MODIFIER", "MODERATE", "HIGH")
   myCancerGenes <- as.character(myCancerGenes$Gene_Symbol)
   
