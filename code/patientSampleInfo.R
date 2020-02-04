@@ -10,8 +10,8 @@ lapply(colnames(sampleInfo), FUN = function(x) assign(x, sampleInfo[,x], envir =
 ##################
 
 #Get Patient Name
-getPatientName <- function() {
-  return(patientName)
+getPatientID <- function() {
+  return(KF_ParticipantID)
 }
 
 # Get Report Date
@@ -39,8 +39,8 @@ getSex <- function() {
 }
 
 # Get DOB
-getDOB <- function() {
-  return(dob)
+getAge <- function() {
+  return(age_years)
 }
 
 # Get ethnicity

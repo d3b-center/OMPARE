@@ -7,11 +7,22 @@ suppressPackageStartupMessages(library(GSEABase))
 suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(RDiseaseXpress))
 suppressPackageStartupMessages(library(xlsx))
+suppressPackageStartupMessages(library(optparse))
 
 # source code
 source('code/helper.R')
 
-topDir <- 'data/PNOC008-04/'
+option_list <- list(
+  make_option(c("-i", "--input"), type = "character",
+              help = "Directory e.g. data/PNOC008-04"),
+  make_option(c("-o", "--output"), type = "character", 
+              help = "output excel file with extension i.e. output.xlsx")
+)
+
+# load data
+opt <- parse_args(OptionParser(option_list = option_list))
+topDir <- opt$input
+fname <- opt$output
 
 # Dataset1: GTex Brain
 gtexData <- readRDS("data/Reference/GTEx/GTEx_fullExpr_matrix.RDS")
@@ -54,8 +65,16 @@ pbta.hist <- pbta.hist %>%
 pbta.hgg <- pbta.full[,colnames(pbta.full) %in% pbta.hist$Kids_First_Biospecimen_ID]
 
 # Cancer Genes
-cancerGenes <- read.delim("data/Reference/genelistreference.txt", stringsAsFactors = F)
-cancerGenes <- subset(cancerGenes, type == "TumorSuppressorGene" | type == "CosmicCensus" | type == "Oncogene")
+cancerGenes <- read.delim("data/Reference/CancerGeneList.tsv", stringsAsFactors = F)
+cancerGenes <- cancerGenes %>%
+  filter(Gene_Symbol != "") %>%
+  dplyr::select(-Count) %>%
+  gather(key = "file", value = "type", -Gene_Symbol) %>%
+  mutate(type = file)
+geneListRef <- read.delim("data/Reference/genelistreference.txt", stringsAsFactors = F)
+geneListRef <- subset(geneListRef, type == "TumorSuppressorGene" | type == "CosmicCensus" | type == "Oncogene")
+cancerGenes <- rbind(cancerGenes, geneListRef)
+rm(geneListRef)
 
 # Genesets
 hallMarkSets <- getGmt("data/Reference/mSigDB/h.all.v6.2.symbols.gmt", collectionType=BroadCollection(), geneIdType= SymbolIdentifier())
@@ -199,16 +218,16 @@ runRNASeqAnalysis <- function(expData = NULL, refData = gtexData, refAnnot = gte
   # up pathways
   upPathways <- funcEnrichment(upGenes, hallMarkSets, qval=1, myN=25000, myUniverse=rownames(mergeDF))
   upPathways <- upPathways %>%
+    mutate(Direction = "Up") %>%
     filter(P_VAL < 0.05) %>%
     arrange(P_VAL)
-  upPathways[,"Direction"] <- "Up"
   
   # down pathways
   downPathways <- funcEnrichment(downGenes, hallMarkSets, qval=1, myN=25000, myUniverse=rownames(mergeDF))
   downPathways <- downPathways %>%
+    mutate(Direction = "Down") %>%
     filter(P_VAL < 0.05) %>%
     arrange(P_VAL)
-  downPathways[,"Direction"] <- "Down"
   
   # full pathway dataframe
   pathway.df <- rbind(upPathways, downPathways)
@@ -222,18 +241,19 @@ runRNASeqAnalysis <- function(expData = NULL, refData = gtexData, refAnnot = gte
   
   # now for the full output.df, add drug info and pathway info
   output.df <- geneAnalysisOut$output.df
-  output.df$gene_name <- rownames(output.df)
+  output.df$Gene_name <- rownames(output.df)
   dgidb <- dgidb %>%
-    filter(interaction_types != "" & drug_name != "" & gene_name != "") %>%
-    dplyr::select(gene_name, drug_name) %>%
+    mutate(Gene_name = gene_name) %>%
+    filter(interaction_types != "" & drug_name != "" & Gene_name != "") %>%
+    dplyr::select(Gene_name, drug_name) %>%
     unique() %>%
-    group_by(gene_name) %>% 
+    group_by(Gene_name) %>% 
     dplyr::summarize(Drugs=paste(drug_name, collapse=", ")) %>%
     as.data.frame()
-  output.df <- merge(output.df, dgidb, by = 'gene_name', all.x = TRUE)
-  output.df <- merge(output.df, pathway.df.exp, by.x = 'gene_name', by.y = 'GENES', all.x = TRUE)
+  output.df <- merge(output.df, dgidb, by = 'Gene_name', all.x = TRUE)
+  output.df <- merge(output.df, pathway.df.exp, by.x = 'Gene_name', by.y = 'GENES', all.x = TRUE)
   output.df <- output.df %>%
-    group_by(gene_name) %>%
+    group_by(Gene_name) %>%
     mutate(Pathway = toString(Pathway)) %>%
     unique() %>%
     filter(DE != "")
@@ -243,10 +263,8 @@ runRNASeqAnalysis <- function(expData = NULL, refData = gtexData, refAnnot = gte
 }
 
 # output filename
-outdir <- paste0(topDir, "Summary")
-system(paste0('mkdir -p ', outdir))
-fname <- "PNOC008_04_summary.xlsx"
-fname <- paste0(outdir, "/", fname)
+outdir <- file.path(topDir, "Summary")
+fname <- file.path(outdir, fname)
 
 # summarize
 GTExBrain <- runRNASeqAnalysis(expData = expData, refData = gtexData, refAnnot = gtexGeneAnnot, comparison = paste0("GTExBrain_", ncol(gtexData)))
@@ -268,7 +286,7 @@ pathway.df.down <- pathway.df %>%
 
 genes.df <- rbind(GTExBrain$genes, PBTA_HGG$genes, PBTA_All$genes)
 genes.df <- genes.df %>%
-  group_by(gene_name, DE) %>%
+  group_by(Gene_name, DE) %>%
   mutate(Freq = n(), Drugs = replace_na(Drugs, "NA")) %>% 
   as.data.frame()
 genes.df.up <- genes.df %>%

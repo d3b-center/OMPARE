@@ -55,10 +55,10 @@ Row Page 1 {data-height=100}
 knitr::include_graphics("figures/d3b_Logo.png")
 ```   
  
-### Patient Name
+### Patient ID
     
 ```{r}
-cat(getPatientName());
+cat(getPatientID());
 ```
 
 ### Report Date
@@ -147,10 +147,10 @@ Row Page 2  {data-height=100}
 knitr::include_graphics("figures/d3b_Logo.png")
 ```   
  
-### Patient Name
+### Patient ID
     
 ```{r}
-cat(getPatientName());
+cat(getPatientID());
 ```
 
 ### Report Date
@@ -206,10 +206,10 @@ Row Page 3  {data-height=100}
 knitr::include_graphics("figures/d3b_Logo.png")
 ```   
  
-### Patient Name
+### Patient ID
     
 ```{r}
-cat(getPatientName());
+cat(getPatientID());
 ```
 
 ### Report Date
@@ -254,10 +254,10 @@ Row Page 4  {data-height=100}
 knitr::include_graphics("figures/d3b_Logo.png")
 ```   
  
-### Patient Name
+### Patient ID
     
 ```{r}
-cat(getPatientName());
+cat(getPatientID());
 ```
 
 ### Report Date
@@ -298,10 +298,10 @@ Row Page 5  {data-height=100}
 knitr::include_graphics("figures/d3b_Logo.png")
 ```   
  
-### Patient Name
+### Patient ID
     
 ```{r}
-cat(getPatientName());
+cat(getPatientID());
 ```
 
 ### Report Date
@@ -357,10 +357,10 @@ Row Page 6  {data-height=100}
 knitr::include_graphics("figures/d3b_Logo.png")
 ```   
  
-### Patient Name
+### Patient ID
     
 ```{r}
-cat(getPatientName());
+cat(getPatientID());
 ```
 
 ### Report Date
@@ -395,10 +395,10 @@ Row Page 7  {data-height=100}
 knitr::include_graphics("figures/d3b_Logo.png")
 ```   
  
-### Patient Name
+### Patient ID
     
 ```{r}
-cat(getPatientName());
+cat(getPatientID());
 ```
 
 ### Report Date
