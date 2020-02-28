@@ -42,17 +42,25 @@ Project Folder Organization
 2. Create project folder using the convention *OMPARE/data/subjectID*.
 3. Dump all downloaded data under the project folder.
 4. Run *create_project.R* script to create and organize project folder. This script will also create intermediate folders like *ImmuneScores* and output folders like *Reports* for .html reports and *Summary* for excel summary.
-5. Currently, *patient_report.txt* has to be created manually.
+5. *patient_report.txt* can either be created manually or using the *create_clinfile.R* script.
 
 .. code-block:: bash
 
-	# Run script
+	# Run script to organize files into corresponding folders
+	# this just needs one argument: path to project directory
+
 	Rscript create_project.R data/PNOC008-08/
 
+	# Run script to create clinical file
+	# -s is the env variable PNOC008_MANIFEST which is the link to the manifest on google sheets
+	# -p parameter should match the subjectID in the manifest so check that before running
+	# -d is the path to project directory
+
+	Rscript create_clinfile.R -s $PNOC008_MANIFEST -p PNOC008-8 -d data/PNOC008-08
 
 **Output files:**
 
-The above script should create a folder structure as shown below:
+The above scripts should create a folder structure as shown below:
 
 .. code-block:: bash
 
