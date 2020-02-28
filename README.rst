@@ -25,6 +25,17 @@ Prerequisites
 Project Folder Organization
 ===========================
 
+**Input files:**
+
+* Copy Number: CNV/\*.CNVs.p.value.txt (Optional)
+* Clinical: Clinical/patient_report.txt (Optional)
+* Expression: ExpressionGene/\*.genes.results (Optional)
+* Fusions: Fusions/\*.arriba.fusions.tsv (Optional)
+* Fusions: Fusions/\*.star-fusion.fusion_candidates.final (Optional)
+* Somatic Variants: MutationsMAF/\*.maf (Optional)
+* Germline Variants: MutationsMAF/\*.hg38_multianno.txt.gz (Optional)
+
+
 **Instructions:**
 	
 1. Clone this repo.
@@ -38,7 +49,13 @@ Project Folder Organization
 	# Run script
 	Rscript create_project.R data/PNOC008/
 
-	# This should create a folder structure as shown below:
+
+**Output files:**
+
+The above script should create a folder structure as shown below:
+
+.. code-block:: bash
+
 	tree data/PNOC008/
 	.
 	├── CNV
@@ -62,17 +79,6 @@ Project Folder Organization
 	└── Summary
 
 
-**Input files:**
-
-* Copy Number: CNV/\*.CNVs.p.value.txt (Optional)
-* Clinical: Clinical/patient_report.txt (Optional)
-* Expression: ExpressionGene/\*.genes.results (Optional)
-* Fusions: Fusions/\*.arriba.fusions.tsv (Optional)
-* Fusions: Fusions/\*.star-fusion.fusion_candidates.final (Optional)
-* Somatic Variants: MutationsMAF/\*.maf (Optional)
-* Germline Variants: MutationsMAF/\*.hg38_multianno.txt.gz (Optional)
-
-
 Report Generation
 =================
 
@@ -85,6 +91,9 @@ Report Generation
 - *tmb* (Tumor mutational burden) is set to 77.46.
   
 **NOTE**: Easiest way to run the report is the use the template below and just replace the `subjectID`.
+
+
+**Instructions:**
 
 .. code-block:: bash
 
