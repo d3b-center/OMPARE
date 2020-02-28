@@ -22,16 +22,16 @@ Prerequisites
 	# install packages
 	Rscript code/install_pkgs.R
 
-Input files
-===========
+Project Folder Organization
+===========================
 
-Instructions:
+**Instructions:**
 	
 1. Clone this repo.
-2. Create project folder using the convention `OMPARE/data/subjectID`.
+2. Create project folder using the convention *OMPARE/data/subjectID*.
 3. Dump all downloaded data under the project folder.
-4. Run `create_project.R` script to create and organize project folder. This script will also create intermediate folders like `ImmuneScores` and output folders like `Reports` for .html reports and `Summary` for excel summary.
-5. Currently, patient_report.txt has to be created manually.
+4. Run *create_project.R* script to create and organize project folder. This script will also create intermediate folders like *ImmuneScores* and output folders like *Reports* for .html reports and *Summary* for excel summary.
+5. Currently, *patient_report.txt* has to be created manually.
 
 .. code-block:: bash
 
@@ -62,27 +62,21 @@ Instructions:
 	└── Summary
 
 
-- Files provided by user (Input):
+**Input files:**
 
-    + CNV/\*.CNVs.p.value.txt (Optional)
-    + Clinical/patient_report.txt (Optional)
-    + ExpressionGene/\*.genes.results (Optional)
-    + Fusions/\*.arriba.fusions.tsv (Optional)
-    + Fusions/\*.star-fusion.fusion_candidates.final (Optional)
-    + MutationsMAF/\*.maf (Optional)
-    + MutationsMAF/\*.hg38_multianno.txt.gz (Optional)
+* Copy Number: CNV/\*.CNVs.p.value.txt (Optional)
+* Clinical: Clinical/patient_report.txt (Optional)
+* Expression: ExpressionGene/\*.genes.results (Optional)
+* Fusions: Fusions/\*.arriba.fusions.tsv (Optional)
+* Fusions: Fusions/\*.star-fusion.fusion_candidates.final (Optional)
+* Somatic Variants: MutationsMAF/\*.maf (Optional)
+* Germline Variants: MutationsMAF/\*.hg38_multianno.txt.gz (Optional)
 
-- Files created upon execution (Output):
-
-    + *tmpRCircos.png*. Requires Fusion data. 
-    + *ImmuneScores/rawScores.txt*. Requires Expression data.
-    + Reports/\*.html for each individual caller, consensus and all callers together.
-    + Summary/\*.excel summary report
 
 Report Generation
 =================
 
-Input Parameters: 
+**Input Parameters:** 
 
 - *topDir* is your project directory. (Required)
 - *fusion_method* is the fusion method. Allowed values: *star*, *arriba*, *both* or not specified. (Optional) 
@@ -112,3 +106,9 @@ Input Parameters:
 	system("Rscript code/tabulate_excel.R -i data/PNOC008-08 -o PNOC008-08_summary.xlsx")
 
 
+**Output files:**
+
+* tmpRCircos.png: Requires Fusion data. 
+* ImmuneScores/rawScores.txt: Requires Expression data.
+* Reports/\*.html for each individual caller, consensus and all callers together.
+* Summary/\*.excel summary report
