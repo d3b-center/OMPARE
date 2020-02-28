@@ -27,63 +27,88 @@ Input files
 
 Instructions:
 	
-- Create project folder under *data/*. 
-- Keep the subdirectory names and file extensions consistent.
-- Run script to create and organize project folder:
+1. Clone this repo.
+2. Create project folder using the convention `OMPARE/data/subjectID`.
+3. Dump all downloaded data under the project folder.
+4. Run `create_project.R` script to create and organize project folder. This script will also create intermediate folders like `ImmuneScores` and output folders like `Reports` for .html reports and `Summary` for excel summary.
+5. Currently, patient_report.txt has to be created manually.
 
 .. code-block:: bash
 
-	Rscript create_project.R <path to project directory with all files>
+	# Run script
+	Rscript create_project.R data/PNOC008/
 
 	# This should create a folder structure as shown below:
-
-	# Directory structure:
-	data/PNOC008
+	tree data/PNOC008/
+	.
 	├── CNV
-	│   └── 8a03c927-7f37-4605-ba6e-73a885cade6c.CNVs
+	│   └── f12011c0-2981-4d54-9678-79988d67ded8.controlfreec.CNVs.p.value.txt
 	├── Clinical
 	│   └── patient_report.txt
 	├── ExpressionGene
-	│   └── 7316-903_577716.genes.results
+	│   └── bf7cafc7-9f33-4d6a-a088-e1794a731232.rsem.genes.results.gz
 	├── Fusions
-	│   ├── 7316-535.local.transcript.converted.pe.star-fusion.fusion_candidates.final
-	│   └── eb06d52a-110b-4c0e-9e90-94ea68d2f698.arriba.fusions.tsv
+	│   ├── bf7cafc7-9f33-4d6a-a088-e1794a731232.STAR.fusion_predictions.abridged.coding_effect.tsv
+	│   └── bf7cafc7-9f33-4d6a-a088-e1794a731232.arriba.fusions.tsv
 	├── ImmuneScores
-	│   └── rawScores.txt
 	├── MutationsMAF
-	│   ├── 5c3eace5-950a-4a05-81ed-5c04b4a0a367.strelka.vep.maf
-	│   ├── 8a03c927-7f37-4605-ba6e-73a885cade6c.strelka.vep.maf
-	│   └── ae4ce725-d3c4-455d-822e-6c5067444b5e.strelka.vep.maf
-	└── tmpRCircos.png
+	│   ├── 5681def8-e594-4866-b612-26ad07a8f20b.gatk.hardfiltered.PASS.vcf.gz.hg38_multianno.txt.gz
+	│   ├── bf2a2a9f-0251-4017-aaeb-0c3b97690273.consensus_somatic.vep.maf
+	│   ├── f12011c0-2981-4d54-9678-79988d67ded8.lancet_somatic.vep.maf
+	│   ├── f12011c0-2981-4d54-9678-79988d67ded8.mutect2_somatic.vep.maf
+	│   ├── f12011c0-2981-4d54-9678-79988d67ded8.strelka2_somatic.vep.maf
+	│   ├── f12011c0-2981-4d54-9678-79988d67ded8.vardict_somatic.vep.maf
+	├── Reports
+	└── Summary
 
-- Files provided by user:
 
-    + CNV/\*.CNVs (Optional)
+- Files provided by user (Input):
+
+    + CNV/\*.CNVs.p.value.txt (Optional)
     + Clinical/patient_report.txt (Optional)
     + ExpressionGene/\*.genes.results (Optional)
     + Fusions/\*.arriba.fusions.tsv (Optional)
     + Fusions/\*.star-fusion.fusion_candidates.final (Optional)
     + MutationsMAF/\*.maf (Optional)
+    + MutationsMAF/\*.hg38_multianno.txt.gz (Optional)
 
-- Files created upon execution:
+- Files created upon execution (Output):
 
     + *tmpRCircos.png*. Requires Fusion data. 
     + *ImmuneScores/rawScores.txt*. Requires Expression data.
+    + Reports/\*.html for each individual caller, consensus and all callers together.
+    + Summary/\*.excel summary report
 
-Running the code
-================
+Report Generation
+=================
 
 Input Parameters: 
 
 - *topDir* is your project directory. (Required)
 - *fusion_method* is the fusion method. Allowed values: *star*, *arriba*, *both* or not specified. (Optional) 
 - *set_title* is the title for the report. (Optional)
+- *snv_pattern* is one of the six values for simple variants: *lancet*, *mutect2*, *strelka2*, *vardict*, *consensus*, *all* (all four callers together)
+- *tmb* (Tumor mutational burden) is set to 77.46.
+  
+**NOTE**: Easiest way to run the report is the use the template below and just replace the `subjectID`.
 
 .. code-block:: bash
 
-	# run with custom parameter values
-	rmarkdown::render(input = 'OMPARE.Rmd', 
-                  	  params = list(topDir = 'data/PNOC008/', 
-                  	  fusion_method = 'arriba',
-                  	  set_title = 'PNOC008 Report'))
+	# e.g. of run using PNOC008-08
+	setwd('/path/to/OMPARE/')
+	# reports
+	callers <- c("lancet", "mutect2", "strelka2", "vardict", "consensus", "all")
+	for(i in 1:length(callers)) {
+	  outputfile <- paste0("data/PNOC008-08/Reports/PNOC008_08_", callers[i], ".html")
+	  rmarkdown::render(input = 'OMPARE.Rmd', 
+	                    params = list(topDir = 'data/PNOC008-08/',
+	                                  fusion_method = 'arriba',
+	                                  set_title = 'PNOC008-08 Patient Report',
+	                                  snv_pattern = callers[i],
+	                                  tmb = 77.46),
+	                    output_file = outputfile)
+	}
+	# summary
+	system("Rscript code/tabulate_excel.R -i data/PNOC008-08 -o PNOC008-08_summary.xlsx")
+
 

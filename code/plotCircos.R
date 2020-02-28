@@ -47,7 +47,7 @@ plotCircos <- function(topDir = topDir) {
   colnames(RCircos.Heatmap.Data) <- c("GeneName", "chromStart", "chromEnd", "Chromosome", "Expression")
   RCircos.Heatmap.Data <- RCircos.Heatmap.Data[!grepl("CHR_", RCircos.Heatmap.Data[,4]), ]
   RCircos.Heatmap.Data <- RCircos.Heatmap.Data[!grepl("MT", RCircos.Heatmap.Data[,4]), ]
-  RCircos.Heatmap.Data[,4] <- paste("chr", RCircos.Heatmap.Data[,4], sep="")
+  RCircos.Heatmap.Data$Chromosome <- paste("chr", RCircos.Heatmap.Data$Chromosome, sep="")
   RCircos.Heatmap.Data <- RCircos.Heatmap.Data[,c("Chromosome", "chromStart", "chromEnd", "GeneName", "Expression")]
   data.col <- 5
   track.num <- 4
@@ -83,14 +83,15 @@ plotCircos <- function(topDir = topDir) {
   
   if(nrow(myFus) > 0){
     RCircos.Link.Data.tmp <- chrMap[chrMap[,1] %in% myFus[,"HeadGene"],];
+    RCircos.Link.Data.tmp <- RCircos.Link.Data.tmp[grep("CHR", RCircos.Link.Data.tmp$Chromosome.scaffold.name, invert = TRUE),]
     RCircos.Link.Data.tmp <- merge(myFus, chrMap, by.x="HeadGene", by.y="HGNC.symbol");
     RCircos.Link.Data.tmp <- merge(RCircos.Link.Data.tmp, chrMap, by.x="TailGene", by.y="HGNC.symbol");  
     RCircos.Link.Data.tmp[,"Chromosome.scaffold.name.y"] <- paste("chr", RCircos.Link.Data.tmp[,"Chromosome.scaffold.name.y"], sep="");
     RCircos.Link.Data.tmp[,"Chromosome.scaffold.name.x"] <- paste("chr", RCircos.Link.Data.tmp[,"Chromosome.scaffold.name.x"], sep="");
     
     # Remove unwanted chromosomes
-    RCircos.Link.Data.tmp <- RCircos.Link.Data.tmp[!grepl("CTG3_1", RCircos.Link.Data.tmp[,"Chromosome.scaffold.name.x"]),]
-    RCircos.Link.Data.tmp <- RCircos.Link.Data.tmp[!grepl("CTG3_1", RCircos.Link.Data.tmp[,"Chromosome.scaffold.name.y"]),]
+    RCircos.Link.Data.tmp <- RCircos.Link.Data.tmp[!grepl("CTG", RCircos.Link.Data.tmp[,"Chromosome.scaffold.name.x"]),]
+    RCircos.Link.Data.tmp <- RCircos.Link.Data.tmp[!grepl("CTG", RCircos.Link.Data.tmp[,"Chromosome.scaffold.name.y"]),]
     RCircos.Link.Data.tmp <- RCircos.Link.Data.tmp[,c("X.fusion_name", "HeadGene",
                                                       "Gene.start..bp..x","Gene.end..bp..x", "Chromosome.scaffold.name.x",
                                                       "TailGene", "Gene.start..bp..y","Gene.end..bp..y", "Chromosome.scaffold.name.y")]

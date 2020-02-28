@@ -43,6 +43,7 @@ cmd <- paste0('mv ', topDir, '*fusion* ', fusionsdir)
 system(cmd)
 cmd <- paste0('mv ', topDir, '*.maf ', mutdir)
 system(cmd)
-
+cmd <- paste0('mv ', topDir, '*.hg38_multianno.txt.gz ', mutdir)
+system(cmd)
 
 

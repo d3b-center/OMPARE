@@ -115,9 +115,11 @@ if(nrow(dsi) > 0){
 ```{r}
 if(exists('mutData.germ')){
   germlineOut <- germlineAnalysis()
-  kable(germlineOut, format="html") %>%
-  kable_styling(bootstrap_options = c("bordered", "condensed", "responsive")) %>%
-  column_spec(c(1), bold=T, border_left = "2px solid gray", border_right = "2px solid gray")
+  if(nrow(germlineOut) >= 1){
+    kable(germlineOut, format="html") %>%
+      kable_styling(bootstrap_options = c("bordered", "condensed", "responsive")) %>%
+      column_spec(c(1), bold=T, border_left = "2px solid gray", border_right = "2px solid gray")
+  }
 }
 # gsub("<thead>.*</thead>", "", x2)
 ```
