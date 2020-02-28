@@ -47,7 +47,7 @@ Project Folder Organization
 .. code-block:: bash
 
 	# Run script
-	Rscript create_project.R data/PNOC008/
+	Rscript create_project.R data/PNOC008-08/
 
 
 **Output files:**
@@ -56,7 +56,7 @@ The above script should create a folder structure as shown below:
 
 .. code-block:: bash
 
-	tree data/PNOC008/
+	tree data/PNOC008-08/
 	.
 	├── CNV
 	│   └── f12011c0-2981-4d54-9678-79988d67ded8.controlfreec.CNVs.p.value.txt
@@ -117,7 +117,45 @@ Report Generation
 
 **Output files:**
 
+These are some intermediate and final files created after running the code:
+
 * tmpRCircos.png: Requires Fusion data. 
 * ImmuneScores/rawScores.txt: Requires Expression data.
 * Reports/\*.html for each individual caller, consensus and all callers together.
-* Summary/\*.excel summary report
+* Summary/\*.excel summary report.
+
+The project folder will look like this:
+
+.. code-block:: bash
+
+	tree data/PNOC008-08/
+	.
+	├── CNV
+	│   └── f12011c0-2981-4d54-9678-79988d67ded8.controlfreec.CNVs.p.value.txt
+	├── Clinical
+	│   └── patient_report.txt
+	├── ExpressionGene
+	│   └── bf7cafc7-9f33-4d6a-a088-e1794a731232.rsem.genes.results.gz
+	├── Fusions
+	│   ├── bf7cafc7-9f33-4d6a-a088-e1794a731232.STAR.fusion_predictions.abridged.coding_effect.tsv
+	│   └── bf7cafc7-9f33-4d6a-a088-e1794a731232.arriba.fusions.tsv
+	├── ImmuneScores
+	│   └── rawScores.txt
+	├── MutationsMAF
+	│   ├── 5681def8-e594-4866-b612-26ad07a8f20b.gatk.hardfiltered.PASS.vcf.gz.hg38_multianno.txt.gz
+	│   ├── bf2a2a9f-0251-4017-aaeb-0c3b97690273.consensus_somatic.vep.maf
+	│   ├── f12011c0-2981-4d54-9678-79988d67ded8.lancet_somatic.vep.maf
+	│   ├── f12011c0-2981-4d54-9678-79988d67ded8.mutect2_somatic.vep.maf
+	│   ├── f12011c0-2981-4d54-9678-79988d67ded8.strelka2_somatic.vep.maf
+	│   ├── f12011c0-2981-4d54-9678-79988d67ded8.vardict_somatic.vep.maf
+	│   └── mpfDataFormat.txt
+	├── Reports
+	│   ├── PNOC008_08_all.html
+	│   ├── PNOC008_08_consensus.html
+	│   ├── PNOC008_08_lancet.html
+	│   ├── PNOC008_08_mutect2.html
+	│   ├── PNOC008_08_strelka2.html
+	│   └── PNOC008_08_vardict.html
+	└── Summary
+	    └── PNOC008-08_summary.xlsx
+
