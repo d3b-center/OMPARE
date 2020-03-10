@@ -81,30 +81,34 @@ plotCircos <- function(topDir = topDir) {
   myFus <- myFus[!grepl(",", myFus[,"TailGene"]),] # remove intergenic fusions from arriba
   myFus <- myFus[!grepl(",", myFus[,"HeadGene"]),] # remove intergenic fusions from arriba
   
-  if(nrow(myFus) > 0){
-    RCircos.Link.Data.tmp <- chrMap[chrMap[,1] %in% myFus[,"HeadGene"],];
-    RCircos.Link.Data.tmp <- RCircos.Link.Data.tmp[grep("CHR", RCircos.Link.Data.tmp$Chromosome.scaffold.name, invert = TRUE),]
-    RCircos.Link.Data.tmp <- merge(myFus, chrMap, by.x="HeadGene", by.y="HGNC.symbol");
-    RCircos.Link.Data.tmp <- merge(RCircos.Link.Data.tmp, chrMap, by.x="TailGene", by.y="HGNC.symbol");  
-    RCircos.Link.Data.tmp[,"Chromosome.scaffold.name.y"] <- paste("chr", RCircos.Link.Data.tmp[,"Chromosome.scaffold.name.y"], sep="");
-    RCircos.Link.Data.tmp[,"Chromosome.scaffold.name.x"] <- paste("chr", RCircos.Link.Data.tmp[,"Chromosome.scaffold.name.x"], sep="");
-    
-    # Remove unwanted chromosomes
-    RCircos.Link.Data.tmp <- RCircos.Link.Data.tmp[!grepl("CTG", RCircos.Link.Data.tmp[,"Chromosome.scaffold.name.x"]),]
-    RCircos.Link.Data.tmp <- RCircos.Link.Data.tmp[!grepl("CTG", RCircos.Link.Data.tmp[,"Chromosome.scaffold.name.y"]),]
-    RCircos.Link.Data.tmp <- RCircos.Link.Data.tmp[,c("X.fusion_name", "HeadGene",
-                                                      "Gene.start..bp..x","Gene.end..bp..x", "Chromosome.scaffold.name.x",
-                                                      "TailGene", "Gene.start..bp..y","Gene.end..bp..y", "Chromosome.scaffold.name.y")]
-    RCircos.Link.Data.tmp <- unique(RCircos.Link.Data.tmp);
-    RCircos.Link.Data <- RCircos.Link.Data.tmp[,c("Chromosome.scaffold.name.x", "Gene.start..bp..x", "Gene.end..bp..x",
-                                                  "Chromosome.scaffold.name.y", "Gene.start..bp..y", "Gene.end..bp..y")]
-    track.num <- 12;
-    RCircos.Link.Plot(RCircos.Link.Data, track.num, TRUE);
-    RCircos.Link.Data.tmp.h <- RCircos.Link.Data.tmp[,c("Chromosome.scaffold.name.x", "Gene.start..bp..x", "Gene.end..bp..x", "HeadGene")]
-    RCircos.Link.Data.tmp.t <- RCircos.Link.Data.tmp[,c("Chromosome.scaffold.name.y", "Gene.start..bp..y", "Gene.end..bp..y", "TailGene")]
-    colnames(RCircos.Link.Data.tmp.h) <- c("Chromosome.scaffold.name", "Gene.start..bp", "Gene.end..bp", "Gene");
-    colnames(RCircos.Link.Data.tmp.t) <- c("Chromosome.scaffold.name", "Gene.start..bp", "Gene.end..bp", "Gene");
-    RCircos.Gene.Name.Plot(rbind(RCircos.Link.Data.tmp.h, RCircos.Link.Data.tmp.t), 4,9, inside.pos=50);
+  if(length(grep(myFus$HeadGene, chrMap$HGNC.symbol) == 0) |
+    length(grep(myFus$TailGene, chrMap$HGNC.symbol) == 0)) {
+  } else {
+    if(nrow(myFus) > 0){
+      RCircos.Link.Data.tmp <- chrMap[chrMap[,1] %in% myFus[,"HeadGene"],];
+      RCircos.Link.Data.tmp <- RCircos.Link.Data.tmp[grep("CHR", RCircos.Link.Data.tmp$Chromosome.scaffold.name, invert = TRUE),]
+      RCircos.Link.Data.tmp <- merge(myFus, chrMap, by.x="HeadGene", by.y="HGNC.symbol");
+      RCircos.Link.Data.tmp <- merge(RCircos.Link.Data.tmp, chrMap, by.x="TailGene", by.y="HGNC.symbol");  
+      RCircos.Link.Data.tmp[,"Chromosome.scaffold.name.y"] <- paste("chr", RCircos.Link.Data.tmp[,"Chromosome.scaffold.name.y"], sep="");
+      RCircos.Link.Data.tmp[,"Chromosome.scaffold.name.x"] <- paste("chr", RCircos.Link.Data.tmp[,"Chromosome.scaffold.name.x"], sep="");
+      
+      # Remove unwanted chromosomes
+      RCircos.Link.Data.tmp <- RCircos.Link.Data.tmp[!grepl("CTG", RCircos.Link.Data.tmp[,"Chromosome.scaffold.name.x"]),]
+      RCircos.Link.Data.tmp <- RCircos.Link.Data.tmp[!grepl("CTG", RCircos.Link.Data.tmp[,"Chromosome.scaffold.name.y"]),]
+      RCircos.Link.Data.tmp <- RCircos.Link.Data.tmp[,c("X.fusion_name", "HeadGene",
+                                                        "Gene.start..bp..x","Gene.end..bp..x", "Chromosome.scaffold.name.x",
+                                                        "TailGene", "Gene.start..bp..y","Gene.end..bp..y", "Chromosome.scaffold.name.y")]
+      RCircos.Link.Data.tmp <- unique(RCircos.Link.Data.tmp);
+      RCircos.Link.Data <- RCircos.Link.Data.tmp[,c("Chromosome.scaffold.name.x", "Gene.start..bp..x", "Gene.end..bp..x",
+                                                    "Chromosome.scaffold.name.y", "Gene.start..bp..y", "Gene.end..bp..y")]
+      track.num <- 12;
+      RCircos.Link.Plot(RCircos.Link.Data, track.num, TRUE);
+      RCircos.Link.Data.tmp.h <- RCircos.Link.Data.tmp[,c("Chromosome.scaffold.name.x", "Gene.start..bp..x", "Gene.end..bp..x", "HeadGene")]
+      RCircos.Link.Data.tmp.t <- RCircos.Link.Data.tmp[,c("Chromosome.scaffold.name.y", "Gene.start..bp..y", "Gene.end..bp..y", "TailGene")]
+      colnames(RCircos.Link.Data.tmp.h) <- c("Chromosome.scaffold.name", "Gene.start..bp", "Gene.end..bp", "Gene");
+      colnames(RCircos.Link.Data.tmp.t) <- c("Chromosome.scaffold.name", "Gene.start..bp", "Gene.end..bp", "Gene");
+      RCircos.Gene.Name.Plot(rbind(RCircos.Link.Data.tmp.h, RCircos.Link.Data.tmp.t), 4,9, inside.pos=50);
+    }
   }
   
   dev.off()

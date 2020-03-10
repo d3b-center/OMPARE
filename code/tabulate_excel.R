@@ -61,7 +61,7 @@ pbta.full <- pbta.full[-1]
 
 # Dataset3: PBTA (HGG)
 pbta.hist <- pbta.hist %>%
-  filter(disease_type_new == "High-grade glioma")
+  filter(integrated_diagnosis == "High-grade glioma")
 pbta.hgg <- pbta.full[,colnames(pbta.full) %in% pbta.hist$Kids_First_Biospecimen_ID]
 
 # Cancer Genes
