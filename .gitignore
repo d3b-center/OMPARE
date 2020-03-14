@@ -4,7 +4,6 @@
 .Ruserdata
 data/*
 !data/Reference
-data/Reference/cbttc_genes_fpkm_1110.RData
 data/Reference/GTEx/GTEx_fullExpr_matrix.RDS
 data/Reference/GTEx/GTEx_matrix.RDS
 data/Reference/pbta-histologies.tsv
@@ -12,10 +11,5 @@ data/Reference/pbta-gene-expression-rsem-fpkm-collapsed.stranded.rds
 figures/*
 *.html
 .httr-oauth
-code/parseSurvival.R
 code/create_gtex_matrix.R
-data/Reference/cbttc_genes_fpkm_1110.RData
-data/Reference/mappingFile.txt
-data/Reference/study_view_clinical_data.txt
-data/Reference/CBTTC_PullApril21.txt
-data/Reference/survData.txt
+Archive/*
