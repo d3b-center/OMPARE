@@ -5,8 +5,7 @@
 getSimilarPatients <- function(numNeighbors=15) {
   if(exists('expData')){
     mySamps <- allCor[1:numNeighbors,"samps"]
-    clinDataTmp <- clinDataOrig[clinDataOrig[,"V2"] %in% mySamps,]
-    clinDataTmp <- clinDataTmp[,c("Sample.ID", "Cancer.Type", "AGE", "ETHNICITY", "RACE", "TUMOR_SITE")]
+    clinDataTmp <- clinData.full[clinData.full$Kids_First_Biospecimen_ID %in% mySamps,]
   } else {
     clinDataTmp <- data.frame()
   }

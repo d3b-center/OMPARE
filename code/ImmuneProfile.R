@@ -7,24 +7,6 @@ calc.immune.scores <- function(fname){
   dir <- paste0(topDir,'/ImmuneScores')
   cmd <- paste0("mkdir -p ", dir)
   system(cmd)
-  
-  # resAll <- res
-  # print(head(resAll)[1:4])
-  rownames(resAll) <- resAll[,1]
-  combGenes <- intersect(rownames(resAll), rownames(expData))
-  resAll <- cbind(resAll[combGenes,], expData[combGenes,"FPKM"])
-  colnames(resAll)[ncol(resAll)] <- "PatSample"
-  resAll[,"max"] <- apply(resAll[3:ncol(resAll)], FUN=max, MARGIN=1)
-  resAll <- resAll[order(-resAll[,"max"]),]
-  resAll <- resAll[!duplicated(resAll[,2]),]
-  rownames(resAll) <- resAll[,2]
-  resAll <- resAll[-1:-2]
-  resAll <- resAll[-ncol(resAll)]
-  # raw.scores <- quietly(rawEnrichmentAnalysis(as.matrix(resAll),
-  #                                     xCell.data$signatures,
-  #                                     xCell.data$genes))
-  # raw.scores[,"CellType"] <- rownames(raw.scores)
-  # write.table(raw.scores, fname, quote = F, sep = "\t", row.names = F)
   raw.scores <- capture.output(rawEnrichmentAnalysis(as.matrix(resAll),
                                               xCell.data$signatures,
                                               xCell.data$genes, file.name = fname, 

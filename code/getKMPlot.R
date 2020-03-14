@@ -1,9 +1,9 @@
 getKMPlot <- function(numNeighbors=15) {
   mySamps <- allCor[1:numNeighbors,"samps"]
-  survData[,"group"] <- survData[,"samps"]%in%mySamps
+  survData[,"group"] <- survData$Kids_First_Biospecimen_ID %in% mySamps
   survData[,"group"] <- ifelse(survData[,"group"], "Cluster With Patient", "Cluster away from Patient")
   survData <- survData[survData[,1]%in%rownames(allCor),]
-  fit <- survfit(Surv(OS_Time, OS_Event) ~ group, data = survData)
+  fit <- survfit(Surv(OS_days, OS_status) ~ group, data = survData)
   ggsurvplot(
     fit,                     # survfit object with calculated statistics.
     data = survData,  # data used to fit survival curves. 

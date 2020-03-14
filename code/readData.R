@@ -110,11 +110,16 @@ readData <- function(topDir, fusion_method = c("star","arriba"), snv_pattern = "
   expDat <- list.files(path = topDir, pattern = "*.genes.results*", recursive = TRUE, full.names = T)
   if(length(expDat) == 1){
     expData <- read.delim(expDat)
-    expData[,"gene_id"] <- sapply(as.character(expData[,1]), FUN = getEns)
-    expData <- expData[order(-expData[,"FPKM"]),]
-    expData <- expData[!duplicated(expData[,1]),]
-    expData[,1] <- sapply(as.character(expData[,1]), FUN = remDotStuff)
-    rownames(expData) <- expData[,1]
+    expData <- expData %>% 
+      mutate(gene_id = str_replace(gene_id, "_PAR_Y_", "_"))  %>%
+      separate(gene_id, c("gene_id", "gene_symbol"), sep = "\\_", extra = "merge") %>%
+      unique()
+    expData <- expData %>% 
+      arrange(desc(FPKM)) %>% 
+      distinct(gene_symbol, .keep_all = TRUE) %>%
+      mutate(!!sampleInfo$subjectID := FPKM) %>%
+      dplyr::select(!!sampleInfo$subjectID, gene_id, gene_symbol) 
+    rownames(expData) <- expData$gene_symbol
     assign("expData", expData, envir = globalenv())
   }
 }

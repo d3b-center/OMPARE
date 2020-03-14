@@ -3,8 +3,7 @@
 #########################
 
 # GTEx (7859 samples)
-gtexData <- readRDS("data/Reference/GTEx/GTEx_fullExpr_matrix.RDS")
-gtexGeneAnnot <- read.delim("data/Reference/GTEx/gencode.v23.annotation.gi_ti_gs.txt", stringsAsFactors =F)
+gtexData <- readRDS("data/Reference/GTEx/GTEx_matrix.RDS")
 
 # Cancer Genes
 cancerGenes <- read.delim("data/Reference/CancerGeneList.tsv", stringsAsFactors = F)
@@ -25,18 +24,15 @@ diseaseSpecificFields <- read.delim("data/Reference/DiseaseSpecificFields.txt")
 hallMarkSets <- getGmt("data/Reference/mSigDB/h.all.v6.2.symbols.gmt", collectionType=BroadCollection(), geneIdType= SymbolIdentifier())
 hallMarkSets <- geneIds(hallMarkSets)
 hallMarkSetsTS <- stack(hallMarkSets)
-load("data/Reference/cbttc_genes_fpkm_1110.RData")
-res[,1] <- sapply(as.character(res[,1]), FUN=remDotStuff)
-mapping <- read.delim("data/Reference/mappingFile.txt", header=F, stringsAsFactors=F)
-clinData <- read.delim("data/Reference/study_view_clinical_data.txt", stringsAsFactors=F)
-if(!file.exists('data/Reference/survData.txt')){
-  formatData <- parseSurvival()
-  write.table(formatData, "data/Reference/survData.txt", row.names=F, sep="\t")
-} 
-survData <- read.delim("data/Reference/survData.txt", stringsAsFactors=F)
+res <- readRDS('data/Reference/pbta-gene-expression-rsem-fpkm-collapsed.stranded.rds')
+clinData <- read.delim("data/Reference/pbta-histologies.tsv", stringsAsFactors = F)
+survData <- clinData %>% 
+  filter(experimental_strategy == "RNA-Seq") %>%
+  dplyr::select(Kids_First_Biospecimen_ID, sample_id, OS_days, OS_status) %>%
+  filter(!is.na(OS_status)) %>%
+  mutate(OS_status = ifelse(OS_status == "DECEASED", 1, 0))
 signatures <- readAlexandrovSignatures("data/Reference/signatures_probabilities.txt")
 dgidb <- read.delim("data/Reference/DGIdb.txt", stringsAsFactors = F)
-rawSurvData <- read.delim("data/Reference/CBTTC_PullApril21.txt", stringsAsFactors = F)
 
 # Germline
 pharmacogenomics.genes <- read.delim("data/Reference/Pharmacogenomics_Genes.list", stringsAsFactors = F, header = F)

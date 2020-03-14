@@ -7,35 +7,20 @@ suppressPackageStartupMessages(library(GSVA))
 suppressPackageStartupMessages(library(GSEABase))
 
 runRNASeqAnalysis <- function(expData = NULL) {
-  
-  # Format gtex data ensembl ids
-  gtexData$gene_id <- sapply(as.character(gtexData$gene_id), FUN=remDotStuff)
-  rownames(gtexData) <- gtexData$gene_id
-  gtexData <- gtexData[-1]
 
   # Merge GTEx and Patient data on common genes
   intGenesTmp <- intersect(rownames(gtexData), rownames(expData))
-  mergeDF <- cbind(gtexData[intGenesTmp,], expData[intGenesTmp,"FPKM"])
-
-  # Collapse to unique gene symbols
-  # Matrix of GTEx and Patient FPKM data
-  gtexGeneAnnot <- unique(gtexGeneAnnot[c("gene_id","gene_symbol")])
-  gtexGeneAnnot$gene_id <- sapply(as.character(gtexGeneAnnot$gene_id), FUN=remDotStuff)
-  rownames(gtexGeneAnnot) <- gtexGeneAnnot$gene_id
-  mergeDF <- cbind(gtexGeneAnnot[rownames(mergeDF),2], mergeDF)
-  mergeDF[,"meanExp"] <- rowMeans(mergeDF[-1]) 
-  mergeDF <- mergeDF[order(-mergeDF[,"meanExp"]),]
-  mergeDF <- mergeDF[!duplicated(mergeDF[,1]),]
-  rownames(mergeDF) <- mergeDF[,1] 
-  mergeDF <- mergeDF[-1]
-  mergeDF <- mergeDF[-ncol(mergeDF)] 
-  colnames(mergeDF)[ncol(mergeDF)] <- "SampleX"
+  mergeDF <- gtexData %>%
+    rownames_to_column("gene_symbol") %>%
+    inner_join(expData, by = "gene_symbol") %>%
+    dplyr::select(-c("gene_id")) %>%
+    column_to_rownames("gene_symbol")
 
   # Calculate Gene Outliers in Patient (top 20 Up and Down)
-  getAllOutliers <- function(myMergeDF = mergeDF, getTop = 20, cancerGeneNames = cancerGenes$Gene_Symbol) {
+  getAllOutliers <- function(id = sampleInfo$subjectID, myMergeDF = mergeDF, getTop = 20, cancerGeneNames = cancerGenes$Gene_Symbol) {
     
     # Filter in Patient: FPKM > 10 
-    myMergeDF <- myMergeDF[myMergeDF$SampleX > 10,]
+    myMergeDF <- myMergeDF[myMergeDF[,id] > 10,]
     
     # z-score and return only patient's value
     getZ <- function(x) {
@@ -48,9 +33,9 @@ runRNASeqAnalysis <- function(expData = NULL) {
     outputDown <- sort(outputCanc)[1:getTop] # top 20 down
     outputUp <- sort(outputCanc, T)[1:getTop] # top 20 up
     
-    outputUpDF <- data.frame(outputUp, myMergeDF[names(outputUp),"SampleX"])
+    outputUpDF <- data.frame(outputUp, myMergeDF[names(outputUp),id])
     colnames(outputUpDF) <- c("Z_Score", "FPKM")
-    outputDownDF <- data.frame(outputDown, myMergeDF[names(outputDown),"SampleX"])
+    outputDownDF <- data.frame(outputDown, myMergeDF[names(outputDown),id])
     colnames(outputDownDF) <- c("Z_Score", "FPKM")
     
     return(list(output, rbind(outputUpDF, outputDownDF)))
@@ -131,6 +116,6 @@ runRNASeqAnalysis <- function(expData = NULL) {
   finalOut <- list()
   finalOut$geneAnalysis <- geneAnalysisOut
   finalOut$pathwayAnalysis <- pathwayAnalysisOut
-  finalOut$FPKM <- mergeDF["SampleX"]
+  finalOut$FPKM <- mergeDF[sampleInfo$subjectID]
   return(finalOut)
 }
