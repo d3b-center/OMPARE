@@ -40,7 +40,6 @@ suppressPackageStartupMessages(library(GenomicRanges))
 # source('code/helper.R')                         # load misc functions
 source('code/createCopyNumber.R')               
 source('code/filterDruggability.R')
-source('code/parseSurvival.R')
 if(exists('mutData.germ')){
   source('code/germlineAnalysis.R')
 }

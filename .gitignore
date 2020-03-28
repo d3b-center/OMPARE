@@ -13,3 +13,5 @@ figures/*
 .httr-oauth
 code/create_gtex_matrix.R
 Archive/*
+code/makeGraph.R
+code/makeGraph_genome.R

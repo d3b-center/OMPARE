@@ -86,6 +86,14 @@ readData <- function(topDir, fusion_method = c("star","arriba"), snv_pattern = "
     }
   }
   
+  # copy number ratio data for plot
+  cnvRatioData <- list.files(path = topDir, pattern = "*controlfreec.ratio.txt$", recursive = TRUE, full.names = T)
+  if(length(cnvRatioData) == 1){
+    cnvRatioData <- data.table::fread(cnvRatioData, header = T)
+    cnvRatioData <- as.data.frame(cnvRatioData)
+    assign("cnvRatioData", cnvRatioData, envir = globalenv())
+  }
+  
   # fusion data (chose either star or arriba or both)
   # fusion_method determines the pattern to be searched
   if(fusion_method == "star"){
