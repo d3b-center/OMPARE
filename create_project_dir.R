@@ -13,14 +13,14 @@ if (length(args)!=1) {
 topDir <- args[1]
 
 # specify directories
-cnvdir <- paste0(topDir, 'CNV')
-clinicaldir <- paste0(topDir, 'Clinical')
-exprdir <- paste0(topDir, 'ExpressionGene')
-fusionsdir <- paste0(topDir, 'Fusions')
-immunescores <- paste0(topDir, 'ImmuneScores')
-mutdir <- paste0(topDir, 'MutationsMAF')
-reports <- paste0(topDir, 'Reports')
-summary <- paste0(topDir, 'Summary')
+cnvdir <- file.path(topDir, 'CNV')
+clinicaldir <- file.path(topDir, 'Clinical')
+exprdir <- file.path(topDir, 'ExpressionGene')
+fusionsdir <- file.path(topDir, 'Fusions')
+immunescores <- file.path(topDir, 'ImmuneScores')
+mutdir <- file.path(topDir, 'MutationsMAF')
+reports <- file.path(topDir, 'Reports')
+summary <- file.path(topDir, 'Summary')
 
 # create directories
 system(paste0('mkdir -p ', cnvdir))
@@ -34,6 +34,8 @@ system(paste0('mkdir -p ', summary))
 
 # organize data
 cmd <- paste0('mv ', topDir, '*CNVs* ', cnvdir)
+system(cmd)
+cmd <- paste0('mv ', topDir, '*controlfreec.ratio.txt ', cnvdir)
 system(cmd)
 cmd <- paste0('mv ', topDir, 'patient_report.txt ', clinicaldir)
 system(cmd)
