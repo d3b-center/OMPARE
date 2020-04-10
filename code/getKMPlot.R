@@ -1,8 +1,15 @@
-getKMPlot <- function(numNeighbors=15) {
-  mySamps <- allCor[1:numNeighbors,"samps"]
-  survData[,"group"] <- survData$Kids_First_Biospecimen_ID %in% mySamps
-  survData[,"group"] <- ifelse(survData[,"group"], "Cluster With Patient", "Cluster away from Patient")
-  survData <- survData[survData[,1]%in%rownames(allCor),]
+getKMPlot <- function(allCor, survData, numNeighbors = 20) {
+  
+  # first get all data with survival
+  allCor <- allCor[intersect(rownames(allCor),survData$sample_barcode),]
+  
+  # subset to top 20 most correlated samples that have survival data
+  colnames(allCor)[1] <- 'Correlation'
+  allCor <- allCor[order(allCor$Correlation, decreasing = T),]
+  mySamps <- allCor[1:numNeighbors,"sample_barcode"]
+  survData$group <- survData$sample_barcode %in% mySamps
+  survData$group <- ifelse(survData$group, "Cluster With Patient", "Cluster away from Patient")
+  survData <- survData[survData$sample_barcode %in% rownames(allCor),]
   fit <- survfit(Surv(OS_days, OS_status) ~ group, data = survData)
   ggsurvplot(
     fit,                     # survfit object with calculated statistics.

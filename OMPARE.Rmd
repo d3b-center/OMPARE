@@ -120,8 +120,8 @@ if(exists('mutData.germ')){
       kable_styling(bootstrap_options = c("bordered", "condensed", "responsive")) %>%
       column_spec(c(1), bold=T, border_left = "2px solid gray", border_right = "2px solid gray")
   }
+  # gsub("<thead>.*</thead>", "", x2)
 }
-# gsub("<thead>.*</thead>", "", x2)
 ```
 
 ### Genomic Summary
@@ -277,17 +277,17 @@ cat(getReportVersion());
 Row 
 -------------------------------------
     
-### Immune Profile
+### Immune Profile (with PBTA)
     
 ```{r immune_profile, fig.width = 28, fig.height=14}
 if(exists('expData')){
-  p <- ImmuneProfile()
+  p <- ImmuneProfile(fullmat = pbta.mat.all, fname = paste0(topDir,'/ImmuneScores/rawScores.txt'))
   ggplotly(p)
 }
 ```
 
 
-Genomically Similar Samples (P5)
+Genomically Similar Samples (PBTA) (P5)
 =====================================     
 
 Row Page 5  {data-height=100}
@@ -322,10 +322,10 @@ Row
 -------------------------------------
 ### Nearest-Neighbor Analysis
     
-```{r tsne_plot}
+```{r tsne_plot_pbta}
 if(exists('expData')){
   # ggplotly(getTSNEPlot())
-  getTSNEPlot()
+  getTSNEPlot(dat = pbta.mat.tsne,  clinData = pbta.clinData, study = "PBTA", patient = sampleInfo$subjectID)
 }
 ```
 
@@ -335,20 +335,159 @@ Row
     
 ### Survival
     
-```{r km_plot, fig.width = 6}
+```{r km_plot_pbta, fig.width = 6}
 if(exists('expData')){
-  getKMPlot();
+  getKMPlot(allCor = pbta.allCor, survData = pbta.survData, numNeighbors = 20);
 }
 ```
 
 ### Treatment/Outcomes - Genomically Similar Patients
     
-```{r similar_patients}
-datatable(getSimilarPatients(), rownames=F, escape=F);
+```{r similar_patients_pbta}
+datatable(getSimilarPatients(allCor = pbta.allCor, clinData = pbta.clinData, numNeighbors = 20), rownames=F, escape=F);
+```
+
+Genomically Similar Samples - TCGA (P6)
+=====================================     
+
+Row Page 5  {data-height=100}
+-------------------------------------
+   
+   
+### {data-width=300}
+
+```{r, echo=FALSE, out.width = '100%'}
+knitr::include_graphics("figures/d3b_Logo.png")
+```   
+ 
+### Patient ID
+    
+```{r}
+cat(getPatientID());
+```
+
+### Report Date
+
+```{r}
+cat(getReportDate());
+```   
+ 
+### Report Version
+    
+```{r}
+cat(getReportVersion());
+```
+
+Row
+-------------------------------------
+### Nearest-Neighbor Analysis
+    
+```{r tsne_plot_tcga}
+if(exists('expData')){
+  # ggplotly(getTSNEPlot())
+  getTSNEPlot(dat = tcga.gbm.mat.tsne, clinData = tcga.gbm.clinData, study = "TCGA", patient = sampleInfo$subjectID)
+}
 ```
 
 
-All Findings (P6)
+Row 
+-------------------------------------
+    
+### Survival
+    
+```{r km_plot_tcga, fig.width = 6}
+if(exists('expData')){
+  getKMPlot(allCor = tcga.gbm.allCor, survData = tcga.gbm.survData, numNeighbors = 20);
+}
+```
+
+### Treatment/Outcomes - Genomically Similar Patients
+    
+```{r similar_patients_tcga}
+datatable(getSimilarPatients(allCor = tcga.gbm.allCor, clinData = tcga.gbm.clinData, numNeighbors = 20), rownames=F, escape=F);
+```
+
+Tumor Purity (Genomically Similar Pediatric Samples) (P7)
+=======================================     
+
+Row Page 4  {data-height=100}
+-------------------------------------
+   
+### {data-width=300}
+
+```{r, echo=FALSE, out.width = '100%'}
+knitr::include_graphics("figures/d3b_Logo.png")
+```   
+ 
+### Patient ID
+    
+```{r}
+cat(getPatientID());
+```
+
+### Report Date
+
+```{r}
+cat(getReportDate());
+```   
+ 
+### Report Version
+    
+```{r}
+cat(getReportVersion());
+```
+
+Row 
+-------------------------------------
+    
+### Immune Profile (Genomically Similar Patients)
+    
+```{r immune_profile_gs, fig.width = 28, fig.height=14}
+if(exists('expData')){
+  p <- ImmuneProfile(fullmat = pbta.topCor, fname = paste0(topDir,'/ImmuneScores/topCor_rawScores.txt'))
+  ggplotly(p)
+}
+```
+
+Pathway Enrichment (Genomically Similar Patients) (P8)
+======================================================     
+
+Row Page 6  {data-height=100}
+-------------------------------------
+   
+### {data-width=300}
+
+```{r, echo=FALSE, out.width = '100%'}
+knitr::include_graphics("figures/d3b_Logo.png")
+```   
+ 
+### Patient ID
+    
+```{r}
+cat(getPatientID());
+```
+
+### Report Date
+
+```{r}
+cat(getReportDate());
+```   
+ 
+### Report Version
+    
+```{r}
+cat(getReportVersion());
+```
+
+Row {data-height=900}
+-------------------------------------
+### Pathway Enrichment (Top Genomically Similar Patients)
+    
+```{r tabulate_pathways}
+datatable(tabulate_pathways(allCor = pbta.allCor, numNeighbors = 20), rownames=F, options = list(pageLength = 10));
+```
+
+All Findings (P9)
 =====================================     
 
 Row Page 6  {data-height=100}
@@ -386,7 +525,7 @@ Row {data-height=900}
 datatable(allFindingsTable(), rownames=F, options = list(pageLength = 10));
 ```
 
-Genomic Landscape (P7)
+Genomic Landscape (P10)
 =====================================     
 
 Row Page 7  {data-height=100}

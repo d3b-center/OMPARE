@@ -26,3 +26,6 @@ suppressPackageStartupMessages(library(xCell))
 suppressPackageStartupMessages(library(decompTumor2Sig))
 suppressPackageStartupMessages(library(stringr))
 suppressPackageStartupMessages(library(GenomicRanges))
+suppressPackageStartupMessages(library(xlsx))
+suppressPackageStartupMessages(library(scales))
+

@@ -79,8 +79,10 @@ source('code/tumorSignaturePlot.R')
 
 # Genomically Similar Samples P5
 if(exists('expData')){
-  source('code/cleanData_p5.R')                   # *Run in driver
+  source('code/pbta_format.R')                   # format PBTA data
+  source('code/tcga_format.R')                   # format TCGA data
 }
+source('code/tabulate_pathways.R')
 source('code/getTSNEPlot.R')
 source('code/getKMPlot.R')
 source('code/getSimilarPatients.R')

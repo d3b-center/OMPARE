@@ -5,6 +5,29 @@
 # GTEx (7859 samples)
 gtexData <- readRDS("data/Reference/GTEx/GTEx_matrix.RDS")
 
+# All PNOC008 patients (expr + clinical)
+pnoc008.data <- readRDS('data/Reference/PNOC008/PNOC008_matrix.RDS')
+pnoc008.clinData <- readRDS('data/Reference/PNOC008/PNOC008_clinData.RDS')
+
+# PBTA specific data
+pbta.mat <- readRDS('data/Reference/pbta-gene-expression-rsem-fpkm-collapsed.stranded.rds')
+pbta.clinData <- read.delim("data/Reference/pbta-histologies.tsv", stringsAsFactors = F)
+pbta.survData <- pbta.clinData %>% 
+  filter(experimental_strategy == "RNA-Seq") %>%
+  mutate(sample_barcode = Kids_First_Biospecimen_ID) %>%
+  dplyr::select(sample_barcode, sample_id, OS_days, OS_status) %>%
+  filter(!is.na(OS_status)) %>%
+  mutate(OS_status = ifelse(OS_status == "DECEASED", 1, 0))
+
+# TCGA GBM specific data
+tcga.gbm.mat <- readRDS('data/Reference/TCGA/TCGA_GBM_matrix.RDS')
+tcga.gbm.clinData <- readRDS('data/Reference/TCGA/TCGA_GBM_clinData.RDS')
+tcga.gbm.survData <- tcga.gbm.clinData %>%
+  filter(overall_survival_time_in_days != "unavailable") %>%
+  mutate(OS_status = as.numeric(vital_status),
+         OS_days = as.numeric(overall_survival_time_in_days)) %>%
+  dplyr::select(sample_barcode, OS_days, OS_status)
+
 # Cancer Genes
 cancerGenes <- read.delim("data/Reference/CancerGeneList.tsv", stringsAsFactors = F)
 cancerGenes <- cancerGenes %>%
@@ -24,13 +47,6 @@ diseaseSpecificFields <- read.delim("data/Reference/DiseaseSpecificFields.txt")
 hallMarkSets <- getGmt("data/Reference/mSigDB/h.all.v6.2.symbols.gmt", collectionType=BroadCollection(), geneIdType= SymbolIdentifier())
 hallMarkSets <- geneIds(hallMarkSets)
 hallMarkSetsTS <- stack(hallMarkSets)
-res <- readRDS('data/Reference/pbta-gene-expression-rsem-fpkm-collapsed.stranded.rds')
-clinData <- read.delim("data/Reference/pbta-histologies.tsv", stringsAsFactors = F)
-survData <- clinData %>% 
-  filter(experimental_strategy == "RNA-Seq") %>%
-  dplyr::select(Kids_First_Biospecimen_ID, sample_id, OS_days, OS_status) %>%
-  filter(!is.na(OS_status)) %>%
-  mutate(OS_status = ifelse(OS_status == "DECEASED", 1, 0))
 signatures <- readAlexandrovSignatures("data/Reference/signatures_probabilities.txt")
 dgidb <- read.delim("data/Reference/DGIdb.txt", stringsAsFactors = F)
 

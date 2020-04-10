@@ -111,3 +111,25 @@ for(i in 1:length(callers)) {
 }
 # summary
 system("Rscript code/tabulate_excel.R -i data/PNOC008-09 -o PNOC008-09_summary.xlsx")
+
+# To run all reports
+# update PNOC008 expression matrix for each new patient
+system('Rscript code/pnoc_format.R') 
+patients <- 15
+callers <- c("lancet", "mutect2", "strelka2", "vardict", "consensus", "all")
+for(p in 1:patients){
+  topDir <- paste0('data/PNOC008-',p,'/')
+  set_title <- paste0('PNOC008-',p,' Patient Report')
+  if(dir.exists(topDir)){
+    for(c in 1:length(callers)) {
+      outputfile <- paste0('data/PNOC008-',p,'/Reports/PNOC008_',p,'_', callers[c], '.html')
+      rmarkdown::render(input = 'OMPARE.Rmd',
+                        params = list(topDir = topDir,
+                                      fusion_method = 'arriba',
+                                      set_title = set_title,
+                                      snv_pattern = callers[i],
+                                      tmb = 77.46),
+                        output_file = outputfile)
+    }
+  }
+}
