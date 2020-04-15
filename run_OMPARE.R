@@ -1,135 +1,59 @@
-# Step2: generate patient report
+# Author: Komal S. Rathi
+# Date: 04/13/2020
+# Function: Generate patient report
 
-# parameter info:
+suppressPackageStartupMessages(library(optparse))
+
+option_list <- list(
+  make_option(c("-p", "--patient"), type = "character",
+              help = "Patient Number (1, 2...)"),
+  make_option(c("-c", "--clin_file"), type = "character",
+              help = "Google sheet link (PNOC008 patients)"),
+  make_option(c("-w", "--workdir"), type = "character",
+              help = "OMPARE working directory")
+)
+
+# parameters to pass
+opt <- parse_args(OptionParser(option_list = option_list))
+clinical_sheet <- opt$clin_file
+p <- opt$patient
+workdir <- opt$workdir
+
+# set variables
+setwd(workdir)
+patient <- paste0('PNOC008-', p)
+topDir <- file.path('data', patient)
+set_title <- paste0(patient,' Patient Report')
+callers <- c("lancet", "mutect2", "strelka2", "vardict", "consensus", "all")
+
+# 1. Create Project directory
+cmd1 <- paste0('Rscript create_project_dir.R ', topDir, '/')
+system(cmd1)
+
+# 2. Create clinical file
+cmd2 <- paste0('Rscript create_clinfile.R -s ', clinical_sheet, ' -p ', patient, ' -d ', topDir)
+system(cmd2)
+
+# 3. Update PNOC008 expression matrix for each new patient
+cmd3 <- 'Rscript code/pnoc_format.R'
+system(cmd3) 
+
+# 4. Run html reports
 # fusion_method can be either arriba, star, both or not specified
-# fusion_method and set_title is completely optional 
-# topDir is mandatory
-# snv_pattern can be either of the 6 options: lancet, mutect2, strelka2, vardict, consensus or all
-
-# PNOC008-04
-callers <- c("lancet", "mutect2", "strelka2", "vardict", "consensus", "all")
-for(i in 1:length(callers)) {
-  outputfile <- paste0("data/PNOC008-04/Reports/PNOC008_04_", callers[i], ".html")
-  rmarkdown::render(input = 'OMPARE.Rmd', 
-                    params = list(topDir = 'data/PNOC008-04/',
-                                  fusion_method = 'arriba',
-                                  set_title = 'PNOC008-04 Patient Report',
-                                  snv_pattern = callers[i],
-                                  tmb = 77.46),
-                    output_file = outputfile)
-}
-
-# PNOC008-02
-callers <- c("lancet", "mutect2", "strelka2", "vardict", "consensus", "all")
-for(i in 1:length(callers)) {
-  outputfile <- paste0("data/PNOC008-02/Reports/PNOC008_02_", callers[i], ".html")
-  rmarkdown::render(input = 'OMPARE.Rmd', 
-                    params = list(topDir = 'data/PNOC008-02/',
-                                  fusion_method = 'arriba',
-                                  set_title = 'PNOC008-02 Patient Report',
-                                  snv_pattern = callers[i],
-                                  tmb = 77.46),
-                    output_file = outputfile)
-}
-
-# PNOC008-06
-# reports
-callers <- c("lancet", "mutect2", "strelka2", "vardict", "consensus", "all")
-for(i in 1:length(callers)) {
-  outputfile <- paste0("data/PNOC008-06/Reports/PNOC008_06_", callers[i], ".html")
-  rmarkdown::render(input = 'OMPARE.Rmd', 
-                    params = list(topDir = 'data/PNOC008-06/',
-                                  fusion_method = 'arriba',
-                                  set_title = 'PNOC008-06 Patient Report',
-                                  snv_pattern = callers[i],
-                                  tmb = 77.46),
-                    output_file = outputfile)
-}
-# summary
-system("Rscript code/tabulate_excel.R -i data/PNOC008-06 -o PNOC008-06_summary-v2.xlsx")
-
-# PNOC008-05-NANT
-# reports
-callers <- c("lancet", "mutect2", "strelka2", "vardict", "consensus", "all")
-for(i in 1:length(callers)) {
-  outputfile <- paste0("data/PNOC008-05-NANT/Reports/PNOC008_05_NANT_", callers[i], ".html")
-  rmarkdown::render(input = 'OMPARE.Rmd', 
-                    params = list(topDir = 'data/PNOC008-05-NANT/',
-                                  fusion_method = 'arriba',
-                                  set_title = 'PNOC008-05-NANT Patient Report',
-                                  snv_pattern = callers[i],
-                                  tmb = 77.46),
-                    output_file = outputfile)
-}
-# summary
-system("Rscript code/tabulate_excel.R -i data/PNOC008-05-NANT -o PNOC008-05-NANT_summary.xlsx")
-
-# PNOC008-05-CHOP
-# reports
-callers <- c("lancet", "mutect2", "strelka2", "vardict", "consensus", "all")
-for(i in 1:length(callers)) {
-  outputfile <- paste0("data/PNOC008-05-CHOP/Reports/PNOC008_05_CHOP_", callers[i], ".html")
-  rmarkdown::render(input = 'OMPARE.Rmd', 
-                    params = list(topDir = 'data/PNOC008-05-CHOP/',
-                                  fusion_method = 'arriba',
-                                  set_title = 'PNOC008-05-CHOP Patient Report',
-                                  snv_pattern = callers[i],
-                                  tmb = 77.46),
-                    output_file = outputfile)
-}
-# summary
-system("Rscript code/tabulate_excel.R -i data/PNOC008-05-CHOP -o PNOC008-05-CHOP_summary.xlsx")
-
-# PNOC008-08
-# reports
-callers <- c("lancet", "mutect2", "strelka2", "vardict", "consensus", "all")
-for(i in 1:length(callers)) {
-  outputfile <- paste0("data/PNOC008-08/Reports/PNOC008_08_", callers[i], ".html")
-  rmarkdown::render(input = 'OMPARE.Rmd', 
-                    params = list(topDir = 'data/PNOC008-08/',
-                                  fusion_method = 'arriba',
-                                  set_title = 'PNOC008-08 Patient Report',
-                                  snv_pattern = callers[i],
-                                  tmb = 77.46),
-                    output_file = outputfile)
-}
-# summary
-system("Rscript code/tabulate_excel.R -i data/PNOC008-08 -o PNOC008-08_summary.xlsx")
-
-# PNOC008-09
-# reports
-callers <- c("lancet", "mutect2", "strelka2", "vardict", "consensus", "all")
-for(i in 1:length(callers)) {
-  outputfile <- paste0("data/PNOC008-09/Reports/PNOC008_09_", callers[i], ".html")
-  rmarkdown::render(input = 'OMPARE.Rmd', 
-                    params = list(topDir = 'data/PNOC008-09/',
-                                  fusion_method = 'arriba',
-                                  set_title = 'PNOC008-09 Patient Report',
-                                  snv_pattern = callers[i],
-                                  tmb = 77.46),
-                    output_file = outputfile)
-}
-# summary
-system("Rscript code/tabulate_excel.R -i data/PNOC008-09 -o PNOC008-09_summary.xlsx")
-
-# To run all reports
-# update PNOC008 expression matrix for each new patient
-system('Rscript code/pnoc_format.R') 
-patients <- 15
-callers <- c("lancet", "mutect2", "strelka2", "vardict", "consensus", "all")
-for(p in 1:patients){
-  topDir <- paste0('data/PNOC008-',p,'/')
-  set_title <- paste0('PNOC008-',p,' Patient Report')
-  if(dir.exists(topDir)){
-    for(c in 1:length(callers)) {
-      outputfile <- paste0('data/PNOC008-',p,'/Reports/PNOC008_',p,'_', callers[c], '.html')
-      rmarkdown::render(input = 'OMPARE.Rmd',
-                        params = list(topDir = topDir,
-                                      fusion_method = 'arriba',
-                                      set_title = set_title,
-                                      snv_pattern = callers[i],
-                                      tmb = 77.46),
-                        output_file = outputfile)
-    }
+if(dir.exists(topDir)){
+  for(c in 1:length(callers)) {
+    outputfile <- paste0(patient,'_',callers[c],'.html')
+    outputfile <- file.path(topDir,'Reports',outputfile)
+    rmarkdown::render(input = 'OMPARE.Rmd',
+                      params = list(topDir = topDir,
+                                    fusion_method = 'arriba',
+                                    set_title = set_title,
+                                    snv_pattern = callers[i],
+                                    tmb = 77.46),
+                      output_file = outputfile)
   }
-}
+} 
+
+# 5. Generate excel summary
+cmd5 <- paste0('Rscript code/tabulate_excel.R -i ', topDir, ' -o ', paste0(patient, '_summary.xlsx'))
+system(cmd5)

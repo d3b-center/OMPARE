@@ -71,6 +71,9 @@ source('code/highConfidenceFindingsTable.R')
 # Immmune Signatures P3
 source('code/ImmuneProfile.R')
 
+# ssGSEA
+source('code/ssGSEA.R')
+
 # TMB Tumor Signatures P4
 if(!is.null(tmb)){
   source('code/tmbProfile.R')

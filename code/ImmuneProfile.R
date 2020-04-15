@@ -27,12 +27,13 @@ ImmuneProfile <- function(fullmat, fname) {
   raw.scoresTS <- gather(raw.scores, "Sample", "Score", -CellType)
   raw.scoresTS[,"IsSample"] <- ifelse(grepl(sampleInfo$subjectID, raw.scoresTS[,"Sample"]), T, F)
   p <- ggplot(raw.scoresTS, aes(CellType, Score)) + 
-    geom_boxplot(outlier.shape=NA) +  
+    geom_boxplot(outlier.shape = NA) +  
     theme_bw() + 
     theme(axis.text.x = element_text(angle = 75, hjust = 1))
-  raw.scoresTSSample <- raw.scoresTS[raw.scoresTS[,4]==T,]
+  raw.scoresTSSample <- raw.scoresTS[raw.scoresTS$IsSample == T,]
   p <- p + 
-    geom_point(data = raw.scoresTSSample, aes(CellType, Score), colour = "red", size=3, shape="triangle") +
-    theme(axis.text=element_text(size=12, face="bold"), axis.title=element_text(size=14,face="bold"))
+    geom_point(data = raw.scoresTSSample, aes(CellType, Score), colour = "red", size = 3, shape = "triangle") +
+    theme(axis.text = element_text(size = 8, face = "bold"), 
+          axis.title = element_blank())
   return(p)
 }

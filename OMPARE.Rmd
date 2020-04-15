@@ -487,7 +487,49 @@ Row {data-height=900}
 datatable(tabulate_pathways(allCor = pbta.allCor, numNeighbors = 20), rownames=F, options = list(pageLength = 10));
 ```
 
-All Findings (P9)
+ssGSEA (Genomically Similar Pediatric Samples) (P9)
+=======================================     
+
+Row Page 4  {data-height=100}
+-------------------------------------
+   
+### {data-width=300}
+
+```{r, echo=FALSE, out.width = '100%'}
+knitr::include_graphics("figures/d3b_Logo.png")
+```   
+ 
+### Patient ID
+    
+```{r}
+cat(getPatientID());
+```
+
+### Report Date
+
+```{r}
+cat(getReportDate());
+```   
+ 
+### Report Version
+    
+```{r}
+cat(getReportVersion());
+```
+
+Row 
+-------------------------------------
+    
+### ssGSEA (Genomically Similar Patients)
+    
+```{r ssgsea_gs, fig.width = 28, fig.height=14}
+if(exists('expData')){
+  p <- ssGSEA(topCor = pbta.topCor, fname = paste0(topDir,'/GSVA/hallmark_rawScores.txt'))
+  ggplotly(p)
+}
+```
+
+All Findings (P10)
 =====================================     
 
 Row Page 6  {data-height=100}
@@ -525,7 +567,7 @@ Row {data-height=900}
 datatable(allFindingsTable(), rownames=F, options = list(pageLength = 10));
 ```
 
-Genomic Landscape (P10)
+Genomic Landscape (P11)
 =====================================     
 
 Row Page 7  {data-height=100}

@@ -2,6 +2,7 @@
 # Function to generate t-SNE plot
 ##################################
 
+# Top 10000 most variable genes
 getTSNEPlot <- function(dat, clinData, study, patient) {
   set.seed(100) # set seed for reproducibility
   tsneOut <- Rtsne(t(log2(dat+1)), initial_dims=100, perplexity=30, check_duplicates = FALSE)

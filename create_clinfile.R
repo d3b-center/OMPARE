@@ -1,6 +1,7 @@
 # Author: Komal S. Rathi
 # Date: 02/28/2020
 # Function: Script to read from google sheets and create clinical file 
+# This will be called from within run_OMPARE.R
 
 library(googlesheets4)
 library(optparse)

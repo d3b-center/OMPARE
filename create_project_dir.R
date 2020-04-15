@@ -1,5 +1,8 @@
-# Step1: code to create and organize directory structure
-# Rscript create_project <path to project directory with all files>
+# Author: Komal S. Rathi
+# Date: 02/28/2020
+# Function: Code to create and organize directory structure
+# This will be called from within run_OMPARE.R
+# E.g.: Rscript create_project <path to project directory with all files>
 
 # required
 args = commandArgs(trailingOnly=TRUE)
@@ -18,6 +21,7 @@ clinicaldir <- file.path(topDir, 'Clinical')
 exprdir <- file.path(topDir, 'ExpressionGene')
 fusionsdir <- file.path(topDir, 'Fusions')
 immunescores <- file.path(topDir, 'ImmuneScores')
+gsvascores  <-  file.path(topDir, 'GSVA')
 mutdir <- file.path(topDir, 'MutationsMAF')
 reports <- file.path(topDir, 'Reports')
 summary <- file.path(topDir, 'Summary')
@@ -28,6 +32,7 @@ system(paste0('mkdir -p ', clinicaldir))
 system(paste0('mkdir -p ', exprdir))
 system(paste0('mkdir -p ', fusionsdir))
 system(paste0('mkdir -p ', immunescores))
+system(paste0('mkdir -p ', gsvascores))
 system(paste0('mkdir -p ', mutdir))
 system(paste0('mkdir -p ', reports))
 system(paste0('mkdir -p ', summary))
