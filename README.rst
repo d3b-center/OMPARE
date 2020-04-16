@@ -167,3 +167,18 @@ The project folder will look like this:
 	└── Summary
 	    └── PNOC008-08_summary.xlsx
 
+
+Run everything
+==============
+
+This single script will take the raw data as input and create output files by:
+
+1. Creating project directory and organize files
+2. Creating clinical file
+3. Updating PNOC008 expression matrix for each new patient
+4. Running html reports
+5. Generating excel summary
+
+.. code-block:: bash
+	
+	Rscript run_OMPARE.R -p 13 -c <link_to_google_sheet> -w <OMPARE_directory>
