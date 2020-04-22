@@ -5,11 +5,11 @@
 # Top 10000 most variable genes
 getTSNEPlot <- function(dat, clinData, study, patient) {
   set.seed(100) # set seed for reproducibility
-  tsneOut <- Rtsne(t(log2(dat+1)), initial_dims=100, perplexity=30, check_duplicates = FALSE)
+  tsneOut <- Rtsne(t(log2(dat+1)), initial_dims = 50, perplexity = 30, check_duplicates = FALSE, theta = 0)
   tsneData <- data.frame(tsneOut$Y, samples = colnames(dat))
   colnames(tsneData)[1:2] <- c("PC1", "PC2")
   tsneData <- merge(clinData, tsneData, by.x = "sample_barcode", by.y = "samples")
-  
+
   # reverse factors to set PNOC to lowest
   # this is for shape
   tsneData$label <- tsneData$study_id
@@ -24,9 +24,9 @@ getTSNEPlot <- function(dat, clinData, study, patient) {
     tsneData$pathology_diagnosis <- tsneData$short_histology
     tsneData$integrated_diagnosis <- tsneData$broad_histology
   }
-  
+
   # plot t-SNE
-  p <- ggplot(tsneData, aes(PC1, PC2, 
+  p <- ggplot(tsneData, aes(PC1, PC2,
                             color = pathology_diagnosis,
                             size = study_id,
                             shape = label,
@@ -38,8 +38,8 @@ getTSNEPlot <- function(dat, clinData, study, patient) {
     geom_jitter(width = 0.5, height = 0.5) +
     theme_bw() + ggtitle("T-SNE Clustering") +
     theme(plot.title = element_text(size = 14, face = "bold", hjust = 0.5),
-          legend.title=element_text(size=12), 
-          legend.text=element_text(size=12)) + 
+          legend.title=element_text(size=12),
+          legend.text=element_text(size=12)) +
     guides(size = FALSE, shape = F, color = F)
   ggplotly(p, tooltip = "text")
 }
