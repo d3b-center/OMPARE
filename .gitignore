@@ -6,12 +6,6 @@
 Archive/*
 data/*
 !data/Reference
-data/Reference/GTEx/GTEx_fullExpr_matrix.RDS
-data/Reference/GTEx/GTEx_matrix.RDS
-data/Reference/pbta-histologies.tsv
-data/Reference/pbta-gene-expression-rsem-fpkm-collapsed.stranded.rds
-data/Reference/TCGA/*
-data/Reference/PNOC008/*
 code/Archive/*
 code/create_gtex_matrix.R
 code/create_tcga_gbm_matrix.R
