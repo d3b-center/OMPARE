@@ -41,16 +41,27 @@ cancerGenes <- rbind(cancerGenes, geneListRef)
 rm(geneListRef)
 tsgGenes <- read.delim("data/Reference/Human_TSGs.txt", stringsAsFactors = F)
 
+# CNV analysis (chr coordinates to gene symbol map)
 chrMap <- read.delim("data/Reference/mart_export_genechr_mapping.txt", stringsAsFactors =F)
+
+# Network analysis
 geneMania <- read.delim("data/Reference/GeneManiaNetwork.txt", stringsAsFactors =F)
+
+# HGG-specific genes
 diseaseSpecificFields <- read.delim("data/Reference/DiseaseSpecificFields.txt")
+
+# Hallmark gene sets
 hallMarkSets <- getGmt("data/Reference/mSigDB/h.all.v6.2.symbols.gmt", collectionType=BroadCollection(), geneIdType= SymbolIdentifier())
 hallMarkSets <- geneIds(hallMarkSets)
 hallMarkSetsTS <- stack(hallMarkSets)
+
+# Mutational signatures
 signatures <- readAlexandrovSignatures("data/Reference/signatures_probabilities.txt")
+
+# Drug info
 dgidb <- read.delim("data/Reference/DGIdb.txt", stringsAsFactors = F)
 
-# Germline
+# Germline markers
 pharmacogenomics.genes <- read.delim("data/Reference/Pharmacogenomics_Genes.list", stringsAsFactors = F, header = F)
 pharmacogenomics.genes <- data.frame("Gene" = pharmacogenomics.genes$V1, "Class" = "Pharmacogenomics")
 chop.panel.genes <- read.delim("data/Reference/CHOP_Additional_Cancer_Genes.list", stringsAsFactors = F, header = F)
@@ -59,7 +70,7 @@ acmg.genes <- read.delim("data/Reference/ACMG_22_Cancer_Genes.list", stringsAsFa
 acmg.genes <-  data.frame("Gene" = acmg.genes$V1, "Class" = "ACMG")
 germlineMarkers <- rbind(pharmacogenomics.genes,  acmg.genes, chop.panel.genes)
 
-# TMB
+# TMB from PBTA and TCGA
 pedTMB <- data.table::fread("data/Reference/pbta-TMBscores_withdiseastype.txt")
 adultTMB <- data.table::fread("data/Reference/TCGA_diseasetypes_and_samples_TMBscores.txt")
 TMBFileBED <- data.table::fread("data/Reference/xgen-exome-research-panel-targets_hg38_ucsc_liftover.100bp_padded.sort.merged.bed")
