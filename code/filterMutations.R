@@ -1,6 +1,6 @@
-####################################################
-# Function to filter mutations-
-####################################################
+##############################
+# Function to filter mutations
+##############################
 
 filterMutations <- function(myMutData = mutData, myCancerGenes = cancerGenes) {
   mutDataFilt <- myMutData

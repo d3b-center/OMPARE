@@ -3,7 +3,6 @@
 # script to pull clinical files from all existing patients and create metadata
 # this is to be run everytime a new patient comes in - before generating the report
 
-setwd('~/Projects/OMPARE/')
 library(dplyr)
 library(stringr)
 library(tidyverse)

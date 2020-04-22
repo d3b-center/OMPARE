@@ -10,7 +10,7 @@ source('code/annotateMutations.R')
 source('code/createCopyNumber.R')
 
 allFindingsTable <- function() {
-  # Druggability
+  # get druggability data
   drugData <- filterDruggability()
   
   # Somatic Mutations

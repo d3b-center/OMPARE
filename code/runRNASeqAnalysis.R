@@ -3,9 +3,6 @@
 ##########################################
 
 # Function to return all results from RNA-Seq Analysis
-suppressPackageStartupMessages(library(GSVA))
-suppressPackageStartupMessages(library(GSEABase))
-
 runRNASeqAnalysis <- function(expData = NULL) {
 
   # Merge GTEx and Patient data on common genes

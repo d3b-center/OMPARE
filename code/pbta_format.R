@@ -10,9 +10,6 @@ pbta.clinData <- pbta.clinData %>%
          study_id = "PBTA") %>%
   dplyr::select(sample_barcode, sample_id, reported_gender, age_at_diagnosis_days, ethnicity, pathology_diagnosis, integrated_diagnosis, short_histology, broad_histology, primary_site, study_id)
 
-# pbta.clinData <- pbta.clinData %>%
-#   filter(experimental_strategy == "RNA-Seq") %>%
-#   dplyr::select(Kids_First_Biospecimen_ID, sample_id, pathology_diagnosis, integrated_diagnosis, short_histology, broad_histology, primary_site)
 pat.clinData <- pnoc008.clinData[,c(rep('subjectID', 2), 'sex', 'AgeAtCollection', 'ethnicity', rep('tumorType', 4), 'tumorLocation', 'study_id')] 
 colnames(pat.clinData) <- colnames(pbta.clinData)
 pbta.clinData <- rbind(pbta.clinData, pat.clinData)
@@ -28,7 +25,7 @@ smps <- grep('BS_', colnames(pbta.mat.full), value = T)
 smps <- c(smps, sampleInfo$subjectID)
 pbta.mat.all <- pbta.mat.full[,colnames(pbta.mat.full) %in% smps]
 
-# Now remove genes that have less 20 FPKM
+# Now remove genes that have max value < 50 FPKM
 maxVals <- apply(pbta.mat, FUN = max, MARGIN = 1)
 pbta.mat <- pbta.mat[maxVals>50,]
 
@@ -53,14 +50,10 @@ pbta.mat.tsne <- pbta.mat.tsne[1:10000,]
 pbta.mat.tsne <- pbta.mat.tsne[-ncol(pbta.mat.tsne)] # Remove cv
 
 # for getKMPlot.R and getSimilarPatients.R
-# diseasetypes <- c("High-grade glioma", sampleInfo$tumorType)
-# pbta.clinDataHGG <- pbta.clinData[grepl(paste(diseasetypes, collapse = "|"), pbta.clinData$integrated_diagnosis),]
-# pbta.HGG <- pbta.mat.tsne[,rownames(pbta.clinDataHGG)]
 pbta.allCor <- cor(pbta.mat.tsne[sampleInfo$subjectID], pbta.mat.tsne)
 pbta.allCor <- data.frame(t(pbta.allCor), check.names = F)
 pbta.allCor[,"sample_barcode"] <- rownames(pbta.allCor)
 pbta.allCor <- pbta.allCor[!grepl(sampleInfo$subjectID, rownames(pbta.allCor)),]
-# pbta.allCor <- pbta.allCor[intersect(rownames(pbta.allCor), survData$Kids_First_Biospecimen_ID),]
 pbta.allCor <- pbta.allCor[order(-pbta.allCor[,1]),]
 pbta.allCor[,1] <- round(pbta.allCor[,1], 3)
 

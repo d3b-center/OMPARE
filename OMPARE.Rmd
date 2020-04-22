@@ -25,9 +25,11 @@ title: `r params$set_title`
 knitr::opts_chunk$set(comment = NA)
 ```
 
-```{r read_data}
+```{r load_libraries}
 source('code/load_libraries.R')
+```
 
+```{r read_data}
 # read input files
 source("code/readData.R")
 topDir <- params$topDir
@@ -37,7 +39,9 @@ tmb <- params$tmb
 readData(topDir = topDir, 
          fusion_method = fusion_method, 
          snv_pattern = snv_pattern)
+```
 
+```{r call_driver}
 # call driver to load other libraries/code
 source("code/driver.R")
 ```
@@ -112,15 +116,14 @@ if(nrow(dsi) > 0){
 
 ### Cancer Germline Variants
 
-```{r}
+```{r germline_vars}
 if(exists('mutData.germ')){
-  germlineOut <- germlineAnalysis()
+  germlineOut <- filterGermline()
   if(nrow(germlineOut) >= 1){
     kable(germlineOut, format="html") %>%
       kable_styling(bootstrap_options = c("bordered", "condensed", "responsive")) %>%
       column_spec(c(1), bold=T, border_left = "2px solid gray", border_right = "2px solid gray")
   }
-  # gsub("<thead>.*</thead>", "", x2)
 }
 ```
 
@@ -611,7 +614,9 @@ if(exists('fusData')){
     
 ```{r plot_network, fig.width = 8, fig.height = 6}
 if(exists('expData')){
-  plotNetwork()
+  if(exists('mutData') | exists('fusData')){
+    plotNetwork()
+  }
 }
 ```
 

@@ -34,8 +34,9 @@ tumorSignaturePlot <- function() {
   colnames(exposure) <- c("Signature", "Value")
   exposure[,1] <- gsub("\\.", "-", exposure[,1])
   exposure[,1] <- factor(exposure[,1], levels=exposure[,1])
-  p <- ggplot(exposure, aes(Signature, Value))+geom_bar(stat="identity")+theme_bw()+coord_flip()
-  p <- p+xlab("Mutational Signature")+ylab("Exposures (percent contribution)")
+  p <- ggplot(exposure, aes(Signature, Value)) + 
+    geom_bar(stat="identity") + theme_bw() + coord_flip() + 
+    xlab("Mutational Signature")+ylab("Exposures (percent contribution)")
   return(p)
   
 }

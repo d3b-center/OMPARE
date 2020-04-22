@@ -1,6 +1,6 @@
-#################################
-# High Confidence Alterations P2
-#################################
+#############################
+# High Confidence Alterations
+#############################
 
 remComma <- function(x) {
   out <- substr(x, nchar(x), nchar(x))
@@ -9,17 +9,17 @@ remComma <- function(x) {
 }
 
 getGeneFromMut <- function(x) {
-  myGene <-strsplit(x, ":")[[1]][[1]]
+  myGene <- strsplit(x, ":")[[1]][[1]]
   return(myGene)
 }
 
 getGeneFromFus <- function(x) {
-  myGene1 <-strsplit(x, "_")[[1]][[1]]
-  myGene2 <-strsplit(x, "_")[[1]][[2]]
+  myGene1 <- strsplit(x, "_")[[1]][[1]]
+  myGene2 <- strsplit(x, "_")[[1]][[2]]
   return(c(myGene1, myGene2))
 }
 
-highConfidenceFindingsTable <- function(delRPKM=10) {
+highConfidenceFindingsTable <- function(delRPKM = 10) {
 
   myTable <- allFindingsTable()
   myTable <- myTable[!grepl("Pathway", myTable[,"Type"]),]
@@ -30,23 +30,23 @@ highConfidenceFindingsTable <- function(delRPKM=10) {
     rnaEvidence <-   RNASeqAnalysisOut[[3]]
     rnaEvidence[,"Gene"] <- rownames(rnaEvidence)
     
-    # Get only significant sets
+    # Get only significant sets with pvalue < 0.01
     sigGeneSets <- RNASeqAnalysisOut[[2]][[2]]
     sigGeneSets <- sigGeneSets[which(sigGeneSets[,"P_VAL"]<0.01),]
     sigGeneSets <- sigGeneSets[,c("Pathway", "Direction")]
-    hallMarkSetsTS <- merge(hallMarkSetsTS, sigGeneSets, by.x="ind", by.y="Pathway")
-    hallMarkSetsTS[,"ind"] <- paste(hallMarkSetsTS[,"ind"], "(",hallMarkSetsTS[,"Direction"], ")", sep="")
-    hallMarkSetsTS <- hallMarkSetsTS[,c("ind", "values")]
-    hallMarkSetsTS <- hallMarkSetsTS %>% 
+    hallMarkSetsTS.sub <- merge(hallMarkSetsTS, sigGeneSets, by.x="ind", by.y="Pathway")
+    hallMarkSetsTS.sub[,"ind"] <- paste(hallMarkSetsTS.sub[,"ind"], "(",hallMarkSetsTS.sub[,"Direction"], ")", sep="")
+    hallMarkSetsTS.sub <- hallMarkSetsTS.sub[,c("ind", "values")]
+    hallMarkSetsTS.sub <- hallMarkSetsTS.sub %>% 
       group_by(values) %>% 
       dplyr::summarize(ind=paste(ind, collapse=","))
-    hallMarkSetsTS <- data.frame(hallMarkSetsTS)
+    hallMarkSetsTS.sub <- data.frame(hallMarkSetsTS.sub)
     
     # Supporting Evidence for Deletions
-    myTableDel <- myTable[myTable[,2]=="Deletion",]
+    myTableDel <- myTable[myTable$Type == "Deletion",]
     if(nrow(myTableDel) > 0){
       myTableDel <- merge(myTableDel, rnaEvidence, by.x="Aberration", by.y="Gene", all.x=T)
-      myTableDel <- merge(myTableDel, hallMarkSetsTS, by.x="Aberration", by.y="values", all.x=T)
+      myTableDel <- merge(myTableDel, hallMarkSetsTS.sub, by.x="Aberration", by.y="values", all.x=T)
       myTableDel <- myTableDel[which(myTableDel[,sampleInfo$subjectID]<10),]
       if(nrow(myTableDel)>0) {
         myTableDel[,"SupportEv"] <- paste("FPKM=", myTableDel[,sampleInfo$subjectID], ifelse(is.na(myTableDel[,"ind"]), "", paste(", Pathway: ", myTableDel[,"ind"], sep="")), sep="")
@@ -60,10 +60,10 @@ highConfidenceFindingsTable <- function(delRPKM=10) {
     
     
     # Supporting Evidence for Amplifications
-    myTableAmp <- myTable[myTable[,2]=="Amplification",]
+    myTableAmp <- myTable[myTable$Type == "Amplification",]
     if(nrow(myTableAmp) > 0){
       myTableAmp <- merge(myTableAmp, rnaEvidence, by.x="Aberration", by.y="Gene", all.x=T)
-      myTableAmp <- merge(myTableAmp, hallMarkSetsTS, by.x="Aberration", by.y="values", all.x=T)
+      myTableAmp <- merge(myTableAmp, hallMarkSetsTS.sub, by.x="Aberration", by.y="values", all.x=T)
       myTableAmp <- myTableAmp[which(myTableAmp[,sampleInfo$subjectID]>100),]
       if(nrow(myTableAmp)>0) {
         myTableAmp[,"SupportEv"] <- paste("FPKM=", myTableAmp[,sampleInfo$subjectID], ifelse(is.na(myTableAmp[,"ind"]), "", paste(", Pathway: ", myTableAmp[,"ind"], sep="")), sep="")
@@ -81,7 +81,7 @@ highConfidenceFindingsTable <- function(delRPKM=10) {
     if(nrow(myTableMut) > 0){
       myTableMut[,"Gene"] <- sapply(myTableMut[,"Aberration"], FUN=getGeneFromMut)
       myTableMut <- merge(myTableMut, rnaEvidence, by.x="Gene", by.y="Gene", all.x=T)
-      myTableMut <- merge(myTableMut, hallMarkSetsTS, by.x="Gene", by.y="values", all.x=T)
+      myTableMut <- merge(myTableMut, hallMarkSetsTS.sub, by.x="Gene", by.y="values", all.x=T)
       myTableMut[,"SupportEv"] <- paste("FPKM=", myTableMut[,sampleInfo$subjectID], ifelse(is.na(myTableMut[,"ind"]), "", paste(", Pathway: ", myTableMut[,"ind"], sep="")), sep="")
       myTableMut <- myTableMut[,c("Aberration", "Type", "Details", "Score", "Drugs", "Trials", "SupportEv")]
     } else {
@@ -97,8 +97,8 @@ highConfidenceFindingsTable <- function(delRPKM=10) {
       colnames(myTableFus)[colnames(myTableFus) == sampleInfo$subjectID] <- "Gene1_fpkm"
       myTableFus <- merge(myTableFus, rnaEvidence, by.x="Gene2", by.y="Gene", all.x=T)
       colnames(myTableFus)[colnames(myTableFus) == sampleInfo$subjectID] <- "Gene2_fpkm"
-      myTableFus <- merge(myTableFus, hallMarkSetsTS, by.x="Gene1", by.y="values", all.x=T)
-      myTableFus <- merge(myTableFus, hallMarkSetsTS, by.x="Gene2", by.y="values", all.x=T)
+      myTableFus <- merge(myTableFus, hallMarkSetsTS.sub, by.x="Gene1", by.y="values", all.x=T)
+      myTableFus <- merge(myTableFus, hallMarkSetsTS.sub, by.x="Gene2", by.y="values", all.x=T)
       myTableFus[,"SupportEv"] <- paste("FPKM=", myTableFus[,"Gene1_fpkm"],
                                         ", ",
                                         myTableFus[,"Gene2_fpkm"],

@@ -21,17 +21,17 @@ plotNetwork <- function(numGenes = 250) {
     nodeGenes <- c(nodeGenesMut)
   }
 
-  tmpGeneMania <- geneMania[geneMania[,"Gene_A_EntrezGeneName"]%in%nodeGenes,]
-  tmpGeneMania <- tmpGeneMania[tmpGeneMania[,"Gene_B_EntrezGeneName"]%in%nodeGenes,]
-  tmpGeneMania <- tmpGeneMania[tmpGeneMania[,"Network_Group_Name"]%in%c("Co-localization", "Genetic Interactions", "Pathway", "Physical Interactions"),]
+  tmpGeneMania <- geneMania[geneMania$Gene_A_EntrezGeneName %in% nodeGenes,]
+  tmpGeneMania <- tmpGeneMania[tmpGeneMania$Gene_B_EntrezGeneName %in% nodeGenes,]
+  tmpGeneMania <- tmpGeneMania[tmpGeneMania$Network_Group_Name %in% c("Co-localization", "Genetic Interactions", "Pathway", "Physical Interactions"),]
   cifNetwork <- tmpGeneMania[,c("Gene_A_EntrezGeneName", "Gene_B_EntrezGeneName")]
   colnames(cifNetwork) <- c("from", "to")
-  cifNetwork[,"logFC"] <- ifelse(cifNetwork[,"from"]%in%nodeGenesMut, 5, 1)
-  cifNetwork[,"miRNA"] <- "No"
-  gR<-polishNetwork(cifNetwork)
+  cifNetwork$logFC <- ifelse(cifNetwork$from %in% nodeGenesMut, 5, 1)
+  cifNetwork$miRNA <- "No"
+  gR <- polishNetwork(cifNetwork)
   tmpNetwork <- igraph.from.graphNEL(gR)
   p <- ggnetwork(tmpNetwork, layout = "fruchtermanreingold", cell.jitter = 0.75)
-  nodeSize <- data.frame(table(p[,"vertex.names"]))
+  nodeSize <- data.frame(table(p$vertex.names))
   colnames(nodeSize)[2] <- "Frequency"
   p <- merge(p, nodeSize, by.x="vertex.names", by.y="Var1")
   ggplot(p, aes(x = x, y = y, xend = xend, yend = yend)) +

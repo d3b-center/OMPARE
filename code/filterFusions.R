@@ -2,9 +2,6 @@
 # Universal Function to filter fusions
 ######################################
 
-# cancerGenes <- read.delim("data/Reference/genelistreference.txt", stringsAsFactors = F)
-# cancerGenes <- subset(cancerGenes, type == "TumorSuppressorGene" | type == "CosmicCensus" | type == "Oncogene")
-
 filterFusions <- function(myFusFile = fusFile, myCancerGenes = cancerGenes, myJunctionReads = 2) {
   
   nm <- grep('star', myFusFile)
@@ -16,18 +13,6 @@ filterFusions <- function(myFusFile = fusFile, myCancerGenes = cancerGenes, myJu
   
   myFusData <- read.delim(myFusFile)
   fusDataFilt <- myFusData
-  
-  # separate comma separated gene names (arriba)
-  # fusDataFilt <- fusDataFilt %>% 
-  #   mutate(X.gene1 = strsplit(as.character(X.gene1), ",")) %>% 
-  #   unnest(X.gene1) %>%
-  #   as.data.frame()
-  # fusDataFilt <- fusDataFilt %>% 
-  #   mutate(gene2 = strsplit(as.character(gene2), ",")) %>% 
-  #   unnest(gene2) %>%
-  #   as.data.frame()
-  # fusDataFilt$X.gene1 <- gsub('[(].*','',fusDataFilt$X.gene1)
-  # fusDataFilt$gene2 <- gsub('[(].*','',fusDataFilt$gene2)
   
   # Format column names
   if(method == "star"){

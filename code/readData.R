@@ -3,9 +3,8 @@
 # Save all data to global env
 #############################
 
-source('code/helper.R')
-source('code/load_reference.R')
-source('code/filterFusions.R')
+source('code/load_reference.R') # load reference data
+source('code/filterFusions.R')  # load filter fusions script to filter fusions
 
 readData <- function(topDir, fusion_method = c("star","arriba"), snv_pattern = "all"){
   

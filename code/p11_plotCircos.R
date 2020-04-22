@@ -58,24 +58,6 @@ plotCircos <- function(topDir = topDir) {
   RCircos.Gene.Connector.Plot(RCircos.Heatmap.Data.High, 5, side)
   RCircos.Gene.Name.Plot(RCircos.Heatmap.Data.High, 4,6, side)
   
-  # Add Fusions (old code)
-  # myFus <- fusData
-  # RCircos.Link.Data.tmp.h <- chrMap[chrMap[,1]%in%myFus[,"HeadGene"],]
-  # RCircos.Link.Data.tmp.h <- RCircos.Link.Data.tmp.h[!grepl("CHR_", RCircos.Link.Data.tmp.h[,"Chromosome.scaffold.name"]),]
-  # RCircos.Link.Data.tmp.h <- RCircos.Link.Data.tmp.h[,c(4,2,3,1)]
-  # RCircos.Link.Data.tmp.h[,1] <- paste("chr", RCircos.Link.Data.tmp.h[,1], sep="")
-  # 
-  # RCircos.Link.Data.tmp.t <- chrMap[chrMap[,1]%in%myFus[,"TailGene"],]
-  # RCircos.Link.Data.tmp.t <- RCircos.Link.Data.tmp.t[!grepl("CHR_", RCircos.Link.Data.tmp.t[,"Chromosome.scaffold.name"]),]
-  # RCircos.Link.Data.tmp.t <- RCircos.Link.Data.tmp.t[,c(4,2,3,1)]
-  # RCircos.Link.Data.tmp.t[,1] <- paste("chr", RCircos.Link.Data.tmp.t[,1], sep="")
-  # 
-  # RCircos.Link.Data <- data.frame(RCircos.Link.Data.tmp.h[,c(1,2,3)], RCircos.Link.Data.tmp.t[,c(1,2,3)])
-  # track.num <- 12
-  # RCircos.Link.Plot(RCircos.Link.Data, track.num, TRUE)
-  # RCircos.Gene.Name.Plot(rbind(RCircos.Link.Data.tmp.h, RCircos.Link.Data.tmp.t), 4,9, inside.pos=50)
-  # dev.off()
-  
   # Add Fusions (added on 07/31/2019)
   myFus <- fusData
   myFus <- myFus[!grepl(",", myFus[,"TailGene"]),] # remove intergenic fusions from arriba

@@ -1,8 +1,8 @@
 ############################
-# Purpose: Germline Analysis
+# Filters for Germline Data
 ############################
 
-germlineAnalysis <- function(mutData = mutData.germ, myGermlineMarkers = germlineMarkers){
+filterGermline <- function(mutData = mutData.germ, myGermlineMarkers = germlineMarkers){
   
   # group by genes
   myGermlineMarkers <- myGermlineMarkers %>% 
@@ -37,7 +37,8 @@ germlineAnalysis <- function(mutData = mutData.germ, myGermlineMarkers = germlin
            Details = paste0("dbSNP: ", V212),
            InterVar_Rank = InterVar_automated) %>% # InterVar_automated as InterVar_Rank
     dplyr::select(Gene.refGene, Aberration, Details, InterVar_Rank, Class, gnomad211_exome_AF_popmax, gnomad211_genome_AF_popmax, gnomad30_genome_AF, DP, INFO) %>%
-    unique()
+    unique() %>%
+    as.data.frame()
   
   return(germlineOut)
 }

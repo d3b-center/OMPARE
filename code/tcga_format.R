@@ -18,7 +18,7 @@ tcga.gbm.mat <- cbind(tcga.gbm.mat[combGenes,], pnoc008.data[combGenes,])
 # keep full matrix for ImmuneProfile.R (not required for TCGA for now)
 # tcga.gbm.mat.all <- tcga.gbm.mat 
 
-# Now remove genes that have less 20 FPKM
+# Now remove genes that have max value < 50 FPKM
 maxVals <- apply(tcga.gbm.mat, FUN = max, MARGIN = 1)
 tcga.gbm.mat <- tcga.gbm.mat[maxVals>50,]
 
@@ -45,13 +45,9 @@ if(nrow(tcga.gbm.mat.tsne) >= 10000){
 tcga.gbm.mat.tsne <- tcga.gbm.mat.tsne[-ncol(tcga.gbm.mat.tsne)] # Remove cv
 
 # for getKMPlot.R and getSimilarPatients.R
-# diseasetypes <- c("High-grade glioma", sampleInfo$tumorType)
-# tcga.gbm.clinDataHGG <- tcga.gbm.clinData[grepl(paste(diseasetypes, collapse = "|"), tcga.gbm.clinData$integrated_diagnosis),]
-# tcga.gbm.HGG <- tcga.gbm.mat.tsne[,rownames(tcga.gbm.clinDataHGG)]
 tcga.gbm.allCor <- cor(tcga.gbm.mat.tsne[sampleInfo$subjectID], tcga.gbm.mat.tsne)
 tcga.gbm.allCor <- data.frame(t(tcga.gbm.allCor), check.names = F)
 tcga.gbm.allCor[,"sample_barcode"] <- rownames(tcga.gbm.allCor)
 tcga.gbm.allCor <- tcga.gbm.allCor[!grepl(sampleInfo$subjectID, rownames(tcga.gbm.allCor)),]
-# tcga.gbm.allCor <- tcga.gbm.allCor[intersect(rownames(tcga.gbm.allCor), survData$Kids_First_Biospecimen_ID),]
 tcga.gbm.allCor <- tcga.gbm.allCor[order(-tcga.gbm.allCor[,1]),]
 tcga.gbm.allCor[,1] <- round(tcga.gbm.allCor[,1], 3)
