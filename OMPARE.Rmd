@@ -21,8 +21,8 @@ editor_options:
 title: `r params$set_title`
 ---
 
-```{r include=FALSE}
-knitr::opts_chunk$set(comment = NA)
+```{r include=FALSE, echo=FALSE}
+knitr::opts_chunk$set(comment = NA, error = TRUE)
 ```
 
 ```{r load_libraries}

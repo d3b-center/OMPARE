@@ -37,10 +37,8 @@ if(!is.null(tmb)){                              # plot tumor mutational burden
 }
 
 # Prepare OpenPBTA and TCGA data to be used for functions in Page 4-7
-if(exists('expData')){
-  source('code/pbta_format.R')                   # format PBTA data
-  source('code/tcga_format.R')                   # format TCGA data
-}
+source('code/pbta_format.R')                    # format PBTA data
+source('code/tcga_format.R')                    # format TCGA data
 
 # Page 4 (OpenPBTA) and Page 7 (Genomically Similar PNOC008 and OpenPBTA)
 source('code/ImmuneProfile.R')                  # plot immune profile using xCell
