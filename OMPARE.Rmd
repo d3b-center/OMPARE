@@ -22,7 +22,7 @@ title: `r params$set_title`
 ---
 
 ```{r include=FALSE, echo=FALSE}
-knitr::opts_chunk$set(comment = NA, error = TRUE)
+knitr::opts_chunk$set(comment = NA)
 ```
 
 ```{r load_libraries}

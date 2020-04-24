@@ -5,7 +5,6 @@
 # Function to return all results from RNA-Seq Analysis
 suppressPackageStartupMessages(library(GSEABase))
 suppressPackageStartupMessages(library(tidyverse))
-suppressPackageStartupMessages(library(RDiseaseXpress))
 suppressPackageStartupMessages(library(xlsx))
 suppressPackageStartupMessages(library(optparse))
 
@@ -25,41 +24,46 @@ topDir <- opt$input
 fname <- opt$output
 
 # Dataset1: GTex Brain
-gtexData <- readRDS("data/Reference/GTEx/GTEx_fullExpr_matrix.RDS")
-gtexBrain <- getSamples(myStudy = "GTEx")
+# clinical
+if(!file.exists('data/Reference/GTEx/GTEx_clinical.RDS')){
+  gtexBrain <- getSamples(myStudy = "GTEx")
+} else {
+  gtexBrain <- readRDS('data/Reference/GTEx/GTEx_clinical.RDS')
+}
 gtexBrain <- gtexBrain %>%
   filter(subtissue == "Brain")
-gtexData <- gtexData[,c("gene_id", gtexBrain$sample_id)]
+
+# gencode annotation
 gtexGeneAnnot <- read.delim("data/Reference/GTEx/gencode.v23.annotation.gi_ti_gs.txt", stringsAsFactors =F)
-gtexGeneAnnot <- gtexGeneAnnot[,c("gene_id", "gene_symbol")]
 
-# Format gtex data ensembl ids
-gtexData$gene_id <- sapply(as.character(gtexData$gene_id), FUN=remDotStuff)
-rownames(gtexData) <- gtexData$gene_id
-gtexData <- gtexData[-1]
+# expression
+gtexData <- readRDS("data/Reference/GTEx/GTEx_fullExpr_matrix.RDS")
+gtexData <- gtexData[,c("gene_id", gtexBrain$sample_id)]
+gtexData <- gtexGeneAnnot %>%
+  dplyr::select(c(gene_id, gene_symbol)) %>%
+  inner_join(gtexData, by = 'gene_id') %>%
+  mutate(means = rowMeans(dplyr::select(.,-gene_id, -gene_symbol))) %>% # take rowMeans
+  arrange(desc(means)) %>% # arrange decreasing by means
+  distinct(gene_symbol, .keep_all = TRUE) %>% # keep the ones with greatest mean value. If ties occur, keep the first occurencce
+  dplyr::select(-c(gene_id, means)) %>%
+  column_to_rownames('gene_symbol') 
 
-# PBTA
-# clinical data
+# Dataset2: PBTA (full n = 1028)
+# clinical
 pbta.hist <- read.delim('data/Reference/PBTA/pbta-histologies.tsv', stringsAsFactors = F)
 pbta.hist <- pbta.hist %>%
   filter(experimental_strategy == "RNA-Seq")
 
-# Dataset2: PBTA (full)
-pbta.polya <- readRDS('data/Reference/PBTA/pbta-gene-expression-rsem-fpkm.polya.rds')
-pbta.stranded <- readRDS('data/Reference/PBTA/pbta-gene-expression-rsem-fpkm.stranded.rds')
-pbta.full <- merge(pbta.polya, pbta.stranded, by = 'gene_id')
-pbta.full <- pbta.full[grep('PAR_Y', pbta.full$gene_id, invert = TRUE),]
-pbta.annot <- pbta.full %>%
-  separate(gene_id, c("gene_id", "gene_symbol"), sep = "\\_", extra = "merge") %>%
-  dplyr::select(c(gene_id, gene_symbol))
-pbta.full <- pbta.full %>%
-  separate(gene_id, c("gene_id", "gene_symbol"), sep = "\\_", extra = "merge") %>%
-  dplyr::select(-c(gene_symbol))
-pbta.full$gene_id <- sapply(as.character(pbta.full$gene_id), FUN=remDotStuff)
-rownames(pbta.full) <- pbta.full$gene_id
-pbta.full <- pbta.full[-1]
+# expression
+pbta.polya <- readRDS('data/Reference/PBTA/pbta-gene-expression-rsem-fpkm-collapsed.polya.rds')
+pbta.stranded <- readRDS('data/Reference/PBTA/pbta-gene-expression-rsem-fpkm-collapsed.stranded.rds')
+pbta.full <- pbta.polya %>%
+  rownames_to_column("gene_symbol") %>%
+  full_join(pbta.stranded %>%
+              rownames_to_column("gene_symbol"), by = 'gene_symbol') %>%
+  column_to_rownames("gene_symbol")
 
-# Dataset3: PBTA (HGG)
+# Dataset3: PBTA (HGG n = 112)
 pbta.hist <- pbta.hist %>%
   filter(integrated_diagnosis == "High-grade glioma")
 pbta.hgg <- pbta.full[,colnames(pbta.full) %in% pbta.hist$Kids_First_Biospecimen_ID]
@@ -83,46 +87,49 @@ hallMarkSetsTS <- stack(hallMarkSets)
 
 # Drug Interaction DB
 dgidb <- read.delim("data/Reference/DGIdb.txt", stringsAsFactors = F)
+dgidb <- dgidb %>%
+  mutate(Gene_name = gene_name) %>%
+  filter(interaction_types != "" & drug_name != "" & Gene_name != "") %>%
+  dplyr::select(Gene_name, drug_name) %>%
+  unique() %>%
+  group_by(Gene_name) %>%
+  dplyr::summarize(Drugs=paste(drug_name, collapse=", ")) %>%
+  as.data.frame()
 
-# Patient Expression data
+# PNOC008 patient
+# expression
 expDat <- list.files(path = topDir, pattern = "*.genes.results*", recursive = TRUE, full.names = T)
 if(length(expDat) == 1){
   expData <- read.delim(expDat)
-  expData[,"gene_id"] <- sapply(as.character(expData[,1]), FUN = getEns)
-  expData <- expData[order(-expData[,"FPKM"]),]
-  expData <- expData[!duplicated(expData[,1]),]
-  expData[,1] <- sapply(as.character(expData[,1]), FUN = remDotStuff)
-  rownames(expData) <- expData[,1]
+  expData <- expData %>% 
+    mutate(gene_id = str_replace(gene_id, "_PAR_Y_", "_"))  %>%
+    separate(gene_id, c("gene_id", "gene_symbol"), sep = "\\_", extra = "merge") %>%
+    unique()
+  expData <- expData %>% 
+    arrange(desc(FPKM)) %>% 
+    distinct(gene_symbol, .keep_all = TRUE) %>%
+    dplyr::select(gene_symbol, FPKM) %>%
+    column_to_rownames("gene_symbol")
   assign("expData", expData, envir = globalenv())
 }
 
 # function to tabulate DE and Pathway results
 runRNASeqAnalysis <- function(expData = NULL, refData = gtexData, refAnnot = gtexGeneAnnot, thresh = 2, comparison) {
-
+  
   # Merge GTEx and Patient data on common genes
   intGenesTmp <- intersect(rownames(refData), rownames(expData))
-  mergeDF <- cbind(refData[intGenesTmp,], expData[intGenesTmp,"FPKM"])
-
+  mergeDF <- cbind(refData[intGenesTmp,], expData[intGenesTmp, "FPKM"])
+  
   # Collapse to unique gene symbols
-  # Matrix of GTEx and Patient FPKM data
-  refAnnot <- unique(refAnnot[c("gene_id","gene_symbol")])
-  refAnnot$gene_id <- sapply(as.character(refAnnot$gene_id), FUN=remDotStuff)
-  rownames(refAnnot) <- refAnnot$gene_id
-  mergeDF <- cbind(refAnnot[rownames(mergeDF),2], mergeDF)
-  mergeDF[,"meanExp"] <- rowMeans(mergeDF[-1])
-  mergeDF <- mergeDF[order(-mergeDF[,"meanExp"]),]
-  mergeDF <- mergeDF[!duplicated(mergeDF[,1]),]
-  rownames(mergeDF) <- mergeDF[,1]
-  mergeDF <- mergeDF[-1]
-  mergeDF <- mergeDF[-ncol(mergeDF)]
+  # Matrix of reference data and Patient FPKM data
   colnames(mergeDF)[ncol(mergeDF)] <- "SampleX"
-
+  
   # Calculate Gene Outliers in Patient (top 20 Up and Down)
   getAllOutliers <- function(myMergeDF = mergeDF, getTop = 20, cancerGeneNames = cancerGenes$Gene_Symbol) {
-
+    
     # Filter in Patient: FPKM > 10
     myMergeDF <- myMergeDF[myMergeDF$SampleX > 10,]
-
+    
     # z-score and return only patient's value
     getZ <- function(x) {
       x <- log2(x+1)
@@ -130,7 +137,7 @@ runRNASeqAnalysis <- function(expData = NULL, refData = gtexData, refAnnot = gte
       return(out[length(out)])
     }
     output <- apply(myMergeDF, FUN=getZ, MARGIN=1)
-
+    
     # full data
     output.df <- data.frame(output, myMergeDF[names(output),"SampleX"])
     colnames(output.df) <- c("Z_Score", "FPKM")
@@ -139,31 +146,31 @@ runRNASeqAnalysis <- function(expData = NULL, refData = gtexData, refAnnot = gte
     output.df$DE[which(output.df$Z_Score > 1.5)] <- "Up"
     output.df$Comparison <- comparison
     output.df$CancerGene <- ifelse(rownames(output.df) %in% cancerGeneNames, TRUE, FALSE)
-
+    
     # top 20 only
     outputCanc <- output[intersect(names(output), cancerGeneNames)] # filter to cancer gene list
     outputDown <- sort(outputCanc)[1:getTop] # top 20 down
     outputUp <- sort(outputCanc, T)[1:getTop] # top 20 up
-
+    
     outputUpDF <- data.frame(outputUp, myMergeDF[names(outputUp),"SampleX"])
     colnames(outputUpDF) <- c("Z_Score", "FPKM")
     outputDownDF <- data.frame(outputDown, myMergeDF[names(outputDown),"SampleX"])
     colnames(outputDownDF) <- c("Z_Score", "FPKM")
-
+    
     return(list(expr.genes.z.score = output,
                 diffexpr.top20 = rbind(outputUpDF, outputDownDF),
                 output.df = output.df))
   }
   geneAnalysisOut <- getAllOutliers()
-
+  
   # Calculate Pathway Outliers-
   # Currently use Enrichment, but moving forward will use GSVA
-
+  
   # Get Up and Down Genes
   tmpghj <- geneAnalysisOut[[1]]
   upGenes <- names(tmpghj)[which(geneAnalysisOut[[1]] > thresh)]
   downGenes <- names(tmpghj)[which(geneAnalysisOut[[1]] < (-1*thresh))]
-
+  
   # If not enough genes take top 1000
   if(length(upGenes) < 1000) {
     upGenes <- names(sort(geneAnalysisOut[[1]], decreasing = TRUE))[1:1000]
@@ -171,39 +178,39 @@ runRNASeqAnalysis <- function(expData = NULL, refData = gtexData, refAnnot = gte
   if(length(downGenes) < 1000) {
     downGenes <- names(sort(geneAnalysisOut[[1]], decreasing = FALSE))[1:1000]
   }
-
+  
   # Code to run pathway analysis
   runHypGeom <- function(set, genes, n = 20000, universe = NULL) {
-
+    
     if(!is.null(universe)) {
       set <- intersect(set, universe)
     }
-
+    
     # number of white balls
     x <- length(intersect(genes, set))
     ngenes <- as.character(toString(intersect(genes, set)))
-
+    
     # white balls
     m <- length(genes)
-
+    
     # black balls
     n2 <- n-m
-
+    
     # balls drawn from the urn
     k <- length(set)
-
+    
     out <- phyper(x-1, m, n2, k, lower.tail=F)
     setSize <- k
     overLap <- x
     numGenes <- m
-
+    
     myRet <- c(setSize, numGenes, overLap, out, ngenes)
     return(myRet)
   }
-
+  
   # Accessory for functional enrichment
   funcEnrichment <- function(genes, sets, qval=.25, numRet=5, myN=20000, myUniverse=NULL) {
-
+    
     out <- lapply(sets, FUN = runHypGeom, genes = genes, n=myN, universe=myUniverse)
     out <- data.frame(out)
     out <- data.frame(t(out))
@@ -212,44 +219,36 @@ runRNASeqAnalysis <- function(expData = NULL, refData = gtexData, refAnnot = gte
     colnames(out)[1:5] <- c("SET_SIZE", "NUM_GENES_INPUT", "OVERLAP", "P_VAL", "GENES")
     out$Pathway <- rownames(out)
     return(out)
-
+    
   }
-
+  
   # up pathways
   upPathways <- funcEnrichment(upGenes, hallMarkSets, qval=1, myN=25000, myUniverse=rownames(mergeDF))
   upPathways <- upPathways %>%
     mutate(Direction = "Up") %>%
     filter(P_VAL < 0.05) %>%
     arrange(P_VAL)
-
+  
   # down pathways
   downPathways <- funcEnrichment(downGenes, hallMarkSets, qval=1, myN=25000, myUniverse=rownames(mergeDF))
   downPathways <- downPathways %>%
     mutate(Direction = "Down") %>%
     filter(P_VAL < 0.05) %>%
     arrange(P_VAL)
-
+  
   # full pathway dataframe
   pathway.df <- rbind(upPathways, downPathways)
   pathway.df <- pathway.df[,c("Pathway", "GENES", "SET_SIZE", "NUM_GENES_INPUT", "OVERLAP", "P_VAL", "ADJ_P_VAL", "Direction")]
   pathway.df$Comparison <- comparison
-
+  
   # expand gene names
   pathway.df.exp <- pathway.df %>%
     separate_rows(GENES, convert = TRUE) %>%
     dplyr::select(Pathway, GENES)
-
+  
   # now for the full output.df, add drug info and pathway info
   output.df <- geneAnalysisOut$output.df
   output.df$Gene_name <- rownames(output.df)
-  dgidb <- dgidb %>%
-    mutate(Gene_name = gene_name) %>%
-    filter(interaction_types != "" & drug_name != "" & Gene_name != "") %>%
-    dplyr::select(Gene_name, drug_name) %>%
-    unique() %>%
-    group_by(Gene_name) %>%
-    dplyr::summarize(Drugs=paste(drug_name, collapse=", ")) %>%
-    as.data.frame()
   output.df <- merge(output.df, dgidb, by = 'Gene_name', all.x = TRUE)
   output.df <- merge(output.df, pathway.df.exp, by.x = 'Gene_name', by.y = 'GENES', all.x = TRUE)
   output.df <- output.df %>%
@@ -257,7 +256,7 @@ runRNASeqAnalysis <- function(expData = NULL, refData = gtexData, refAnnot = gte
     mutate(Pathway = toString(Pathway)) %>%
     unique() %>%
     filter(DE != "")
-
+  
   finalOut <- list(pathways = pathway.df, genes = output.df)
   return(finalOut)
 }

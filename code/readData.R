@@ -10,17 +10,11 @@ readData <- function(topDir, fusion_method = c("star","arriba"), snv_pattern = "
   
   # patient sample info (at most one with .txt extension)
   # assign n/a if no clinical info is present
-  sampleInfo <- list.files(path = paste0(topDir, "Clinical"), pattern = "*.txt", full.names = T)
+  sampleInfo <- list.files(path = topDir, pattern = "patient_report.txt", recursive = T, full.names = T)
   if(length(sampleInfo) == 1){
     sampleInfo <- read.delim(sampleInfo, stringsAsFactors = F)
-  } else {
-    sampleInfo <- setNames(data.frame(t(rep("n/a", 15)), stringsAsFactors = F), 
-                           nm = c("patientName","reportDate","reportVersion","primRelapse",
-                                  "tumorType","tumorLocation","collectionDate","labDirector",
-                                  "pathologist","primPhysician","medicalFacility","ethnicity",
-                                  "dob","sex","subjectID"))
+    assign("sampleInfo", sampleInfo, envir = globalenv())
   }
-  assign("sampleInfo", sampleInfo, envir = globalenv())
   
   # mutation data (can be multiple with .maf extension)
   # if snv_pattern is all, then use all files except consensus
@@ -39,25 +33,6 @@ readData <- function(topDir, fusion_method = c("star","arriba"), snv_pattern = "
     assign("mutData", mutData, envir = globalenv())
   } 
   
-  # # TMB scores
-  # TMBFiles <- list.files(path = topDir, pattern = "TMB", recursive = T, full.names = T)
-  # if(length(TMBFiles) == 2) {
-  #   pedTMB <- grep('TCGA', TMBFiles, invert = T, value = T)
-  #   pedTMB <- data.table::fread(pedTMB)
-  #   assign("pedTMB", pedTMB, envir = globalenv())
-  #   adultTMB <- grep('TCGA', TMBFiles, value = T)
-  #   adultTMB <- data.table::fread(adultTMB)
-  #   assign("adultTMB", adultTMB, envir = globalenv())
-  # }
-  # 
-  # # TMB bedfile
-  # TMBFileBED <- list.files(path = topDir, pattern = ".bed$", recursive = T, full.names = T)
-  # if(length(TMBFileBED) == 1) {
-  #   TMBFileBED <- data.table::fread(TMBFileBED)
-  #   colnames(TMBFileBED)  <- c("chr", "start", "end")
-  #   assign("TMBFileBED", TMBFileBED, envir = globalenv())
-  # }
-  
   # germline data
   mutFiles <- list.files(path = topDir, pattern = 'hg38_multianno.txt.gz', recursive = TRUE, full.names = T)
   if(length(mutFiles) >= 1){
@@ -68,21 +43,13 @@ readData <- function(topDir, fusion_method = c("star","arriba"), snv_pattern = "
     assign("mutData.germ", mutData.germ, envir = globalenv())
   } 
   
-  # copy number (only 1 per patient with .CNVs extension)
-  cnvData <- list.files(path = topDir, pattern = "*.CNVs$", recursive = TRUE, full.names = T)
+  # copy number pvalue file
+  cnvData <- list.files(path = topDir, pattern = "*.CNVs.p.value.txt", recursive = TRUE, full.names = T)
   if(length(cnvData) == 1){
-    cnvData <- data.table::fread(cnvData, header = F)
+    cnvData <- data.table::fread(cnvData, header = T)
+    cnvData <- cnvData[,1:5]
     cnvData <- as.data.frame(cnvData)
     assign("cnvData", cnvData, envir = globalenv())
-  } else {
-    # try to read p-value data if available
-    cnvData <- list.files(path = topDir, pattern = "*.CNVs.p.value.txt", recursive = TRUE, full.names = T)
-    if(length(cnvData) == 1){
-      cnvData <- data.table::fread(cnvData, header = T)
-      cnvData <- cnvData[,1:5]
-      cnvData <- as.data.frame(cnvData)
-      assign("cnvData", cnvData, envir = globalenv())
-    }
   }
   
   # copy number ratio data for plot
@@ -102,7 +69,7 @@ readData <- function(topDir, fusion_method = c("star","arriba"), snv_pattern = "
   } else {
     fusPattern = "*star-fusion.fusion_candidates.final|*.arriba.fusions.tsv"
   }
-  # read fusion files/filter them/merge them
+  # read fusion files + filter and merge them
   fusFiles <- list.files(path = topDir, pattern = fusPattern, recursive = TRUE, full.names = T)
   if(length(fusFiles) >= 1){
     fusFiles <- lapply(fusFiles, filterFusions)
