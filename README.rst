@@ -4,8 +4,8 @@
 Omics Patient Report
 ********************
 
-:authors: Pichai Raman, Komal S Rathi
-:contact: ramanp@email.chop.edu
+:authors: Komal S Rathi, Pichai Raman
+:contact: rathik@email.chop.edu
 :organization: D3B, CHOP
 :status: This is "work in progress"
 :date: |date|
@@ -17,155 +17,168 @@ Omics Patient Report
 Prerequisites
 =============
 
+1. R Packages
+
 .. code-block:: bash
 
 	# install packages
 	Rscript code/install_pkgs.R
 
-Project Folder Organization
-===========================
-
-**Input files:**
-
-* Copy Number: CNV/\*.CNVs.p.value.txt (Optional)
-* Clinical: Clinical/patient_report.txt (Optional)
-* Expression: ExpressionGene/\*.genes.results (Optional)
-* Fusions: Fusions/\*.arriba.fusions.tsv (Optional)
-* Fusions: Fusions/\*.star-fusion.fusion_candidates.final (Optional)
-* Somatic Variants: MutationsMAF/\*.maf (Optional)
-* Germline Variants: MutationsMAF/\*.hg38_multianno.txt.gz (Optional)
-
-
-**Instructions:**
-	
-1. Clone this repo.
-2. Create project folder using the convention *OMPARE/data/subjectID*.
-3. Dump all downloaded data under the project folder.
-4. Run *create_project.R* script to create and organize project folder. This script will also create intermediate folders like *ImmuneScores* and output folders like *Reports* for .html reports and *Summary* for excel summary.
-5. *patient_report.txt* can either be created manually or using the *create_clinfile.R* script.
-
+2. Reference Data
+   
 .. code-block:: bash
 
-	# Run script to organize files into corresponding folders
-	# this just needs one argument: path to project directory
+	# get reference data from s3
+	# currently data is available in the repo. In the future, we will pull from s3
+	aws s3 --profile saml s3://d3b-bix-dev-data-bucket/PNOC008/Reference /path/to/OMPARE/data/Reference
 
-	Rscript create_project.R data/PNOC008-08/
+Project Organization
+====================
+
+1. Clone the OMPARE repository.
+
+2. Download required files from data delivery project:
+
+* Copy Number: .CNVs.p.value.txt
+* Copy Number: .controlfreec.ratio.txt
+* Expression: .genes.results
+* Fusions: .arriba.fusions.tsv
+* Fusions: .star-fusion.fusion_candidates.final
+* Somatic Variants: .maf
+* Germline Variants: .hg38_multianno.txt.gz
+
+3. Organize patient data: 
+Run *create_project.R* script to create and organize project folder under data/. This script will also create intermediate folders like *ImmuneScores* and *GSVA* as well as output folders like *Reports* for .html reports and *Summary* for excel summary.
+   
+.. code-block:: bash
+
+	# Run script to create project folder
+	# -s source directory will data dump from cavatica
+	# -d destination directory. Should be /path/to/OMPARE/data/subjectID
+	# Example for Patient PNOC008-13
+	Rscript create_project.R -s /path/to/source/PNOC008-13-cavatica-files -d /path/to/OMPARE/data/PNOC008-13/
+
+4. Create clinical file using the *create_clinfile.R* script.
+
+.. code-block:: bash
 
 	# Run script to create clinical file
 	# -s is the env variable PNOC008_MANIFEST which is the link to the manifest on google sheets
 	# -p parameter should match the subjectID in the manifest so check that before running
-	# -d is the path to project directory
+	# -d is the path to project directory. Should be /path/to/OMPARE/data/subjectID
+	# Example for Patient PNOC008-13
+	Rscript create_clinfile.R -s $PNOC008_MANIFEST -p PNOC008-8 -d /path/to/OMPARE/data/PNOC008-13
 
-	Rscript create_clinfile.R -s $PNOC008_MANIFEST -p PNOC008-8 -d data/PNOC008-08
-
-**Output files:**
-
-The above scripts should create a folder structure as shown below:
+Steps (3) and (4) should create a folder structure as shown below:
 
 .. code-block:: bash
 
-	tree data/PNOC008-08/
+	# Example for PNOC008-13
+	tree /path/to/OMPARE/data/PNOC008-13/
 	.
 	├── CNV
-	│   └── f12011c0-2981-4d54-9678-79988d67ded8.controlfreec.CNVs.p.value.txt
+	│   ├── 86319bd2-424d-44bf-928b-03a0ad97ee54.controlfreec.CNVs.p.value.txt
+	│   └── 86319bd2-424d-44bf-928b-03a0ad97ee54.controlfreec.ratio.txt
 	├── Clinical
 	│   └── patient_report.txt
 	├── ExpressionGene
-	│   └── bf7cafc7-9f33-4d6a-a088-e1794a731232.rsem.genes.results.gz
+	│   └── d27a8113-7acb-4303-a018-e1383c2673af.rsem.genes.results.gz
 	├── Fusions
-	│   ├── bf7cafc7-9f33-4d6a-a088-e1794a731232.STAR.fusion_predictions.abridged.coding_effect.tsv
-	│   └── bf7cafc7-9f33-4d6a-a088-e1794a731232.arriba.fusions.tsv
+	│   ├── d27a8113-7acb-4303-a018-e1383c2673af.STAR.fusion_predictions.abridged.coding_effect.tsv
+	│   └── d27a8113-7acb-4303-a018-e1383c2673af.arriba.fusions.tsv
+	├── GSVA
 	├── ImmuneScores
 	├── MutationsMAF
-	│   ├── 5681def8-e594-4866-b612-26ad07a8f20b.gatk.hardfiltered.PASS.vcf.gz.hg38_multianno.txt.gz
-	│   ├── bf2a2a9f-0251-4017-aaeb-0c3b97690273.consensus_somatic.vep.maf
-	│   ├── f12011c0-2981-4d54-9678-79988d67ded8.lancet_somatic.vep.maf
-	│   ├── f12011c0-2981-4d54-9678-79988d67ded8.mutect2_somatic.vep.maf
-	│   ├── f12011c0-2981-4d54-9678-79988d67ded8.strelka2_somatic.vep.maf
-	│   ├── f12011c0-2981-4d54-9678-79988d67ded8.vardict_somatic.vep.maf
+	│   ├── 5ff3b001-bbdd-4640-829e-5d340aa90482.consensus_somatic.vep.maf
+	│   ├── 86319bd2-424d-44bf-928b-03a0ad97ee54.gatk.hardfiltered.PASS.vcf.gz.hg38_multianno.txt.gz
+	│   ├── 86319bd2-424d-44bf-928b-03a0ad97ee54.lancet_somatic.vep.maf
+	│   ├── 86319bd2-424d-44bf-928b-03a0ad97ee54.mutect2_somatic.vep.maf
+	│   ├── 86319bd2-424d-44bf-928b-03a0ad97ee54.strelka2_somatic.vep.maf
+	│   ├── 86319bd2-424d-44bf-928b-03a0ad97ee54.vardict_somatic.vep.maf
 	├── Reports
-	└── Summary
+	├── Summary
 
+5. Update PNOC008 expression matrix for each new patient. This will update PNOC008_matrix.RDS (expression matrix) and PNOC008_clinData.RDS (clinical file) under /path/to/OMPARE/data/Reference/PNOC008.
+   
+.. code-block:: bash
 
-Report Generation
-=================
+	Rscript code/pnoc_format.R   
 
-**Input Parameters:** 
-
-- *topDir* is your project directory. (Required)
-- *fusion_method* is the fusion method. Allowed values: *star*, *arriba*, *both* or not specified. (Optional) 
-- *set_title* is the title for the report. (Optional)
-- *snv_pattern* is one of the six values for simple variants: *lancet*, *mutect2*, *strelka2*, *vardict*, *consensus*, *all* (all four callers together)
-- *tmb* (Tumor mutational burden) is set to 77.46.
-  
-**NOTE**: Easiest way to run the report is the use the template below and just replace the `subjectID`.
-
-
-**Instructions:**
+6. Report:
 
 .. code-block:: bash
 
-	# e.g. of run using PNOC008-08
-	setwd('/path/to/OMPARE/')
-	# reports
+	# topDir is your project directory
+	# fusion_method is the fusion method. Allowed values: *star*, *arriba*, *both* or not specified. (Optional) 
+	# set_title is the title for the report. (Optional)
+	# snv_pattern is one of the six values for simple variants: *lancet*, *mutect2*, *strelka2*, *vardict*, *consensus*, *all* (all four callers together)
+	# tmb (Tumor mutational burden) is set to 77.46.
+	setwd(/path/to/OMPARE)
 	callers <- c("lancet", "mutect2", "strelka2", "vardict", "consensus", "all")
 	for(i in 1:length(callers)) {
-	  outputfile <- paste0("data/PNOC008-08/Reports/PNOC008_08_", callers[i], ".html")
+	  outputfile <- paste0("data/PNOC008-13/Reports/PNOC008-13_", callers[i], ".html")
 	  rmarkdown::render(input = 'OMPARE.Rmd', 
-	                    params = list(topDir = 'data/PNOC008-08/',
+	                    params = list(topDir = 'data/PNOC008-13/',
 	                                  fusion_method = 'arriba',
-	                                  set_title = 'PNOC008-08 Patient Report',
+	                                  set_title = 'PNOC008-13 Patient Report',
 	                                  snv_pattern = callers[i],
 	                                  tmb = 77.46),
 	                    output_file = outputfile)
 	}
-	# summary
-	system("Rscript code/tabulate_excel.R -i data/PNOC008-08 -o PNOC008-08_summary.xlsx")
 
-
-**Output files:**
-
-These are some intermediate and final files created after running the code:
-
-* tmpRCircos.png: Requires Fusion data. 
-* ImmuneScores/rawScores.txt: Requires Expression data.
-* Reports/\*.html for each individual caller, consensus and all callers together.
-* Summary/\*.excel summary report.
-
-The project folder will look like this:
+7. Excel summary:
 
 .. code-block:: bash
 
-	tree data/PNOC008-08/
+	# create excel summary file
+	Rscript code/tabulate_excel.R -i /path/to/OMPARE/data/PNOC008-13 -o PNOC008-13_summary.xlsx
+
+After running step 7, the project folder should have some intermediate and output files:
+
+* tmpRCircos.png: circos plot 
+* ImmuneScores/rawScores.txt: raw scores from immune profile function
+* GSVA/hallmark_rawScores.txt: ssGSEA raw scores
+* Reports/\*.html for each individual caller, consensus and all callers together.
+* Summary/\*.excel summary report.
+
+.. code-block:: bash
+
+	tree data/PNOC008-13/
 	.
 	├── CNV
-	│   └── f12011c0-2981-4d54-9678-79988d67ded8.controlfreec.CNVs.p.value.txt
+	│   ├── 86319bd2-424d-44bf-928b-03a0ad97ee54.controlfreec.CNVs.p.value.txt
+	│   └── 86319bd2-424d-44bf-928b-03a0ad97ee54.controlfreec.ratio.txt
 	├── Clinical
 	│   └── patient_report.txt
 	├── ExpressionGene
-	│   └── bf7cafc7-9f33-4d6a-a088-e1794a731232.rsem.genes.results.gz
+	│   └── d27a8113-7acb-4303-a018-e1383c2673af.rsem.genes.results.gz
 	├── Fusions
-	│   ├── bf7cafc7-9f33-4d6a-a088-e1794a731232.STAR.fusion_predictions.abridged.coding_effect.tsv
-	│   └── bf7cafc7-9f33-4d6a-a088-e1794a731232.arriba.fusions.tsv
+	│   ├── d27a8113-7acb-4303-a018-e1383c2673af.STAR.fusion_predictions.abridged.coding_effect.tsv
+	│   └── d27a8113-7acb-4303-a018-e1383c2673af.arriba.fusions.tsv
+	├── GSVA
+	│   └── hallmark_rawScores.txt
 	├── ImmuneScores
-	│   └── rawScores.txt
+	│   ├── rawScores.txt
+	│   └── topCor_rawScores.txt
 	├── MutationsMAF
-	│   ├── 5681def8-e594-4866-b612-26ad07a8f20b.gatk.hardfiltered.PASS.vcf.gz.hg38_multianno.txt.gz
-	│   ├── bf2a2a9f-0251-4017-aaeb-0c3b97690273.consensus_somatic.vep.maf
-	│   ├── f12011c0-2981-4d54-9678-79988d67ded8.lancet_somatic.vep.maf
-	│   ├── f12011c0-2981-4d54-9678-79988d67ded8.mutect2_somatic.vep.maf
-	│   ├── f12011c0-2981-4d54-9678-79988d67ded8.strelka2_somatic.vep.maf
-	│   ├── f12011c0-2981-4d54-9678-79988d67ded8.vardict_somatic.vep.maf
+	│   ├── 5ff3b001-bbdd-4640-829e-5d340aa90482.consensus_somatic.vep.maf
+	│   ├── 86319bd2-424d-44bf-928b-03a0ad97ee54.gatk.hardfiltered.PASS.vcf.gz.hg38_multianno.txt.gz
+	│   ├── 86319bd2-424d-44bf-928b-03a0ad97ee54.lancet_somatic.vep.maf
+	│   ├── 86319bd2-424d-44bf-928b-03a0ad97ee54.mutect2_somatic.vep.maf
+	│   ├── 86319bd2-424d-44bf-928b-03a0ad97ee54.strelka2_somatic.vep.maf
+	│   ├── 86319bd2-424d-44bf-928b-03a0ad97ee54.vardict_somatic.vep.maf
 	│   └── mpfDataFormat.txt
 	├── Reports
-	│   ├── PNOC008_08_all.html
-	│   ├── PNOC008_08_consensus.html
-	│   ├── PNOC008_08_lancet.html
-	│   ├── PNOC008_08_mutect2.html
-	│   ├── PNOC008_08_strelka2.html
-	│   └── PNOC008_08_vardict.html
-	└── Summary
-	    └── PNOC008-08_summary.xlsx
+	│   ├── PNOC008_13_all.html
+	│   ├── PNOC008_13_consensus.html
+	│   ├── PNOC008_13_lancet.html
+	│   ├── PNOC008_13_mutect2.html
+	│   ├── PNOC008_13_strelka2.html
+	│   └── PNOC008_13_vardict.html
+	├── Summary
+	│   ├── PNOC008-13_summary.xlsx
+	│   └── up_pathways_gen_similar.txt
+	└── tmpRCircos.png
 
 
 Run everything
