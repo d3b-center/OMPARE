@@ -8,17 +8,13 @@ suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(xlsx))
 suppressPackageStartupMessages(library(optparse))
 
-# source code
-source('code/helper.R')
-
+# parse params
 option_list <- list(
   make_option(c("-i", "--input"), type = "character",
               help = "Directory e.g. data/PNOC008-04"),
   make_option(c("-o", "--output"), type = "character",
               help = "output excel file with extension i.e. output.xlsx")
 )
-
-# load data
 opt <- parse_args(OptionParser(option_list = option_list))
 topDir <- opt$input
 fname <- opt$output
