@@ -50,9 +50,9 @@ highConfidenceFindingsTable <- function(delRPKM = 10) {
       myTableDel <- myTableDel[which(myTableDel[,sampleInfo$subjectID]<10),]
       if(nrow(myTableDel)>0) {
         myTableDel[,"SupportEv"] <- paste("FPKM=", myTableDel[,sampleInfo$subjectID], ifelse(is.na(myTableDel[,"ind"]), "", paste(", Pathway: ", myTableDel[,"ind"], sep="")), sep="")
-        myTableDel <- myTableDel[,c("Aberration", "Type", "Details", "Score", "Drugs", "Trials", "SupportEv")]
+        myTableDel <- myTableDel[,c("Aberration", "Type", "Details", "Drugs", "SupportEv")]
       } else {
-        colnames(myTableDel) <- c("Aberration", "Type", "Details", "Score", "Drugs", "Trials", "SupportEv")
+        colnames(myTableDel) <- c("Aberration", "Type", "Details", "Drugs", "SupportEv")
       }
     } else {
       myTableDel <- data.frame()
@@ -67,9 +67,9 @@ highConfidenceFindingsTable <- function(delRPKM = 10) {
       myTableAmp <- myTableAmp[which(myTableAmp[,sampleInfo$subjectID]>100),]
       if(nrow(myTableAmp)>0) {
         myTableAmp[,"SupportEv"] <- paste("FPKM=", myTableAmp[,sampleInfo$subjectID], ifelse(is.na(myTableAmp[,"ind"]), "", paste(", Pathway: ", myTableAmp[,"ind"], sep="")), sep="")
-        myTableAmp <- myTableAmp[,c("Aberration", "Type", "Details", "Score", "Drugs", "Trials", "SupportEv")]
+        myTableAmp <- myTableAmp[,c("Aberration", "Type", "Details", "Drugs", "SupportEv")]
       } else {
-        colnames(myTableAmp) <- c("Aberration", "Type", "Details", "Score", "Drugs", "Trials", "SupportEv")
+        colnames(myTableAmp) <- c("Aberration", "Type", "Details", "Drugs", "SupportEv")
       }
     } else {
       myTableAmp <- data.frame()
@@ -83,7 +83,7 @@ highConfidenceFindingsTable <- function(delRPKM = 10) {
       myTableMut <- merge(myTableMut, rnaEvidence, by.x="Gene", by.y="Gene", all.x=T)
       myTableMut <- merge(myTableMut, hallMarkSetsTS.sub, by.x="Gene", by.y="values", all.x=T)
       myTableMut[,"SupportEv"] <- paste("FPKM=", myTableMut[,sampleInfo$subjectID], ifelse(is.na(myTableMut[,"ind"]), "", paste(", Pathway: ", myTableMut[,"ind"], sep="")), sep="")
-      myTableMut <- myTableMut[,c("Aberration", "Type", "Details", "Score", "Drugs", "Trials", "SupportEv")]
+      myTableMut <- myTableMut[,c("Aberration", "Type", "Details", "Drugs", "SupportEv")]
     } else {
       myTableMut <- data.frame()
     }
@@ -104,7 +104,7 @@ highConfidenceFindingsTable <- function(delRPKM = 10) {
                                         myTableFus[,"Gene2_fpkm"],
                                         ifelse(is.na(myTableFus[,"ind.x"]), "", paste(", Pathway: ", myTableFus[,"ind.x"], ",", sep="")),
                                         ifelse(is.na(myTableFus[,"ind.y"]), "", paste("", myTableFus[,"ind.y"], sep="")), sep="")
-      myTableFus <- myTableFus[,c("Aberration", "Type", "Details", "Score", "Drugs", "Trials", "SupportEv")]
+      myTableFus <- myTableFus[,c("Aberration", "Type", "Details", "Drugs", "SupportEv")]
     } else {
       myTableFus <- data.frame()
     }
