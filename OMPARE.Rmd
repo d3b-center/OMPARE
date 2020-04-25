@@ -46,7 +46,6 @@ readData(topDir = topDir,
 source("code/driver.R")
 ```
 
-
 Key Clinical Findings (P1)
 ===
 Row {data-height=200}
@@ -115,7 +114,6 @@ if(nrow(gs) > 0){
 }
 ```
 
-   
 High Confidence Alterations (P2)
 ===
 Row {data-height=300}
@@ -140,7 +138,6 @@ if(exists('expData')){
 
 ### Pathway Alterations
 
-    
 ```{r plot_pathway}
 #Bar chart of genes
 if(exists('expData')){
@@ -183,7 +180,6 @@ if(exists('expData')){
 }
 ```
 
-
 Genomically Similar Samples (PBTA) (P5) {data-navmenu="Genomically Similar Analysis"}
 ===
 Row
@@ -197,7 +193,6 @@ if(exists('expData')){
   getTSNEPlot(dat = pbta.mat.tsne,  clinData = pbta.clinData, study = "PBTA", patient = sampleInfo$subjectID)
 }
 ```
-
 
 Row 
 ---
@@ -229,7 +224,6 @@ if(exists('expData')){
   getTSNEPlot(dat = tcga.gbm.mat.tsne, clinData = tcga.gbm.clinData, study = "TCGA", patient = sampleInfo$subjectID)
 }
 ```
-
 
 Row 
 ---
@@ -320,7 +314,6 @@ if(exists('expData')){
   }
 }
 ```
-
 
 Row 
 ---
