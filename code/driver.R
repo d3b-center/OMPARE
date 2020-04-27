@@ -65,3 +65,5 @@ if(exists('fusData')){
   plotCircos(topDir = topDir)
 }
 
+# Page 12
+source('code/p12_cnv_exp_heatmap.R')

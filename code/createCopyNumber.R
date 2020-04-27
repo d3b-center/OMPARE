@@ -2,7 +2,7 @@
 # Copy number by gene instead of region
 #######################################
 
-createCopyNumber <- function(){
+createCopyNumber <- function(cnvData){
   
   # Chromosome Map
   chrMap <- chrMap %>%

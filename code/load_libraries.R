@@ -28,4 +28,6 @@ suppressPackageStartupMessages(library(stringr))
 suppressPackageStartupMessages(library(GenomicRanges))
 suppressPackageStartupMessages(library(xlsx))
 suppressPackageStartupMessages(library(scales))
-
+suppressPackageStartupMessages(library(circlize))
+suppressPackageStartupMessages(library(ComplexHeatmap))
+suppressPackageStartupMessages(library(data.table))

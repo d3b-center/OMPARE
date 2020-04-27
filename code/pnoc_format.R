@@ -41,6 +41,10 @@ pat.expr.mat <- pat.expr.mat %>%
   column_to_rownames('gene_symbol')
 colnames(pat.expr.mat) <- gsub('-[0]+','-',colnames(pat.expr.mat))
 
+# only keep CHOP sample for PNOC008-5
+pat.expr.mat <- pat.expr.mat[,grep('NANT', colnames(pat.expr.mat), invert = T)]
+colnames(pat.expr.mat)  <- gsub("-CHOP", "", colnames(pat.expr.mat))
+
 # now merge all clinical data for all patients
 # read from google sheets (would need authentication the first time)
 pat.clinData <- read_sheet(ss = "https://docs.google.com/spreadsheets/d/1cZgdMhIi53eNZWZMCYqRS_ThqNLb9w2TsRh2Rdg7aHY/edit#gid=0")

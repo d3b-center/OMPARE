@@ -45,7 +45,7 @@ allFindingsTable <- function() {
   
   # Now Copy Number
   if(exists('cnvData')){
-    cnvGenes <- createCopyNumber()
+    cnvGenes <- createCopyNumber(cnvData = cnvData)
     assign("cnvGenes", cnvGenes, envir = globalenv())
     tmpCnv <- filterCNV()
     if(nrow(tmpCnv) >= 1){

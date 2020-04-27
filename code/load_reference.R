@@ -9,8 +9,10 @@ gtexData <- readRDS("data/Reference/GTEx/GTEx_matrix.RDS")
 pnoc008.data <- readRDS('data/Reference/PNOC008/PNOC008_matrix.RDS')
 pnoc008.clinData <- readRDS('data/Reference/PNOC008/PNOC008_clinData.RDS')
 
-# PBTA specific data
-pbta.mat <- readRDS('data/Reference/PBTA/pbta-gene-expression-rsem-fpkm-collapsed.stranded.rds')
+# PBTA specific mRNA data
+pbta.polya <- readRDS('data/Reference/PBTA/pbta-gene-expression-rsem-fpkm-collapsed.polya.rds')
+pbta.stranded <- readRDS('data/Reference/PBTA/pbta-gene-expression-rsem-fpkm-collapsed.stranded.rds')
+pbta.mat <- pbta.stranded
 pbta.clinData <- read.delim("data/Reference/PBTA/pbta-histologies.tsv", stringsAsFactors = F)
 pbta.survData <- pbta.clinData %>%
   filter(experimental_strategy == "RNA-Seq") %>%
@@ -18,6 +20,9 @@ pbta.survData <- pbta.clinData %>%
   dplyr::select(sample_barcode, sample_id, OS_days, OS_status) %>%
   filter(!is.na(OS_status)) %>%
   mutate(OS_status = ifelse(OS_status == "DECEASED", 1, 0))
+
+# PBTA specific CNV data
+pbta.cnv <- data.table::fread('data/Reference/PBTA/pbta-cnv-controlfreec.tsv.gz')
 
 # TCGA GBM specific data
 tcga.gbm.mat <- readRDS('data/Reference/TCGA/TCGA_GBM_matrix.RDS')
@@ -75,3 +80,7 @@ pedTMB <- data.table::fread("data/Reference/pbta-TMBscores_withdiseastype.txt")
 adultTMB <- data.table::fread("data/Reference/TCGA_diseasetypes_and_samples_TMBscores.txt")
 TMBFileBED <- data.table::fread("data/Reference/xgen-exome-research-panel-targets_hg38_ucsc_liftover.100bp_padded.sort.merged.bed")
 colnames(TMBFileBED)  <- c("chr", "start", "end")
+
+# genelist for heatmaps
+genelist.heatmap <- read.delim('data/Reference/2020-03-30_Glioma_GeneList.txt', stringsAsFactors = F)
+
