@@ -59,11 +59,21 @@ source('code/p10_allFindingsTable.R')           # all findings table
 
 # Page 11
 source('code/p11_plotCNV.R')
-source('code/p11_plotCircos.R')
 source('code/p11_plotNetwork.R')
+source('code/p11_plotCircos.R')                 # source and run in driver
 if(exists('fusData')){
   plotCircos(topDir = topDir)
 }
 
-# Page 12
+# Page 12 (source and run in driver)
 source('code/p12_cnv_exp_heatmap.R')
+if(!file.exists(paste0(topDir,'/complexHeatmap_phgg.png'))){
+  create.heatmap(fname = paste0(topDir,'/complexHeatmap_phgg.png'), 
+                 genelist = genelist.heatmap$pHGG_Gene_List, 
+                 plot.layout = "h")
+}
+if(!file.exists(paste0(topDir,'/complexHeatmap_cgs.png'))){
+  create.heatmap(fname = paste0(topDir,'/complexHeatmap_cgs.png'), 
+                 genelist = genelist.heatmap$Cancer_Gene_Census_CNVs, 
+                 plot.layout = "h")
+}

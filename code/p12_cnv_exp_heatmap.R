@@ -150,55 +150,85 @@ create.heatmap <- function(fname, genelist, plot.layout = "h"){
   cnv.mat <- genelist.cnv
   cnv.mat <- cnv.mat[rownames(expr.mat),colnames(expr.mat)]
   
-  # assign ggplot2 default colors to disease_subtype
+  # define color scheme
+  # disease_subtype: assign ggplot2 default colors 
   n = length(unique(clin$disease_subtype))
-  cols = gg_color_hue(n) 
-  names(cols) <- unique(clin$disease_subtype)
+  subtype_cols = gg_color_hue(n)
+  names(subtype_cols) <- unique(clin$disease_subtype)
+  # gender
+  gender_cols <- c("Male" = "steelblue", "Female" = "palevioletred1")
   
   # set heatmap options
-  ht_opt(heatmap_column_names_gp = gpar(fontsize = 10),
-         heatmap_row_names_gp = gpar(fontsize = 10),
-         heatmap_column_title_gp = gpar(fontsize = 12),
+  ht_opt(heatmap_column_title_gp = gpar(fontsize = 18, fontface = "bold"),
+         heatmap_column_names_gp = gpar(fontsize = 18, fontface = "bold"),
+         heatmap_row_names_gp = gpar(fontsize = 18, fontface = "bold"),
          legend_border = "black",
          heatmap_border = TRUE,
-         annotation_border = TRUE
-  )
+         annotation_border = TRUE)
   
-  png(fname, height = 17, width = 20, units = "in", res = 300)
+  # set heatmap legend params
+  heatmap_legend_param_global <- list(color_bar = 'continuous', 
+                                      direction = 'horizontal',
+                                      grid_height = unit(0.7, "cm"), 
+                                      grid_width = unit(3, "mm"),
+                                      title_gp = gpar(fontsize = 18, fontface = "bold"),
+                                      labels_gp = gpar(fontsize = 18, fontface = "bold"))
+  
+  # set annotation legend params
+  # subtype
+  subtype_annotation_legend_params <- list(nrow = 10, 
+                                           grid_height = unit(0.7, "cm"), 
+                                           grid_width = unit(3, "mm"),
+                                           title_gp = gpar(fontsize = 18, fontface = "bold"),
+                                           labels_gp = gpar(fontsize = 18, fontface = "bold"))
+  # gender
+  gender_annotation_legend_params <- list(nrow = 4, 
+                                          grid_height = unit(0.7, "cm"), 
+                                          grid_width = unit(3, "mm"),
+                                          title_gp = gpar(fontsize = 18, fontface = "bold"),
+                                          labels_gp = gpar(fontsize = 18, fontface = "bold"))
+  
+  
+  png(filename = fname, height = 15, width = 35, units = "in", res = 300)
   # horizontal or vertical layout
   if(plot.layout == "v"){
     # create topannotation
-    ha1 = HeatmapAnnotation(disease_subtype = clin$disease_subtype, 
-                            gender = clin$sex,
-                            col = list(gender = c("Male" = "steelblue", "Female" = "palevioletred1"),
-                                       disease_subtype = cols),
+    ha1 = HeatmapAnnotation(Subtype = clin$disease_subtype, 
+                            Gender = clin$sex,
+                            col = list(Gender = gender_cols,
+                                       Subtype = subtype_cols),
                             annotation_legend_param = list(
-                              disease_subtype = list(direction = "horizontal"),
-                              gender = list(direction = "horizontal")))
-    ht1 <- Heatmap(as.matrix(expr.mat), cluster_rows = FALSE, top_annotation = ha1,
+                              Subtype = subtype_annotation_legend_params,
+                              Gender = gender_annotation_legend_params))
+    
+    ht1 <- Heatmap(as.matrix(expr.mat), cluster_rows = FALSE, 
+                   top_annotation = ha1,
                    name = "RNA",  row_title = "RNA",
-                   heatmap_legend_param= list(color_bar= 'continuous', direction = "horizontal"))
+                   heatmap_legend_param = heatmap_legend_param_global)
     ht2 <- Heatmap(as.matrix(cnv.mat), cluster_rows = FALSE, cluster_columns = FALSE,
                    top_annotation = ha1,
                    name = "CNV", row_title = "CNV (WXS)",
-                   heatmap_legend_param = list(color_bar= 'continuous', direction = "horizontal"))
-    draw(ht1 %v% ht2, heatmap_legend_side = "bottom", annotation_legend_side = "bottom")
+                   heatmap_legend_param = heatmap_legend_param_global)
+    draw(ht1 %v% ht2, heatmap_legend_side = "right", annotation_legend_side = "right")
   } else if(plot.layout == "h"){
     # create row annotation
-    ha1 = rowAnnotation(disease_subtype = clin$disease_subtype, 
-                        gender = clin$sex,
-                        col = list(gender = c("Male" = "steelblue", "Female" = "palevioletred1"),
-                                   disease_subtype = cols),
+    ha1 = rowAnnotation(Subtype = clin$disease_subtype, 
+                        Gender = clin$sex,
+                        col = list(Gender = gender_cols,
+                                   Subtype = subtype_cols),
                         annotation_legend_param = list(
-                          disease_subtype = list(direction = "horizontal"),
-                          gender = list(direction = "horizontal")))
-    ht1 <- Heatmap(t(expr.mat), cluster_columns = FALSE, left_annotation = ha1,
-                   name = "RNA",  column_title = "RNA",
-                   heatmap_legend_param = list(color_bar= 'continuous', direction = "horizontal"))
+                          Subtype = subtype_annotation_legend_params,
+                          Gender = gender_annotation_legend_params))
+    
+    ht1 <- Heatmap(t(expr.mat), cluster_columns = FALSE, 
+                   left_annotation = ha1,
+                   name = "RNA", column_title = "RNA", 
+                   heatmap_legend_param = heatmap_legend_param_global)
+    
     ht2 <- Heatmap(t(cnv.mat), cluster_rows = FALSE, cluster_columns = FALSE,
                    name = "CNV", column_title = "CNV (WXS)",
-                   heatmap_legend_param = list(color_bar= 'continuous', direction = "horizontal"))
-    draw(ht1 + ht2, heatmap_legend_side = "bottom", annotation_legend_side = "bottom")
+                   heatmap_legend_param = heatmap_legend_param_global)
+    draw(ht1 + ht2, heatmap_legend_side = "right", padding = unit(c(2, 10, 2, 2), "mm"))
   }
   dev.off()
 }

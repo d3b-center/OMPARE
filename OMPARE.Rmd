@@ -326,3 +326,27 @@ if(exists("cnvData")){
   plotCNV()
 }
 ```
+
+Expression and CNV Heatmap (P12) {data-navmenu="Heatmaps"}
+===
+Row {data-height=700}
+---
+
+### Expression-CNV Heatmap (PHGG)
+    
+```{r heatmap_phgg, echo=FALSE}
+fname <- paste0(topDir,'/complexHeatmap_phgg.png')
+knitr::include_graphics(fname)
+```
+
+Expression and CNV Heatmap (P13) {data-navmenu="Heatmaps"}
+===
+Row
+---
+
+### Expression-CNV Heatmap (CGS)
+
+```{r heatmap_cgs, echo=FALSE}
+fname <- paste0(topDir,'/complexHeatmap_cgs.png')
+knitr::include_graphics(fname) 
+```
