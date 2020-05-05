@@ -30,9 +30,9 @@ highConfidenceFindingsTable <- function(delRPKM = 10) {
     rnaEvidence <-   RNASeqAnalysisOut[[3]]
     rnaEvidence[,"Gene"] <- rownames(rnaEvidence)
     
-    # Get only significant sets with pvalue < 0.01
+    # Get only significant sets with adj. pvalue < 0.05
     sigGeneSets <- RNASeqAnalysisOut[[2]][[2]]
-    sigGeneSets <- sigGeneSets[which(sigGeneSets[,"P_VAL"]<0.01),]
+    sigGeneSets <- sigGeneSets[which(sigGeneSets$ADJ_P_VALUE < 0.05),]
     sigGeneSets <- sigGeneSets[,c("Pathway", "Direction")]
     hallMarkSetsTS.sub <- merge(hallMarkSetsTS, sigGeneSets, by.x="ind", by.y="Pathway")
     hallMarkSetsTS.sub[,"ind"] <- paste(hallMarkSetsTS.sub[,"ind"], "(",hallMarkSetsTS.sub[,"Direction"], ")", sep="")

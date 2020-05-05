@@ -17,6 +17,7 @@ source('code/filterFusions.R')                  # filter Fusions
 source('code/filterMutations.R')                # filter Mutations
 source("code/runRNASeqAnalysis.R")              # function to run RNA-seq analysis
 RNASeqAnalysisOut <- runRNASeqAnalysis(expData) # run in driver
+source('code/highConfidenceFindingsTable.R')    # high confidence findings
 
 # Page 1
 source('code/p1_patientSampleInfo.R')           # patient/sample information
@@ -26,7 +27,6 @@ source('code/p1_filterGermline.R')              # filter and output germline dat
 source('code/p1_genomicSummary.R')              # genomic summary table
 
 # Page 2
-source('code/p2_highConfidenceFindingsTable.R') # high confidence findings
 source('code/p2_plotGenes.R')                   # plot barchart of top 20 up/down genes
 source('code/p2_plotPathway.R')                 # plot barchat of top 10 up/down pathways (sorted by p-value)
 

@@ -9,7 +9,7 @@ genomicSummary <- function() {
     numTranscripts <- RNASeqAnalysisOut[[1]][[2]]
     numTranscripts <- nrow(numTranscripts[numTranscripts$Z_Score>3,]) # z-score > 3 (highly upreg genes)
     numPathways <- RNASeqAnalysisOut[[2]][[2]]
-    numPathways <- numPathways[numPathways[,"P_VAL"]<0.01,]  # pval < 0.01 (highly significant pathways)
+    numPathways <- numPathways[numPathways$ADJ_P_VAL < 0.05,]  # adj. pval < 0.05 (highly significant pathways)
     numPathways <- nrow(numPathways)
     
     tmpVals <- c(highConfLesions, numLesions, numTranscripts, numPathways)

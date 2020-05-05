@@ -110,7 +110,7 @@ if(length(expDat) == 1){
 }
 
 # function to tabulate DE and Pathway results
-runRNASeqAnalysis <- function(expData = NULL, refData = gtexData, refAnnot = gtexGeneAnnot, thresh = 2, comparison) {
+runRNASeqAnalysis <- function(expData = NULL, refData = gtexData, thresh = 2, comparison) {
   
   # Merge GTEx and Patient data on common genes
   intGenesTmp <- intersect(rownames(refData), rownames(expData))
@@ -222,15 +222,15 @@ runRNASeqAnalysis <- function(expData = NULL, refData = gtexData, refAnnot = gte
   upPathways <- funcEnrichment(upGenes, hallMarkSets, qval=1, myN=25000, myUniverse=rownames(mergeDF))
   upPathways <- upPathways %>%
     mutate(Direction = "Up") %>%
-    filter(P_VAL < 0.05) %>%
-    arrange(P_VAL)
+    filter(ADJ_P_VAL < 0.05) %>%
+    arrange(ADJ_P_VAL)
   
   # down pathways
   downPathways <- funcEnrichment(downGenes, hallMarkSets, qval=1, myN=25000, myUniverse=rownames(mergeDF))
   downPathways <- downPathways %>%
     mutate(Direction = "Down") %>%
-    filter(P_VAL < 0.05) %>%
-    arrange(P_VAL)
+    filter(ADJ_P_VAL < 0.05) %>%
+    arrange(ADJ_P_VAL)
   
   # full pathway dataframe
   pathway.df <- rbind(upPathways, downPathways)
@@ -262,9 +262,9 @@ outdir <- file.path(topDir, "Summary")
 fname <- file.path(outdir, fname)
 
 # summarize
-GTExBrain <- runRNASeqAnalysis(expData = expData, refData = gtexData, refAnnot = gtexGeneAnnot, comparison = paste0("GTExBrain_", ncol(gtexData)))
-PBTA_HGG <- runRNASeqAnalysis(expData = expData, refData = pbta.hgg, refAnnot = pbta.annot, comparison = paste0("PBTA_HGG_", ncol(pbta.hgg)))
-PBTA_All <- runRNASeqAnalysis(expData = expData, refData = pbta.full, refAnnot = pbta.annot, comparison = paste0("PBTA_All_", ncol(pbta.full)))
+GTExBrain <- runRNASeqAnalysis(expData = expData, refData = gtexData, comparison = paste0("GTExBrain_", ncol(gtexData)))
+PBTA_HGG <- runRNASeqAnalysis(expData = expData, refData = pbta.hgg, comparison = paste0("PBTA_HGG_", ncol(pbta.hgg)))
+PBTA_All <- runRNASeqAnalysis(expData = expData, refData = pbta.full, comparison = paste0("PBTA_All_", ncol(pbta.full)))
 
 # create one file per output
 pathway.df <- rbind(GTExBrain$pathways, PBTA_HGG$pathways, PBTA_All$pathways)

@@ -114,21 +114,12 @@ if(nrow(gs) > 0){
 }
 ```
 
-High Confidence Alterations (P2)
+Transcriptomic Alterations (P2)
 ===
-Row {data-height=300}
+Row {data-height=700}
 ---
 
-### High Confidence Genomic Findings
-    
-```{r}
-datatable(highConfidenceFindingsTable(), rownames=F);
-```
-
-Row {data-height=500}
----
-    
-### Transcriptome-Proteome Alterations
+### Transcriptome Alterations
     
 ```{r plot_genes}
 if(exists('expData')){
@@ -258,13 +249,23 @@ if(exists('expData')){
 
 Pathway Enrichment (Genomically Similar PNOC008 Patients) (P8) {data-navmenu="Genomically Similar Analysis"}
 ===
-Row {data-height=700}
+Row {data-height=500}
 ---
 
 ### Pathway Enrichment (Top Genomically Similar Patients)
     
 ```{r tabulate_pathways}
-datatable(tabulate_pathways(allCor = pbta.allCor, numNeighbors = 20), rownames=F, options = list(pageLength = 10));
+gsPath <- tabulate_pathways(allCor = pbta.allCor, numNeighbors = 20)
+datatable(gsPath[[1]], rownames=F, options = list(pageLength = 10));
+```
+
+Row {data-height=500}
+---
+
+### CNV Mapping 
+
+```{r cnv_mapping}
+datatable(gsPath[[2]], rownames=F, options = list(pageLength = 10));
 ```
 
 ssGSEA (Genomically Similar Pediatric Samples) (P9) {data-navmenu="Genomically Similar Analysis"}
@@ -327,7 +328,7 @@ if(exists("cnvData")){
 }
 ```
 
-Expression and CNV Heatmap (P12) {data-navmenu="Heatmaps"}
+PHGG: Expression and CNV Heatmap (P12) {data-navmenu="Heatmaps"}
 ===
 Row {data-height=700}
 ---
@@ -339,7 +340,7 @@ fname <- paste0(topDir,'/complexHeatmap_phgg.png')
 knitr::include_graphics(fname)
 ```
 
-Expression and CNV Heatmap (P13) {data-navmenu="Heatmaps"}
+CGS: Expression and CNV Heatmap (P13) {data-navmenu="Heatmaps"}
 ===
 Row
 ---
