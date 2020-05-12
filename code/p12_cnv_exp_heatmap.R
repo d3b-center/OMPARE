@@ -15,14 +15,20 @@ merge.cnv <- function(cnvData, gene.list){
     # PBTA
     sample_name <- unique(cnvData$sample_id)
     cnvData$Kids_First_Biospecimen_ID <- NULL
+    ploidy <- unique(cnvData$tumor_ploidy)
   } else {
     # PNOC
     sample_name <- gsub(".*PNOC", "PNOC", cnvData)
     sample_name <- gsub('/.*', '', sample_name)
     sample_name <- gsub('-[0]+', '-', sample_name)
-    cnvData <- data.table::fread(cnvData)
+    cnvData <- data.table::fread(cnvData, header = T, check.names = T)
+    ploidy <- NULL
   }
-  cnvOut <- createCopyNumber(cnvData = cnvData) # map coordinates to gene symbol
+  cnvData <- cnvData %>% 
+    dplyr::select(chr, start, end, copy.number, 
+                  status, WilcoxonRankSumTestPvalue) %>%
+    as.data.frame()
+  cnvOut <- createCopyNumber(cnvData = cnvData, ploidy = ploidy) # map coordinates to gene symbol
   cnvOut <- cnvOut %>%
     filter(Gene %in% gene.list) %>% # filter to gene list
     mutate(sample_name = sample_name) %>% # add PNOC008 patient id
@@ -31,6 +37,8 @@ merge.cnv <- function(cnvData, gene.list){
 }
 
 create.heatmap <- function(fname, genelist, plot.layout = "h"){
+  
+  genelist <- unique(genelist)
   
   ## Expression
   # PNOC008 clinical
@@ -126,6 +134,7 @@ create.heatmap <- function(fname, genelist, plot.layout = "h"){
   
   # convert to matrix
   genelist.cnv <- genelist.cnv %>%
+    dplyr::select(-c(Pvalue, Status)) %>%
     spread(sample_name, CNA) %>%
     column_to_rownames("Gene")
   

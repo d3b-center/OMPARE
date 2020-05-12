@@ -13,7 +13,7 @@ merge.excel <- function(nm) {
   
   # highly significant up/down pathways only
   x <- x %>%
-    filter(ADJ_P_VAL < 0.05) %>%
+    filter(ADJ_P_VAL < 0.01) %>%
     dplyr::select(-c(Freq))
   if(nrow(x) > 1){
     x <- as.data.frame(x)
@@ -67,21 +67,24 @@ tabulate_pathways <- function(allCor, numNeighbors = 20) {
     # now merge patPath (PNOC008) and pbtaPath (PBTA)
     totalPath <- rbind(patPath, pbtaPath)
     
-    # highly significant up/down pathways only (adj. pvalue < 0.05)
-    # pathways which are seen misregulated in at least 50% of genomically similar samples
+    # highly significant up/down pathways only (adj. pvalue < 0.01)
+    # pathways which are seen misregulated in at least 80% of genomically similar samples
     totalPath <- totalPath %>%
-      filter(ADJ_P_VAL < 0.05) %>% 
+      filter(ADJ_P_VAL < 0.01) %>% 
       dplyr::select(-c(SET_SIZE, NUM_GENES_INPUT, OVERLAP)) %>%
       mutate(P_VAL = scientific(P_VAL, digits = 3),
              ADJ_P_VAL = scientific(ADJ_P_VAL, digits = 3)) %>%
       group_by(Pathway, Comparison, Direction) %>%
       mutate(Sample.count.per.pathway = n()) %>%
-      filter(Sample.count.per.pathway > 10) %>%
+      filter(Sample.count.per.pathway >= 16) %>%
       arrange(desc(sample_name), desc(Sample.count.per.pathway)) 
     
     # now create table2 in which we will have genes, pathway and copy number info
-    cnvPath <- cnvGenes
-    cnvPath$Type <- ifelse(cnvPath$CNA > 2, "Amplification", "Deletion")
+    # this is only for PNOC008 patient of interest
+    # cnv gain/loss with WilcoxonRankSumTestPvalue < 0.05
+    cnvPath <- cnvGenes %>%
+      filter(Status %in% c("gain", "loss") & Pvalue < 0.05)
+    cnvPath$Status <- ifelse(cnvPath$Status == "gain", "Amplification", "Deletion")
     cnvPath <- totalPath %>%
       filter(sample_name == sampleInfo$subjectID) %>%
       ungroup() %>%

@@ -46,9 +46,11 @@ readData <- function(topDir, fusion_method = c("star","arriba"), snv_pattern = "
   # copy number pvalue file
   cnvData <- list.files(path = topDir, pattern = "*.CNVs.p.value.txt", recursive = TRUE, full.names = T)
   if(length(cnvData) == 1){
-    cnvData <- data.table::fread(cnvData, header = T)
-    cnvData <- cnvData[,1:5]
-    cnvData <- as.data.frame(cnvData)
+    cnvData <- data.table::fread(cnvData, header = T, check.names = T)
+    cnvData <- cnvData %>% 
+      dplyr::select(chr, start, end, copy.number, 
+                    status, WilcoxonRankSumTestPvalue) %>%
+      as.data.frame()
     assign("cnvData", cnvData, envir = globalenv())
   }
   

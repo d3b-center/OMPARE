@@ -49,9 +49,9 @@ allFindingsTable <- function() {
     assign("cnvGenes", cnvGenes, envir = globalenv())
     tmpCnv <- filterCNV()
     if(nrow(tmpCnv) >= 1){
-      tmpCnv[,"Aberration"] <- tmpCnv[,1]
-      tmpCnv[,"Type"] <- ifelse(tmpCnv[,2]>2, "Amplification", "Deletion")
-      tmpCnv[,"Details"] <- paste("Copy Number Value: ",tmpCnv[,2], sep="")
+      tmpCnv$Aberration <- tmpCnv$Gene
+      tmpCnv$Type <- ifelse(tmpCnv$Status == "gain","Amplification", "Deletion")
+      tmpCnv[,"Details"] <- paste("Copy Number Value: ",tmpCnv$CNA, sep="")
       tmpCnv <- merge(tmpCnv, drugData, by.x="Gene", by.y="gene_name", all.x=T)
       tmpCnv <- tmpCnv[,c("Aberration", "Type", "Details", "Drugs")]
     }  else {

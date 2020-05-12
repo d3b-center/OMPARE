@@ -2,7 +2,7 @@
 # Function to filter CNV
 ########################
 
-filterCNV <- function(myCNVData = cnvGenes, myCancerGenes = cancerGenes, myTSGenes = tsgGenes, cutoffHigh = 4, cutoffLow = 1) {
+filterCNV <- function(myCNVData = cnvGenes, myCancerGenes = cancerGenes, myTSGenes = tsgGenes) {
   cnvDataFilt <- myCNVData
   
   # Filter by Oncogenes/TSGs as well as copy number cutoff
@@ -16,9 +16,9 @@ filterCNV <- function(myCNVData = cnvGenes, myCancerGenes = cancerGenes, myTSGen
     unique()
   myOncogenes <- setdiff(myOncogenes, myTSGenes)
   cnvDataFiltUp <- cnvDataFilt %>%
-    filter(CNA > cutoffHigh & Gene %in% myOncogenes)
+    filter(Status == "gain" & Gene %in% myOncogenes)
   cnvDataFiltDown <- cnvDataFilt %>%
-    filter(CNA < cutoffLow & Gene %in% myTSGenes)
+    filter(Status == "loss" & Gene %in% myTSGenes)
   cnvDataFilt <- rbind(cnvDataFiltUp, cnvDataFiltDown)
   
   return(cnvDataFilt)
