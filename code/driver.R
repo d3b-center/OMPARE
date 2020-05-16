@@ -9,6 +9,7 @@
 #############################
 # sourced in order of requirement
 source('code/pubTheme.R')                       # univeral plot theme
+source('code/helper.R')                         # universal helper functions like z-score etc
 source('code/patientSampleInfo.R')              # functions to load patient info
 source('code/createCopyNumber.R')               # create a map of gene symbol and copy number
 source('code/filterDruggability.R')             # create a map of gene symbol and drug info from dgiDB
@@ -42,6 +43,7 @@ source('code/tcga_format.R')                    # format TCGA data
 
 # Page 4 (OpenPBTA) and Page 7 (Genomically Similar PNOC008 and OpenPBTA)
 source('code/ImmuneProfile.R')                  # plot immune profile using xCell
+source('code/p4_TISProfile.R')                  # plot TIS profile
 
 # Page 5 (PNOC008 + OpenPBTA) and Page 6 (PNOC008 + TCGA GBM)
 source('code/getTSNEPlot.R')                    # plot t-SNE     

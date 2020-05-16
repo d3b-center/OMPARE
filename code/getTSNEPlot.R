@@ -30,11 +30,11 @@ getTSNEPlot <- function(dat, clinData, study, patient) {
                             color = pathology_diagnosis,
                             size = study_id,
                             shape = label,
-                            text = paste0("Sample:",tsneData$sample_barcode,
-                                          "\nShort_histology:", tsneData$short_histology,
-                                          "\nBroad_histology:", tsneData$broad_histology,
-                                          "\nPathology_diagnosis:", tsneData$pathology_diagnosis,
-                                          "\nIntegrated_diagnosis:", tsneData$integrated_diagnosis))) +
+                            text = paste0("Sample:", sample_barcode,
+                                          "\nShort_histology:", short_histology,
+                                          "\nBroad_histology:", broad_histology,
+                                          "\nPathology_diagnosis:", pathology_diagnosis,
+                                          "\nIntegrated_diagnosis:", integrated_diagnosis))) +
     geom_jitter(width = 0.5, height = 0.5) +
     theme_bw() + ggtitle("T-SNE Clustering") +
     theme(plot.title = element_text(size = 14, face = "bold", hjust = 0.5),

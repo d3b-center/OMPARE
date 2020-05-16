@@ -44,22 +44,18 @@ gtexData <- gtexGeneAnnot %>%
   dplyr::select(-c(gene_id, means)) %>%
   column_to_rownames('gene_symbol') 
 
-# Dataset2: PBTA (full n = 1028)
+# Dataset2: PBTA (full n = 970)
 # clinical
 pbta.hist <- read.delim('data/Reference/PBTA/pbta-histologies.tsv', stringsAsFactors = F)
 pbta.hist <- pbta.hist %>%
-  filter(experimental_strategy == "RNA-Seq")
+  filter(experimental_strategy == "RNA-Seq",
+         RNA_library == "stranded")
 
 # expression
-pbta.polya <- readRDS('data/Reference/PBTA/pbta-gene-expression-rsem-fpkm-collapsed.polya.rds')
 pbta.stranded <- readRDS('data/Reference/PBTA/pbta-gene-expression-rsem-fpkm-collapsed.stranded.rds')
-pbta.full <- pbta.polya %>%
-  rownames_to_column("gene_symbol") %>%
-  full_join(pbta.stranded %>%
-              rownames_to_column("gene_symbol"), by = 'gene_symbol') %>%
-  column_to_rownames("gene_symbol")
+pbta.full <- pbta.stranded
 
-# Dataset3: PBTA (HGG n = 112)
+# Dataset3: PBTA (HGG n = 96)
 pbta.hist <- pbta.hist %>%
   filter(integrated_diagnosis == "High-grade glioma")
 pbta.hgg <- pbta.full[,colnames(pbta.full) %in% pbta.hist$Kids_First_Biospecimen_ID]

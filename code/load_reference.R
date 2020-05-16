@@ -10,12 +10,12 @@ pnoc008.data <- readRDS('data/Reference/PNOC008/PNOC008_matrix.RDS')
 pnoc008.clinData <- readRDS('data/Reference/PNOC008/PNOC008_clinData.RDS')
 
 # PBTA specific mRNA data
-pbta.polya <- readRDS('data/Reference/PBTA/pbta-gene-expression-rsem-fpkm-collapsed.polya.rds')
 pbta.stranded <- readRDS('data/Reference/PBTA/pbta-gene-expression-rsem-fpkm-collapsed.stranded.rds')
 pbta.mat <- pbta.stranded
 pbta.clinData <- read.delim("data/Reference/PBTA/pbta-histologies.tsv", stringsAsFactors = F)
 pbta.survData <- pbta.clinData %>%
-  filter(experimental_strategy == "RNA-Seq") %>%
+  filter(experimental_strategy == "RNA-Seq",
+         RNA_library == "stranded") %>%
   mutate(sample_barcode = Kids_First_Biospecimen_ID) %>%
   dplyr::select(sample_barcode, sample_id, OS_days, OS_status) %>%
   filter(!is.na(OS_status)) %>%
