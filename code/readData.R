@@ -82,21 +82,30 @@ readData <- function(topDir, fusion_method = c("star","arriba"), snv_pattern = "
     }
   }
   
-  # expression data (can be only 1 per patient with .genes.results)
+  # expression data: FPKM (can be only 1 per patient with .genes.results)
   expDat <- list.files(path = topDir, pattern = "*.genes.results*", recursive = TRUE, full.names = T)
   if(length(expDat) == 1){
     expData <- read.delim(expDat)
-    expData <- expData %>% 
+    expData.full <- expData %>% 
       mutate(gene_id = str_replace(gene_id, "_PAR_Y_", "_"))  %>%
       separate(gene_id, c("gene_id", "gene_symbol"), sep = "\\_", extra = "merge") %>%
       unique()
-    expData <- expData %>% 
+    expData <- expData.full %>% 
       arrange(desc(FPKM)) %>% 
       distinct(gene_symbol, .keep_all = TRUE) %>%
       mutate(!!sampleInfo$subjectID := FPKM) %>%
-      dplyr::select(!!sampleInfo$subjectID, gene_id, gene_symbol) 
+      dplyr::select(!!sampleInfo$subjectID, gene_id, gene_symbol) %>%
+      unique()
     rownames(expData) <- expData$gene_symbol
     assign("expData", expData, envir = globalenv())
+    
+    expData.counts <- expData.full %>%
+      filter(expData.full$gene_id  %in% expData$gene_id) %>%
+      mutate(!!sampleInfo$subjectID := expected_count) %>%
+      dplyr::select(!!sampleInfo$subjectID, gene_id, gene_symbol) %>%
+      unique()
+    rownames(expData.counts) <- expData.counts$gene_symbol
+    assign("expData.counts", expData.counts, envir = globalenv())
   }
 }
 

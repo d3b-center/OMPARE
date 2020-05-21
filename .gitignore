@@ -7,6 +7,7 @@ Archive/*
 data/*
 !data/Reference
 code/Archive/*
+code/create_pbta_count_matrix.R
 code/create_gtex_matrix.R
 code/create_tcga_gbm_matrix.R
 code/tcga_fullmat_format.R

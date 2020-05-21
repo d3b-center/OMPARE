@@ -1,57 +1,84 @@
 # Author: Komal S. Rathi
 # Date:  05/11/2020
-# Function:  TCGA + OpenPBTA + PNOC GSVA
+# Function:  TCGA + OpenPBTA + PNOC Quantile Norm -> Avg.
 
 tisProfile <- function(fname, score){
   
   if(!file.exists(fname)){
     # TCGA
-    tcga <- readRDS("data/Reference/TCGA/TCGA_matrix_FPKM.RDS")
+    tcga <- readRDS("data/Reference/TCGA/TCGA_matrix_counts.RDS")
     
     # PBTA (stranded)
-    pbta.stranded <- readRDS('data/Reference/PBTA/pbta-gene-expression-rsem-fpkm-collapsed.stranded.rds')
+    pbta.stranded <- readRDS('data/Reference/PBTA/pbta-gene-expression-rsem-counts-collapsed.stranded.rds')
     
     # PNOC008 expression
-    pnoc008 <- expData[,sampleInfo$subjectID, drop=FALSE]
-    
+    pnoc008 <- expData.counts[,sampleInfo$subjectID, drop=FALSE]
+
     # read TIS signature
     tis <- read.delim('data/Reference/TIS_geneset.txt', stringsAsFactors = F)
     
     # merge on common genes from TIS signature
     common.genes <- intersect(intersect(rownames(tcga), rownames(pbta.stranded)), rownames(pnoc008))
-    common.genes <- intersect(tis$Genes, common.genes)
     tcga <- tcga[common.genes,]
     pbta.stranded <- pbta.stranded[common.genes,]
     pnoc008 <- pnoc008[common.genes, , drop = FALSE]
     total <- cbind(tcga, pbta.stranded, pnoc008)
-    
-    # z-score data
-    total <- t(apply(total, 1, getZ))
-    total.sums <- colSums(total)
-    total.avg <- colMeans(total)
-    total <- data.frame(sample_barcode = names(total.sums), scoreSum = total.sums, scoreAvg = total.avg)
-    total <- total[order(total$sample_barcode),]
+    total <- total[,order(colnames(total))] # order columns
     
     # now read meta data
     tcga.meta <- readRDS('data/Reference/TCGA/TCGA_meta.RDS')
     tcga.meta <- tcga.meta %>%
+      rownames_to_column("sample_id") %>%
       mutate(Type = "Adult") %>%
-      dplyr::select(sample_barcode, disease, Type)
+      dplyr::select(sample_id, disease, Type)
     pbta.meta <- read.delim('data/Reference/PBTA/pbta-histologies.tsv')
     pbta.meta <- pbta.meta %>%
       filter(experimental_strategy  == "RNA-Seq", RNA_library == "stranded") %>%
-      mutate(sample_barcode = Kids_First_Biospecimen_ID, 
+      mutate(sample_id = Kids_First_Biospecimen_ID, 
              disease = short_histology,
              Type = "Pediatric") %>%
-      dplyr::select(sample_barcode, disease, Type)
-    pnoc.meta <- data.frame(sample_barcode =  sampleInfo$subjectID, disease = "", Type = "")
+      dplyr::select(sample_id, disease, Type)
+    pnoc.meta <- data.frame(sample_id =  sampleInfo$subjectID, disease = "HGAT", Type = "Pediatric")
     total.meta <- rbind(tcga.meta, pbta.meta, pnoc.meta)
-    total.meta <- total.meta[order(total.meta$sample_barcode),]
+    total.meta <- total.meta[order(total.meta$sample_id),] # order rows
     
-    # merge both
-    total <- total.meta %>% 
-      dplyr::select(disease, Type) %>% 
-      cbind(total)
+    # quantile normalize 
+    normalize.mat <- function(mat, meta, method, genelist){
+      if(method == "voom"){
+        # create design
+        var <- factor(meta[,'Type'])
+        design <- model.matrix(~0+var)
+        colnames(design) <- levels(var)
+        rownames(design) <- meta$sample_id
+        
+        # voom normalize
+        v <- voom(counts = mat, design = design, plot = FALSE, normalize.method = "quantile")
+        total.norm <- v$E
+      }  else {
+        mat <-  data.matrix(log2(mat + 1))
+        total.norm <- normalize.quantiles(mat)
+        rownames(total.norm) <- rownames(mat)
+        colnames(total.norm) <- colnames(mat)
+        total.norm <- as.data.frame(total.norm)
+      }
+      
+      # filter by genelist and format
+      total.norm <- total.norm[rownames(total.norm) %in% genelist,]
+      print(dim(total.norm))
+      total.sums <- colSums(total.norm)
+      total.avg <- colMeans(total.norm)
+      total.norm <- data.frame(sample_barcode = names(total.sums), scoreSum = total.sums, scoreAvg = total.avg)
+      total.norm <- total.norm[order(total.norm$sample_barcode),]
+      
+      # merge with meta file
+      total.norm <- meta %>% 
+        dplyr::select(disease, Type) %>% 
+        cbind(total.norm)
+      
+      return(total.norm)
+    }
+    total <- normalize.mat(mat = total, meta = total.meta, genelist = tis$Genes, method = "quantile")
+    
     write.table(total, file = fname, sep = "\t", quote = F, row.names = F)
   } else {
     total  <- read.delim(fname, stringsAsFactors = F)
@@ -64,12 +91,12 @@ tisProfile <- function(fname, score){
     total <- total %>% 
       mutate(score = scoreSum)
     yint <- pnoc008.scoreSum
-    ylab <- "TIS Signature Score (Sum of Z-scores)"
+    ylab <- "TIS Signature Score (Sum)"
   } else {
     total <- total %>% 
       mutate(score = scoreAvg)
     yint <- pnoc008.scoreAvg
-    ylab <- "TIS Signature Score (Avg of Z-scores)"
+    ylab <- "TIS Signature Score (Avg.)"
   }
   
   # order
