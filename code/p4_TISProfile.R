@@ -23,7 +23,6 @@ tisProfile <- function(fname, score){
     pbta.stranded <- pbta.stranded[common.genes,]
     pnoc008 <- pnoc008[common.genes, , drop = FALSE]
     total <- cbind(tcga, pbta.stranded, pnoc008)
-    total <- total[,order(colnames(total))] # order columns
     
     # now read meta data
     tcga.meta <- readRDS('data/Reference/TCGA/TCGA_meta.RDS')
@@ -40,7 +39,16 @@ tisProfile <- function(fname, score){
       dplyr::select(sample_id, disease, Type)
     pnoc.meta <- data.frame(sample_id =  sampleInfo$subjectID, disease = "HGAT", Type = "Pediatric")
     total.meta <- rbind(tcga.meta, pbta.meta, pnoc.meta)
+    
+    # count number of samples per hist and only keep >= 20
+    total.meta <- total.meta  %>%
+      group_by(disease) %>%
+      mutate(n = n()) %>%
+      filter(n >= 20) %>%
+      dplyr::select(-c(n))
     total.meta <- total.meta[order(total.meta$sample_id),] # order rows
+    total <- total[,colnames(total) %in% total.meta$sample_id]
+    total <- total[,order(colnames(total))] # order columns
     
     # quantile normalize 
     normalize.mat <- function(mat, meta, method, genelist){
@@ -64,7 +72,6 @@ tisProfile <- function(fname, score){
       
       # filter by genelist and format
       total.norm <- total.norm[rownames(total.norm) %in% genelist,]
-      print(dim(total.norm))
       total.sums <- colSums(total.norm)
       total.avg <- colMeans(total.norm)
       total.norm <- data.frame(sample_barcode = names(total.sums), scoreSum = total.sums, scoreAvg = total.avg)
@@ -73,12 +80,12 @@ tisProfile <- function(fname, score){
       # merge with meta file
       total.norm <- meta %>% 
         dplyr::select(disease, Type) %>% 
-        cbind(total.norm)
+        cbind(total.norm) %>%
+        as.data.frame()
       
       return(total.norm)
     }
     total <- normalize.mat(mat = total, meta = total.meta, genelist = tis$Genes, method = "quantile")
-    
     write.table(total, file = fname, sep = "\t", quote = F, row.names = F)
   } else {
     total  <- read.delim(fname, stringsAsFactors = F)
@@ -114,7 +121,7 @@ tisProfile <- function(fname, score){
     xlab("Disease") + ylab(ylab) +
     theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
     geom_hline(yintercept = yint, linetype = 2, color = 'gray30') +
-    annotate("text", x = 50, y = max(total$score) - 1, 
+    annotate("text", x = 40, y = max(total$score) - 1, 
              label = "- - - Patient SigScore", size = 4, 
              fontface = 'italic', color = "gray30")
   return(p)
