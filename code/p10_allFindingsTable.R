@@ -66,7 +66,7 @@ allFindingsTable <- function() {
     tmpExp <- RNASeqAnalysisOut[[1]][[2]]
     tmpExp[,"Aberration"] <-rownames(tmpExp)
     tmpExp[,"Type"] <- c(rep("Outlier-High (mRNA)", 20), rep("Outlier-Low (mRNA)", 20))
-    tmpExp[,"Details"] <- paste("Z-Score / FPKM: ",round(tmpExp[,"Z_Score"],2), " / ", tmpExp[,"FPKM"], sep="")
+    tmpExp[,"Details"] <- paste("Z-Score / TPM: ",round(tmpExp[,"Z_Score"],2), " / ", tmpExp[,"TPM"], sep="")
     tmpExp <- merge(tmpExp, drugData, by.x="Aberration", by.y="gene_name", all.x=T)
     tmpExp <- tmpExp[,c("Aberration", "Type", "Details", "Drugs")]
   } else {

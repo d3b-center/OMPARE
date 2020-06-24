@@ -2,20 +2,19 @@
 # Load all reference data
 #########################
 
-# GTEx (7859 samples)
-gtexData <- readRDS("data/Reference/GTEx/GTEx_matrix.RDS")
+# GTEx Normals TPM (7863 samples)
+gtexData <- readRDS("data/Reference/GTEx/gtex_normals_TPM.RDS")
 
 # All PNOC008 patients (expr + clinical)
 pnoc008.data <- readRDS('data/Reference/PNOC008/PNOC008_matrix.RDS')
 pnoc008.clinData <- readRDS('data/Reference/PNOC008/PNOC008_clinData.RDS')
 
-# PBTA specific mRNA data
-pbta.stranded <- readRDS('data/Reference/PBTA/pbta-gene-expression-rsem-fpkm-collapsed.stranded.rds')
-pbta.mat <- pbta.stranded
+# PBTA specific mRNA data (TPM)
+pbta.full <- readRDS('data/Reference/PBTA/pbta-gene-expression-rsem-tpm-collapsed.polya.stranded.corrected.rds')
+pbta.mat <- pbta.full
 pbta.clinData <- read.delim("data/Reference/PBTA/pbta-histologies.tsv", stringsAsFactors = F)
 pbta.survData <- pbta.clinData %>%
-  filter(experimental_strategy == "RNA-Seq",
-         RNA_library == "stranded") %>%
+  filter(experimental_strategy == "RNA-Seq") %>%
   mutate(sample_barcode = Kids_First_Biospecimen_ID) %>%
   dplyr::select(sample_barcode, sample_id, OS_days, OS_status) %>%
   filter(!is.na(OS_status)) %>%
@@ -24,8 +23,8 @@ pbta.survData <- pbta.clinData %>%
 # PBTA specific CNV data
 pbta.cnv <- data.table::fread('data/Reference/PBTA/pbta-cnv-controlfreec.tsv.gz')
 
-# TCGA GBM specific data
-tcga.gbm.mat <- readRDS('data/Reference/TCGA/TCGA_GBM_matrix.RDS')
+# TCGA GBM specific data (TPM)
+tcga.gbm.mat <- readRDS('data/Reference/TCGA/TCGA_GBM_matrix_TPM.RDS')
 tcga.gbm.clinData <- readRDS('data/Reference/TCGA/TCGA_GBM_clinData.RDS')
 tcga.gbm.survData <- tcga.gbm.clinData %>%
   filter(overall_survival_time_in_days != "unavailable") %>%

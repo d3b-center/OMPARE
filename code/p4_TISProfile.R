@@ -5,11 +5,11 @@
 tisProfile <- function(fname, score){
   
   if(!file.exists(fname)){
-    # TCGA
+    # TCGA counts
     tcga <- readRDS("data/Reference/TCGA/TCGA_matrix_counts.RDS")
     
-    # PBTA (stranded)
-    pbta.stranded <- readRDS('data/Reference/PBTA/pbta-gene-expression-rsem-counts-collapsed.stranded.rds')
+    # PBTA counts  (polyA + stranded count data collapsed to gene symbols)
+    pbta.full <- readRDS('data/Reference/PBTA/pbta-gene-expression-rsem-counts-collapsed.polya.stranded.rds')
     
     # PNOC008 expression
     pnoc008 <- expData.counts[,sampleInfo$subjectID, drop=FALSE]
@@ -18,11 +18,11 @@ tisProfile <- function(fname, score){
     tis <- read.delim('data/Reference/TIS_geneset.txt', stringsAsFactors = F)
     
     # merge on common genes from TIS signature
-    common.genes <- intersect(intersect(rownames(tcga), rownames(pbta.stranded)), rownames(pnoc008))
+    common.genes <- intersect(intersect(rownames(tcga), rownames(pbta.full)), rownames(pnoc008))
     tcga <- tcga[common.genes,]
-    pbta.stranded <- pbta.stranded[common.genes,]
+    pbta.full <- pbta.full[common.genes,]
     pnoc008 <- pnoc008[common.genes, , drop = FALSE]
-    total <- cbind(tcga, pbta.stranded, pnoc008)
+    total <- cbind(tcga, pbta.full, pnoc008)
     
     # now read meta data
     tcga.meta <- readRDS('data/Reference/TCGA/TCGA_meta.RDS')
@@ -32,7 +32,7 @@ tisProfile <- function(fname, score){
       dplyr::select(sample_id, disease, Type)
     pbta.meta <- read.delim('data/Reference/PBTA/pbta-histologies.tsv')
     pbta.meta <- pbta.meta %>%
-      filter(experimental_strategy  == "RNA-Seq", RNA_library == "stranded") %>%
+      filter(experimental_strategy  == "RNA-Seq") %>%
       mutate(sample_id = Kids_First_Biospecimen_ID, 
              disease = short_histology,
              Type = "Pediatric") %>%

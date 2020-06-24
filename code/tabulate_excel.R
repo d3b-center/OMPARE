@@ -21,43 +21,22 @@ fname <- opt$output
 
 # Dataset1: GTex Brain
 # clinical
-if(!file.exists('data/Reference/GTEx/GTEx_clinical.RDS')){
-  gtexBrain <- getSamples(myStudy = "GTEx")
-} else {
-  gtexBrain <- readRDS('data/Reference/GTEx/GTEx_clinical.RDS')
-}
-gtexBrain <- gtexBrain %>%
-  filter(subtissue == "Brain")
-
-# gencode annotation
-gtexGeneAnnot <- read.delim("data/Reference/GTEx/gencode.v23.annotation.gi_ti_gs.txt", stringsAsFactors =F)
+gtexBrain <- readRDS('data/Reference/GTEx/GTEx_Brain_clinical.RDS')
 
 # expression
-gtexData <- readRDS("data/Reference/GTEx/GTEx_fullExpr_matrix.RDS")
-gtexData <- gtexData[,c("gene_id", gtexBrain$sample_id)]
-gtexData <- gtexGeneAnnot %>%
-  dplyr::select(c(gene_id, gene_symbol)) %>%
-  inner_join(gtexData, by = 'gene_id') %>%
-  mutate(means = rowMeans(dplyr::select(.,-gene_id, -gene_symbol))) %>% # take rowMeans
-  arrange(desc(means)) %>% # arrange decreasing by means
-  distinct(gene_symbol, .keep_all = TRUE) %>% # keep the ones with greatest mean value. If ties occur, keep the first occurencce
-  dplyr::select(-c(gene_id, means)) %>%
-  column_to_rownames('gene_symbol') 
+gtexData <- readRDS("data/Reference/GTEx/GTEx_Brain_TPM.RDS")
 
-# Dataset2: PBTA (full n = 970)
+# Dataset2: PBTA (polyA + corrected stranded n = 1028)
 # clinical
 pbta.hist <- read.delim('data/Reference/PBTA/pbta-histologies.tsv', stringsAsFactors = F)
 pbta.hist <- pbta.hist %>%
   filter(experimental_strategy == "RNA-Seq",
-         RNA_library == "stranded")
+         integrated_diagnosis == "High-grade glioma")
 
-# expression
-pbta.stranded <- readRDS('data/Reference/PBTA/pbta-gene-expression-rsem-fpkm-collapsed.stranded.rds')
-pbta.full <- pbta.stranded
+# expression  (polyA + corrected stranded TPM data collapsed to gene symbols)
+pbta.full <- readRDS('data/Reference/PBTA/pbta-gene-expression-rsem-tpm-collapsed.polya.stranded.corrected.rds')
 
-# Dataset3: PBTA (HGG n = 96)
-pbta.hist <- pbta.hist %>%
-  filter(integrated_diagnosis == "High-grade glioma")
+# Dataset3: PBTA (polyA + corrected stranded HGG n = 112)
 pbta.hgg <- pbta.full[,colnames(pbta.full) %in% pbta.hist$Kids_First_Biospecimen_ID]
 
 # Cancer Genes
@@ -98,9 +77,9 @@ if(length(expDat) == 1){
     separate(gene_id, c("gene_id", "gene_symbol"), sep = "\\_", extra = "merge") %>%
     unique()
   expData <- expData %>% 
-    arrange(desc(FPKM)) %>% 
+    arrange(desc(TPM)) %>% 
     distinct(gene_symbol, .keep_all = TRUE) %>%
-    dplyr::select(gene_symbol, FPKM) %>%
+    dplyr::select(gene_symbol, TPM) %>%
     column_to_rownames("gene_symbol")
   assign("expData", expData, envir = globalenv())
 }
@@ -110,16 +89,16 @@ runRNASeqAnalysis <- function(expData = NULL, refData = gtexData, thresh = 2, co
   
   # Merge GTEx and Patient data on common genes
   intGenesTmp <- intersect(rownames(refData), rownames(expData))
-  mergeDF <- cbind(refData[intGenesTmp,], expData[intGenesTmp, "FPKM"])
+  mergeDF <- cbind(refData[intGenesTmp,], expData[intGenesTmp, "TPM"])
   
   # Collapse to unique gene symbols
-  # Matrix of reference data and Patient FPKM data
+  # Matrix of reference data and Patient TPM data
   colnames(mergeDF)[ncol(mergeDF)] <- "SampleX"
   
   # Calculate Gene Outliers in Patient (top 20 Up and Down)
   getAllOutliers <- function(myMergeDF = mergeDF, getTop = 20, cancerGeneNames = cancerGenes$Gene_Symbol) {
     
-    # Filter in Patient: FPKM > 10
+    # Filter in Patient: TPM > 10
     myMergeDF <- myMergeDF[myMergeDF$SampleX > 10,]
     
     # z-score and return only patient's value
@@ -132,7 +111,7 @@ runRNASeqAnalysis <- function(expData = NULL, refData = gtexData, thresh = 2, co
     
     # full data
     output.df <- data.frame(output, myMergeDF[names(output),"SampleX"])
-    colnames(output.df) <- c("Z_Score", "FPKM")
+    colnames(output.df) <- c("Z_Score", "TPM")
     output.df$DE <- ""
     output.df$DE[which(output.df$Z_Score < (-1*1.5))] <- "Down"
     output.df$DE[which(output.df$Z_Score > 1.5)] <- "Up"
@@ -145,9 +124,9 @@ runRNASeqAnalysis <- function(expData = NULL, refData = gtexData, thresh = 2, co
     outputUp <- sort(outputCanc, T)[1:getTop] # top 20 up
     
     outputUpDF <- data.frame(outputUp, myMergeDF[names(outputUp),"SampleX"])
-    colnames(outputUpDF) <- c("Z_Score", "FPKM")
+    colnames(outputUpDF) <- c("Z_Score", "TPM")
     outputDownDF <- data.frame(outputDown, myMergeDF[names(outputDown),"SampleX"])
-    colnames(outputDownDF) <- c("Z_Score", "FPKM")
+    colnames(outputDownDF) <- c("Z_Score", "TPM")
     
     return(list(expr.genes.z.score = output,
                 diffexpr.top20 = rbind(outputUpDF, outputDownDF),

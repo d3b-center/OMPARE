@@ -1,5 +1,5 @@
 # ssGSEA of top 20 genomically similar patients
-# takes FPKM data
+# takes TPM data
 library(msigdbr) ## Contains the hallmark data sets
 library(GSVA)    ## Performs GSEA analysis
 

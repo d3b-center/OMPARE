@@ -25,7 +25,7 @@ smps <- grep('BS_', colnames(pbta.mat.full), value = T)
 smps <- c(smps, sampleInfo$subjectID)
 pbta.mat.all <- pbta.mat.full[,colnames(pbta.mat.full) %in% smps]
 
-# Now remove genes that have max value < 50 FPKM
+# Now remove genes that have max value < 50 TPM
 maxVals <- apply(pbta.mat, FUN = max, MARGIN = 1)
 pbta.mat <- pbta.mat[maxVals>50,]
 

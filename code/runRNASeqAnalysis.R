@@ -16,7 +16,7 @@ runRNASeqAnalysis <- function(expData = NULL) {
   # Calculate Gene Outliers in Patient (top 20 Up and Down)
   getAllOutliers <- function(id = sampleInfo$subjectID, myMergeDF = mergeDF, getTop = 20, cancerGeneNames = cancerGenes$Gene_Symbol) {
     
-    # Filter in Patient: FPKM > 10 
+    # Filter in Patient: TPM > 10 
     myMergeDF <- myMergeDF[myMergeDF[,id] > 10,]
     
     # z-score and return only patient's value
@@ -31,9 +31,9 @@ runRNASeqAnalysis <- function(expData = NULL) {
     outputUp <- sort(outputCanc, T)[1:getTop] # top 20 up
     
     outputUpDF <- data.frame(outputUp, myMergeDF[names(outputUp),id])
-    colnames(outputUpDF) <- c("Z_Score", "FPKM")
+    colnames(outputUpDF) <- c("Z_Score", "TPM")
     outputDownDF <- data.frame(outputDown, myMergeDF[names(outputDown),id])
-    colnames(outputDownDF) <- c("Z_Score", "FPKM")
+    colnames(outputDownDF) <- c("Z_Score", "TPM")
     
     return(list(output, rbind(outputUpDF, outputDownDF)))
   }
@@ -113,6 +113,6 @@ runRNASeqAnalysis <- function(expData = NULL) {
   finalOut <- list()
   finalOut$geneAnalysis <- geneAnalysisOut
   finalOut$pathwayAnalysis <- pathwayAnalysisOut
-  finalOut$FPKM <- mergeDF[sampleInfo$subjectID]
+  finalOut$TPM <- mergeDF[sampleInfo$subjectID]
   return(finalOut)
 }

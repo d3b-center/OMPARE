@@ -56,8 +56,7 @@ create.heatmap <- function(fname, genelist, plot.layout = "h"){
   pbta.clin <- read.delim('data/Reference/PBTA/pbta-histologies.tsv')
   pbta.clin <- pbta.clin %>%
     filter(integrated_diagnosis == "High-grade glioma",
-           experimental_strategy %in% c("WGS", "RNA-Seq"),
-           is.na(RNA_library) | RNA_library == "stranded") %>%
+           experimental_strategy %in% c("WGS", "RNA-Seq")) %>%
     mutate(disease = "HGG", 
            disease_subtype = pathology_diagnosis,
            subjectID = Kids_First_Biospecimen_ID,
@@ -83,7 +82,7 @@ create.heatmap <- function(fname, genelist, plot.layout = "h"){
     column_to_rownames("subjectID")
   
   # PBTA HGG mRNA expression (n = 112)
-  pbta.expr <- pbta.stranded
+  pbta.expr <- pbta.full
   rna.sids <- intersect(colnames(pbta.expr), rownames(pbta.rna.clin))
   pbta.rna.clin  <- pbta.rna.clin[rna.sids,]
   pbta.expr <- pbta.expr[,rna.sids]
@@ -105,7 +104,7 @@ create.heatmap <- function(fname, genelist, plot.layout = "h"){
     filter(gene_symbol %in% genelist) %>%
     column_to_rownames("gene_symbol")
   
-  # convert FPKM matrix to z-score matrix
+  # convert TPM matrix to z-score matrix
   genelist.expr <- as.data.frame(t(apply(genelist.expr, FUN = getZ, MARGIN = 1)))
   
   ## Copy number

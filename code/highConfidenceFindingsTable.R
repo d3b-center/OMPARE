@@ -49,7 +49,7 @@ highConfidenceFindingsTable <- function(delRPKM = 10) {
       myTableDel <- merge(myTableDel, hallMarkSetsTS.sub, by.x="Aberration", by.y="values", all.x=T)
       myTableDel <- myTableDel[which(myTableDel[,sampleInfo$subjectID]<10),]
       if(nrow(myTableDel)>0) {
-        myTableDel[,"SupportEv"] <- paste("FPKM=", myTableDel[,sampleInfo$subjectID], ifelse(is.na(myTableDel[,"ind"]), "", paste(", Pathway: ", myTableDel[,"ind"], sep="")), sep="")
+        myTableDel[,"SupportEv"] <- paste("TPM=", myTableDel[,sampleInfo$subjectID], ifelse(is.na(myTableDel[,"ind"]), "", paste(", Pathway: ", myTableDel[,"ind"], sep="")), sep="")
         myTableDel <- myTableDel[,c("Aberration", "Type", "Details", "Drugs", "SupportEv")]
       } else {
         colnames(myTableDel) <- c("Aberration", "Type", "Details", "Drugs", "SupportEv")
@@ -66,7 +66,7 @@ highConfidenceFindingsTable <- function(delRPKM = 10) {
       myTableAmp <- merge(myTableAmp, hallMarkSetsTS.sub, by.x="Aberration", by.y="values", all.x=T)
       myTableAmp <- myTableAmp[which(myTableAmp[,sampleInfo$subjectID]>100),]
       if(nrow(myTableAmp)>0) {
-        myTableAmp[,"SupportEv"] <- paste("FPKM=", myTableAmp[,sampleInfo$subjectID], ifelse(is.na(myTableAmp[,"ind"]), "", paste(", Pathway: ", myTableAmp[,"ind"], sep="")), sep="")
+        myTableAmp[,"SupportEv"] <- paste("TPM=", myTableAmp[,sampleInfo$subjectID], ifelse(is.na(myTableAmp[,"ind"]), "", paste(", Pathway: ", myTableAmp[,"ind"], sep="")), sep="")
         myTableAmp <- myTableAmp[,c("Aberration", "Type", "Details", "Drugs", "SupportEv")]
       } else {
         colnames(myTableAmp) <- c("Aberration", "Type", "Details", "Drugs", "SupportEv")
@@ -82,7 +82,7 @@ highConfidenceFindingsTable <- function(delRPKM = 10) {
       myTableMut[,"Gene"] <- sapply(myTableMut[,"Aberration"], FUN=getGeneFromMut)
       myTableMut <- merge(myTableMut, rnaEvidence, by.x="Gene", by.y="Gene", all.x=T)
       myTableMut <- merge(myTableMut, hallMarkSetsTS.sub, by.x="Gene", by.y="values", all.x=T)
-      myTableMut[,"SupportEv"] <- paste("FPKM=", myTableMut[,sampleInfo$subjectID], ifelse(is.na(myTableMut[,"ind"]), "", paste(", Pathway: ", myTableMut[,"ind"], sep="")), sep="")
+      myTableMut[,"SupportEv"] <- paste("TPM=", myTableMut[,sampleInfo$subjectID], ifelse(is.na(myTableMut[,"ind"]), "", paste(", Pathway: ", myTableMut[,"ind"], sep="")), sep="")
       myTableMut <- myTableMut[,c("Aberration", "Type", "Details", "Drugs", "SupportEv")]
     } else {
       myTableMut <- data.frame()
@@ -94,14 +94,14 @@ highConfidenceFindingsTable <- function(delRPKM = 10) {
     if(nrow(myTableFus) > 0){
       myTableFus[,c("Gene1", "Gene2")] <- sapply(myTableFus[,"Aberration"], FUN=getGeneFromFus)
       myTableFus <- merge(myTableFus, rnaEvidence, by.x="Gene1", by.y="Gene", all.x=T)
-      colnames(myTableFus)[colnames(myTableFus) == sampleInfo$subjectID] <- "Gene1_fpkm"
+      colnames(myTableFus)[colnames(myTableFus) == sampleInfo$subjectID] <- "Gene1_TPM"
       myTableFus <- merge(myTableFus, rnaEvidence, by.x="Gene2", by.y="Gene", all.x=T)
-      colnames(myTableFus)[colnames(myTableFus) == sampleInfo$subjectID] <- "Gene2_fpkm"
+      colnames(myTableFus)[colnames(myTableFus) == sampleInfo$subjectID] <- "Gene2_TPM"
       myTableFus <- merge(myTableFus, hallMarkSetsTS.sub, by.x="Gene1", by.y="values", all.x=T)
       myTableFus <- merge(myTableFus, hallMarkSetsTS.sub, by.x="Gene2", by.y="values", all.x=T)
-      myTableFus[,"SupportEv"] <- paste("FPKM=", myTableFus[,"Gene1_fpkm"],
+      myTableFus[,"SupportEv"] <- paste("TPM=", myTableFus[,"Gene1_TPM"],
                                         ", ",
-                                        myTableFus[,"Gene2_fpkm"],
+                                        myTableFus[,"Gene2_TPM"],
                                         ifelse(is.na(myTableFus[,"ind.x"]), "", paste(", Pathway: ", myTableFus[,"ind.x"], ",", sep="")),
                                         ifelse(is.na(myTableFus[,"ind.y"]), "", paste("", myTableFus[,"ind.y"], sep="")), sep="")
       myTableFus <- myTableFus[,c("Aberration", "Type", "Details", "Drugs", "SupportEv")]

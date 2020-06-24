@@ -18,7 +18,7 @@ tcga.gbm.mat <- cbind(tcga.gbm.mat[combGenes,], pnoc008.data[combGenes,])
 # keep full matrix for ImmuneProfile.R (not required for TCGA for now)
 # tcga.gbm.mat.all <- tcga.gbm.mat 
 
-# Now remove genes that have max value < 50 FPKM
+# Now remove genes that have max value < 50 TPM
 maxVals <- apply(tcga.gbm.mat, FUN = max, MARGIN = 1)
 tcga.gbm.mat <- tcga.gbm.mat[maxVals>50,]
 

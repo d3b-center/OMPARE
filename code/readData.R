@@ -82,7 +82,7 @@ readData <- function(topDir, fusion_method = c("star","arriba"), snv_pattern = "
     }
   }
   
-  # expression data: FPKM (can be only 1 per patient with .genes.results)
+  # expression data: TPM (can be only 1 per patient with .genes.results)
   expDat <- list.files(path = topDir, pattern = "*.genes.results*", recursive = TRUE, full.names = T)
   if(length(expDat) == 1){
     expData <- read.delim(expDat)
@@ -91,9 +91,9 @@ readData <- function(topDir, fusion_method = c("star","arriba"), snv_pattern = "
       separate(gene_id, c("gene_id", "gene_symbol"), sep = "\\_", extra = "merge") %>%
       unique()
     expData <- expData.full %>% 
-      arrange(desc(FPKM)) %>% 
+      arrange(desc(TPM)) %>% 
       distinct(gene_symbol, .keep_all = TRUE) %>%
-      mutate(!!sampleInfo$subjectID := FPKM) %>%
+      mutate(!!sampleInfo$subjectID := TPM) %>%
       dplyr::select(!!sampleInfo$subjectID, gene_id, gene_symbol) %>%
       unique()
     rownames(expData) <- expData$gene_symbol

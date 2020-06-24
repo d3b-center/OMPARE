@@ -34,10 +34,10 @@ pat.expr.mat <- pat.expr.mat %>%
 # uniquify gene_symbol
 pat.expr.mat <- pat.expr.mat %>% 
   group_by(sample_name) %>%
-  arrange(desc(FPKM)) %>% 
+  arrange(desc(TPM)) %>% 
   distinct(gene_symbol, .keep_all = TRUE) %>%
-  dplyr::select(gene_symbol, sample_name, FPKM) %>%
-  spread(sample_name, FPKM) %>%
+  dplyr::select(gene_symbol, sample_name, TPM) %>%
+  spread(sample_name, TPM) %>%
   column_to_rownames('gene_symbol')
 colnames(pat.expr.mat) <- gsub('-[0]+','-',colnames(pat.expr.mat))
 
@@ -61,5 +61,5 @@ pat.clinData <- pat.clinData[common.pat,]
 pat.expr.mat <- pat.expr.mat[,common.pat]
 
 system('mkdir -p data/Reference/PNOC008/')
-saveRDS(pat.expr.mat, file = 'data/Reference/PNOC008/PNOC008_matrix.RDS')
+saveRDS(pat.expr.mat, file = 'data/Reference/PNOC008/PNOC008_TPM_matrix.RDS')
 saveRDS(pat.clinData, file = "data/Reference/PNOC008/PNOC008_clinData.RDS")
