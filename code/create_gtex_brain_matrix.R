@@ -1,7 +1,7 @@
 # Script to create GTEx Brain TPM matrix
 library(tidyverse)
 
-# Clinical file
+# GTEx Brain meta file
 gtexClin <- readRDS('data/Reference/GTEx/GTEx_clinical.RDS')
 gtexBrain <- gtexClin %>%
   filter(subtissue == "Brain") %>%
