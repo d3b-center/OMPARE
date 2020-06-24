@@ -5,8 +5,8 @@
 # GTEx Normals TPM (7863 samples)
 gtexData <- readRDS("data/Reference/GTEx/gtex_normals_TPM.RDS")
 
-# All PNOC008 patients (expr + clinical)
-pnoc008.data <- readRDS('data/Reference/PNOC008/PNOC008_matrix.RDS')
+# All PNOC008 patients (TPM matrix + clinical)
+pnoc008.data <- readRDS('data/Reference/PNOC008/PNOC008_TPM_matrix.RDS')
 pnoc008.clinData <- readRDS('data/Reference/PNOC008/PNOC008_clinData.RDS')
 
 # PBTA specific mRNA data (TPM)
