@@ -116,5 +116,11 @@ highConfidenceFindingsTable <- function(delRPKM = 10) {
   } else {
     myTable <- data.frame()
   }
+  
+  # add Ensembl ids and map to targetvalidation.org
+  myTable <- myTable %>%
+    inner_join(expData %>% dplyr::select(gene_id, gene_symbol), by = c("Aberration" = "gene_symbol")) %>%
+    mutate(gene_id =paste0('<a href = \"https://www.targetvalidation.org/target/',gene_id,'\">',gene_id,"</a>"))
+  
   return(myTable)
 }

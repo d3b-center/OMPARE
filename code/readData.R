@@ -89,6 +89,7 @@ readData <- function(topDir, fusion_method = c("star","arriba"), snv_pattern = "
     expData.full <- expData %>% 
       mutate(gene_id = str_replace(gene_id, "_PAR_Y_", "_"))  %>%
       separate(gene_id, c("gene_id", "gene_symbol"), sep = "\\_", extra = "merge") %>%
+      mutate(gene_id = gsub('[.].*', '', gene_id))  %>%
       unique()
     expData <- expData.full %>% 
       arrange(desc(TPM)) %>% 

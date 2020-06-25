@@ -70,7 +70,7 @@ Row {data-height=500}
 ### Key Clinical Findings
     
 ```{r key_findings}
-datatable(keyClinicalFindingsTable(), rownames=F);
+datatable(keyClinicalFindingsTable(), rownames=F, escape = F);
 ```
 
 Row {data-height=300}
