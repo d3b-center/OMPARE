@@ -23,12 +23,12 @@ gtexData <- readRDS("data/Reference/GTEx/GTEx_Brain_TPM.RDS")
 pbta.hist <- read.delim('data/Reference/PBTA/pbta-histologies.tsv', stringsAsFactors = F)
 pbta.hist <- pbta.hist %>%
   filter(experimental_strategy == "RNA-Seq",
-         integrated_diagnosis == "High-grade glioma")
+         short_histology == "HGAT")
 
 # expression  (polyA + corrected stranded TPM data collapsed to gene symbols)
 pbta.full <- readRDS('data/Reference/PBTA/pbta-gene-expression-rsem-tpm-collapsed.polya.stranded.corrected.rds')
 
-# Dataset3: PBTA (polyA + corrected stranded HGG n = 112)
+# Dataset3: PBTA (polyA + corrected stranded HGG n = 186)
 pbta.hgg <- pbta.full[,colnames(pbta.full) %in% pbta.hist$Kids_First_Biospecimen_ID]
 
 # Cancer Genes

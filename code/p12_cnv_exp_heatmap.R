@@ -55,7 +55,7 @@ create.heatmap <- function(fname, genelist, plot.layout = "h"){
   # PBTA clinical
   pbta.clin <- read.delim('data/Reference/PBTA/pbta-histologies.tsv')
   pbta.clin <- pbta.clin %>%
-    filter(integrated_diagnosis == "High-grade glioma",
+    filter(short_histology == "HGAT",
            experimental_strategy %in% c("WGS", "RNA-Seq")) %>%
     mutate(disease = "HGG", 
            disease_subtype = pathology_diagnosis,
@@ -81,7 +81,7 @@ create.heatmap <- function(fname, genelist, plot.layout = "h"){
     filter(experimental_strategy == "WGS") %>%
     column_to_rownames("subjectID")
   
-  # PBTA HGG mRNA expression (n = 112)
+  # PBTA HGG mRNA expression (n = 186)
   pbta.expr <- pbta.full
   rna.sids <- intersect(colnames(pbta.expr), rownames(pbta.rna.clin))
   pbta.rna.clin  <- pbta.rna.clin[rna.sids,]
