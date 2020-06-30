@@ -79,3 +79,6 @@ if(!file.exists(paste0(topDir,'/complexHeatmap_cgs.png'))){
                  genelist = genelist.heatmap$Cancer_Gene_Census_CNVs, 
                  plot.layout = "h")
 }
+
+# Page 13 Mutational Analysis
+source('code/p13_mutational_analysis.R')

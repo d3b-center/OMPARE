@@ -298,6 +298,27 @@ if(exists('expData')){
 }
 ```
 
+Mutational Analysis (Genomically Similar Pediatric Samples) (P13) {data-navmenu="Genomically Similar Analysis"}
+===
+Row {data-height=500}
+---
+
+### Recurrently Altered Genes (Top Genomically Similar Patients)
+    
+```{r rec_alt_genes}
+total.alt.table <<- recurrent.alterations(topCor = pbta.topCor)
+datatable(total.alt.table[[1]], rownames=F, options = list(pageLength = 10));
+```
+
+Row {data-height=500}
+---
+
+### Shared Genes 
+
+```{r shared_genes}
+datatable(total.alt.table[[2]], rownames=F, options = list(pageLength = 10));
+```
+
 All Findings (P10)
 ===
 Row {data-height=700}
@@ -342,7 +363,7 @@ if(exists("cnvData")){
 }
 ```
 
-PHGG: Expression and CNV Heatmap (P12) {data-navmenu="Heatmaps"}
+PHGG: Expression and CNV Heatmap  (P12) {data-navmenu="Heatmaps"}
 ===
 Row {data-height=700}
 ---
@@ -354,7 +375,7 @@ fname <- paste0(topDir,'/complexHeatmap_phgg.png')
 knitr::include_graphics(fname)
 ```
 
-CGS: Expression and CNV Heatmap (P13) {data-navmenu="Heatmaps"}
+CGS: Expression and CNV Heatmap (P12) {data-navmenu="Heatmaps"}
 ===
 Row
 ---

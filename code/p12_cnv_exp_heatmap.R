@@ -194,7 +194,7 @@ create.heatmap <- function(fname, genelist, plot.layout = "h"){
                                           labels_gp = gpar(fontsize = 18, fontface = "bold"))
   
   
-  png(filename = fname, height = 15, width = 35, units = "in", res = 300)
+  png(filename = fname, height = 20, width = 40, units = "in", res = 300)
   # horizontal or vertical layout
   if(plot.layout == "v"){
     # create topannotation

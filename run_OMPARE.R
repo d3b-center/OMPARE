@@ -7,7 +7,8 @@ suppressPackageStartupMessages(library(optparse))
 option_list <- list(
   make_option(c("-p", "--patient"), type = "character",
               help = "Patient Number (1, 2...)"),
-  make_option(c("-s", "--sourcedir"), type = "character",
+  make_option(c("-s", "--sourcedir"), type = "character", 
+              default = NULL,
               help = "Source directory with all files"),
   make_option(c("-c", "--clin_file"), type = "character",
               help = "Google sheet link (PNOC008 patients)"),
@@ -30,11 +31,15 @@ topDir <- file.path(getwd(), 'data', patient)
 set_title <- paste0(patient,' Patient Report')
 callers <- c("lancet", "mutect2", "strelka2", "vardict", "consensus", "all")
 
-# 1. Create Project directory
-print("Create Project Directory...")
-cmd1 <- paste0('Rscript create_project_dir.R -s ', sourceDir, ' -d ', topDir, '/')
-print(cmd1)
-system(cmd1)
+# 1. Create Project directory (if sourcedir param is provided)
+if(!is.null(sourceDir)){
+  print("Create Project Directory...")
+  cmd1 <- paste0('Rscript create_project_dir.R -s ', sourceDir, ' -d ', topDir, '/')
+  print(cmd1)
+  system(cmd1)
+} else {
+  print("Project Directory found...")
+}
 
 # 2. Create clinical file
 print("Create Clinical file...")

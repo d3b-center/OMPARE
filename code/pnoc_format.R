@@ -1,13 +1,38 @@
 # Author: Komal S. Rathi
-# Function: script to pull rsem files from all existing patients and create a matrix of expression
-# script to pull clinical files from all existing patients and create metadata
-# this is to be run everytime a new patient comes in - before generating the report
+# Function: script to pull rsem files from all existing patients and do the following: 
+# create a matrix of expression
+# create metadata using clinical files
+# create full summary data files of cnv, mutations and fusions
+# This is to be run everytime a new patient comes in - before generating the report
 
 library(dplyr)
 library(stringr)
 library(tidyverse)
 library(googlesheets4)
 
+# create output directory
+system('mkdir -p data/Reference/PNOC008/')
+
+# source functions
+source('code/createCopyNumber.R')
+
+# reference data
+# cancer genes 
+cancerGenes <- read.delim("data/Reference/CancerGeneList.tsv", stringsAsFactors = F)
+cancerGenes <- cancerGenes %>%
+  filter(Gene_Symbol != "") %>%
+  dplyr::select(-Count) %>%
+  gather(key = "file", value = "type", -Gene_Symbol) %>%
+  mutate(type = file)
+geneListRef <- read.delim("data/Reference/genelistreference.txt", stringsAsFactors = F)
+geneListRef <- subset(geneListRef, type == "TumorSuppressorGene" | type == "CosmicCensus" | type == "Oncogene")
+cancerGenes <- rbind(cancerGenes, geneListRef)
+gene.list <- unique(cancerGenes$Gene_Symbol)
+
+# chr coordinates to gene symbol map
+chrMap <- read.delim("data/Reference/mart_export_genechr_mapping.txt", stringsAsFactors =F)
+
+# function to merge expression
 merge.res <- function(nm){
   sample_name <- gsub(".*PNOC","PNOC",nm)
   sample_name <- gsub('/.*','',sample_name)
@@ -17,6 +42,26 @@ merge.res <- function(nm){
     x$sample_name <- sample_name
     return(x)
   } 
+}
+
+# function to read cnv, filter by genes and merge
+merge.cnv <- function(cnvData, genelist){
+  # PNOC
+  sample_name <- gsub(".*PNOC", "PNOC", cnvData)
+  sample_name <- gsub('/.*', '', sample_name)
+  sample_name <- gsub('-[0]+', '-', sample_name)
+  cnvData <- data.table::fread(cnvData, header = T, check.names = T)
+  ploidy <- NULL
+  cnvData <- cnvData %>% 
+    dplyr::select(chr, start, end, copy.number, status, WilcoxonRankSumTestPvalue) %>%
+    filter(WilcoxonRankSumTestPvalue < 0.05) %>%
+    as.data.frame()
+  cnvOut <- createCopyNumber(cnvData = cnvData, ploidy = ploidy) # map coordinates to gene symbol
+  cnvOut <- cnvOut %>%
+    filter(Gene %in% genelist,
+           Status != "neutral") %>% # filter to gene list
+    mutate(sample_name = sample_name) # add PNOC008 patient id
+  return(cnvOut)
 }
 
 # list of all PNOC patients
@@ -60,6 +105,87 @@ common.pat <- intersect(rownames(pat.clinData), colnames(pat.expr.mat))
 pat.clinData <- pat.clinData[common.pat,]
 pat.expr.mat <- pat.expr.mat[,common.pat]
 
-system('mkdir -p data/Reference/PNOC008/')
+# save expression and clinical
 saveRDS(pat.expr.mat, file = 'data/Reference/PNOC008/PNOC008_TPM_matrix.RDS')
 saveRDS(pat.clinData, file = "data/Reference/PNOC008/PNOC008_clinData.RDS")
+
+# copy number
+cnv.files <- list.files(path = 'data/', pattern = "*.CNVs.p.value.txt", recursive = TRUE, full.names = T)
+cnv.files <- cnv.files[grep('PNOC008-',  cnv.files)]
+pnoc.cnv <- lapply(cnv.files, FUN = function(x) merge.cnv(cnvData = x, genelist = gene.list))
+pnoc.cnv <- data.table::rbindlist(pnoc.cnv)
+# only keep CHOP sample for PNOC008-5
+pnoc.cnv <- pnoc.cnv[grep('NANT', pnoc.cnv$sample_name, invert = T),]
+pnoc.cnv$sample_name  <- gsub("-CHOP", "", pnoc.cnv$sample_name)
+
+pnoc.cnv <- pnoc.cnv %>%
+  mutate(Alteration_Datatype = "CNV",
+         Alteration_Type = stringr::str_to_title(Status),
+         Alteration = paste0('Copy Number Value:', CNA),
+         Kids_First_Biospecimen_ID = sample_name,
+         SampleID = sample_name,
+         Study = "PNOC008") %>%
+  dplyr::select(Gene, Alteration_Datatype, Alteration_Type, Alteration, Kids_First_Biospecimen_ID, SampleID, Study) %>%
+  unique()
+saveRDS(pnoc.cnv, file = "data/Reference/PNOC008/PNOC008_cnvData_filtered.rds")
+
+# fusions
+fusion.files <- list.files(path = 'data/', pattern = "*.arriba.fusions.tsv", recursive = TRUE, full.names = T)
+fusion.files <- fusion.files[grep('PNOC008-',  fusion.files)]
+pnoc.fusions <- lapply(fusion.files, FUN = function(x) merge.res(x))
+pnoc.fusions <- data.table::rbindlist(pnoc.fusions)
+colnames(pnoc.fusions)[1] <- "gene1"
+pnoc.fusions$sample_name <- gsub('-[0]+','-', pnoc.fusions$sample_name)
+# only keep CHOP sample for PNOC008-5
+pnoc.fusions <- pnoc.fusions[grep('NANT', pnoc.fusions$sample_name, invert = T),]
+pnoc.fusions$sample_name  <- gsub("-CHOP", "", pnoc.fusions$sample_name)
+
+pnoc.fusions <- pnoc.fusions %>%
+  separate_rows(gene1, gene2, sep = ",", convert = TRUE) %>%
+  mutate(gene1 = gsub('[(].*', '', gene1),
+         gene2 = gsub('[(].*',' ', gene2),
+         reading_frame = ifelse(reading_frame == ".", "other", reading_frame)) %>%
+  mutate(Alteration_Datatype = "Fusion",
+         Alteration_Type = stringr::str_to_title(reading_frame),
+         Alteration = paste0(gene1, '_',  gene2),
+         Kids_First_Biospecimen_ID = sample_name,
+         SampleID = sample_name,
+         Study = "PNOC008") %>%
+  unite(col = "Gene", gene1, gene2, sep = ", ", na.rm = T) %>%
+  dplyr::select(Gene, Alteration_Datatype, Alteration_Type, Alteration, Kids_First_Biospecimen_ID, SampleID, Study) %>%
+  separate_rows(Gene, convert = TRUE) %>%
+  filter(Gene %in% gene.list) %>%
+  unique()
+saveRDS(pnoc.fusions, file = "data/Reference/PNOC008/PNOC008_fusData_filtered.rds")
+
+# mutations
+mut.files <- list.files(path = 'data/', pattern = "*consensus_somatic.vep.maf", recursive = TRUE, full.names = T)
+mut.files <- mut.files[grep('PNOC008-',  mut.files)]
+pnoc.mutations <- lapply(mut.files, FUN = function(x) merge.res(x))
+pnoc.mutations <- data.table::rbindlist(pnoc.mutations)
+pnoc.mutations$sample_name <- gsub('-[0]+','-', pnoc.mutations$sample_name)
+# only keep CHOP sample for PNOC008-5
+pnoc.mutations <- pnoc.mutations[grep('NANT', pnoc.mutations$sample_name, invert = T),]
+pnoc.mutations$sample_name  <- gsub("-CHOP", "", pnoc.mutations$sample_name)
+
+keepVC <- c("Nonsense_Mutation", "Missense_Mutation", 
+            "Splice_Region", "Splice_Site",
+            "3'UTR", "5'UTR", 
+            "In_Frame_Ins", "In_Frame_Del",
+            "Frame_Shift_Ins", "Frame_Shift_Del")
+keepVI <- c("MODIFIER", "MODERATE", "HIGH")
+pnoc.mutations <- pnoc.mutations %>%
+  filter(BIOTYPE == "protein_coding",
+         Variant_Classification %in% keepVC,
+         IMPACT %in% keepVI,
+         Hugo_Symbol %in% gene.list) %>%
+  mutate(Gene = Hugo_Symbol,
+         Alteration_Datatype = "Mutation",
+         Alteration_Type = Variant_Classification,
+         Alteration = HGVSp_Short,
+         Kids_First_Biospecimen_ID = sample_name,
+         SampleID = sample_name,
+         Study = "PNOC008") %>%
+  dplyr::select(Gene, Alteration_Datatype, Alteration_Type, Alteration, Kids_First_Biospecimen_ID, SampleID, Study) %>%
+  unique()
+saveRDS(pnoc.mutations, file = "data/Reference/PNOC008/PNOC008_consensus_mutData_filtered.rds")
