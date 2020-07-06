@@ -17,7 +17,7 @@ plotPathway <- function(myRNASeqAnalysisOut = RNASeqAnalysisOut) {
 
   # combine and plot
   pathData <- rbind(pathDataDown, pathDataUp)
-  pathData$Pathway <- factor(pathData$Pathway, levels = pathData$Pathway)
+  pathData$Pathway <- factor(pathData$Pathway, levels = unique(pathData$Pathway))
   pathData$Direction <- factor(pathData$Direction, levels = c("Down", "Up"))
   p <- ggplot(pathData, aes(Pathway, y = (-1)*log10(P_VAL), fill=Direction)) + 
     geom_bar(stat="identity") + coord_flip() + theme_bw() +
