@@ -10,7 +10,7 @@ pbta.clinData <- pbta.clinData %>%
          study_id = "PBTA") %>%
   dplyr::select(sample_barcode, sample_id, reported_gender, age_at_diagnosis_days, ethnicity, pathology_diagnosis, integrated_diagnosis, short_histology, broad_histology, primary_site, study_id)
 
-pat.clinData <- pnoc008.clinData[,c(rep('subjectID', 2), 'sex', 'AgeAtCollection', 'ethnicity', rep('tumorType', 4), 'tumorLocation', 'study_id')] 
+pat.clinData <- pnoc008.clinData[,c(rep('subjectID', 2), 'sex', 'age_diagnosis_days', 'ethnicity', rep('tumorType', 4), 'tumorLocation', 'study_id')] 
 colnames(pat.clinData) <- colnames(pbta.clinData)
 pbta.clinData <- rbind(pbta.clinData, pat.clinData)
 rownames(pbta.clinData) <- pbta.clinData$sample_barcode

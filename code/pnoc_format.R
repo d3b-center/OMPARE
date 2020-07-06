@@ -8,7 +8,7 @@
 library(dplyr)
 library(stringr)
 library(tidyverse)
-library(googlesheets4)
+library(xlsx)
 
 # create output directory
 system('mkdir -p data/Reference/PNOC008/')
@@ -49,7 +49,6 @@ merge.cnv <- function(cnvData, genelist){
   # PNOC
   sample_name <- gsub(".*PNOC", "PNOC", cnvData)
   sample_name <- gsub('/.*', '', sample_name)
-  sample_name <- gsub('-[0]+', '-', sample_name)
   cnvData <- data.table::fread(cnvData, header = T, check.names = T)
   ploidy <- NULL
   cnvData <- cnvData %>% 
@@ -84,20 +83,29 @@ pat.expr.mat <- pat.expr.mat %>%
   dplyr::select(gene_symbol, sample_name, TPM) %>%
   spread(sample_name, TPM) %>%
   column_to_rownames('gene_symbol')
-colnames(pat.expr.mat) <- gsub('-[0]+','-',colnames(pat.expr.mat))
+# colnames(pat.expr.mat) <- gsub('-[0]+','-',colnames(pat.expr.mat))
 
 # only keep CHOP sample for PNOC008-5
 pat.expr.mat <- pat.expr.mat[,grep('NANT', colnames(pat.expr.mat), invert = T)]
 colnames(pat.expr.mat)  <- gsub("-CHOP", "", colnames(pat.expr.mat))
 
 # now merge all clinical data for all patients
-# read from google sheets (would need authentication the first time)
-pat.clinData <- read_sheet(ss = "https://docs.google.com/spreadsheets/d/1cZgdMhIi53eNZWZMCYqRS_ThqNLb9w2TsRh2Rdg7aHY/edit#gid=0")
-pat.clinData <- pat.clinData[-1,]
-colnames(pat.clinData)[3] <- "KF_ParticipantID"
+pat.clinData <- read.xlsx('data/Reference/Manifest/FV_JMAQBSDF_2020-06-25_PNOC008_ClinicalManifest.xlsx', sheetIndex = 1)
 pat.clinData <- pat.clinData %>%
-  mutate(study_id = "PNOC008") %>%
-  dplyr::select(subjectID, KF_ParticipantID, tumorType, tumorLocation, ethnicity, sex, AgeAtCollection, study_id) %>%
+  filter_all(any_vars(!is.na(.))) %>%
+  mutate(PNOC.Subject.ID = gsub('P-','PNOC008-', PNOC.Subject.ID))
+pat.clinData <- pat.clinData %>%
+  mutate(study_id = "PNOC008",
+         KF_ParticipantID = PNOC.Subject.ID,
+         subjectID = PNOC.Subject.ID,
+         reportDate = Sys.Date(),
+         tumorType = Diagnosis.a,
+         tumorLocation = Primary.Site.a,
+         ethnicity = Ethnicity,
+         age_diagnosis_days = Age.at.Diagnosis..in.days.,
+         age_collection_days = Age.at.Collection..in.days.,
+         sex = Gender) %>%
+  dplyr::select(subjectID, KF_ParticipantID, tumorType, tumorLocation, ethnicity, sex, age_diagnosis_days, age_collection_days, study_id) %>%
   as.data.frame()
 rownames(pat.clinData) <- pat.clinData$subjectID
 
@@ -135,7 +143,6 @@ fusion.files <- fusion.files[grep('PNOC008-',  fusion.files)]
 pnoc.fusions <- lapply(fusion.files, FUN = function(x) merge.res(x))
 pnoc.fusions <- data.table::rbindlist(pnoc.fusions)
 colnames(pnoc.fusions)[1] <- "gene1"
-pnoc.fusions$sample_name <- gsub('-[0]+','-', pnoc.fusions$sample_name)
 # only keep CHOP sample for PNOC008-5
 pnoc.fusions <- pnoc.fusions[grep('NANT', pnoc.fusions$sample_name, invert = T),]
 pnoc.fusions$sample_name  <- gsub("-CHOP", "", pnoc.fusions$sample_name)
@@ -163,7 +170,6 @@ mut.files <- list.files(path = 'data/', pattern = "*consensus_somatic.vep.maf", 
 mut.files <- mut.files[grep('PNOC008-',  mut.files)]
 pnoc.mutations <- lapply(mut.files, FUN = function(x) merge.res(x))
 pnoc.mutations <- data.table::rbindlist(pnoc.mutations)
-pnoc.mutations$sample_name <- gsub('-[0]+','-', pnoc.mutations$sample_name)
 # only keep CHOP sample for PNOC008-5
 pnoc.mutations <- pnoc.mutations[grep('NANT', pnoc.mutations$sample_name, invert = T),]
 pnoc.mutations$sample_name  <- gsub("-CHOP", "", pnoc.mutations$sample_name)

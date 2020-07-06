@@ -11,7 +11,8 @@ option_list <- list(
               default = NULL,
               help = "Source directory with all files"),
   make_option(c("-c", "--clin_file"), type = "character",
-              help = "Google sheet link (PNOC008 patients)"),
+              default = NULL,
+              help = "PNOC008 Manifest file (.xlsx)"),
   make_option(c("-w", "--workdir"), type = "character",
               help = "OMPARE working directory")
 )
@@ -41,11 +42,15 @@ if(!is.null(sourceDir)){
   print("Project Directory found...")
 }
 
-# 2. Create clinical file
-print("Create Clinical file...")
-cmd2 <- paste0('Rscript create_clinfile.R -s ', clinical_sheet, ' -p ', patient, ' -d ', topDir)
-print(cmd2)
-system(cmd2)
+# 2. Create clinical file  (if clin_file param is provided)
+if(!is.null(clinical_sheet)){
+  print("Create Clinical file...")
+  cmd2 <- paste0('Rscript create_clinfile.R -s ', clinical_sheet, ' -p ', patient, ' -d ', topDir)
+  print(cmd2)
+  system(cmd2)
+} else {
+  print("Clinical file present...")
+}
 
 # 3. Update PNOC008 expression matrix for each new patient
 print("Update PNOC008 expression matrix...")

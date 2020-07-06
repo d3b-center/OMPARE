@@ -20,9 +20,9 @@ getReportDate <- function() {
 }
 
 # Get Report Version
-getReportVersion <- function() {
-  return(reportVersion)
-}
+# getReportVersion <- function() {
+#   return(reportVersion)
+# }
 
 ##################
 #Patient/Sample Information
@@ -33,17 +33,17 @@ getSubjectID<- function() {
   return(subjectID)
 }
 
-# Get Sex
+# sex
 getSex <- function() {
   return(sex)
 }
 
-# Get DOB
+# age at diagnosis
 getAge <- function() {
-  return(age_years)
+  return(age_diagnosis_days)
 }
 
-# Get ethnicity
+# ethnicity
 getEthnicity <- function() {
   return(ethnicity)
 }
@@ -51,46 +51,46 @@ getEthnicity <- function() {
 ##################
 
 # Get Medical Facility
-getMedicalFacility <- function() {
-  return(medicalFacility)
-}
+# getMedicalFacility <- function() {
+#   return(medicalFacility)
+# }
 
 # Get Primary Physician
-getPrimPhysician <- function() {
-  return(primPhysician)
-}
-
-# Get Pathologist
-getPathologist <- function() {
-  return(pathologist)
-}
-
-# Get Collection Date
-getLabDirector <- function() {
-  return(labDirector)
-}
+# getPrimPhysician <- function() {
+#   return(primPhysician)
+# }
+# 
+# # Get Pathologist
+# getPathologist <- function() {
+#   return(pathologist)
+# }
+# 
+# # Get Collection Date
+# getLabDirector <- function() {
+#   return(labDirector)
+# }
 
 ##################
 
-# Get Collection Date
+# age at collection
 getCollectionDate <- function() {
-  return(collectionDate)
+  return(age_collection_days)
 }
 
-# Get Tumor Location
+# tumor location
 getTumorLocation <- function() {
   return(tumorLocation)
 }
 
-# Get Tumor Type
+# tumor type
 getTumorType <- function() {
   return(tumorType)
 }
 
-# Get P/R
-getPrimRelapse <- function() {
-  return(primRelapse)
-}
+# # Get P/R
+# getPrimRelapse <- function() {
+#   return(primRelapse)
+# }
 
 
 

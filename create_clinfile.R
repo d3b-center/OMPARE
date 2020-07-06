@@ -3,13 +3,13 @@
 # Function: Script to read from google sheets and create clinical file 
 # This will be called from within run_OMPARE.R
 
-library(googlesheets4)
-library(optparse)
-library(dplyr)
+suppressPackageStartupMessages(library(xlsx))
+suppressPackageStartupMessages(library(optparse))
+suppressPackageStartupMessages(library(dplyr))
 
 option_list <- list(
   make_option(c("-s", "--sheet"), type = "character",
-              help = "Link to PNOC008 Google sheet"),
+              help = "PNOC008 Manifest file (.xlsx)"),
   make_option(c("-d", "--dir"), type = "character",
               help = "Path to PNOC008 patient folder (top directory)"),
   make_option(c("-p", "--patient"), type = "character",
@@ -22,29 +22,24 @@ dir <- opt$dir
 patient <- opt$patient
 
 # read from google sheets (would need authentication the first time)
-dat <- read_sheet(sheet)
+dat <- read.xlsx(sheet, sheetIndex = 1)
 dat <- dat %>%
-  dplyr::filter(subjectID == patient)
-colnames(dat)[3] <- "KF_ParticipantID"
+  filter_all(any_vars(!is.na(.))) %>%
+  mutate(PNOC.Subject.ID = gsub('P-','PNOC008-', PNOC.Subject.ID)) %>%
+  dplyr::filter(PNOC.Subject.ID == patient)
 
 # create clinical file
-df <- data.frame(matrix(ncol = 15, nrow = 1))
-colnames(df) <- c("subjectID","reportDate","reportVersion","primRelapse","tumorType","tumorLocation","collectionDate","labDirector","pathologist","primPhysician","medicalFacility","ethnicity","age_years","sex","KF_ParticipantID")
-df$subjectID <- dat$subjectID
-df$reportDate <- Sys.Date()
-df$reportVersion <- "V1.01"
-df$primRelapse <- "Primary"
-df$tumorType <- dat$tumorType
-df$tumorLocation <- dat$tumorLocation
-df$collectionDate <- "n/a"
-df$labDirector  <- "n/a"
-df$pathologist <- "n/a"
-df$primPhysician <- "n/a"
-df$medicalFacility <- "UCSF"
-df$ethnicity <- dat$ethnicity
-df$age_years <- dat$AgeAtCollection[[1]]
-df$sex <- dat$sex
-df$KF_ParticipantID <- dat$KF_ParticipantID
+df <- dat %>%
+  mutate(KF_ParticipantID = PNOC.Subject.ID,
+         subjectID = PNOC.Subject.ID,
+         reportDate = Sys.Date(),
+         tumorType = Diagnosis.a,
+         tumorLocation = Primary.Site.a,
+         ethnicity = Ethnicity,
+         age_diagnosis_days = Age.at.Diagnosis..in.days.,
+         age_collection_days = Age.at.Collection..in.days.,
+         sex = Gender) %>%
+  dplyr::select(subjectID, reportDate, tumorType,	tumorLocation, ethnicity, sex, age_diagnosis_days, age_collection_days, KF_ParticipantID)
 
 # write out
 fname <- file.path(dir, "Clinical", "patient_report.txt")

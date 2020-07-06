@@ -60,7 +60,7 @@ knitr::include_graphics("figures/d3b_Logo.png")
 
 ```{r patient_info}
 x=kable(patientSampleInfo(), format="html") %>%
-    kable_styling(bootstrap_options = c("bordered", "condensed", "responsive")) %>% column_spec(c(1,3,5), bold=T, border_left = "2px solid gray", border_right = "2px solid gray")
+    kable_styling(bootstrap_options = c("bordered", "condensed", "responsive")) %>% column_spec(c(1,3), bold=T, border_left = "2px solid gray", border_right = "2px solid gray")
 gsub("<thead>.*</thead>", "", x)
 ```
 

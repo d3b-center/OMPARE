@@ -6,7 +6,7 @@
 tcga.gbm.clinData <- tcga.gbm.clinData %>%
   dplyr::select(-c(overall_survival_time_in_days, vital_status)) %>%
   as.data.frame()
-pat.clinData <- pnoc008.clinData[,c(rep('subjectID', 2), 'sex', 'AgeAtCollection', 'ethnicity', rep('tumorType',2), 'study_id')] 
+pat.clinData <- pnoc008.clinData[,c(rep('subjectID', 2), 'sex', 'age_diagnosis_days', 'ethnicity', rep('tumorType',2), 'study_id')] 
 colnames(pat.clinData) <- colnames(tcga.gbm.clinData)
 tcga.gbm.clinData <- rbind(tcga.gbm.clinData, pat.clinData)
 rownames(tcga.gbm.clinData) <- tcga.gbm.clinData$sample_barcode

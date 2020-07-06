@@ -20,7 +20,6 @@ merge.cnv <- function(cnvData, gene.list){
     # PNOC
     sample_name <- gsub(".*PNOC", "PNOC", cnvData)
     sample_name <- gsub('/.*', '', sample_name)
-    sample_name <- gsub('-[0]+', '-', sample_name)
     cnvData <- data.table::fread(cnvData, header = T, check.names = T)
     ploidy <- NULL
   }
