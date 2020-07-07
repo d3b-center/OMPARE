@@ -64,6 +64,15 @@ recurrent.alterations <- function(topCor){
   total.alt.table2 <- total.alterations %>%
     filter(Gene %in% key.genes)
   
+  # shared genes that are present in patient of interest + at least 1 more sample
+  total.alt.table2 <- total.alt.table2 %>%
+    inner_join(total.alt.table2 %>%
+                 dplyr::select(Gene, SampleID) %>% 
+                 unique() %>%
+                 group_by(Gene) %>% 
+                 summarise(SampleCount = n()), by = c("Gene")) %>%
+    filter(SampleCount != 1)
+  
   alt.tables <- list(total.alt.table1, total.alt.table2)
   return(alt.tables)
 }
