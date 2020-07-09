@@ -35,7 +35,7 @@ tabulate_pathways <- function(allCor, numNeighbors = 20) {
     
     # read all previous reports
     patPath <- list.files(path = 'data', pattern = "*.xlsx", recursive = TRUE, full.names = T)
-    patPath <- grep('PNOC008-05-NANT', patPath, invert = T, value = T) # remove NANT report to avoid confusion
+    patPath <- grep('PNOC008-05-CHOP', patPath, invert = T, value = T) # remove CHOP report to avoid confusion
     patPath <- patPath[grep('PNOC008-',  patPath)]
     patPath <- data.frame(fname = patPath)
     patPath$sample_name <- gsub('.*/|_summary.xlsx', '', patPath$fname)

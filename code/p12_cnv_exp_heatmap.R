@@ -133,9 +133,9 @@ create.heatmap <- function(fname, genelist, plot.layout = "h"){
     spread(sample_name, CNA) %>%
     column_to_rownames("Gene")
   
-  # only keep CHOP sample for PNOC008-5
-  genelist.cnv <- genelist.cnv[,grep('NANT', colnames(genelist.cnv), invert = T)]
-  colnames(genelist.cnv)  <- gsub("-CHOP", "", colnames(genelist.cnv))
+  # only keep NANT sample for PNOC008-5
+  genelist.cnv <- genelist.cnv[,grep('CHOP', colnames(genelist.cnv), invert = T)]
+  colnames(genelist.cnv)  <- gsub("-NANT", "", colnames(genelist.cnv))
   
   # now combine clinical files for heatmap
   pbta.clin <- pbta.rna.clin %>%

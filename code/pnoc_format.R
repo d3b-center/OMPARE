@@ -85,9 +85,9 @@ pat.expr.mat <- pat.expr.mat %>%
   column_to_rownames('gene_symbol')
 # colnames(pat.expr.mat) <- gsub('-[0]+','-',colnames(pat.expr.mat))
 
-# only keep CHOP sample for PNOC008-5
-pat.expr.mat <- pat.expr.mat[,grep('NANT', colnames(pat.expr.mat), invert = T)]
-colnames(pat.expr.mat)  <- gsub("-CHOP", "", colnames(pat.expr.mat))
+# only keep NANT sample for PNOC008-5
+pat.expr.mat <- pat.expr.mat[,grep('CHOP', colnames(pat.expr.mat), invert = T)]
+colnames(pat.expr.mat)  <- gsub("-NANT", "", colnames(pat.expr.mat))
 
 # now merge all clinical data for all patients
 pat.clinData <- read.xlsx('data/Reference/Manifest/FV_JMAQBSDF_2020-06-25_PNOC008_ClinicalManifest.xlsx', sheetIndex = 1)
@@ -122,9 +122,9 @@ cnv.files <- list.files(path = 'data/', pattern = "*.CNVs.p.value.txt", recursiv
 cnv.files <- cnv.files[grep('PNOC008-',  cnv.files)]
 pnoc.cnv <- lapply(cnv.files, FUN = function(x) merge.cnv(cnvData = x, genelist = gene.list))
 pnoc.cnv <- data.table::rbindlist(pnoc.cnv)
-# only keep CHOP sample for PNOC008-5
-pnoc.cnv <- pnoc.cnv[grep('NANT', pnoc.cnv$sample_name, invert = T),]
-pnoc.cnv$sample_name  <- gsub("-CHOP", "", pnoc.cnv$sample_name)
+# only keep NANT sample for PNOC008-5
+pnoc.cnv <- pnoc.cnv[grep('CHOP', pnoc.cnv$sample_name, invert = T),]
+pnoc.cnv$sample_name  <- gsub("-NANT", "", pnoc.cnv$sample_name)
 
 pnoc.cnv <- pnoc.cnv %>%
   mutate(Alteration_Datatype = "CNV",
@@ -143,9 +143,9 @@ fusion.files <- fusion.files[grep('PNOC008-',  fusion.files)]
 pnoc.fusions <- lapply(fusion.files, FUN = function(x) merge.res(x))
 pnoc.fusions <- data.table::rbindlist(pnoc.fusions)
 colnames(pnoc.fusions)[1] <- "gene1"
-# only keep CHOP sample for PNOC008-5
-pnoc.fusions <- pnoc.fusions[grep('NANT', pnoc.fusions$sample_name, invert = T),]
-pnoc.fusions$sample_name  <- gsub("-CHOP", "", pnoc.fusions$sample_name)
+# only keep NANT sample for PNOC008-5
+pnoc.fusions <- pnoc.fusions[grep('CHOP', pnoc.fusions$sample_name, invert = T),]
+pnoc.fusions$sample_name  <- gsub("-NANT", "", pnoc.fusions$sample_name)
 
 pnoc.fusions <- pnoc.fusions %>%
   separate_rows(gene1, gene2, sep = ",", convert = TRUE) %>%
@@ -170,9 +170,9 @@ mut.files <- list.files(path = 'data/', pattern = "*consensus_somatic.vep.maf", 
 mut.files <- mut.files[grep('PNOC008-',  mut.files)]
 pnoc.mutations <- lapply(mut.files, FUN = function(x) merge.res(x))
 pnoc.mutations <- data.table::rbindlist(pnoc.mutations)
-# only keep CHOP sample for PNOC008-5
-pnoc.mutations <- pnoc.mutations[grep('NANT', pnoc.mutations$sample_name, invert = T),]
-pnoc.mutations$sample_name  <- gsub("-CHOP", "", pnoc.mutations$sample_name)
+# only keep NANT sample for PNOC008-5
+pnoc.mutations <- pnoc.mutations[grep('CHOP', pnoc.mutations$sample_name, invert = T),]
+pnoc.mutations$sample_name  <- gsub("-NANT", "", pnoc.mutations$sample_name)
 
 keepVC <- c("Nonsense_Mutation", "Missense_Mutation", 
             "Splice_Region", "Splice_Site",
