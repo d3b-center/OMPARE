@@ -54,10 +54,10 @@ geneMania <- read.delim("data/Reference/GeneManiaNetwork.txt", stringsAsFactors 
 # HGG-specific genes
 diseaseSpecificFields <- read.delim("data/Reference/DiseaseSpecificFields.txt")
 
-# Hallmark gene sets
-hallMarkSets <- getGmt("data/Reference/mSigDB/h.all.v6.2.symbols.gmt", collectionType=BroadCollection(), geneIdType= SymbolIdentifier())
-hallMarkSets <- geneIds(hallMarkSets)
-hallMarkSetsTS <- stack(hallMarkSets)
+# Gene sets (KEGG)
+geneSet <- getGmt('data/Reference/mSigDB/c2.cp.kegg.v7.1.symbols.gmt', collectionType = BroadCollection(), geneIdType = SymbolIdentifier())
+geneSet <- geneIds(geneSet)
+geneSetTS <- stack(geneSet)
 
 # Mutational signatures
 signatures <- readAlexandrovSignatures("data/Reference/signatures_probabilities.txt")

@@ -97,12 +97,12 @@ runRNASeqAnalysis <- function(expData = NULL) {
     
   }
   
-  upPathways <- funcEnrichment(upGenes, hallMarkSets, qval=1, myN=25000, myUniverse=rownames(mergeDF))
+  upPathways <- funcEnrichment(upGenes, geneSet, qval=1, myN=25000, myUniverse=rownames(mergeDF))
   upPathways <- upPathways[order(upPathways$P_VAL),]
   upPathways[,"Direction"] <- "Up"
   upPathways[,"Pathway"] <- rownames(upPathways)
   
-  downPathways <- funcEnrichment(downGenes, hallMarkSets, qval=1, myN=25000, myUniverse=rownames(mergeDF))
+  downPathways <- funcEnrichment(downGenes, geneSet, qval=1, myN=25000, myUniverse=rownames(mergeDF))
   downPathways <- downPathways[order(downPathways$P_VAL),]
   downPathways[,"Direction"] <- "Down"
   downPathways[,"Pathway"] <- rownames(downPathways)

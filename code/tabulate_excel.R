@@ -51,10 +51,9 @@ geneListRef <- subset(geneListRef, type == "TumorSuppressorGene" | type == "Cosm
 cancerGenes <- rbind(cancerGenes, geneListRef)
 rm(geneListRef)
 
-# Genesets
-hallMarkSets <- getGmt("data/Reference/mSigDB/h.all.v6.2.symbols.gmt", collectionType=BroadCollection(), geneIdType= SymbolIdentifier())
-hallMarkSets <- geneIds(hallMarkSets)
-hallMarkSetsTS <- stack(hallMarkSets)
+# Genesets (KEGG)
+geneSet <- getGmt('data/Reference/mSigDB/c2.cp.kegg.v7.1.symbols.gmt', collectionType = BroadCollection(), geneIdType = SymbolIdentifier())
+geneSet <- geneIds(geneSet)
 
 # Drug Interaction DB
 dgidb <- read.delim("data/Reference/DGIdb.txt", stringsAsFactors = F)
@@ -194,14 +193,14 @@ runRNASeqAnalysis <- function(expData = NULL, refData = gtexData, thresh = 2, co
   }
   
   # up pathways
-  upPathways <- funcEnrichment(upGenes, hallMarkSets, qval=1, myN=25000, myUniverse=rownames(mergeDF))
+  upPathways <- funcEnrichment(upGenes, geneSet, qval=1, myN=25000, myUniverse=rownames(mergeDF))
   upPathways <- upPathways %>%
     mutate(Direction = "Up") %>%
     filter(ADJ_P_VAL < 0.05) %>%
     arrange(ADJ_P_VAL)
   
   # down pathways
-  downPathways <- funcEnrichment(downGenes, hallMarkSets, qval=1, myN=25000, myUniverse=rownames(mergeDF))
+  downPathways <- funcEnrichment(downGenes, geneSet, qval=1, myN=25000, myUniverse=rownames(mergeDF))
   downPathways <- downPathways %>%
     mutate(Direction = "Down") %>%
     filter(ADJ_P_VAL < 0.05) %>%

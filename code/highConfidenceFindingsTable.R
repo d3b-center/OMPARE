@@ -34,19 +34,19 @@ highConfidenceFindingsTable <- function(delRPKM = 10) {
     sigGeneSets <- RNASeqAnalysisOut[[2]][[2]]
     sigGeneSets <- sigGeneSets[which(sigGeneSets$ADJ_P_VALUE < 0.05),]
     sigGeneSets <- sigGeneSets[,c("Pathway", "Direction")]
-    hallMarkSetsTS.sub <- merge(hallMarkSetsTS, sigGeneSets, by.x="ind", by.y="Pathway")
-    hallMarkSetsTS.sub[,"ind"] <- paste(hallMarkSetsTS.sub[,"ind"], "(",hallMarkSetsTS.sub[,"Direction"], ")", sep="")
-    hallMarkSetsTS.sub <- hallMarkSetsTS.sub[,c("ind", "values")]
-    hallMarkSetsTS.sub <- hallMarkSetsTS.sub %>% 
+    geneSetTS.sub <- merge(geneSetTS, sigGeneSets, by.x="ind", by.y="Pathway")
+    geneSetTS.sub[,"ind"] <- paste(geneSetTS.sub[,"ind"], "(",geneSetTS.sub[,"Direction"], ")", sep="")
+    geneSetTS.sub <- geneSetTS.sub[,c("ind", "values")]
+    geneSetTS.sub <- geneSetTS.sub %>% 
       group_by(values) %>% 
       dplyr::summarize(ind=paste(ind, collapse=","))
-    hallMarkSetsTS.sub <- data.frame(hallMarkSetsTS.sub)
+    geneSetTS.sub <- data.frame(geneSetTS.sub)
     
     # Supporting Evidence for Deletions
     myTableDel <- myTable[myTable$Type == "Deletion",]
     if(nrow(myTableDel) > 0){
       myTableDel <- merge(myTableDel, rnaEvidence, by.x="Aberration", by.y="Gene", all.x=T)
-      myTableDel <- merge(myTableDel, hallMarkSetsTS.sub, by.x="Aberration", by.y="values", all.x=T)
+      myTableDel <- merge(myTableDel, geneSetTS.sub, by.x="Aberration", by.y="values", all.x=T)
       myTableDel <- myTableDel[which(myTableDel[,sampleInfo$subjectID]<10),]
       if(nrow(myTableDel)>0) {
         myTableDel[,"SupportEv"] <- paste("TPM=", myTableDel[,sampleInfo$subjectID], ifelse(is.na(myTableDel[,"ind"]), "", paste(", Pathway: ", myTableDel[,"ind"], sep="")), sep="")
@@ -63,7 +63,7 @@ highConfidenceFindingsTable <- function(delRPKM = 10) {
     myTableAmp <- myTable[myTable$Type == "Amplification",]
     if(nrow(myTableAmp) > 0){
       myTableAmp <- merge(myTableAmp, rnaEvidence, by.x="Aberration", by.y="Gene", all.x=T)
-      myTableAmp <- merge(myTableAmp, hallMarkSetsTS.sub, by.x="Aberration", by.y="values", all.x=T)
+      myTableAmp <- merge(myTableAmp, geneSetTS.sub, by.x="Aberration", by.y="values", all.x=T)
       myTableAmp <- myTableAmp[which(myTableAmp[,sampleInfo$subjectID]>100),]
       if(nrow(myTableAmp)>0) {
         myTableAmp[,"SupportEv"] <- paste("TPM=", myTableAmp[,sampleInfo$subjectID], ifelse(is.na(myTableAmp[,"ind"]), "", paste(", Pathway: ", myTableAmp[,"ind"], sep="")), sep="")
@@ -81,7 +81,7 @@ highConfidenceFindingsTable <- function(delRPKM = 10) {
     if(nrow(myTableMut) > 0){
       myTableMut[,"Gene"] <- sapply(myTableMut[,"Aberration"], FUN=getGeneFromMut)
       myTableMut <- merge(myTableMut, rnaEvidence, by.x="Gene", by.y="Gene", all.x=T)
-      myTableMut <- merge(myTableMut, hallMarkSetsTS.sub, by.x="Gene", by.y="values", all.x=T)
+      myTableMut <- merge(myTableMut, geneSetTS.sub, by.x="Gene", by.y="values", all.x=T)
       myTableMut[,"SupportEv"] <- paste("TPM=", myTableMut[,sampleInfo$subjectID], ifelse(is.na(myTableMut[,"ind"]), "", paste(", Pathway: ", myTableMut[,"ind"], sep="")), sep="")
       myTableMut <- myTableMut[,c("Aberration", "Type", "Details", "Drugs", "SupportEv")]
     } else {
@@ -97,8 +97,8 @@ highConfidenceFindingsTable <- function(delRPKM = 10) {
       colnames(myTableFus)[colnames(myTableFus) == sampleInfo$subjectID] <- "Gene1_TPM"
       myTableFus <- merge(myTableFus, rnaEvidence, by.x="Gene2", by.y="Gene", all.x=T)
       colnames(myTableFus)[colnames(myTableFus) == sampleInfo$subjectID] <- "Gene2_TPM"
-      myTableFus <- merge(myTableFus, hallMarkSetsTS.sub, by.x="Gene1", by.y="values", all.x=T)
-      myTableFus <- merge(myTableFus, hallMarkSetsTS.sub, by.x="Gene2", by.y="values", all.x=T)
+      myTableFus <- merge(myTableFus, geneSetTS.sub, by.x="Gene1", by.y="values", all.x=T)
+      myTableFus <- merge(myTableFus, geneSetTS.sub, by.x="Gene2", by.y="values", all.x=T)
       myTableFus[,"SupportEv"] <- paste("TPM=", myTableFus[,"Gene1_TPM"],
                                         ", ",
                                         myTableFus[,"Gene2_TPM"],
