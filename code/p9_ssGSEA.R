@@ -20,7 +20,7 @@ ssGSEA <- function(topCor, fname) {
     # We then calculate the Gaussian-distributed scores
     gsea_scores <- GSVA::gsva(expression_data_log2_matrix,
                               human_hallmark_list,
-                              method = "gsva",
+                              method = "ssgsea",
                               min.sz = 1, max.sz = 1500,
                               mx.diff = TRUE, ## Setting this argument to TRUE computes Gaussian-distributed scores (bimodal score distribution if FALSE)
                               verbose = FALSE)        
