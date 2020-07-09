@@ -5,6 +5,10 @@
 plotPathway <- function(myRNASeqAnalysisOut = RNASeqAnalysisOut) {
   pathData <- myRNASeqAnalysisOut[[2]][[2]]
   
+  # only significant pathways
+  pathData <- pathData %>%
+    filter(ADJ_P_VALUE < 0.05)
+  
   # top 10 upregulated pathways
   pathDataUp <- pathData %>%
     filter(Direction == "Up") %>%
