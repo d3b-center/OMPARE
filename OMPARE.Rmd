@@ -293,7 +293,7 @@ Row {data-height=700}
     
 ```{r ssgsea_gs, fig.width = 28, fig.height=14}
 if(exists('expData')){
-  p <- ssGSEA(topCor = pbta.topCor, fname = paste0(topDir,'/GSVA/hallmark_rawScores.txt'))
+  p <- ssGSEA(topCor = pbta.topCor, fname = paste0(topDir,'/GSVA/ssgsea_rawScores.txt'))
   ggplotly(p)
 }
 ```
