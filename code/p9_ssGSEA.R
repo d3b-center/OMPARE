@@ -55,19 +55,19 @@ ssGSEA <- function(topCor, fname) {
     gsea_scores_df_tidy <- gsea_scores_df_tidy %>%
       filter(geneset_name %in% top50$geneset_name)
     
-    # factorize by median
-    tmp <- gsea_scores_df_tidy %>%
-      dplyr::select(geneset_name, gsea_score_median) %>%
-      arrange(desc(gsea_score_median)) %>%
-      unique() %>%
-      .$geneset_name
-    gsea_scores_df_tidy$geneset_name <- factor(gsea_scores_df_tidy$geneset_name, levels = tmp)
-    
     # save output
     write.table(gsea_scores_df_tidy, file = fname, sep = "\t", row.names = F)
   } else {
     gsea_scores_df_tidy <- read.delim(fname, check.names = F)
   }
+  # factorize by median
+  tmp <- gsea_scores_df_tidy %>%
+    dplyr::select(geneset_name, gsea_score_median) %>%
+    arrange(desc(gsea_score_median)) %>%
+    unique() %>%
+    .$geneset_name
+  gsea_scores_df_tidy$geneset_name <- factor(gsea_scores_df_tidy$geneset_name, levels = tmp)
+  
   # plot as boxplot
   p <- ggplot(gsea_scores_df_tidy, aes(geneset_name, gsea_score)) + 
     geom_boxplot(outlier.shape = NA) +  
