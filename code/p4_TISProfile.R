@@ -28,24 +28,29 @@ tisProfile <- function(fname, score){
     tcga.meta <- readRDS('data/Reference/TCGA/TCGA_meta.RDS')
     tcga.meta <- tcga.meta %>%
       rownames_to_column("sample_id") %>%
-      mutate(Type = "Adult") %>%
-      dplyr::select(sample_id, disease, Type)
+      mutate(Type = "Adult",
+             study_id = "TCGA") %>%
+      dplyr::select(sample_id, disease, Type, study_id, library_name)
     pbta.meta <- read.delim('data/Reference/PBTA/pbta-histologies.tsv')
     pbta.meta <- pbta.meta %>%
       filter(experimental_strategy  == "RNA-Seq") %>%
       mutate(sample_id = Kids_First_Biospecimen_ID, 
              disease = short_histology,
-             Type = "Pediatric") %>%
-      dplyr::select(sample_id, disease, Type)
-    pnoc.meta <- data.frame(sample_id =  sampleInfo$subjectID, disease = "HGAT", Type = "Pediatric")
+             Type = "Pediatric",
+             study_id = "PBTA",
+             library_name = RNA_library) %>%
+      dplyr::select(sample_id, disease, Type, study_id, library_name)
+    pnoc.meta <- data.frame(sample_id =  sampleInfo$subjectID, disease = "HGAT", Type = "Pediatric", study_id = "PNOC008", library_name = sampleInfo$library_name)
     total.meta <- rbind(tcga.meta, pbta.meta, pnoc.meta)
+    total.meta$batch <- paste0(total.meta$study_id, '_',  total.meta$library_name)
     
     # count number of samples per hist and only keep >= 20
     total.meta <- total.meta  %>%
       group_by(disease) %>%
       mutate(n = n()) %>%
       filter(n >= 20) %>%
-      dplyr::select(-c(n))
+      dplyr::select(-c(n)) %>%
+      as.data.frame()
     total.meta <- total.meta[order(total.meta$sample_id),] # order rows
     total <- total[,colnames(total) %in% total.meta$sample_id]
     total <- total[,order(colnames(total))] # order columns
@@ -53,8 +58,8 @@ tisProfile <- function(fname, score){
     # quantile normalize 
     normalize.mat <- function(mat, meta, method, genelist){
       if(method == "voom"){
-        # create design
-        var <- factor(meta[,'Type'])
+        # create design to correct for batch
+        var <- factor(meta$batch)
         design <- model.matrix(~0+var)
         colnames(design) <- levels(var)
         rownames(design) <- meta$sample_id
@@ -85,7 +90,8 @@ tisProfile <- function(fname, score){
       
       return(total.norm)
     }
-    total <- normalize.mat(mat = total, meta = total.meta, genelist = tis$Genes, method = "quantile")
+    # total <- normalize.mat(mat = total, meta = total.meta, genelist = tis$Genes, method = "quantile")
+    total <- normalize.mat(mat = total, meta = total.meta, genelist = tis$Genes, method = "voom")
     write.table(total, file = fname, sep = "\t", quote = F, row.names = F)
   } else {
     total  <- read.delim(fname, stringsAsFactors = F)

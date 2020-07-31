@@ -46,11 +46,11 @@ create.heatmap <- function(fname, genelist, plot.layout = "h"){
     mutate(disease = "HGG",
            disease_subtype = tumorType,
            sample_id = subjectID) %>%
-    dplyr::select(subjectID, sample_id, disease, disease_subtype, sex, ethnicity)
+    dplyr::select(subjectID, sample_id, disease, disease_subtype, sex, ethnicity, library_name)
   
   # PNOC008 mRNA
   pnoc.expr <- pnoc008.data
- 
+  
   # PBTA clinical
   pbta.clin <- read.delim('data/Reference/PBTA/pbta-histologies.tsv')
   pbta.clin <- pbta.clin %>%
@@ -59,9 +59,10 @@ create.heatmap <- function(fname, genelist, plot.layout = "h"){
     mutate(disease = "HGG", 
            disease_subtype = pathology_diagnosis,
            subjectID = Kids_First_Biospecimen_ID,
-           sex = germline_sex_estimate) %>%
-    dplyr::select(subjectID, sample_id, disease, disease_subtype, sex, ethnicity, experimental_strategy)
- 
+           sex = germline_sex_estimate,
+           library_name = RNA_library) %>%
+    dplyr::select(subjectID, sample_id, disease, disease_subtype, sex, ethnicity, experimental_strategy, library_name)
+  
   # sample ids with unique WGS + RNA-seq mapping (n = 48)
   sids <- pbta.clin %>%
     group_by(sample_id, experimental_strategy) %>%
@@ -96,9 +97,27 @@ create.heatmap <- function(fname, genelist, plot.layout = "h"){
                 rownames_to_column("gene_symbol"), by = "gene_symbol") %>%
     column_to_rownames("gene_symbol") 
   
+  # now combine clinical files for heatmap
+  pbta.clin <- pbta.rna.clin %>%
+    as.tibble() %>%
+    mutate(subjectID = sample_id,
+           study_id = "PBTA") %>%
+    column_to_rownames("subjectID") %>%
+    dplyr::select(-c(experimental_strategy))
+  pnoc.clin <- pnoc.clin %>%
+    as.tibble() %>% 
+    mutate(study_id = "PNOC008") %>%
+    column_to_rownames("subjectID")
+  clin <- rbind(pbta.clin, pnoc.clin)
+  
+  # batch correct
+  clin$batch <- paste0(clin$study_id, '_', clin$library_name)
+  expr <- expr[,rownames(clin)]
+  expr <- batch.correct(mat = expr, clin = clin)
   
   # subset to genelist of interest
   genelist.expr <- expr %>%
+    as.data.frame() %>%
     rownames_to_column("gene_symbol") %>%
     filter(gene_symbol %in% genelist) %>%
     column_to_rownames("gene_symbol")
@@ -115,8 +134,8 @@ create.heatmap <- function(fname, genelist, plot.layout = "h"){
   
   # subset to genelist
   pbta.cnv.genelist <- plyr::ddply(.data = pbta.cnv, 
-                              .variables = 'Kids_First_Biospecimen_ID', 
-                              .fun = function(x) merge.cnv(cnvData = x, gene.list = genelist))
+                                   .variables = 'Kids_First_Biospecimen_ID', 
+                                   .fun = function(x) merge.cnv(cnvData = x, gene.list = genelist))
   
   # PNOC008
   cnv.files <- list.files(path = getwd(), pattern = "*.CNVs.p.value.txt", recursive = TRUE, full.names = T)
@@ -125,7 +144,7 @@ create.heatmap <- function(fname, genelist, plot.layout = "h"){
   
   # merge PBTA and PNOC
   genelist.cnv <- rbind(pbta.cnv.genelist %>%
-                     dplyr::select(-c(Kids_First_Biospecimen_ID)), pnoc.cnv.genelist)
+                          dplyr::select(-c(Kids_First_Biospecimen_ID)), pnoc.cnv.genelist)
   
   # convert to matrix
   genelist.cnv <- genelist.cnv %>%
@@ -136,17 +155,6 @@ create.heatmap <- function(fname, genelist, plot.layout = "h"){
   # only keep NANT sample for PNOC008-5
   genelist.cnv <- genelist.cnv[,grep('CHOP', colnames(genelist.cnv), invert = T)]
   colnames(genelist.cnv)  <- gsub("-NANT", "", colnames(genelist.cnv))
-  
-  # now combine clinical files for heatmap
-  pbta.clin <- pbta.rna.clin %>%
-    as.tibble() %>%
-    mutate(subjectID = sample_id) %>%
-    column_to_rownames("subjectID") %>%
-    dplyr::select(-c(experimental_strategy))
-  pnoc.clin <- pnoc.clin %>% 
-    as.tibble() %>% 
-    column_to_rownames("subjectID")
-  clin <- rbind(pbta.clin, pnoc.clin)
   
   # plot with ComplexHeatmap
   # make cnv matrix consistent with expression

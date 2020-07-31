@@ -10,7 +10,13 @@ pnoc008.data <- readRDS('data/Reference/PNOC008/PNOC008_TPM_matrix.RDS')
 pnoc008.clinData <- readRDS('data/Reference/PNOC008/PNOC008_clinData.RDS')
 
 # PBTA specific mRNA data (TPM)
-pbta.full <- readRDS('data/Reference/PBTA/pbta-gene-expression-rsem-tpm-collapsed.polya.stranded.corrected.rds')
+pbta.stranded <- readRDS('data/Reference/PBTA/pbta-gene-expression-rsem-tpm-collapsed.stranded.rds')
+pbta.polya <- readRDS('data/Reference/PBTA/pbta-gene-expression-rsem-tpm-collapsed.polya.rds')
+pbta.full <- pbta.stranded %>%
+  rownames_to_column('sym') %>%
+  inner_join(pbta.polya %>%
+               rownames_to_column('sym'), by = 'sym') %>%
+  column_to_rownames('sym')
 pbta.mat <- pbta.full
 pbta.clinData <- read.delim("data/Reference/PBTA/pbta-histologies.tsv", stringsAsFactors = F)
 pbta.survData <- pbta.clinData %>%

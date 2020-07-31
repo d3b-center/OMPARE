@@ -83,14 +83,13 @@ pat.expr.mat <- pat.expr.mat %>%
   dplyr::select(gene_symbol, sample_name, TPM) %>%
   spread(sample_name, TPM) %>%
   column_to_rownames('gene_symbol')
-# colnames(pat.expr.mat) <- gsub('-[0]+','-',colnames(pat.expr.mat))
 
 # only keep NANT sample for PNOC008-5
 pat.expr.mat <- pat.expr.mat[,grep('CHOP', colnames(pat.expr.mat), invert = T)]
 colnames(pat.expr.mat)  <- gsub("-NANT", "", colnames(pat.expr.mat))
 
 # now merge all clinical data for all patients
-pat.clinData <- read.xlsx('data/Reference/Manifest/FV_JMAQBSDF_2020-06-25_PNOC008_ClinicalManifest.xlsx', sheetIndex = 1)
+pat.clinData <- read.xlsx('data/Reference/Manifest/PNOC008_Manifest.xlsx', sheetIndex = 1)
 pat.clinData <- pat.clinData %>%
   filter_all(any_vars(!is.na(.))) %>%
   mutate(PNOC.Subject.ID = gsub('P-','PNOC008-', PNOC.Subject.ID))
@@ -105,7 +104,7 @@ pat.clinData <- pat.clinData %>%
          age_diagnosis_days = Age.at.Diagnosis..in.days.,
          age_collection_days = Age.at.Collection..in.days.,
          sex = Gender) %>%
-  dplyr::select(subjectID, KF_ParticipantID, tumorType, tumorLocation, ethnicity, sex, age_diagnosis_days, age_collection_days, study_id) %>%
+  dplyr::select(subjectID, KF_ParticipantID, tumorType, tumorLocation, ethnicity, sex, age_diagnosis_days, age_collection_days, study_id, library_name) %>%
   as.data.frame()
 rownames(pat.clinData) <- pat.clinData$subjectID
 

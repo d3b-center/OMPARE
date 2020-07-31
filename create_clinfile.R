@@ -39,7 +39,7 @@ df <- dat %>%
          age_diagnosis_days = Age.at.Diagnosis..in.days.,
          age_collection_days = Age.at.Collection..in.days.,
          sex = Gender) %>%
-  dplyr::select(subjectID, reportDate, tumorType,	tumorLocation, ethnicity, sex, age_diagnosis_days, age_collection_days, KF_ParticipantID)
+  dplyr::select(subjectID, reportDate, tumorType,	tumorLocation, ethnicity, sex, age_diagnosis_days, age_collection_days, KF_ParticipantID, library_name)
 
 # write out
 fname <- file.path(dir, "Clinical", "patient_report.txt")

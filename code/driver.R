@@ -38,6 +38,7 @@ if(!is.null(tmb)){                              # plot tumor mutational burden
 }
 
 # Prepare OpenPBTA and TCGA data to be used for functions in Page 4-7
+source('code/batch_correct.R')                  # batch correction function
 source('code/pbta_format.R')                    # format PBTA data
 source('code/tcga_format.R')                    # format TCGA data
 
