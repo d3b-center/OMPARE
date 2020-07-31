@@ -25,8 +25,8 @@ pbta.hist <- pbta.hist %>%
   filter(experimental_strategy == "RNA-Seq",
          short_histology == "HGAT")
 
-# expression  (polyA + corrected stranded TPM data collapsed to gene symbols)
-pbta.full <- readRDS('data/Reference/PBTA/pbta-gene-expression-rsem-tpm-collapsed.polya.stranded.corrected.rds')
+# expression  (polyA + stranded combined TPM data collapsed to gene symbols)
+pbta.full <- readRDS('data/Reference/PBTA/pbta-gene-expression-rsem-tpm-collapsed.polya.stranded.rds')
 
 # Dataset3: PBTA (polyA + corrected stranded HGG n = 186)
 pbta.hgg <- pbta.full[,colnames(pbta.full) %in% pbta.hist$Kids_First_Biospecimen_ID]

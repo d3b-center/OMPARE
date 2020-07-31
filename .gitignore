@@ -7,8 +7,8 @@ Archive/*
 
 # Code
 code/Archive/*
-code/collapse-matrices.R
-code/create_pbta_count_matrix.R
+code/collapse_matrix.R
+code/create_pbta_combined_matrices.R
 code/create_gtex_matrix.R
 code/create_gtex_brain_matrix.R
 code/create_tcga_gbm_matrix.R
