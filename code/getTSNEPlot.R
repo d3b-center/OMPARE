@@ -7,7 +7,7 @@ getTSNEPlot <- function(dat, clinData, study, patient) {
   set.seed(100) # set seed for reproducibility
   tsneOut <- Rtsne(t(log2(dat+1)), initial_dims = 50, perplexity = 30, check_duplicates = FALSE, theta = 0)
   tsneData <- data.frame(tsneOut$Y, samples = colnames(dat))
-  colnames(tsneData)[1:2] <- c("PC1", "PC2")
+  colnames(tsneData)[1:2] <- c("Dim1", "Dim2")
   tsneData <- merge(clinData, tsneData, by.x = "sample_barcode", by.y = "samples")
 
   # reverse factors to set PNOC to lowest
@@ -26,7 +26,7 @@ getTSNEPlot <- function(dat, clinData, study, patient) {
   }
 
   # plot t-SNE
-  p <- ggplot(tsneData, aes(PC1, PC2,
+  p <- ggplot(tsneData, aes(Dim1, Dim2,
                             color = pathology_diagnosis,
                             size = study_id,
                             shape = label,
