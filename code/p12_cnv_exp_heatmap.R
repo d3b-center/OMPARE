@@ -113,7 +113,7 @@ create.heatmap <- function(fname, genelist, plot.layout = "h"){
   # batch correct
   clin$batch <- paste0(clin$study_id, '_', clin$library_name)
   expr <- expr[,rownames(clin)]
-  expr <- batch.correct(mat = expr, clin = clin)
+  expr <- quiet(batch.correct(mat = expr, clin = clin))
   
   # subset to genelist of interest
   genelist.expr <- expr %>%

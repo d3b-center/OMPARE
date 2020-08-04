@@ -22,15 +22,13 @@ merge.excel <- function(nm) {
 }
 
 # function to get upregulated pathways from top genomically similar patients  
-tabulate_pathways <- function(allCor, numNeighbors = 20) {
+tabulate_pathways <- function(allCor) {
   
   fname1 <- paste0(topDir, '/Summary/sig_pathways_gen_similar.txt')
   fname2 <- paste0(topDir, '/Summary/cnv_pathways.txt')
   if(!file.exists(fname1) | !file.exists(fname2)){
     # top 20 genomically similar PNOC008 patients 
-    colnames(allCor)[1] <- "Correlation"
-    patSamples <- allCor[1:numNeighbors,]
-    patSamples <- patSamples[grep("PNOC", patSamples$sample_barcode),'sample_barcode']
+    patSamples <- allCor[grep("PNOC", allCor$nearest_neighbor),'nearest_neighbor']
     patSamples <- c(patSamples, sampleInfo$subjectID)
     
     # read all previous reports
@@ -49,8 +47,7 @@ tabulate_pathways <- function(allCor, numNeighbors = 20) {
     patPath <- plyr::ddply(.data = patPath, .variables = 'sample_name', .fun = function(x) merge.excel(x))
     
     # top 20 genomically similar PBTA
-    pbtaSamples <- allCor[1:numNeighbors,]
-    pbtaSamples <- pbtaSamples[grep("^BS_", pbtaSamples$sample_barcode),'sample_barcode']
+    pbtaSamples <- allCor[grep("^BS_", allCor$nearest_neighbor),'nearest_neighbor']
     
     # read precalculated enrichment for PBTA vs GTEx, PBTA vs PBTA (HGG) and PBTA vs PBTA (All)
     gtexBrain <- readRDS('data/Reference/GSEA/PBTA_vs_GTExBrain.RDS')

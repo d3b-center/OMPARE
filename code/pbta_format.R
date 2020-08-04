@@ -24,7 +24,7 @@ pbta.mat <- pbta.mat[,rownames(pbta.clinData)]
 
 # Correct for batch effect: study_id + library_name
 pbta.clinData$batch <- paste0(pbta.clinData$study_id,'_', pbta.clinData$library_name)
-pbta.mat <- batch.correct(mat = pbta.mat, clin = pbta.clinData)
+pbta.mat <- quiet(batch.correct(mat = pbta.mat, clin = pbta.clinData))
 
 # keep full matrix for ImmuneProfile.R (only PBTA + PNOC patient of interest)
 pbta.mat.full <- pbta.mat 
@@ -58,15 +58,38 @@ if(nrow(pbta.mat.tsne) >= 10000){
 }
 pbta.mat.tsne$CV <- NULL # Remove cv
 
-# for getKMPlot.R and getSimilarPatients.R
-pbta.allCor <- cor(x = pbta.mat.tsne[sampleInfo$subjectID], y = pbta.mat.tsne)
-pbta.allCor <- data.frame(t(pbta.allCor), check.names = F)
-pbta.allCor[,"sample_barcode"] <- rownames(pbta.allCor)
-pbta.allCor <- pbta.allCor[!grepl(sampleInfo$subjectID, rownames(pbta.allCor)),]
-pbta.allCor <- pbta.allCor[order(pbta.allCor[,1], decreasing = TRUE),]
-pbta.allCor[,1] <- round(pbta.allCor[,1], 3)
+# for clustering
+# use UMAP correlation
+set.seed(100)
+ump <- uwot::umap(X = t(log2(pbta.mat.tsne+1)), n_neighbors = 21, n_components = 2, metric = "correlation", ret_nn = TRUE, n_sgd_threads = 123L)
+embedding <- as.data.frame(ump$embedding)
+colnames(embedding) <- c("UMAP1", "UMAP2")
+pbta.embedding <- embedding
 
-# get matrix of top 20 correlated samples (for Immune profile of genomically similar patients)
-pbta.topCor <- pbta.allCor[1:20,'sample_barcode']
-pbta.topCor <- c(pbta.topCor, sampleInfo$subjectID) # add patient of interest
-pbta.topCor <- pbta.mat.full[,colnames(pbta.mat.full) %in% pbta.topCor]
+# for getKMPlot.R and getSimilarPatients.R
+# extract nearest neighbor info
+corr <- as.data.frame(ump$nn$correlation$idx) # nn
+dist <- as.data.frame(ump$nn$correlation$dist) # distances
+corr <- t(apply(corr, MARGIN = 1, FUN = function(x) colnames(pbta.mat.tsne)[x]))
+rownames(corr) <- colnames(pbta.mat.tsne)
+rownames(dist) <- colnames(pbta.mat.tsne)
+nn_table <- data.frame(nearest_neighbor = as.character(corr[grep(sampleInfo$subjectID, rownames(corr)),]), 
+                       distance = as.numeric(dist[grep(sampleInfo$subjectID, rownames(dist)),]))
+nn_table$distance <- round(nn_table$distance, digits = 3)
+pbta.allCor <- nn_table[grep(sampleInfo$subjectID, nn_table$nearest_neighbor, invert = TRUE),]
+
+# Immune profile, ssGSEA, recurrent alterations (keep POI)
+pbta.topCor <- pbta.mat.full[,colnames(pbta.mat.full) %in% nn_table$nearest_neighbor]
+
+# # for getKMPlot.R and getSimilarPatients.R
+# pbta.allCor <- cor(x = pbta.mat.tsne[sampleInfo$subjectID], y = pbta.mat.tsne)
+# pbta.allCor <- data.frame(t(pbta.allCor), check.names = F)
+# pbta.allCor[,"sample_barcode"] <- rownames(pbta.allCor)
+# pbta.allCor <- pbta.allCor[!grepl(sampleInfo$subjectID, rownames(pbta.allCor)),]
+# pbta.allCor <- pbta.allCor[order(pbta.allCor[,1], decreasing = TRUE),]
+# pbta.allCor[,1] <- round(pbta.allCor[,1], 3)
+# 
+# # get matrix of top 20 correlated samples (for Immune profile of genomically similar patients)
+# pbta.topCor <- pbta.allCor[1:20,'sample_barcode']
+# pbta.topCor <- c(pbta.topCor, sampleInfo$subjectID) # add patient of interest
+# pbta.topCor <- pbta.mat.full[,colnames(pbta.mat.full) %in% pbta.topCor]

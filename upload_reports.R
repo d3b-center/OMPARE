@@ -23,6 +23,7 @@ patient <- paste0('PNOC008-', p)
 topDir <- file.path(getwd(), 'data', patient)
 
 # set variables for upload commands
+readRenviron("~/.Renviron")
 cav <- Sys.getenv('CAV') # path to cavatica-uploader.sh
 auth <- Sys.getenv('AUTH_TOKEN') # authentication token
 project <- 'cavatica/sd-8y99qzjj' # project id

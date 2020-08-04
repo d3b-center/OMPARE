@@ -194,10 +194,13 @@ Row
 
 ### Nearest-Neighbor Analysis
     
-```{r tsne_plot_pbta}
+```{r dimred_plot_pbta}
 if(exists('expData')){
-  # ggplotly(getTSNEPlot())
-  getTSNEPlot(dat = pbta.mat.tsne,  clinData = pbta.clinData, study = "PBTA", patient = sampleInfo$subjectID)
+  getDimRedPlot(dat = pbta.embedding, 
+                clindata = pbta.clinData, 
+                study = "PBTA", 
+                patient = sampleInfo$subjectID, 
+                title =  "UMAP Correlation Clustering")
 }
 ```
 
@@ -208,14 +211,14 @@ Row
     
 ```{r km_plot_pbta, fig.width = 6}
 if(exists('expData')){
-  getKMPlot(allCor = pbta.allCor, survData = pbta.survData, numNeighbors = 20);
+  getKMPlot(allCor = pbta.allCor, survData = pbta.survData)
 }
 ```
 
 ### Treatment/Outcomes - Genomically Similar Patients
     
 ```{r similar_patients_pbta}
-datatable(getSimilarPatients(allCor = pbta.allCor, clinData = pbta.clinData, numNeighbors = 20), rownames=F, escape=F);
+datatable(getSimilarPatients(allCor = pbta.allCor, clinData = pbta.clinData), rownames=F, escape=F);
 ```
 
 Genomically Similar Samples (TCGA) (P6) {data-navmenu="Genomically Similar Analysis"}
@@ -225,10 +228,13 @@ Row
 
 ### Nearest-Neighbor Analysis
     
-```{r tsne_plot_tcga}
+```{r dimred_plot_tcga}
 if(exists('expData')){
-  # ggplotly(getTSNEPlot())
-  getTSNEPlot(dat = tcga.gbm.mat.tsne, clinData = tcga.gbm.clinData, study = "TCGA", patient = sampleInfo$subjectID)
+  getDimRedPlot(dat = tcga.gbm.embedding, 
+                clindata = tcga.gbm.clinData, 
+                study = "TCGA", 
+                patient = sampleInfo$subjectID, 
+                title =  "UMAP Correlation Clustering")
 }
 ```
 
@@ -239,14 +245,14 @@ Row
     
 ```{r km_plot_tcga, fig.width = 6}
 if(exists('expData')){
-  getKMPlot(allCor = tcga.gbm.allCor, survData = tcga.gbm.survData, numNeighbors = 20);
+  getKMPlot(allCor = tcga.gbm.allCor, survData = tcga.gbm.survData)
 }
 ```
 
 ### Treatment/Outcomes - Genomically Similar Patients
     
 ```{r similar_patients_tcga}
-datatable(getSimilarPatients(allCor = tcga.gbm.allCor, clinData = tcga.gbm.clinData, numNeighbors = 20), rownames=F, escape=F);
+datatable(getSimilarPatients(allCor = tcga.gbm.allCor, clinData = tcga.gbm.clinData), rownames=F, escape=F);
 ```
 
 Tumor Purity (Genomically Similar Pediatric Samples) (P7) {data-navmenu="Genomically Similar Analysis"}
@@ -271,7 +277,7 @@ Row {data-height=500}
 ### Pathway Enrichment (Top Genomically Similar Patients)
     
 ```{r tabulate_pathways}
-gsPath <- tabulate_pathways(allCor = pbta.allCor, numNeighbors = 20)
+gsPath <- tabulate_pathways(allCor = pbta.allCor)
 datatable(gsPath[[1]], rownames=F, options = list(pageLength = 10));
 ```
 

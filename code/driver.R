@@ -47,7 +47,7 @@ source('code/ImmuneProfile.R')                  # plot immune profile using xCel
 source('code/p4_TISProfile.R')                  # plot TIS profile
 
 # Page 5 (PNOC008 + OpenPBTA) and Page 6 (PNOC008 + TCGA GBM)
-source('code/getTSNEPlot.R')                    # plot t-SNE     
+source('code/getDimRedPlot.R')                  # plot UMAP     
 source('code/getSimilarPatients.R')             # get top 20 correlated patients
 source('code/getKMPlot.R')                      # plot KM plot of top 20 most correlated patients with survival
 

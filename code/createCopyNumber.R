@@ -29,6 +29,9 @@ createCopyNumber <- function(cnvData, ploidy = NULL){
   if(is.null(ploidy)){
     ploidy <- unique(output[which(output$tmpStatus == "neutral"),'tmpValue'])
   }
+  if(length(ploidy) > 1){
+    ploidy <- min(ploidy)
+  }
   # if there is no CN entry for neutral status, then do this
   if(length(ploidy) == 0){
     ploidy <- min(output$tmpValue[output$tmpStatus == "gain"])-1
