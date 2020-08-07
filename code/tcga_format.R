@@ -18,7 +18,12 @@ tcga.gbm.mat <- tcga.gbm.mat[,rownames(tcga.gbm.clinData)]
 
 # Correct for batch effect: study_id + library_name
 tcga.gbm.clinData$batch <- paste0(tcga.gbm.clinData$study_id,'_', tcga.gbm.clinData$library_name)
-tcga.gbm.mat <- quiet(batch.correct(mat = tcga.gbm.mat, clin = tcga.gbm.clinData))
+if(snv_pattern != "lancet" & file.exists('data/Reference/TCGA/tcga_gbm_pnoc008_corrected_matrix.rds')){
+  tcga.gbm.mat <- readRDS('data/Reference/TCGA/tcga_gbm_pnoc008_corrected_matrix.rds')
+} else {
+  tcga.gbm.mat <- quiet(batch.correct(mat = tcga.gbm.mat, clin = tcga.gbm.clinData))
+  saveRDS(tcga.gbm.mat, file = 'data/Reference/TCGA/tcga_gbm_pnoc008_corrected_matrix.rds')
+}
 
 # keep full matrix for ImmuneProfile.R (not required for TCGA for now)
 # tcga.gbm.mat.all <- tcga.gbm.mat 
@@ -51,23 +56,28 @@ tcga.gbm.mat.tsne$CV <- NULL # Remove cv
 
 # for clustering
 # use UMAP correlation
-set.seed(100)
-ump <- uwot::umap(X = t(log2(tcga.gbm.mat.tsne+1)), n_neighbors = 21, n_components = 2, metric = "correlation", ret_nn = TRUE, n_sgd_threads = 123L)
-embedding <- as.data.frame(ump$embedding)
-colnames(embedding) <- c("UMAP1", "UMAP2")
-tcga.gbm.embedding <- embedding
+tcga.umap.output <- file.path(topDir, 'Summary/tcga_pnoc008_umap_output.rds')
+if(file.exists(tcga.umap.output)){
+  tcga.umap <- readRDS(file = tcga.umap.output)
+} else {
+  set.seed(100)
+  tcga.umap <- uwot::umap(X = t(log2(tcga.gbm.mat.tsne+1)), n_neighbors = 21, n_components = 2, metric = "correlation", ret_nn = TRUE, n_sgd_threads = 123L)
+  saveRDS(tcga.umap, file = tcga.umap.output)
+}
+tcga.gbm.embedding <- as.data.frame(tcga.umap$embedding)
+colnames(tcga.gbm.embedding) <- c("UMAP1", "UMAP2")
 
 # for getKMPlot.R and getSimilarPatients.R
 # extract nearest neighbor info
-corr <- as.data.frame(ump$nn$correlation$idx) # nn
-dist <- as.data.frame(ump$nn$correlation$dist) # distances
+corr <- as.data.frame(tcga.umap$nn$correlation$idx) # nn
+dist <- as.data.frame(tcga.umap$nn$correlation$dist) # distances
 corr <- t(apply(corr, MARGIN = 1, FUN = function(x) colnames(tcga.gbm.mat.tsne)[x]))
 rownames(corr) <- colnames(tcga.gbm.mat.tsne)
 rownames(dist) <- colnames(tcga.gbm.mat.tsne)
-nn_table <- data.frame(nearest_neighbor = as.character(corr[grep(sampleInfo$subjectID, rownames(corr)),]), 
+tcga_nn_table <- data.frame(nearest_neighbor = as.character(corr[grep(sampleInfo$subjectID, rownames(corr)),]), 
                        distance = as.numeric(dist[grep(sampleInfo$subjectID, rownames(dist)),]))
-nn_table$distance <- round(nn_table$distance, digits = 3)
-tcga.gbm.allCor <- nn_table[grep(sampleInfo$subjectID, nn_table$nearest_neighbor, invert = TRUE),]
+tcga_nn_table$distance <- round(tcga_nn_table$distance, digits = 3)
+tcga.gbm.allCor <- tcga_nn_table[grep(sampleInfo$subjectID, tcga_nn_table$nearest_neighbor, invert = TRUE),]
 
 # for getKMPlot.R and getSimilarPatients.R
 # tcga.gbm.allCor <- cor(x = tcga.gbm.mat.tsne[sampleInfo$subjectID], y = tcga.gbm.mat.tsne)
