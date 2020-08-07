@@ -30,9 +30,13 @@ project <- 'cavatica/sd-8y99qzjj' # project id
 report.folder <- paste0(patient,'/reports') # destination folder
 summary <- file.path(topDir, 'Summary', paste0(patient, '_summary.xlsx')) # summary excel file
 reports <- file.path(topDir, 'Reports', paste0(patient, '_*.html')) # html reports
+umap <- file.path(topDir, 'Summary', paste0('*_umap_output.rds')) # umap output
 cmd1 <- paste(cav, '-t', auth, '-p', project, '-f', report.folder, summary, sep = " ")
 print(cmd1)
 system(cmd1)
 cmd2 <- paste(cav, '-t', auth, '-p', project, '-f', report.folder, reports, sep = " ")
 print(cmd2)
 system(cmd2)
+cmd3 <- paste(cav, '-t', auth, '-p', project, '-f', report.folder, umap, sep = " ")
+print(cmd3)
+system(cmd3)
