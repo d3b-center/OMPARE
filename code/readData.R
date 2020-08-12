@@ -5,6 +5,7 @@
 
 source('code/load_reference.R') # load reference data
 source('code/filterFusions.R')  # load filter fusions script to filter fusions
+source('code/createCopyNumber.R') # load script to map copynumber to gene symbol
 
 readData <- function(topDir, fusion_method = c("star","arriba"), snv_pattern = "all"){
   
@@ -52,6 +53,10 @@ readData <- function(topDir, fusion_method = c("star","arriba"), snv_pattern = "
                     status, WilcoxonRankSumTestPvalue) %>%
       as.data.frame()
     assign("cnvData", cnvData, envir = globalenv())
+    
+    # map to gene symbol
+    cnvGenes <- createCopyNumber(cnvData = cnvData)
+    assign("cnvGenes", cnvGenes, envir = globalenv())
   }
   
   # copy number ratio data for plot

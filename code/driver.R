@@ -83,3 +83,9 @@ if(!file.exists(paste0(topDir,'/complexHeatmap_cgs.png'))){
 
 # Page 13 Mutational Analysis
 source('code/p13_mutational_analysis.R')
+
+# Page 14 Oncogrid 
+if(!file.exists(file.path(topDir,'complexHeatmap_oncogrid.png'))){
+  source('code/p14_oncogrid.R')
+  source('code/plot_oncogrid.R')
+}

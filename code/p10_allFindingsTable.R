@@ -3,11 +3,8 @@
 #####################
 
 source('code/filterDruggability.R')
-source('code/filterFusions.R')
 source('code/filterCNV.R')
-source('code/filterMutations.R')
 source('code/annotateMutations.R')
-source('code/createCopyNumber.R')
 
 allFindingsTable <- function() {
   # get druggability data
@@ -44,9 +41,7 @@ allFindingsTable <- function() {
   }
   
   # Now Copy Number
-  if(exists('cnvData')){
-    cnvGenes <- createCopyNumber(cnvData = cnvData)
-    assign("cnvGenes", cnvGenes, envir = globalenv())
+  if(exists('cnvGenes')){
     tmpCnv <- filterCNV()
     if(nrow(tmpCnv) >= 1){
       tmpCnv$Aberration <- tmpCnv$Gene

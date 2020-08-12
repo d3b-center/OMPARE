@@ -392,3 +392,15 @@ Row
 fname <- paste0(topDir,'/complexHeatmap_cgs.png')
 knitr::include_graphics(fname) 
 ```
+
+Oncogrid (HGG-DMG)  (P14)
+===
+Row {data-height=700}
+---
+  
+### Oncogrid (HGG-DMG)
+  
+```{r oncogrid_hgg_dmg, echo=FALSE}
+fname <- file.path(topDir,'complexHeatmap_oncogrid.png')
+knitr::include_graphics(fname)
+```
