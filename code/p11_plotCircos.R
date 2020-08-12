@@ -63,8 +63,8 @@ plotCircos <- function(topDir = topDir) {
   myFus <- myFus[!grepl(",", myFus[,"TailGene"]),] # remove intergenic fusions from arriba
   myFus <- myFus[!grepl(",", myFus[,"HeadGene"]),] # remove intergenic fusions from arriba
   
-  if(length(grep(paste(myFus$HeadGene, collapse = "|"), chrMap$HGNC.symbol) == 0) |
-    length(grep(paste(myFus$TailGene, collapse = "|"), chrMap$HGNC.symbol) == 0)) {
+  if(length(grep(paste(myFus$HeadGene, collapse = "|"), chrMap$HGNC.symbol)) == 0 |
+    length(grep(paste(myFus$TailGene, collapse = "|"), chrMap$HGNC.symbol)) == 0) {
   } else {
     if(nrow(myFus) > 0){
       RCircos.Link.Data.tmp <- chrMap[chrMap[,1] %in% myFus[,"HeadGene"],];
