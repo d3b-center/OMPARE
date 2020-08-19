@@ -101,7 +101,7 @@ if(nrow(mutData) > 0){
 
 
 # 4. get fusion info
-if(nrow(fusData) > 1){
+if(nrow(fusData) > 0){
   fus.genes <- data.frame(Gene = unique(c(fusData$HeadGene, fusData$TailGene)))
   fus.genes <- fus.genes %>%
     mutate(label = "FUS") %>%
