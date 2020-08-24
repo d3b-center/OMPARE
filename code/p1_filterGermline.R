@@ -35,8 +35,9 @@ filterGermline <- function(mutData = mutData.germ, myGermlineMarkers = germlineM
     filter(AF < 0.001) %>% # allele frequency < 0.001 in the gnomAD datasets
     mutate(Aberration = AAChange.refGene, 
            Details = paste0("dbSNP: ", V212),
+           Clinvar_Pred = CLNSIG, # add Clinvar prediction
            InterVar_Rank = InterVar_automated) %>% # InterVar_automated as InterVar_Rank
-    dplyr::select(Gene.refGene, Aberration, Details, InterVar_Rank, Class, gnomad211_exome_AF_popmax, gnomad211_genome_AF_popmax, gnomad30_genome_AF, DP, INFO) %>%
+    dplyr::select(Gene.refGene, Aberration, Details, Clinvar_Pred, InterVar_Rank, Class, gnomad211_exome_AF_popmax, gnomad211_genome_AF_popmax, gnomad30_genome_AF, DP, INFO) %>%
     unique() %>%
     as.data.frame()
   

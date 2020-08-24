@@ -2,94 +2,88 @@
 # All Findings Table
 #####################
 
-source('code/filterDruggability.R')
 source('code/filterCNV.R')
 source('code/annotateMutations.R')
 
 allFindingsTable <- function() {
-  # get druggability data
-  drugData <- filterDruggability()
-  
-  # Somatic Mutations
+  # Add Mutations
   if(exists('mutData')){
-    tmpMut <- annotateMutations() # don't filter, just annotate
-    if(nrow(tmpMut) > 0){
-      tmpMut[,"Aberration"] <- ifelse(tmpMut[,"HGVSp_Short"]!="", paste(tmpMut[,"Hugo_Symbol"], tmpMut[,"HGVSp_Short"], sep=": "), as.character(tmpMut[,"Hugo_Symbol"]))
-      tmpMut[,"Type"] <- tmpMut[,"Type"]
-      tmpMut[,"Details"] <- paste0("Mutation Type: ", tmpMut[,"Variant_Classification"])
-      tmpMut <- merge(tmpMut, drugData, by.x="Hugo_Symbol", by.y="gene_name", all.x=T)
-      tmpMut <- tmpMut[,c("Aberration", "Type", "Details", "Drugs")]
-    } else {
-      tmpMut <- data.frame()
-    }
+    tmpMut <- annotateMutations() %>%
+      mutate(Aberration = Hugo_Symbol) %>%
+      filter(HGVSp_Short != "") %>%
+      mutate(Details = paste0('Variant: ', Variant_Classification, " | HGVSp: ", HGVSp_Short),
+             Variant_Properties = paste("T_ALT", t_alt_count, "T_DEPTH", t_depth, "SIFT", SIFT, "DOMAINS", DOMAINS, sep = "; ")) %>%
+      dplyr::select(Aberration, Type, Details, Variant_Properties)
   } else {
     tmpMut <- data.frame()
   }
   
-  # Now Fusions
+  # Add Fusions
   if(exists('fusData')){
-    tmpFus <- fusData
-    tmpFus[,"Aberration"] <- tmpFus[,"X.fusion_name"]
-    tmpFus[,"Type"] <- "Fusion"
-    tmpFus[,"Details"] <- paste0("Fusion Type: ",tmpFus[,"Splice_type"])
-    tmpFus <- merge(tmpFus, drugData, by.x="HeadGene", by.y="gene_name", all.x=T)
-    tmpFus <- merge(tmpFus, drugData, by.x="TailGene", by.y="gene_name", all.x=T)
-    tmpFus[,"Drugs"] <- paste(tmpFus[,"Drugs.x"], tmpFus[,"Drugs.y"], sep=", ")
-    tmpFus <- tmpFus[,c("Aberration", "Type", "Details", "Drugs")]
+    tmpFus <- fusData %>%
+      mutate(Aberration = X.fusion_name,
+             Type = "Fusion",
+             Details = paste0("Fusion Type: ", Splice_type),
+             Variant_Properties = "") %>%
+      dplyr::select(Aberration, Type, Details, Variant_Properties)
   } else {
     tmpFus <- data.frame()
   }
   
-  # Now Copy Number
+  # Add Copy Number
   if(exists('cnvGenes')){
-    tmpCnv <- filterCNV()
-    if(nrow(tmpCnv) >= 1){
-      tmpCnv$Aberration <- tmpCnv$Gene
-      tmpCnv$Type <- ifelse(tmpCnv$Status == "gain","Amplification", "Deletion")
-      tmpCnv[,"Details"] <- paste("Copy Number Value: ",tmpCnv$CNA, sep="")
-      tmpCnv <- merge(tmpCnv, drugData, by.x="Gene", by.y="gene_name", all.x=T)
-      tmpCnv <- tmpCnv[,c("Aberration", "Type", "Details", "Drugs")]
-    }  else {
-      tmpCnv <- data.frame()
-    }
+    tmpCnv <- filterCNV() %>%
+      mutate(Aberration = Gene,
+             Type = ifelse(Status == "gain", "Amplification", "Deletion"),
+             Details = paste0("Copy Number Value: ", CNA),
+             Variant_Properties = "") %>%
+      dplyr::select(Aberration, Type, Details, Variant_Properties)
   } else {
     tmpCnv <- data.frame()
   }
   
-  # Now Expression
+  # Add Expression
   if(exists('expData')){
-    tmpExp <- RNASeqAnalysisOut[[1]][[2]]
-    tmpExp[,"Aberration"] <-rownames(tmpExp)
-    tmpExp[,"Type"] <- c(rep("Outlier-High (mRNA)", 20), rep("Outlier-Low (mRNA)", 20))
-    tmpExp[,"Details"] <- paste("Z-Score / TPM: ",round(tmpExp[,"Z_Score"],2), " / ", tmpExp[,"TPM"], sep="")
-    tmpExp <- merge(tmpExp, drugData, by.x="Aberration", by.y="gene_name", all.x=T)
-    tmpExp <- tmpExp[,c("Aberration", "Type", "Details", "Drugs")]
+    tmpExp <- RNASeqAnalysisOut[[1]][[2]] %>%
+      rownames_to_column("Aberration") %>%
+      mutate(Type = c(rep("Outlier-High (mRNA)", 20), rep("Outlier-Low (mRNA)", 20)),
+             Details = paste0("Z-score: ", round(Z_Score, 2)," | TPM: ",TPM),
+             Variant_Properties = "")  %>%
+      dplyr::select(Aberration, Type, Details, Variant_Properties)
   } else {
     tmpExp <- data.frame()
   }
   
-  # Now Pathway
+  # Add Pathway
   if(exists('expData')){
     tmpPath <- RNASeqAnalysisOut[[2]][[2]]
-    tmpPathUp <- tmpPath[tmpPath[,"Direction"]=="Up",][1:20,]
-    tmpPathDown <- tmpPath[tmpPath[,"Direction"]=="Down",][1:20,]
+    tmpPathUp <- tmpPath %>%
+      filter(Direction == "Up") %>%
+      arrange(ADJ_P_VALUE) %>%
+      top_n(20)
+    tmpPathDown <- tmpPath %>%
+      filter(Direction == "Down") %>%
+      arrange(ADJ_P_VALUE) %>%
+      top_n(20)
     tmpPath <- rbind(tmpPathUp, tmpPathDown)
-    tmpPath[,"Aberration"] <-gsub("HALLMARK_", "", tmpPath[,"Pathway"])
-    tmpPath[,"Aberration"] <-gsub("_", " ", tmpPath[,"Aberration"])
-    tmpPath[,"Type"] <- c(rep("Pathway Up", 20), rep("Pathway Down", 20))
-    tmpPath[,"Details"] <- paste("P-Value: ",as.character(formatC(tmpPath[,"P_VAL"], format = "e", digits = 2)), sep="")
-    tmpPath[,"Drugs"] <- "N/A"
-    tmpPath <- tmpPath[,c("Aberration", "Type", "Details", "Drugs")]
+    tmpPath <- tmpPath %>%
+      mutate(Aberration = Pathway,
+             Type = c(rep("Pathway Up", 20), rep("Pathway Down", 20)),
+             Details = paste0("P-Value: ", formatC(P_VAL, format = "e", digits = 2)),
+             Variant_Properties = "") %>%
+      dplyr::select(Aberration, Type, Details, Variant_Properties)
   } else {
     tmpPath <- data.frame()
   }
   
-  # Now Merge Together
-  allFindingsDF <- rbind(tmpMut, tmpFus, tmpCnv, tmpExp, tmpPath)
-  if(nrow(allFindingsDF) > 0){
-    allFindingsDF[is.na(allFindingsDF[,"Drugs"]),"Drugs"]<- "N/A"
-    allFindingsDF[allFindingsDF[,"Drugs"]=="NA, NA","Drugs"]<- "N/A"
-    allFindingsDF <- unique(allFindingsDF)
-  }
+  # Merge Together
+  allFindingsDF <- unique(rbind(tmpMut, tmpFus, tmpCnv, tmpExp, tmpPath))
+  
+  # add Ensembl ids and map to targetvalidation.org
+  myTable <- allFindingsDF %>%
+    left_join(expData %>% dplyr::select(gene_id, gene_symbol), by = c("Aberration" = "gene_symbol")) %>%
+    mutate(TargetValidation = ifelse(is.na(gene_id), "", paste0('<a href = \"https://www.targetvalidation.org/target/',gene_id,'\">',gene_id,"</a>"))) %>%
+    dplyr::select(-c(gene_id)) 
+  
   return(allFindingsDF)
 }
