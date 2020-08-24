@@ -25,8 +25,11 @@ if(snv_pattern != "lancet" & file.exists('data/Reference/TCGA/tcga_gbm_pnoc008_c
   saveRDS(tcga.gbm.mat, file = 'data/Reference/TCGA/tcga_gbm_pnoc008_corrected_matrix.rds')
 }
 
-# keep full matrix for ImmuneProfile.R (not required for TCGA for now)
-# tcga.gbm.mat.all <- tcga.gbm.mat 
+# keep full matrix for ImmuneProfile.R (only TCGA + PNOC patient of interest)
+tcga.gbm.mat.full <- tcga.gbm.mat 
+smps <- grep('TCGA_', colnames(tcga.gbm.mat.full), value = T)
+smps <- c(smps, sampleInfo$subjectID)
+tcga.gbm.mat.all <- tcga.gbm.mat.full[,colnames(tcga.gbm.mat.full) %in% smps]
 
 # Now remove genes that have max value < 20 TPM
 maxVals <- apply(tcga.gbm.mat, FUN = max, MARGIN = 1)
@@ -79,10 +82,5 @@ tcga_nn_table <- data.frame(nearest_neighbor = as.character(corr[grep(sampleInfo
 tcga_nn_table$distance <- round(tcga_nn_table$distance, digits = 3)
 tcga.gbm.allCor <- tcga_nn_table[grep(sampleInfo$subjectID, tcga_nn_table$nearest_neighbor, invert = TRUE),]
 
-# for getKMPlot.R and getSimilarPatients.R
-# tcga.gbm.allCor <- cor(x = tcga.gbm.mat.tsne[sampleInfo$subjectID], y = tcga.gbm.mat.tsne)
-# tcga.gbm.allCor <- data.frame(t(tcga.gbm.allCor), check.names = F)
-# tcga.gbm.allCor[,"sample_barcode"] <- rownames(tcga.gbm.allCor)
-# tcga.gbm.allCor <- tcga.gbm.allCor[!grepl(sampleInfo$subjectID, rownames(tcga.gbm.allCor)),]
-# tcga.gbm.allCor <- tcga.gbm.allCor[order(tcga.gbm.allCor[,1], decreasing = TRUE),]
-# tcga.gbm.allCor[,1] <- round(tcga.gbm.allCor[,1], 3)
+# Immune profile, ssGSEA, recurrent alterations (keep POI)
+tcga.gbm.topCor <- tcga.gbm.mat.full[,colnames(tcga.gbm.mat.full) %in% tcga_nn_table$nearest_neighbor]

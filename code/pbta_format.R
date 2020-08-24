@@ -90,16 +90,3 @@ pbta.allCor <- pbta_nn_table[grep(sampleInfo$subjectID, pbta_nn_table$nearest_ne
 
 # Immune profile, ssGSEA, recurrent alterations (keep POI)
 pbta.topCor <- pbta.mat.full[,colnames(pbta.mat.full) %in% pbta_nn_table$nearest_neighbor]
-
-# # for getKMPlot.R and getSimilarPatients.R
-# pbta.allCor <- cor(x = pbta.mat.tsne[sampleInfo$subjectID], y = pbta.mat.tsne)
-# pbta.allCor <- data.frame(t(pbta.allCor), check.names = F)
-# pbta.allCor[,"sample_barcode"] <- rownames(pbta.allCor)
-# pbta.allCor <- pbta.allCor[!grepl(sampleInfo$subjectID, rownames(pbta.allCor)),]
-# pbta.allCor <- pbta.allCor[order(pbta.allCor[,1], decreasing = TRUE),]
-# pbta.allCor[,1] <- round(pbta.allCor[,1], 3)
-# 
-# # get matrix of top 20 correlated samples (for Immune profile of genomically similar patients)
-# pbta.topCor <- pbta.allCor[1:20,'sample_barcode']
-# pbta.topCor <- c(pbta.topCor, sampleInfo$subjectID) # add patient of interest
-# pbta.topCor <- pbta.mat.full[,colnames(pbta.mat.full) %in% pbta.topCor]

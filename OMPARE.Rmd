@@ -187,7 +187,7 @@ if(exists('expData')){
 }
 ```
 
-Genomically Similar Samples (PBTA) (P5) {data-navmenu="Genomically Similar Analysis"}
+Genomically Similar Samples (PBTA) (P5) {data-navmenu="Genomically Similar Analysis Pediatric"}
 ===
 Row
 ---
@@ -221,7 +221,77 @@ if(exists('expData')){
 datatable(getSimilarPatients(allCor = pbta.allCor, clinData = pbta.clinData), rownames=F, escape=F);
 ```
 
-Genomically Similar Samples (TCGA) (P6) {data-navmenu="Genomically Similar Analysis"}
+Tumor Purity (P7) {data-navmenu="Genomically Similar Analysis Pediatric"}
+===
+Row {data-height=700}
+---
+    
+### Immune Profile (Genomically Similar Patients)
+    
+```{r immune_profile_gs, fig.width = 28, fig.height=14}
+if(exists('expData')){
+  p <- ImmuneProfile(fullmat = pbta.topCor, fname = paste0(topDir,'/ImmuneScores/topCor_rawScores.txt'))
+  ggplotly(p)
+}
+```
+
+Pathway Enrichment (P8) {data-navmenu="Genomically Similar Analysis Pediatric"}
+===
+Row {data-height=500}
+---
+
+### Pathway Enrichment (Top Genomically Similar Patients)
+    
+```{r tabulate_pathways_pediatric}
+gsPath <- tabulate_pathways(allCor = pbta.allCor)
+datatable(gsPath[[1]], rownames=F, options = list(pageLength = 10));
+```
+
+Row {data-height=500}
+---
+
+### CNV Mapping 
+
+```{r cnv_mapping_pediatric}
+datatable(gsPath[[2]], rownames=F, options = list(pageLength = 10));
+```
+
+ssGSEA (P9) {data-navmenu="Genomically Similar Analysis Pediatric"}
+===
+Row {data-height=700}
+---
+    
+### ssGSEA (Genomically Similar Patients)
+    
+```{r ssgsea_gs, fig.width = 28, fig.height=14}
+if(exists('expData')){
+  p <- ssGSEA(topCor = pbta.topCor, fname = paste0(topDir,'/GSVA/ssgsea_rawScores.txt'))
+  ggplotly(p)
+}
+```
+
+Mutational Analysis (P13) {data-navmenu="Genomically Similar Analysis Pediatric"}
+===
+Row {data-height=500}
+---
+
+### Recurrently Altered Genes (Top Genomically Similar Patients)
+    
+```{r rec_alt_genes_pediatric}
+total.alt.table <<- recurrent.alterations(topCor = pbta.topCor)
+datatable(total.alt.table[[1]], rownames=F, options = list(pageLength = 10));
+```
+
+Row {data-height=500}
+---
+
+### Shared Genes 
+
+```{r shared_genes_pediatric}
+datatable(total.alt.table[[2]], rownames=F, options = list(pageLength = 10));
+```
+
+Genomically Similar Samples (TCGA) (P6) {data-navmenu="Genomically Similar Analysis Adult"}
 ===
 Row
 ---
@@ -255,30 +325,16 @@ if(exists('expData')){
 datatable(getSimilarPatients(allCor = tcga.gbm.allCor, clinData = tcga.gbm.clinData), rownames=F, escape=F);
 ```
 
-Tumor Purity (Genomically Similar Pediatric Samples) (P7) {data-navmenu="Genomically Similar Analysis"}
-===
-Row {data-height=700}
----
-    
-### Immune Profile (Genomically Similar Patients)
-    
-```{r immune_profile_gs, fig.width = 28, fig.height=14}
-if(exists('expData')){
-  p <- ImmuneProfile(fullmat = pbta.topCor, fname = paste0(topDir,'/ImmuneScores/topCor_rawScores.txt'))
-  ggplotly(p)
-}
-```
-
-Pathway Enrichment (Genomically Similar PNOC008 Patients) (P8) {data-navmenu="Genomically Similar Analysis"}
+Pathway Enrichment (P8) {data-navmenu="Genomically Similar Analysis Adult"}
 ===
 Row {data-height=500}
 ---
 
 ### Pathway Enrichment (Top Genomically Similar Patients)
     
-```{r tabulate_pathways}
-gsPath <- tabulate_pathways(allCor = pbta.allCor)
-datatable(gsPath[[1]], rownames=F, options = list(pageLength = 10));
+```{r tabulate_pathways_adult}
+# gsPath <- tabulate_pathways(allCor = tcga.gbm.allCor)
+# datatable(gsPath[[1]], rownames=F, options = list(pageLength = 10));
 ```
 
 Row {data-height=500}
@@ -286,34 +342,20 @@ Row {data-height=500}
 
 ### CNV Mapping 
 
-```{r cnv_mapping}
-datatable(gsPath[[2]], rownames=F, options = list(pageLength = 10));
+```{r cnv_mapping_adult}
+# datatable(gsPath[[2]], rownames=F, options = list(pageLength = 10));
 ```
 
-ssGSEA (Genomically Similar Pediatric Samples) (P9) {data-navmenu="Genomically Similar Analysis"}
-===
-Row {data-height=700}
----
-    
-### ssGSEA (Genomically Similar Patients)
-    
-```{r ssgsea_gs, fig.width = 28, fig.height=14}
-if(exists('expData')){
-  p <- ssGSEA(topCor = pbta.topCor, fname = paste0(topDir,'/GSVA/ssgsea_rawScores.txt'))
-  ggplotly(p)
-}
-```
-
-Mutational Analysis (Genomically Similar Pediatric Samples) (P13) {data-navmenu="Genomically Similar Analysis"}
+Mutational Analysis (P13) {data-navmenu="Genomically Similar Analysis Adult"}
 ===
 Row {data-height=500}
 ---
 
 ### Recurrently Altered Genes (Top Genomically Similar Patients)
     
-```{r rec_alt_genes}
-total.alt.table <<- recurrent.alterations(topCor = pbta.topCor)
-datatable(total.alt.table[[1]], rownames=F, options = list(pageLength = 10));
+```{r rec_alt_genes_adult}
+# total.alt.table <<- recurrent.alterations(topCor = pbta.topCor)
+# datatable(total.alt.table[[1]], rownames=F, options = list(pageLength = 10));
 ```
 
 Row {data-height=500}
@@ -321,9 +363,10 @@ Row {data-height=500}
 
 ### Shared Genes 
 
-```{r shared_genes}
-datatable(total.alt.table[[2]], rownames=F, options = list(pageLength = 10));
+```{r shared_genes_adult}
+# datatable(total.alt.table[[2]], rownames=F, options = list(pageLength = 10));
 ```
+
 
 All Findings (P10)
 ===
