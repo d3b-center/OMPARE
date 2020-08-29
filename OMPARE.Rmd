@@ -79,9 +79,9 @@ Row {data-height=300}
 ### Disease Specific Information
     
 ```{r disease_specific_info}
-dsi <- diseaseSpecificInformation()
+dsi <- diseaseSpecificInformation(snv_pattern)
 if(nrow(dsi) > 0){
-  x2=kable(diseaseSpecificInformation(), format="html") %>% 
+  x2=kable(dsi, format="html") %>% 
     kable_styling(bootstrap_options = c("bordered", "condensed", "responsive")) %>% 
     column_spec(c(1), bold=T, border_left = "2px solid gray", border_right = "2px solid gray")
   gsub("<thead>.*</thead>", "", x2)
@@ -105,9 +105,9 @@ if(exists('mutData.germ')){
 ### Genomic Summary
     
 ```{r genomic_summary}
-gs <- genomicSummary()
+gs <- genomicSummary(snv_pattern)
 if(nrow(gs) > 0){
-  x2=kable(genomicSummary(), format="html") %>%
+  x2=kable(gs, format="html") %>%
     kable_styling(bootstrap_options = c("bordered", "condensed", "responsive")) %>% 
     column_spec(c(1), bold=T, border_left = "2px solid gray", border_right = "2px solid gray")
   gsub("<thead>.*</thead>", "", x2)
@@ -325,49 +325,6 @@ if(exists('expData')){
 datatable(getSimilarPatients(allCor = tcga.gbm.allCor, clinData = tcga.gbm.clinData), rownames=F, escape=F);
 ```
 
-Pathway Enrichment (P8) {data-navmenu="Genomically Similar Analysis Adult"}
-===
-Row {data-height=500}
----
-
-### Pathway Enrichment (Top Genomically Similar Patients)
-    
-```{r tabulate_pathways_adult}
-# gsPath <- tabulate_pathways(allCor = tcga.gbm.allCor)
-# datatable(gsPath[[1]], rownames=F, options = list(pageLength = 10));
-```
-
-Row {data-height=500}
----
-
-### CNV Mapping 
-
-```{r cnv_mapping_adult}
-# datatable(gsPath[[2]], rownames=F, options = list(pageLength = 10));
-```
-
-Mutational Analysis (P13) {data-navmenu="Genomically Similar Analysis Adult"}
-===
-Row {data-height=500}
----
-
-### Recurrently Altered Genes (Top Genomically Similar Patients)
-    
-```{r rec_alt_genes_adult}
-# total.alt.table <<- recurrent.alterations(topCor = pbta.topCor)
-# datatable(total.alt.table[[1]], rownames=F, options = list(pageLength = 10));
-```
-
-Row {data-height=500}
----
-
-### Shared Genes 
-
-```{r shared_genes_adult}
-# datatable(total.alt.table[[2]], rownames=F, options = list(pageLength = 10));
-```
-
-
 All Findings (P10)
 ===
 Row {data-height=700}
@@ -376,7 +333,7 @@ Row {data-height=700}
 ### All Findings
     
 ```{r all_findings}
-datatable(allFindingsTable(), rownames=F, options = list(pageLength = 10));
+datatable(allFindingsTable(snv_pattern), rownames=F, options = list(pageLength = 10));
 ```
 
 Genomic Landscape (P11)

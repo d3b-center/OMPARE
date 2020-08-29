@@ -2,10 +2,10 @@
 # High Confidence Alterations
 #############################
 
-highConfidenceFindingsTable <- function() {
+highConfidenceFindingsTable <- function(snv_pattern) {
 
   # call allFindingsTable
-  myTable <- allFindingsTable()
+  myTable <- allFindingsTable(snv_pattern)
 
   # expression is critical
   if(exists('expData')){

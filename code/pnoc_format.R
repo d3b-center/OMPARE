@@ -8,7 +8,7 @@
 library(dplyr)
 library(stringr)
 library(tidyverse)
-library(xlsx)
+library(readxl)
 
 # create output directory
 system('mkdir -p data/Reference/PNOC008/')
@@ -89,7 +89,8 @@ pat.expr.mat <- pat.expr.mat[,grep('CHOP', colnames(pat.expr.mat), invert = T)]
 colnames(pat.expr.mat)  <- gsub("-NANT", "", colnames(pat.expr.mat))
 
 # now merge all clinical data for all patients
-pat.clinData <- read.xlsx('data/Reference/Manifest/PNOC008_Manifest.xlsx', sheetIndex = 1)
+pat.clinData <- readxl::read_xlsx('data/Reference/Manifest/PNOC008_Manifest.xlsx', sheet = 1)
+colnames(pat.clinData) <- gsub('[() ]', '.', colnames(pat.clinData))
 pat.clinData <- pat.clinData %>%
   filter_all(any_vars(!is.na(.))) %>%
   mutate(PNOC.Subject.ID = gsub('P-','PNOC008-', PNOC.Subject.ID))

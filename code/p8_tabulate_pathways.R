@@ -7,8 +7,8 @@ gc()
 # function to merge excel sheets
 merge.excel <- function(nm) {
   fname <- as.character(nm[[1]])
-  x <- read.xlsx(file = fname, sheetIndex = 1)  # up pathways
-  y <- read.xlsx(file = fname, sheetIndex = 3)  # down pathways
+  x <- readxl::read_xlsx(fname, sheet = "Pathways_Up")  # up pathways
+  y <- readxl::read_xlsx(fname, sheet = "Pathways_Down")  # down pathways
   x <- rbind(x, y)
   
   # highly significant up/down pathways only

@@ -1,11 +1,11 @@
 # Genomic Summary
-genomicSummary <- function() {
+genomicSummary <- function(snv_pattern) {
   if(exists('expData')){
     headers <- c("High Confidence Genomic Alterations", "Total Genomic Alterations", "Transcriptomic Alterations", "Aberrant Pathway Activity")
     
     # high confidence alterations
-    highConfLesions <- nrow(highConfidenceFindingsTable())
-    numLesions <- allFindingsTable() %>%
+    highConfLesions <- nrow(highConfidenceFindingsTable(snv_pattern))
+    numLesions <- allFindingsTable(snv_pattern) %>%
       filter(Type %in% c("Mutation", "Fusion", "Amplification", "Deletion")) %>%
       nrow()
     

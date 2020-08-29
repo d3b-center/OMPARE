@@ -5,15 +5,44 @@
 source('code/filterCNV.R')
 source('code/annotateMutations.R')
 
-allFindingsTable <- function() {
+allFindingsTable <- function(snv_pattern) {
   # Add Mutations
   if(exists('mutData')){
+    # annotate mutations, add Aberration and Details
     tmpMut <- annotateMutations() %>%
       mutate(Aberration = Hugo_Symbol) %>%
       filter(HGVSp_Short != "") %>%
-      mutate(Details = paste0('Variant: ', Variant_Classification, " | HGVSp: ", HGVSp_Short),
-             Variant_Properties = paste("T_ALT", t_alt_count, "T_DEPTH", t_depth, "SIFT", SIFT, "DOMAINS", DOMAINS, sep = "; ")) %>%
-      dplyr::select(Aberration, Type, Details, Variant_Properties)
+      mutate(Details = paste0('Variant: ', Variant_Classification, " | HGVSp: ", HGVSp_Short)) 
+    
+    # remove all PDB-ENSP from DOMAINS, collapse DOMAINS to string
+    tmpMut <- tmpMut %>%
+      mutate(DOMAINS = ifelse(DOMAINS == "", NA, strsplit(as.character(DOMAINS), ","))) %>% 
+      unnest(DOMAINS) %>%
+      mutate(match = str_detect(DOMAINS, 'PDB-ENSP')) %>%
+      mutate(DOMAINS = ifelse(match, NA, DOMAINS)) %>%
+      group_by(Aberration, Type, Details) %>%
+      mutate(DOMAINS = toString(na.omit(DOMAINS))) %>%
+      unique()
+    
+    # now add Variant Properties depending on snv_pattern
+    if(snv_pattern == "all"){
+      tmpMut <- tmpMut %>%
+        dplyr::select(Aberration, Type, Details, SIFT, DOMAINS) %>%
+        unique()
+    } else {
+      tmpMut <- tmpMut %>%
+        dplyr::select(Aberration, Type, Details, t_alt_count, t_depth, SIFT, DOMAINS) %>%
+        unique()
+    }
+    
+    # collapse into Variant_Properties
+    tmpMut <- melt(tmpMut, id.vars = c('Aberration', 'Type', 'Details'))
+    tmpMut <- tmpMut %>%
+      group_by(Aberration, Type, Details, variable) %>%
+      mutate(Variant_Properties = paste0(variable,":", value))  %>%
+      group_by(Aberration, Type, Details) %>%
+      summarise(Variant_Properties = paste(Variant_Properties, collapse = '; ')) %>%
+      unique()
   } else {
     tmpMut <- data.frame()
   }

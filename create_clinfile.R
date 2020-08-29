@@ -3,7 +3,7 @@
 # Function: Script to read from google sheets and create clinical file 
 # This will be called from within run_OMPARE.R
 
-suppressPackageStartupMessages(library(xlsx))
+suppressPackageStartupMessages(library(readxl))
 suppressPackageStartupMessages(library(optparse))
 suppressPackageStartupMessages(library(dplyr))
 
@@ -22,7 +22,8 @@ dir <- opt$dir
 patient <- opt$patient
 
 # read from google sheets (would need authentication the first time)
-dat <- read.xlsx(sheet, sheetIndex = 1)
+dat <- readxl::read_xlsx(sheet, sheet = 1)
+colnames(dat) <- gsub('[() ]', '.', colnames(dat))
 dat <- dat %>%
   filter_all(any_vars(!is.na(.))) %>%
   mutate(PNOC.Subject.ID = gsub('P-','PNOC008-', PNOC.Subject.ID)) %>%

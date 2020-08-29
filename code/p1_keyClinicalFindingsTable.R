@@ -1,4 +1,4 @@
 # Key Clinical Findings
 keyClinicalFindingsTable <- function() {
-  return(highConfidenceFindingsTable())
+  return(highConfidenceFindingsTable(snv_pattern))
 }
