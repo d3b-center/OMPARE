@@ -333,7 +333,7 @@ Row {data-height=700}
 ### All Findings
     
 ```{r all_findings}
-datatable(allFindingsTable(snv_pattern), rownames=F, options = list(pageLength = 10));
+datatable(allFindingsTable(snv_pattern), rownames=F, escape = F, options = list(pageLength = 10));
 ```
 
 Genomic Landscape (P11)

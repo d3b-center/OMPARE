@@ -114,5 +114,5 @@ allFindingsTable <- function(snv_pattern) {
     mutate(TargetValidation = ifelse(is.na(gene_id), "", paste0('<a href = \"https://www.targetvalidation.org/target/',gene_id,'\">',gene_id,"</a>"))) %>%
     dplyr::select(-c(gene_id)) 
   
-  return(allFindingsDF)
+  return(myTable)
 }
