@@ -88,5 +88,10 @@ pbta_nn_table <- data.frame(nearest_neighbor = as.character(corr[grep(sampleInfo
 pbta_nn_table$distance <- round(pbta_nn_table$distance, digits = 3)
 pbta.allCor <- pbta_nn_table[grep(sampleInfo$subjectID, pbta_nn_table$nearest_neighbor, invert = TRUE),]
 
-# Immune profile, ssGSEA, recurrent alterations (keep POI)
+# HGAT samples + POI (ssGSEA)
+pbta.hgg.clin <- pbta.clinData %>% filter(short_histology == "HGAT")
+pbta.hgg.clin <- c(sampleInfo$subjectID, pbta.hgg.clin$sample_barcode)
+pbta.mat.hgg <- pbta.mat.full[,colnames(pbta.mat.full) %in% pbta.hgg.clin]
+
+# Immune profile, recurrent alterations (top 20 genomically similar + POI)
 pbta.topCor <- pbta.mat.full[,colnames(pbta.mat.full) %in% pbta_nn_table$nearest_neighbor]
