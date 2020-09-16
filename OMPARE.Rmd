@@ -157,17 +157,32 @@ if(!is.null(tmb)){
 }
 ```
 
-Tumor Purity (P4) {data-navmenu="Tumor Purity"}
+Immune Profile: Pediatric (P4) {data-navmenu="Tumor Purity"}
 ===
 Row {data-height=700}
 ---
     
 ### Immune Profile (with PBTA)
     
-```{r immune_profile, fig.width = 28, fig.height=14}
+```{r immune_profile_pbta, fig.width = 28, fig.height=14}
 if(exists('expData')){
   p <- ImmuneProfile(fullmat = pbta.mat.all, 
-                     fname = paste0(topDir,'/ImmuneScores/rawScores.txt'))
+                     fname = paste0(topDir,'/ImmuneScores/rawScores_pediatric.txt'))
+  ggplotly(p)
+}
+```
+
+Immune Profile: Adult (P4) {data-navmenu="Tumor Purity"}
+===
+Row {data-height=700}
+---
+    
+### Immune Profile (with TCGA GBM)
+    
+```{r immune_profile_tcga, fig.width = 28, fig.height=14}
+if(exists('expData')){
+  p <- ImmuneProfile(fullmat = tcga.gbm.mat, 
+                     fname = paste0(topDir,'/ImmuneScores/rawScores_adult.txt'))
   ggplotly(p)
 }
 ```
@@ -187,7 +202,7 @@ if(exists('expData')){
 }
 ```
 
-Genomically Similar Samples (PBTA) (P5) {data-navmenu="Genomically Similar Analysis Pediatric"}
+Genomically Similar Samples (PBTA) (P5) {data-navmenu="Pediatric Tumors Analysis"}
 ===
 Row
 ---
@@ -221,7 +236,7 @@ if(exists('expData')){
 datatable(getSimilarPatients(allCor = pbta.allCor, clinData = pbta.clinData), rownames=F, escape=F);
 ```
 
-Tumor Purity (P7) {data-navmenu="Genomically Similar Analysis Pediatric"}
+Tumor Purity (P7) {data-navmenu="Pediatric Tumors Analysis"}
 ===
 Row {data-height=700}
 ---
@@ -235,15 +250,15 @@ if(exists('expData')){
 }
 ```
 
-Pathway Enrichment (P8) {data-navmenu="Genomically Similar Analysis Pediatric"}
+Pathway Enrichment (P8) {data-navmenu="Pediatric Tumors Analysis"}
 ===
 Row {data-height=500}
 ---
 
-### Pathway Enrichment (Top Genomically Similar Patients)
+### Pathway Enrichment (Genomically Similar Patients)
     
 ```{r tabulate_pathways_pediatric}
-gsPath <- tabulate_pathways(allCor = pbta.allCor)
+gsPath <- tabulate_pathways(allCor = pbta.allCor, prefix = "pediatric", comparison = "pediatric")
 datatable(gsPath[[1]], rownames=F, options = list(pageLength = 10));
 ```
 
@@ -256,26 +271,26 @@ Row {data-height=500}
 datatable(gsPath[[2]], rownames=F, options = list(pageLength = 10));
 ```
 
-ssGSEA (P9) {data-navmenu="Genomically Similar Analysis Pediatric"}
+ssGSEA (P9) {data-navmenu="Pediatric Tumors Analysis"}
 ===
 Row {data-height=700}
 ---
     
-### ssGSEA (Genomically Similar Patients)
+### ssGSEA (PBTA HGAT samples)
     
-```{r ssgsea_gs, fig.width = 28, fig.height=14}
+```{r ssgsea_hgg, fig.width = 28, fig.height=14}
 if(exists('expData')){
-  p <- ssGSEA(topCor = pbta.topCor, fname = paste0(topDir,'/GSVA/ssgsea_rawScores.txt'))
+  p <- ssGSEA(topCor = pbta.mat.hgg, fname = paste0(topDir,'/GSVA/ssgsea_rawScores.txt'))
   ggplotly(p)
 }
 ```
 
-Mutational Analysis (P13) {data-navmenu="Genomically Similar Analysis Pediatric"}
+Mutational Analysis (P13) {data-navmenu="Pediatric Tumors Analysis"}
 ===
 Row {data-height=500}
 ---
 
-### Recurrently Altered Genes (Top Genomically Similar Patients)
+### Recurrently Altered Genes (Genomically Similar Patients)
     
 ```{r rec_alt_genes_pediatric}
 total.alt.table <<- recurrent.alterations(topCor = pbta.topCor)
@@ -291,7 +306,7 @@ Row {data-height=500}
 datatable(total.alt.table[[2]], rownames=F, options = list(pageLength = 10));
 ```
 
-Genomically Similar Samples (TCGA) (P6) {data-navmenu="Genomically Similar Analysis Adult"}
+Genomically Similar Samples (TCGA) (P6) {data-navmenu="Adult Tumors Analysis"}
 ===
 Row
 ---
@@ -323,6 +338,18 @@ if(exists('expData')){
     
 ```{r similar_patients_tcga}
 datatable(getSimilarPatients(allCor = tcga.gbm.allCor, clinData = tcga.gbm.clinData), rownames=F, escape=F);
+```
+
+Pathway Enrichment (P8) {data-navmenu="Adult Tumors Analysis"}
+===
+Row {data-height=500}
+---
+
+### Pathway Enrichment (Genomically Similar Patients)
+    
+```{r tabulate_pathways_adult}
+gsPath <- tabulate_pathways(allCor = tcga.gbm.allCor, prefix = "adult", comparison = "adult")
+datatable(gsPath[[1]], rownames=F, options = list(pageLength = 10));
 ```
 
 All Findings (P10)
