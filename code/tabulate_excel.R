@@ -51,8 +51,8 @@ geneListRef <- subset(geneListRef, type == "TumorSuppressorGene" | type == "Cosm
 cancerGenes <- rbind(cancerGenes, geneListRef)
 rm(geneListRef)
 
-# Genesets (KEGG)
-geneSet <- getGmt('data/Reference/mSigDB/c2.cp.kegg.v7.1.symbols.gmt', collectionType = BroadCollection(), geneIdType = SymbolIdentifier())
+# Genesets (c2 reactome)
+geneSet <- getGmt('data/Reference/mSigDB/c2.cp.reactome.v6.0.symbols.gmt', collectionType = BroadCollection(), geneIdType = SymbolIdentifier())
 geneSet <- geneIds(geneSet)
 
 # Drug Interaction DB

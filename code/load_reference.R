@@ -54,8 +54,8 @@ geneMania <- read.delim("data/Reference/GeneManiaNetwork.txt", stringsAsFactors 
 # HGG-specific genes
 diseaseSpecificFields <- read.delim("data/Reference/DiseaseSpecificFields.txt")
 
-# Gene sets (KEGG)
-geneSet <- getGmt('data/Reference/mSigDB/c2.cp.kegg.v7.1.symbols.gmt', collectionType = BroadCollection(), geneIdType = SymbolIdentifier())
+# Gene sets (c2 reactome)
+geneSet <- getGmt('data/Reference/mSigDB/c2.cp.reactome.v6.0.symbols.gmt', collectionType = BroadCollection(), geneIdType = SymbolIdentifier())
 geneSet <- geneIds(geneSet)
 geneSetTS <- stack(geneSet)
 
