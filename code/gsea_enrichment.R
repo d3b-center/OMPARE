@@ -1,6 +1,6 @@
 # Author: Komal S. Rathi
 # Date: 04/25/2020
-# Function: Up/Down pathways for each PBTA sample, compare to rest of PBTA (1) and GTEx (2)
+# Function: Up/Down pathways for each PBTA sample, compare to rest of PBTA (1) and GTEx (2) and TCGA GBM (3)
 # do this once and read in for tabulate pathways (Page 8 of report)
 
 # Function to return all results from RNA-Seq Analysis
@@ -12,13 +12,14 @@ suppressPackageStartupMessages(library(doMC))
 registerDoMC(cores = 4)
 
 # Dataset1: GTex Brain
-# clinical
 gtexBrain <- readRDS('data/Reference/GTEx/GTEx_Brain_clinical.RDS')
-
-# expression
 gtexData <- readRDS("data/Reference/GTEx/GTEx_Brain_TPM.RDS")
 
-# Dataset2: PBTA (polyA + corrected stranded n = 1028)
+# Dataset2: TCGA GBM
+tcgaGBMclin <- readRDS('data/Reference/TCGA/TCGA_GBM_clinData.RDS')
+tcgaGBMData <- readRDS('data/Reference/TCGA/TCGA_GBM_matrix_TPM.RDS')
+
+# Dataset3: PBTA (polyA + corrected stranded n = 1028)
 # clinical
 pbta.hist <- read.delim('data/Reference/PBTA/pbta-histologies.tsv', stringsAsFactors = F)
 pbta.hist <- pbta.hist %>%
@@ -28,7 +29,7 @@ pbta.hist <- pbta.hist %>%
 # expression  (polyA + stranded combined TPM data collapsed to gene symbols)
 pbta.full <- readRDS('data/Reference/PBTA/pbta-gene-expression-rsem-tpm-collapsed.polya.stranded.rds')
 
-# Dataset3: PBTA (polyA + corrected stranded HGG n = 186)
+# Dataset4: PBTA (polyA + corrected stranded HGG n = 186)
 pbta.hgg <- pbta.full[,colnames(pbta.full) %in% pbta.hist$Kids_First_Biospecimen_ID]
 
 # Cancer Genes
@@ -43,8 +44,8 @@ geneListRef <- subset(geneListRef, type == "TumorSuppressorGene" | type == "Cosm
 cancerGenes <- rbind(cancerGenes, geneListRef)
 rm(geneListRef)
 
-# Genesets (KEGG)
-geneSet <- getGmt('data/Reference/mSigDB/c2.cp.kegg.v7.1.symbols.gmt', collectionType = BroadCollection(), geneIdType = SymbolIdentifier())
+# Genesets (c2 reactome)
+geneSet <- getGmt('data/Reference/mSigDB/c2.cp.reactome.v6.0.symbols.gmt', collectionType = BroadCollection(), geneIdType = SymbolIdentifier())
 geneSet <- geneIds(geneSet)
 
 # Drug Interaction DB
@@ -63,7 +64,7 @@ runRNASeqAnalysis <- function(expData = NULL, refData = gtexData, thresh = 2, co
   
   smp <- unique(as.character(expData$Sample))
   
-  # done for PBTA
+  # add genes as rownames and remove sample name
   expData <- expData %>%
     remove_rownames() %>%
     column_to_rownames('Gene') %>%
@@ -72,7 +73,7 @@ runRNASeqAnalysis <- function(expData = NULL, refData = gtexData, thresh = 2, co
   # now remove the current PBTA SOI from refData
   refData <- refData[,grep(smp, colnames(refData), invert = T, value = T)]
   
-  # Merge GTEx and Patient data on common genes
+  # Merge refData and Patient data on common genes
   intGenesTmp <- intersect(rownames(refData), rownames(expData))
   mergeDF <- cbind(refData[intGenesTmp,], expData[intGenesTmp, "TPM"])
   
@@ -217,19 +218,37 @@ runRNASeqAnalysis <- function(expData = NULL, refData = gtexData, thresh = 2, co
   return(finalOut)
 }
 
+# input data
 res <- melt(as.matrix(pbta.full), value.name = "TPM", varnames = c("Gene", "Sample"))
+res.tcga <- melt(as.matrix(tcgaGBMData), value.name = "TPM", varnames = c("Gene", "Sample"))
+
 system('mkdir -p data/Reference/GSEA')
+# PBTA vs GTEx Brain
 if(!file.exists('data/Reference/GSEA/PBTA_vs_GTExBrain.RDS')){
   GTExBrain <-  plyr::dlply(res, .variables = "Sample", .fun = function(x) runRNASeqAnalysis(expData = x, refData = gtexData, comparison = paste0("GTExBrain_", ncol(gtexData))), .parallel = TRUE)
   saveRDS(GTExBrain, file = 'data/Reference/GSEA/PBTA_vs_GTExBrain.RDS')
 }
 
+# PBTA vs PBTA
 if(!file.exists('data/Reference/GSEA/PBTA_vs_PBTA.RDS')){
   PBTA_All <- plyr::dlply(res, .variables = "Sample", .fun = function(x) runRNASeqAnalysis(expData = x, refData = pbta.full, comparison = paste0("PBTA_All_", ncol(pbta.full))), .parallel = TRUE)
   saveRDS(PBTA_All, file = 'data/Reference/GSEA/PBTA_vs_PBTA.RDS')
 }
 
+# PBTA vs PBTA HGG
 if(!file.exists('data/Reference/GSEA/PBTA_vs_PBTAHGG.RDS')){
   PBTA_HGG <- plyr::dlply(res, .variables = "Sample", .fun = function(x) runRNASeqAnalysis(expData = x, refData = pbta.hgg, comparison = paste0("PBTA_HGG_", ncol(pbta.hgg))), .parallel = TRUE)
   saveRDS(PBTA_HGG, file = 'data/Reference/GSEA/PBTA_vs_PBTAHGG.RDS')
+}
+
+# TCGA GBM vs GTEx Brain
+if(!file.exists('data/Reference/GSEA/TCGA_GBM_vs_GTExBrain.RDS')){
+  TCGA.vs.GTExBrain <-  plyr::dlply(res.tcga, .variables = "Sample", .fun = function(x) runRNASeqAnalysis(expData = x, refData = gtexData, comparison = paste0("GTExBrain_", ncol(gtexData))), .parallel = TRUE)
+  saveRDS(TCGA.vs.GTExBrain, file = 'data/Reference/GSEA/TCGA_GBM_vs_GTExBrain.RDS')
+}
+
+# TCGA GBM vs TCGA GBM
+if(!file.exists('data/Reference/GSEA/TCGA_GBM_vs_TCGA_GBM.RDS')){
+  TCGA.vs.TCGA <-  plyr::dlply(res.tcga, .variables = "Sample", .fun = function(x) runRNASeqAnalysis(expData = x, refData = tcgaGBMData, comparison = paste0("TCGA_GBM_", ncol(tcgaGBMData))), .parallel = TRUE)
+  saveRDS(TCGA.vs.TCGA, file = 'data/Reference/GSEA/TCGA_GBM_vs_TCGA_GBM.RDS')
 }
