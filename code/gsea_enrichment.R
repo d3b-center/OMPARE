@@ -1,6 +1,6 @@
 # Author: Komal S. Rathi
 # Date: 04/25/2020
-# Function: Up/Down pathways for each PBTA sample, compare to rest of PBTA (1) and GTEx (2) and TCGA GBM (3)
+# Function: Up/Down pathways for each PBTA sample, compare to rest of PBTA (1) and GTEx (2) and TCGA GBM (3) and PNOC008 (4)
 # do this once and read in for tabulate pathways (Page 8 of report)
 
 # Function to return all results from RNA-Seq Analysis
@@ -31,6 +31,9 @@ pbta.full <- readRDS('data/Reference/PBTA/pbta-gene-expression-rsem-tpm-collapse
 
 # Dataset4: PBTA (polyA + corrected stranded HGG n = 186)
 pbta.hgg <- pbta.full[,colnames(pbta.full) %in% pbta.hist$Kids_First_Biospecimen_ID]
+
+# Dataset5: PNOC008
+pnoc008 <- readRDS('data/Reference/PNOC008/PNOC008_TPM_matrix.RDS')
 
 # Cancer Genes
 cancerGenes <- read.delim("data/Reference/CancerGeneList.tsv", stringsAsFactors = F)
@@ -221,8 +224,33 @@ runRNASeqAnalysis <- function(expData = NULL, refData = gtexData, thresh = 2, co
 # input data
 res <- melt(as.matrix(pbta.full), value.name = "TPM", varnames = c("Gene", "Sample"))
 res.tcga <- melt(as.matrix(tcgaGBMData), value.name = "TPM", varnames = c("Gene", "Sample"))
+res.pnoc008 <- melt(as.matrix(pnoc008), value.name = "TPM", varnames = c("Gene", "Sample"))
 
 system('mkdir -p data/Reference/GSEA')
+# PNOC008 vs GTEx Brain
+if(!file.exists('data/Reference/GSEA/PNOC008_vs_GTExBrain.RDS')){
+  GTExBrain <-  plyr::dlply(res.pnoc008, .variables = "Sample", .fun = function(x) runRNASeqAnalysis(expData = x, refData = gtexData, comparison = paste0("GTExBrain_", ncol(gtexData))), .parallel = TRUE)
+  saveRDS(GTExBrain, file = 'data/Reference/GSEA/PNOC008_vs_GTExBrain.RDS')
+}
+
+# PNOC008 vs PBTA
+if(!file.exists('data/Reference/GSEA/PNOC008_vs_PBTA.RDS')){
+  PBTA_All <- plyr::dlply(res.pnoc008, .variables = "Sample", .fun = function(x) runRNASeqAnalysis(expData = x, refData = pbta.full, comparison = paste0("PBTA_All_", ncol(pbta.full))), .parallel = TRUE)
+  saveRDS(PBTA_All, file = 'data/Reference/GSEA/PNOC008_vs_PBTA.RDS')
+}
+
+# PNOC008 vs PBTA HGG
+if(!file.exists('data/Reference/GSEA/PNOC008_vs_PBTA_HGG.RDS')){
+  PBTA_HGG <- plyr::dlply(res.pnoc008, .variables = "Sample", .fun = function(x) runRNASeqAnalysis(expData = x, refData = pbta.hgg, comparison = paste0("PBTA_HGG_", ncol(pbta.hgg))), .parallel = TRUE)
+  saveRDS(PBTA_HGG, file = 'data/Reference/GSEA/PNOC008_vs_PBTA_HGG.RDS')
+}
+
+# PNOC008 vs TCGA GBM
+if(!file.exists('data/Reference/GSEA/PNOC008_vs_TCGA_GBM.RDS')){
+  TCGA_GBM <- plyr::dlply(res.pnoc008, .variables = "Sample", .fun = function(x) runRNASeqAnalysis(expData = x, refData = tcgaGBMData, comparison = paste0("TCGA_GBM_", ncol(tcgaGBMData))), .parallel = TRUE)
+  saveRDS(TCGA_GBM, file = 'data/Reference/GSEA/PNOC008_vs_TCGA_GBM.RDS')
+}
+
 # PBTA vs GTEx Brain
 if(!file.exists('data/Reference/GSEA/PBTA_vs_GTExBrain.RDS')){
   GTExBrain <-  plyr::dlply(res, .variables = "Sample", .fun = function(x) runRNASeqAnalysis(expData = x, refData = gtexData, comparison = paste0("GTExBrain_", ncol(gtexData))), .parallel = TRUE)
