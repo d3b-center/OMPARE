@@ -7,13 +7,13 @@ ssGSEA <- function(topCor, fname) {
   
   if(!file.exists(fname)) {
     expression_data <- topCor
-    human_geneset <- msigdbr::msigdbr(species = "Homo sapiens", category = "C2", subcategory = "CP:KEGG") ## human KEGG genes from `migsdbr` package. The loaded data is a tibble.
+    human_geneset <- msigdbr::msigdbr(species = "Homo sapiens", category = "C2", subcategory = "CP:REACTOME") ## human REACTOME genes from `migsdbr` package. The loaded data is a tibble.
     
     # Prepare expression data: log2 transform re-cast as matrix
     ### Rownames are genes and column names are samples
     expression_data_log2_matrix <- as.matrix( log2(expression_data + 1) )
     
-    # Prepare KEGG genes: Create a list of KEGG gene sets, each of which is a list of genes
+    # Prepare REACTOME genes: Create a list of REACTOME gene sets, each of which is a list of genes
     human_geneset_twocols <- human_geneset %>% dplyr::select(gs_name, human_gene_symbol)
     human_geneset_list    <- base::split(human_geneset_twocols$human_gene_symbol, list(human_geneset_twocols$gs_name))
     
