@@ -9,6 +9,7 @@ library(dplyr)
 library(stringr)
 library(tidyverse)
 library(readxl)
+library(GenomicRanges)
 
 # create output directory
 system('mkdir -p data/Reference/PNOC008/')
@@ -37,6 +38,26 @@ merge.res <- function(nm){
   sample_name <- gsub(".*PNOC","PNOC",nm)
   sample_name <- gsub('/.*','',sample_name)
   x <- data.table::fread(nm)
+  if(nrow(x) > 1){
+    x <- as.data.frame(x)
+    x$sample_name <- sample_name
+    return(x)
+  } 
+}
+
+# function to merge degs
+merge.excel <- function(nm){
+  sample_name <- gsub(".*PNOC", "PNOC", nm)
+  sample_name <- gsub('_.*','',sample_name)
+  x <- readxl::read_xlsx(path = nm, sheet = 'DE_Genes_Up')
+  y <- readxl::read_xlsx(path = nm, sheet = 'DE_Genes_Down')
+  x <- x %>%
+    filter(Comparison == "GTExBrain_1152") %>%
+    dplyr::select(Gene_name, DE)
+  y <- y %>%
+    filter(Comparison == "GTExBrain_1152") %>%
+    dplyr::select(Gene_name, DE)
+  x <- rbind(x, y)
   if(nrow(x) > 1){
     x <- as.data.frame(x)
     x$sample_name <- sample_name
@@ -195,3 +216,51 @@ pnoc.mutations <- pnoc.mutations %>%
   dplyr::select(Gene, Alteration_Datatype, Alteration_Type, Alteration, Kids_First_Biospecimen_ID, SampleID, Study) %>%
   unique()
 saveRDS(pnoc.mutations, file = "data/Reference/PNOC008/PNOC008_consensus_mutData_filtered.rds")
+
+# cohort level degs
+deg.files <- list.files(path = 'data/', pattern = "*_summary.xlsx", recursive = TRUE, full.names = T)
+deg.files <- deg.files[grep('PNOC008-',  deg.files)]
+pnoc.deg <- lapply(deg.files, FUN = function (x) merge.excel(x))
+pnoc.deg <- data.table::rbindlist(pnoc.deg)
+# only keep NANT sample for PNOC008-5
+pnoc.deg <- pnoc.deg[grep('CHOP', pnoc.deg$sample_name, invert = T),]
+pnoc.deg$sample_name  <- gsub("-NANT", "", pnoc.deg$sample_name)
+saveRDS(pnoc.deg, file = "data/Reference/PNOC008/PNOC008_deg_GTExBrain.rds")
+
+# cohort level tmb scores
+TMBFileBED <- data.table::fread("data/Reference/xgen-exome-research-panel-targets_hg38_ucsc_liftover.100bp_padded.sort.merged.bed")
+colnames(TMBFileBED)  <- c("chr", "start", "end")
+
+# read mutect2 for TMB profile
+mutFiles <- list.files(path = 'data/', pattern = 'mutect2_somatic.vep.maf', recursive = TRUE, full.names = T)
+mutFiles <- mutFiles[grep('PNOC008-',  mutFiles)]
+pnoc.mutations <- lapply(mutFiles, FUN = function(x) merge.res(x))
+pnoc.mutations <- data.table::rbindlist(pnoc.mutations, fill = T)
+# only keep NANT sample for PNOC008-5
+pnoc.mutations <- pnoc.mutations[grep('CHOP', pnoc.mutations$sample_name, invert = T),]
+pnoc.mutations$sample_name  <- gsub("-NANT", "", pnoc.mutations$sample_name)
+
+# mutect2 nonsense and missense mutations
+pnoc.mutations <- pnoc.mutations %>%
+  filter(Variant_Classification %in% c("Missense_Mutation", "Nonsense_Mutation")) %>%
+  dplyr::select(sample_name, Hugo_Symbol, Variant_Classification, Chromosome, Start_Position, End_Position) %>%
+  unique()
+  
+# intersect with bed file
+subject <- with(TMBFileBED, GRanges(chr, IRanges(start = start, end = end)))
+query <- with(pnoc.mutations, GRanges(Chromosome, IRanges(start = Start_Position, end = End_Position, names = Hugo_Symbol)))
+tmb.res <- findOverlaps(query = query, subject = subject, type = "within")
+tmb.res <- data.frame(pnoc.mutations[queryHits(tmb.res),], TMBFileBED[subjectHits(tmb.res),])
+  
+# return the number of missense + nonsense overlapping with the bed file/77.46
+tmb.res <- tmb.res %>%
+  group_by(sample_name) %>%
+  mutate(num.mis.non = n()) %>%
+  dplyr::select(sample_name, num.mis.non)  %>%
+  unique() %>%
+  mutate(tmb = num.mis.non/77.46) %>%
+  dplyr::select(sample_name, tmb)
+saveRDS(tmb.res, file = "data/Reference/PNOC008/PNOC008_TMBscores.rds")
+
+
+

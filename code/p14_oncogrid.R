@@ -1,176 +1,147 @@
 # Author: Komal S. Rathi
 # Date: 08/10/2020
-# Function: Script to generate Oncogrid matrix/additional files using CNV, SNV, Fusion and Expression data
-library(readxl)
+# Function: Script to generat Oncogrid matrix/additional files using CNV, SNV, Fusion and Expression data
+library(tidyverse)
 
-# read existing oncogrid data
+# Directories
+# oncogrid directories
 oncogrid.path <- file.path('data', 'Reference', 'oncogrid')
-if(!file.exists(file.path(oncogrid.path, 'oncoprint_snv_fusion_mat.txt')) & 
-   !file.exists(file.path(oncogrid.path, 'oncoprint_cnv_dge_mat.txt'))){
-  n <- FALSE
-} else {
-  n <- TRUE
-}
+oncogrid.path.input <- file.path(oncogrid.path, 'input')
+oncogrid.path.output <- file.path(oncogrid.path, 'output')
+# pnoc008 directory
+pnoc008.path <- file.path('data', 'Reference', 'PNOC008')
 
-# read only cohort3 data else if present, then read cohort3 + additional 008 generated data
-if(n == FALSE){
-  snv_fusion_mat <- read.delim(file.path(oncogrid.path,'cohort3_snv_fusions_mat.txt'), check.names = F)
-  cnv_dge_mat <- read.delim(file.path(oncogrid.path,'cohort3_cnv_dge_mat.txt'), check.names = F)
-  sym <- ';'
-  tmb_mat <- read.delim(file.path(oncogrid.path, 'sample_cohort3.TMB'), check.names = F)
-  annot_info <- read.delim(file.path(oncogrid.path, 'sample_cohort3.info'), check.names = F)
-} else { 
-  snv_fusion_mat <- read.delim(file.path(oncogrid.path,'oncoprint_snv_fusion_mat.txt'), check.names = F)
-  cnv_dge_mat <- read.delim(file.path(oncogrid.path,'oncoprint_cnv_dge_mat.txt'), check.names = F)
-  sym <- ', '
-  tmb_mat <- read.delim(file.path(oncogrid.path, 'tmb_mat.txt'), check.names = F)
-  annot_info <- read.delim(file.path(oncogrid.path, 'annot_mat.txt'), check.names = F)
-}
-
-# format matrices from wide to long format
-snv_fusion_mat <- snv_fusion_mat %>%
-  dplyr::rename(Sample = 1) %>%
-  mutate_all(list(~na_if(.,""))) %>%
-  gather("Gene", "label", -Sample) %>%
-  mutate(label = strsplit(as.character(label), sym)) %>% 
-  unnest(label) %>%
-  unique()
-
-cnv_dge_mat <- cnv_dge_mat %>%
-  dplyr::rename(Sample = 1) %>%
-  mutate_all(list(~na_if(.,""))) %>%
-  gather("Gene", "label", -Sample) %>%
-  mutate(label = strsplit(as.character(label), sym)) %>% 
-  unnest(label) %>%
-  unique()
+## Oncoprint matrix
+# cohort 3 matrix
+cohort3.matrix <- read.delim(file.path(oncogrid.path.output, 'oncoprint.cohort3.txt'), check.names = F)
+colnames(cohort3.matrix)[1] <- 'Sample' 
+tmb_mat <- read.delim(file.path(oncogrid.path.input, 'sample_cohort3.TMB'), check.names = F)
+tmb_mat <- tmb_mat %>% 
+  dplyr::rename(Sample = 1)
+annot_info <- read.delim(file.path(oncogrid.path.input, 'sample_cohort3.info'), check.names = F)
+annot_info <- annot_info %>% 
+  dplyr::rename(Sample = 1)
+split_samples <- read.delim(file.path(oncogrid.path.input, 'sample_cohort3_split_samples.txt'), check.names = F)
+split_samples <- split_samples %>% 
+  dplyr::rename(Sample = 1)
 
 # read reference gene lists
-snv <- read.delim('data/Reference/oncogrid/snv-genes', header = F)
-fusion <- read.delim('data/Reference/oncogrid/fusion_genes', header = F)
-cnv <- read.delim('data/Reference/oncogrid/copy_number_gene', header = F)
-deg <- read.delim('data/Reference/oncogrid/dge_gene_list', header = F)
+snv <- read.delim(file.path(oncogrid.path.input, 'snv-genes'), header = F)
+fusion <- read.delim(file.path(oncogrid.path.input, 'fusion_genes'), header = F)
+cnv <- read.delim(file.path(oncogrid.path.input, 'copy_number_gene'), header = F)
+deg <- read.delim(file.path(oncogrid.path.input, 'all_cnv_tgen_genes'), header = F)
 
-# fill in details for PNOC008 patient of interest
-# 1. get degene info PNOC008 patient vs GTEx Brain
-fname <- file.path(topDir, 'Summary', paste0(sampleInfo$subjectID, '_summary.xlsx'))
-genes.df.up <- readxl::read_xlsx(path = fname, sheet = "DE_Genes_Up")
-genes.df.up <- genes.df.up %>%
-  mutate(label = "OVE", 
-         Gene = Gene_name) %>%
-  filter(Comparison == "GTExBrain_1152",
-         Gene_name %in% deg$V1) %>%
-  dplyr::select(Gene, label)
-genes.df.down <- readxl::read_xlsx(path = fname, sheet = "DE_Genes_Down")
-genes.df.down <- genes.df.down %>%
-  mutate(label = "UNE",
-         Gene = Gene_name) %>%
-  filter(Comparison == "GTExBrain_1152",
-         Gene_name %in% deg$V1) %>%
-  dplyr::select(Gene, label)
-deg.genes <- rbind(genes.df.up, genes.df.down)
+# fill in details for PNOC008 patients
+# 1. get degene info PNOC008 patientss vs GTEx Brain
+fname <- file.path(pnoc008.path, 'PNOC008_deg_GTExBrain.rds')
+genes.df <- readRDS(fname)
+deg.genes <- genes.df %>%
+  mutate(label = ifelse(DE == "Up", "OVE", "UNE")) %>%
+  filter(Gene_name %in% deg$V1) %>%
+  dplyr::select(sample_name, Gene_name, label) %>%
+  unique()
 
 # 2. get cnv info from cnvGenes
-if(nrow(cnvGenes) > 1){
-  cnv.genes.gain <- cnvGenes %>%
-    filter(Gene %in% cnv$V1, 
-           Status == "gain") %>%
-    mutate(label = "GAI") %>%
-    dplyr::select(Gene, label)
-  cnv.genes.loss <- cnvGenes %>%
-    filter(Gene %in% cnv$V1) %>%
-    mutate(label = "LOS") %>%
-    dplyr::select(Gene, label)
-  cnv.genes <- rbind(cnv.genes.gain, cnv.genes.loss)
-}
+fname <- file.path(pnoc008.path, 'PNOC008_cnvData_filtered.rds')
+cnv.genes <- readRDS(fname)
+cnv.genes <- cnv.genes %>%
+  mutate(label = ifelse(Alteration_Type == "Gain", "GAI", "LOS")) %>%
+  filter(Gene %in% cnv$V1) %>%
+  mutate(Gene_name = Gene,
+         sample_name = Kids_First_Biospecimen_ID) %>%
+  dplyr::select(sample_name, Gene_name, label) %>%
+  unique()
 
 # 3. get snv info
-if(nrow(mutData) > 0){
-  mut.genes <- mutData %>%
-    mutate(label = case_when(Variant_Classification %in% "Missense_Mutation" ~ "MIS",
-                             Variant_Classification %in% "Nonsense_Mutation" ~ "NOS",
-                             Variant_Classification %in% "Nonstop_Mutation" ~ "NOT",
-                             Variant_Classification %in% "Frame_Shift_Del" ~ "FSD",
-                             Variant_Classification %in% "Frame_Shift_Ins" ~ "FSI",
-                             Variant_Classification %in% "In_Frame_Del" ~ "IFD",
-                             Variant_Classification %in% "Splice_Site" ~ "SPS"),
-           Gene = Hugo_Symbol) %>%
-    filter(Hugo_Symbol %in% snv$V1,
-           !Variant_Classification %in% c("3'Flank", "5'Flank", "3'UTR", "5'UTR", "IGR", "Intron", "RNA")) %>%
-    dplyr::select(Gene, label)
-}
-
+fname <- file.path(pnoc008.path, 'PNOC008_consensus_mutData_filtered.rds')
+mut.genes <- readRDS(fname)
+mut.genes <- mut.genes %>%
+  filter(!Alteration_Type %in% c("3'Flank", "5'Flank", "3'UTR", "5'UTR", "IGR", "Intron", "RNA")) %>%
+  mutate(label = case_when(Alteration_Type %in% "Missense_Mutation" ~ "MIS",
+                           Alteration_Type %in% "Nonsense_Mutation" ~ "NOS",
+                           Alteration_Type %in% "Frame_Shift_Del" ~ "FSD",
+                           Alteration_Type %in% "Frame_Shift_Ins" ~ "FSI",
+                           Alteration_Type %in% "In_Frame_Del" ~ "IFD",
+                           Alteration_Type %in% "Splice_Site" ~ "SPS")) %>%
+  filter(Gene %in% snv$V1) %>%
+  mutate(Gene_name = Gene,
+         sample_name = Kids_First_Biospecimen_ID) %>%
+  dplyr::select(sample_name, Gene_name, label) %>%
+  unique()
 
 # 4. get fusion info
-if(nrow(fusData) > 0){
-  fus.genes <- data.frame(Gene = unique(c(fusData$HeadGene, fusData$TailGene)))
-  fus.genes <- fus.genes %>%
-    mutate(label = "FUS") %>%
-    filter(Gene %in% fusion$V1)
-}
+fname <- file.path(pnoc008.path, 'PNOC008_fusData_filtered.rds')
+fus.genes <- readRDS(fname)
+fus.genes <- fus.genes %>%
+  mutate(label = "FUS") %>%
+  filter(Gene %in% fusion$V1) %>%
+  mutate(Gene_name = Gene,
+         sample_name = Kids_First_Biospecimen_ID) %>%
+  dplyr::select(sample_name, Gene_name, label) %>%
+  unique()
 
 # combine fus + snv
 snv_fus <- rbind(mut.genes, fus.genes)
-snv_fus <- snv_fus %>%
-  mutate(Sample = sampleInfo$subjectID)
 
 # combine deg + cnv
 cnv_deg <- rbind(cnv.genes, deg.genes)
-cnv_deg <- cnv_deg %>%
-  mutate(Sample = sampleInfo$subjectID)
-  
-# add to existing data
-snv_fusion_mat <- unique(rbind(snv_fusion_mat, snv_fus))
-cnv_dge_mat <- unique(rbind(cnv_dge_mat, cnv_deg))
 
 # uniquify rows
-snv_fusion_mat <- snv_fusion_mat %>%
-  group_by(Sample, Gene) %>%
-  summarise(label = toString(label))
-cnv_dge_mat <- cnv_dge_mat %>%
-  group_by(Sample, Gene) %>%
-  summarise(label = toString(label))
+snv_fus <- snv_fus %>%
+  group_by(sample_name, Gene_name) %>%
+  summarise(label = paste0(label, collapse = ';'))
+cnv_deg <- cnv_deg %>%
+  group_by(sample_name, Gene_name) %>%
+  summarise(label = paste0(label, collapse = ';'))
 
 # convert to matrix
-snv_fusion_mat <- snv_fusion_mat %>%
-  spread(key = Gene, value = 'label') %>%
-  column_to_rownames('Sample')
-write.table(x = snv_fusion_mat %>% 
-              rownames_to_column('Sample'), file = file.path(oncogrid.path, "oncoprint_snv_fusion_mat.txt"), quote = F, sep = "\t", row.names = TRUE)
+snv_fus <- snv_fus %>%
+  spread(key = Gene_name, value = 'label') %>%
+  column_to_rownames('sample_name')
+cnv_deg <- cnv_deg %>%
+  spread(key = Gene_name, value = 'label') %>%
+  column_to_rownames('sample_name')
 
-cnv_dge_mat <- cnv_dge_mat %>%
-  spread(key = Gene, value = 'label') %>%
-  column_to_rownames('Sample')
-write.table(x = cnv_dge_mat %>% 
-              rownames_to_column('Sample'), file = file.path(oncogrid.path, "oncoprint_cnv_dge_mat.txt"), quote = F, sep = "\t", row.names = F)
+# add an * to common genes 
+colnames(cnv_deg) <- ifelse(colnames(cnv_deg) %in% colnames(snv_fus), paste0(colnames(cnv_deg),'*'), colnames(cnv_deg))
 
-# now add an * to common genes 
-colnames(cnv_dge_mat) <- ifelse(colnames(cnv_dge_mat) %in% colnames(snv_fusion_mat), paste0(colnames(cnv_dge_mat),'*'), colnames(cnv_dge_mat))
-
-# I. now merge both matrices
-oncogrid.mat <- snv_fusion_mat %>%
+# merge both matrices
+pnoc008.oncogrid.mat <- snv_fus %>%
   rownames_to_column('Sample') %>%
-  full_join(cnv_dge_mat %>%
+  full_join(cnv_deg %>%
               rownames_to_column('Sample'), by = "Sample")
-write.table(oncogrid.mat, file = file.path(oncogrid.path, 'oncoprint_mat.txt'), quote = F, sep = "\t", row.names = F)
+write.table(pnoc008.oncogrid.mat, file = file.path(oncogrid.path.output, 'oncoprint.pnoc008.txt'), quote = F, sep = "\t", row.names = F)
 
+# add cohort3 matrix to pnoc008 matrix
+cohort3.pnoc008.matrix <- plyr::rbind.fill(cohort3.matrix, pnoc008.oncogrid.mat)
+write.table(cohort3.pnoc008.matrix, file = file.path(oncogrid.path.output, 'oncoprint.cohort3.pnoc008.txt'), quote = F, sep = "\t", row.names = F)
 
-# II. add TMB info
-tmb_mat <- tmb_mat %>% 
-  dplyr::rename(Sample = 1)
-tmb_mat_p <- data.frame(Sample = sampleInfo$subjectID, TMB = tmb.calculate()/tmb)
+## TMB
+# add TMB info
+tmb_mat_p <- readRDS(file.path(pnoc008.path, 'PNOC008_TMBscores.rds'))
+colnames(tmb_mat_p) <- colnames(tmb_mat)
 tmb_mat <- unique(rbind(tmb_mat, tmb_mat_p))
-tmb_mat <- tmb_mat[match(oncogrid.mat$Sample, tmb_mat$Sample),]
-write.table(tmb_mat, file = file.path(oncogrid.path, 'tmb_mat.txt'), quote = F, sep = "\t", row.names = F)
+tmb_mat <- tmb_mat[match(cohort3.pnoc008.matrix$Sample, tmb_mat$Sample),]
+write.table(tmb_mat, file = file.path(oncogrid.path.output, 'tmb.cohort3.pnoc008.txt'), quote = F, sep = "\t", row.names = F)
 
-# III. add annotation info
+## Annotation
+# add annotation info
 annot_info <- annot_info %>% 
   dplyr::rename(Sample = 1)
-annot_info_p <- data.frame(Sample = sampleInfo$subjectID,
+annot_info_p <- data.frame(Sample = grep('PNOC', cohort3.pnoc008.matrix$Sample, value = T),
                            Sequencing_Experiment = "WXS,RNA-Seq",
                            Cohort = "PNOC008",
                            Tumor_Descriptor = "Primary",
                            Integrated_Diagnosis = "High_grade_glioma",
                            OS_Status = "LIVING")
 annot_info <- unique(rbind(annot_info, annot_info_p))
-annot_info <- annot_info[match(oncogrid.mat$Sample, annot_info$Sample),]
-write.table(annot_info, file = file.path(oncogrid.path, 'annot_mat.txt'), quote = F, sep = "\t", row.names = F)
+annot_info <- annot_info[match(cohort3.pnoc008.matrix$Sample, annot_info$Sample),]
+write.table(annot_info, file = file.path(oncogrid.path.output, 'annotation.cohort3.pnoc008.txt'), quote = F, sep = "\t", row.names = F)
+
+## Split samples
+split_samples_p <- data.frame(Sample = grep('PNOC', cohort3.pnoc008.matrix$Sample, value = T),
+                              split_samples = "Others")
+split_samples <- unique(rbind(split_samples, split_samples_p))
+split_samples <- split_samples[match(cohort3.pnoc008.matrix$Sample, split_samples$Sample),]
+write.table(split_samples, file = file.path(oncogrid.path.output, 'split_samples.cohort3.pnoc008.txt'), quote = F, sep = "\t", row.names = F)
+
