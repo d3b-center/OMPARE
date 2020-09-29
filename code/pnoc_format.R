@@ -15,7 +15,7 @@ library(GenomicRanges)
 system('mkdir -p data/Reference/PNOC008/')
 
 # source functions
-source('code/createCopyNumber.R')
+source('code/utils/createCopyNumber.R')
 
 # reference data
 # cancer genes 

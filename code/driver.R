@@ -8,17 +8,16 @@
 # Source all code 
 #############################
 # sourced in order of requirement
-source('code/pubTheme.R')                       # univeral plot theme
-source('code/helper.R')                         # universal helper functions like z-score etc
-source('code/patientSampleInfo.R')              # functions to load patient info
-source('code/createCopyNumber.R')               # create a map of gene symbol and copy number
-source('code/filterDruggability.R')             # create a map of gene symbol and drug info from dgiDB
-source('code/filterCNV.R')                      # filter CNV
-source('code/filterFusions.R')                  # filter Fusions
-source('code/filterMutations.R')                # filter Mutations
-source("code/runRNASeqAnalysis.R")              # function to run RNA-seq analysis
+source('code/utils/pubTheme.R')                       # univeral plot theme
+source('code/utils/helper.R')                         # universal helper functions like z-score etc
+source('code/utils/patientSampleInfo.R')              # functions to load patient info
+source('code/utils/createCopyNumber.R')               # create a map of gene symbol and copy number
+source('code/utils/filterCNV.R')                      # filter CNV
+source('code/utils/filterFusions.R')                  # filter Fusions
+source('code/utils/filterMutations.R')                # filter Mutations
+source("code/utils/runRNASeqAnalysis.R")              # function to run RNA-seq analysis
 RNASeqAnalysisOut <- runRNASeqAnalysis(expData) # run in driver
-source('code/highConfidenceFindingsTable.R')    # high confidence findings
+source('code/utils/highConfidenceFindingsTable.R')    # high confidence findings
 
 # Page 1
 source('code/p1_patientSampleInfo.R')           # patient/sample information
@@ -38,18 +37,18 @@ if(!is.null(tmb)){                              # plot tumor mutational burden
 }
 
 # Prepare OpenPBTA and TCGA data to be used for functions in Page 4-7
-source('code/batch_correct.R')                  # batch correction function
-source('code/pbta_format.R')                    # format PBTA data
-source('code/tcga_format.R')                    # format TCGA data
+source('code/utils/batch_correct.R')                  # batch correction function
+source('code/utils/pbta_format.R')                    # format PBTA data
+source('code/utils/tcga_format.R')                    # format TCGA data
 
 # Page 4 (OpenPBTA) and Page 7 (Genomically Similar PNOC008 and OpenPBTA)
-source('code/ImmuneProfile.R')                  # plot immune profile using xCell
+source('code/utils/ImmuneProfile.R')                  # plot immune profile using xCell
 source('code/p4_TISProfile.R')                  # plot TIS profile
 
 # Page 5 (PNOC008 + OpenPBTA) and Page 6 (PNOC008 + TCGA GBM)
-source('code/getDimRedPlot.R')                  # plot UMAP     
-source('code/getSimilarPatients.R')             # get top 20 correlated patients
-source('code/getKMPlot.R')                      # plot KM plot of top 20 most correlated patients with survival
+source('code/utils/getDimRedPlot.R')                  # plot UMAP     
+source('code/utils/getSimilarPatients.R')             # get top 20 correlated patients
+source('code/utils/getKMPlot.R')                      # plot KM plot of top 20 most correlated patients with survival
 
 # Page 8 (PNOC008)
 source('code/p8_tabulate_pathways.R')           # enriched pathways of PNOC008 patients from top 20 genomically similar
@@ -87,5 +86,5 @@ source('code/p13_mutational_analysis.R')
 # Page 14 Oncogrid 
 if(!file.exists(file.path(topDir, 'complexHeatmap_oncogrid.png'))){
   source('code/p14_oncogrid.R')
-  source('code/plot_oncogrid.R')
+  source('code/utils/plot_oncogrid.R')
 }

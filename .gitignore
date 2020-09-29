@@ -7,16 +7,16 @@ Archive/*
 
 # Code
 code/Archive/*
-code/collapse_matrix.R
-code/create_pbta_combined_matrices.R
-code/create_gtex_matrix.R
-code/create_gtex_brain_matrix.R
-code/create_tcga_gbm_matrix.R
-code/tcga_fullmat_format.R
-code/create_icr_matrix.R
+code_ignored/collapse_matrix.R
+code_ignored/create_pbta_combined_matrices.R
+code_ignored/create_gtex_matrix.R
+code_ignored/create_gtex_brain_matrix.R
+code_ignored/create_tcga_gbm_matrix.R
+code_ignored/tcga_fullmat_format.R
+code_ignored/create_icr_matrix.R
 
 # PBTA data preparation for mutational analysis
-code/prepare_pbta_mut_analysis.R
+code_ignored/prepare_pbta_mut_analysis.R
 
 # Data will be uploaded to s3 instead of github
 data/*

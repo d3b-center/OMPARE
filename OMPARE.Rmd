@@ -26,12 +26,12 @@ knitr::opts_chunk$set(comment = NA)
 ```
 
 ```{r load_libraries}
-source('code/load_libraries.R')
+source('code/utils/load_libraries.R')
 ```
 
 ```{r read_data}
 # read input files
-source("code/readData.R")
+source("code/utils/readData.R")
 topDir <- params$topDir
 fusion_method <- params$fusion_method
 snv_pattern <- params$snv_pattern

@@ -2,8 +2,8 @@
 # All Findings Table
 #####################
 
-source('code/filterCNV.R')
-source('code/annotateMutations.R')
+source('code/utils/filterCNV.R')
+source('code/utils/annotateMutations.R')
 
 allFindingsTable <- function(snv_pattern) {
   # Add Mutations

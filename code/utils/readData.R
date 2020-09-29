@@ -4,8 +4,8 @@
 #############################
 
 source('code/load_reference.R') # load reference data
-source('code/filterFusions.R')  # load filter fusions script to filter fusions
-source('code/createCopyNumber.R') # load script to map copynumber to gene symbol
+source('code/utils/filterFusions.R')  # load filter fusions script to filter fusions
+source('code/utils/createCopyNumber.R') # load script to map copynumber to gene symbol
 
 readData <- function(topDir, fusion_method = c("star","arriba"), snv_pattern = "all"){
   
