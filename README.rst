@@ -38,16 +38,16 @@ Project Organization
 
 2. Download required files from data delivery project:
 
-* Copy Number: `*.CNVs.p.value.txt`
-* Copy Number: `*.controlfreec.ratio.txt`
-* Expression: `*.genes.results`
-* Fusions: `*.arriba.fusions.tsv`
-* Fusions: `*.star-fusion.fusion_candidates.final`
-* Somatic Variants: `*.maf`
-* Germline Variants: `*.hg38_multianno.txt.gz`
+* Copy Number: ``*.CNVs.p.value.txt``
+* Copy Number: ``*.controlfreec.ratio.txt``
+* Expression: ``*.genes.results``
+* Fusions: ``*.arriba.fusions.tsv``
+* Fusions: ``*.star-fusion.fusion_candidates.final``
+* Somatic Variants: ``*.maf``
+* Germline Variants: ``*.hg38_multianno.txt.gz``
 
 3. Organize patient data: 
-Run `create_project.R` script to create and organize project folder under data/. This script will also create intermediate folders like `ImmuneScores` and `GSVA` as well as output folders like `Reports` for \*.html reports and `Summary` for excel summary.
+Run ``create_project.R`` script to create and organize project folder under ``data/``. This script will also create intermediate folders like ``ImmuneScores`` and ``GSVA`` as well as output folders like ``Reports`` for ``*.html`` reports and ``Summary`` for ``*.xlsx`` summary file.
    
 .. code-block:: bash
 
@@ -68,7 +68,7 @@ Run `create_project.R` script to create and organize project folder under data/.
 	--sourcedir /path/to/source/PNOC008-21-cavatica-files \
 	--destdir /path/to/OMPARE/data/PNOC008-21/
 
-4. Create clinical file using the *create_clinfile.R* script.
+4. Create clinical file using the ``create_clinfile.R`` script.
 
 .. code-block:: bash
 
@@ -119,7 +119,7 @@ Steps (3) and (4) should create a folder structure with corresponding files as s
 	├── Reports
 	├── Summary
 
-5. Update PNOC008 patient matrices with each new patient data.
+5. Update PNOC008 patient matrices (cnv, mutations, fusions, expression) with each new patient data.
    
 .. code-block:: bash
 
@@ -153,7 +153,7 @@ Steps (3) and (4) should create a folder structure with corresponding files as s
 	├── TCGA_GBM_vs_GTExBrain.RDS
 	└── TCGA_GBM_vs_TCGA_GBM.RDS
 
-7. Excel summary containing up/down pathways and genes of patient of interest vs GTEx Brain, PBTA HGG and PBTA all histologies:
+7. Excel summary containing up/down pathways and genes of patient of interest vs ``GTEx Brain``, ``PBTA HGG`` and ``PBTA all histologies``:
 
 .. code-block:: bash
 
@@ -176,9 +176,9 @@ Steps (3) and (4) should create a folder structure with corresponding files as s
 .. code-block:: bash
 
 	# topDir is the project directory of current patient
-	# fusion_method is the fusion method. Allowed values: *star*, *arriba*, *both* or not specified. (Optional) 
+	# fusion_method is the fusion method. Allowed values: ``star``, ``arriba``, ``both`` or not specified. (Optional) 
 	# set_title is the title for the report. (Optional)
-	# snv_pattern is one of the six values for simple variants: *lancet*, *mutect2*, *strelka2*, *vardict*, *consensus*, *all* (all four callers together)
+	# snv_pattern is one of the six values for simple variants: ``lancet``, ``mutect2``, ``strelka2``, ``vardict``, ``consensus``, ``all`` (all four callers together)
 	# tmb (Tumor mutational burden) is set to 77.46.
 	setwd(/path/to/OMPARE)
 	callers <- c("lancet", "mutect2", "strelka2", "vardict", "consensus", "all")
