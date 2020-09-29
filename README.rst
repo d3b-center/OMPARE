@@ -38,16 +38,16 @@ Project Organization
 
 2. Download required files from data delivery project:
 
-* Copy Number: .CNVs.p.value.txt
-* Copy Number: .controlfreec.ratio.txt
-* Expression: .genes.results
-* Fusions: .arriba.fusions.tsv
-* Fusions: .star-fusion.fusion_candidates.final
-* Somatic Variants: .maf
-* Germline Variants: .hg38_multianno.txt.gz
+* Copy Number: `*.CNVs.p.value.txt`
+* Copy Number: `*.controlfreec.ratio.txt`
+* Expression: `*.genes.results`
+* Fusions: `*.arriba.fusions.tsv`
+* Fusions: `*.star-fusion.fusion_candidates.final`
+* Somatic Variants: `*.maf`
+* Germline Variants: `*.hg38_multianno.txt.gz`
 
 3. Organize patient data: 
-Run *create_project.R* script to create and organize project folder under data/. This script will also create intermediate folders like *ImmuneScores* and *GSVA* as well as output folders like *Reports* for .html reports and *Summary* for excel summary.
+Run `create_project.R` script to create and organize project folder under data/. This script will also create intermediate folders like `ImmuneScores` and `GSVA` as well as output folders like `Reports` for \*.html reports and `Summary` for excel summary.
    
 .. code-block:: bash
 
@@ -282,7 +282,7 @@ This single script will take the raw data as input and create output files by:
 Upload to data-delivery project
 ===============================
 
-This script uploads the Summary/\*._summary.xlsx, Summary/\*._umap_output.rds, Reports/\*.html output to the data delivery project folder on cavatica. 
+This script uploads the `Summary/*._summary.xlsx`, `Summary/*._umap_output.rds`, `Reports/*.html` output to the data delivery project folder on cavatica. 
 
 .. code-block:: bash
 
