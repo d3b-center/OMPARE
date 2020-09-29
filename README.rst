@@ -278,3 +278,25 @@ This single script will take the raw data as input and create output files by:
 	--clin_file data/Reference/Manifest/PNOC008_Manifest.xlsx \
 	--workdir ~/Projects/OMPARE \
 	--sourcedir ~/Downloads/p21
+
+Upload to data-delivery project
+===============================
+
+This script uploads the Summary/\*._summary.xlsx, Summary/\*._umap_output.rds, Reports/\*.html output to the data delivery project folder on cavatica. 
+
+.. code-block:: bash
+
+	Rscript upload_reports.R --help
+
+    Options:
+	-p PATIENT, --patient=PATIENT
+		Patient Number (1, 2...)
+
+	-w WORKDIR, --workdir=WORKDIR
+		OMPARE working directory
+
+	# Example run for PNOC008-21
+	Rscript upload_reports.R \
+	--patient 21 \
+	--wordir ~/Projects/OMPARE
+
