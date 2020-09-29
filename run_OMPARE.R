@@ -35,7 +35,7 @@ callers <- c("lancet", "mutect2", "strelka2", "vardict", "consensus", "all")
 # 1. Create Project directory (if sourcedir param is provided)
 if(!is.null(sourceDir)){
   print("Create Project Directory...")
-  cmd1 <- paste0('Rscript create_project_dir.R -s ', sourceDir, ' -d ', topDir, '/')
+  cmd1 <- paste0('Rscript code/create_project_dir.R -s ', sourceDir, ' -d ', topDir, '/')
   print(cmd1)
   system(cmd1)
 } else {
@@ -45,7 +45,7 @@ if(!is.null(sourceDir)){
 # 2. Create clinical file  (if clin_file param is provided)
 if(!is.null(clinical_sheet)){
   print("Create Clinical file...")
-  cmd2 <- paste0('Rscript create_clinfile.R -s ', clinical_sheet, ' -p ', patient, ' -d ', topDir)
+  cmd2 <- paste0('Rscript code/create_clinfile.R -s ', clinical_sheet, ' -p ', patient, ' -d ', topDir)
   print(cmd2)
   system(cmd2)
 } else {

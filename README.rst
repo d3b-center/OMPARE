@@ -51,7 +51,7 @@ Run *create_project.R* script to create and organize project folder under data/.
    
 .. code-block:: bash
 
-	Rscript create_project_dir.R --help
+	Rscript code/create_project_dir.R --help
 
 	Options:
 		-s SOURCEDIR, --sourcedir=SOURCEDIR
@@ -64,7 +64,7 @@ Run *create_project.R* script to create and organize project folder under data/.
 			Show this help message and exit
 
 	# Example for Patient PNOC008-21
-	Rscript create_project.R \
+	Rscript code/create_project.R \
 	--sourcedir /path/to/source/PNOC008-21-cavatica-files \
 	--destdir /path/to/OMPARE/data/PNOC008-21/
 
@@ -72,7 +72,7 @@ Run *create_project.R* script to create and organize project folder under data/.
 
 .. code-block:: bash
 
-	Rscript create_clinfile.R --help
+	Rscript code/create_clinfile.R --help
 
 	Options:
 		-s SHEET, --sheet=SHEET
@@ -85,7 +85,7 @@ Run *create_project.R* script to create and organize project folder under data/.
 			Patient identifier for PNOC008. e.g. PNOC008-1, PNOC008-10 etc
 
 	# Example for Patient PNOC008-21
-	Rscript create_clinfile.R \
+	Rscript code/create_clinfile.R \
 	--sheet data/Reference/Manifest/PNOC008_Manifest.xlsx \
 	--patient PNOC008-21 \
 	--dir /path/to/OMPARE/data/PNOC008-21
