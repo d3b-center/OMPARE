@@ -2,7 +2,8 @@
 # Date: 08/10/2020
 # Function: Script to generate Oncogrid plot
 
-library(ComplexHeatmap)
+suppressPackageStartupMessages(library(ComplexHeatmap))
+
 oncogrid.path <- file.path('data', 'Reference', 'oncogrid')
 oncogrid.path.input <- file.path(oncogrid.path, 'input')
 oncogrid.path.output <- file.path(oncogrid.path, 'output')

@@ -5,11 +5,11 @@
 # create full summary data files of cnv, mutations and fusions
 # This is to be run everytime a new patient comes in - before generating the report
 
-library(dplyr)
-library(stringr)
-library(tidyverse)
-library(readxl)
-library(GenomicRanges)
+suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(stringr))
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(readxl))
+suppressPackageStartupMessages(library(GenomicRanges))
 
 # create output directory
 system('mkdir -p data/Reference/PNOC008/')

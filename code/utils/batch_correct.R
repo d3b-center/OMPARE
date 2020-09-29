@@ -1,7 +1,7 @@
 # Author: Komal S. Rathi
 # Function: Batch correct using ComBat
 
-library(sva)
+suppressPackageStartupMessages(library(sva))
 
 batch.correct <- function(mat, clin) {
   corrected.mat <- suppressWarnings(ComBat(dat = log2(mat + 1), batch = clin$batch))

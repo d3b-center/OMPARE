@@ -1,7 +1,7 @@
 # Author: Komal S. Rathi
 # Date: 08/10/2020
 # Function: Script to generat Oncogrid matrix/additional files using CNV, SNV, Fusion and Expression data
-library(tidyverse)
+suppressPackageStartupMessages(library(tidyverse))
 
 # Directories
 # oncogrid directories

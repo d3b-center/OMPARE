@@ -1,7 +1,7 @@
 # ssGSEA of top 20 genomically similar patients
 # takes TPM data
-library(msigdbr) ## Contains the msigDB gene sets
-library(GSVA)    ## Performs GSEA analysis
+suppressPackageStartupMessages(library(msigdbr)) ## Contains the msigDB gene sets
+suppressPackageStartupMessages(library(GSVA))    ## Performs GSEA analysis
 
 ssGSEA <- function(topCor, fname) {
   
