@@ -282,7 +282,7 @@ This single script will take the raw data as input and create output files by:
 Upload to data-delivery project
 ===============================
 
-This script uploads the `Summary/*._summary.xlsx`, `Summary/*._umap_output.rds`, `Reports/*.html` output to the data delivery project folder on cavatica. 
+This script uploads the ``Summary/*._summary.xlsx``, ``Summary/*._umap_output.rds``, ``Reports/*.html`` output to the data delivery project folder on cavatica. 
 
 .. code-block:: bash
 
