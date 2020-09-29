@@ -69,9 +69,7 @@ tisProfile <- function(fname, score){
         total.norm <- v$E
       }  else {
         mat <-  data.matrix(log2(mat + 1))
-        total.norm <- normalize.quantiles(mat)
-        rownames(total.norm) <- rownames(mat)
-        colnames(total.norm) <- colnames(mat)
+        total.norm <- normalize.quantiles(mat, copy = FALSE)
         total.norm <- as.data.frame(total.norm)
       }
       
@@ -90,8 +88,8 @@ tisProfile <- function(fname, score){
       
       return(total.norm)
     }
-    # total <- normalize.mat(mat = total, meta = total.meta, genelist = tis$Genes, method = "quantile")
-    total <- normalize.mat(mat = total, meta = total.meta, genelist = tis$Genes, method = "voom")
+    # normalize.quantiles is faster than voom
+    total <- normalize.mat(mat = total, meta = total.meta, genelist = tis$Genes, method = "quantile") 
     write.table(total, file = fname, sep = "\t", quote = F, row.names = F)
   } else {
     total  <- read.delim(fname, stringsAsFactors = F)
