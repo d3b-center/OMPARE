@@ -64,14 +64,13 @@ cmd4 <- 'Rscript code/gsea_enrichment.R'
 print(cmd4)
 system(cmd4)
 
-
-# 4. Generate excel summary
+# 5. Generate excel summary
 print("Generate excel summary...")
 cmd5 <- paste0('Rscript code/tabulate_excel.R -i ', topDir, ' -o ', paste0(patient, '_summary.xlsx'))
 print(cmd5)
 system(cmd5)
 
-# 5. Run html reports
+# 6. Run html reports
 # fusion_method can be either arriba, star, both or not specified
 print("Run reports...")
 if(dir.exists(topDir)){
