@@ -29,7 +29,6 @@ Prerequisites
 .. code-block:: bash
 
 	# get reference data from s3
-	# currently data is available in the repo. In the future, we will pull from s3
 	aws s3 --profile saml s3://d3b-bix-dev-data-bucket/PNOC008/Reference /path/to/OMPARE/data/Reference
 
 Project Organization
