@@ -176,9 +176,9 @@ Steps (3) and (4) should create a folder structure with corresponding files as s
 .. code-block:: bash
 
 	# topDir is the project directory of current patient
-	# fusion_method is the fusion method. Allowed values: ``star``, ``arriba``, ``both`` or not specified. (Optional) 
+	# fusion_method is the fusion method. Allowed values: star, arriba, both or not specified. (Optional) 
 	# set_title is the title for the report. (Optional)
-	# snv_pattern is one of the six values for simple variants: ``lancet``, ``mutect2``, ``strelka2``, ``vardict``, ``consensus``, ``all`` (all four callers together)
+	# snv_pattern is one of the six values for simple variants: lancet, mutect2, strelka2, vardict, consensus, all (all four callers together)
 	# tmb (Tumor mutational burden) is set to 77.46.
 	setwd(/path/to/OMPARE)
 	callers <- c("lancet", "mutect2", "strelka2", "vardict", "consensus", "all")
