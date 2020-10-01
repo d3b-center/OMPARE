@@ -10,13 +10,13 @@ genomicSummary <- function(snv_pattern) {
       nrow()
     
     # highly upreg genes (z-score > 3)
-    numTranscripts <- RNASeqAnalysisOut[[1]][[2]] %>%
+    numTranscripts <- RNASeqAnalysisOut$diffexpr.top20 %>%
       filter(Z_Score > 3) %>%
       nrow()
     
     # adj. pval < 0.05 (highly significant pathways)
-    numPathways <- RNASeqAnalysisOut[[2]][[2]] %>%
-      filter(ADJ_P_VALUE < 0.05) %>%
+    numPathways <- RNASeqAnalysisOut$pathways %>%
+      filter(ADJ_P_VAL < 0.05) %>%
       nrow()
     
     tmpVals <- c(highConfLesions, numLesions, numTranscripts, numPathways)

@@ -3,7 +3,7 @@
 #############################
 
 plotGenes <- function(myRNASeqAnalysisOut = RNASeqAnalysisOut) {
-  geneData <- myRNASeqAnalysisOut[[1]][[2]]
+  geneData <- myRNASeqAnalysisOut$diffexpr.top20
   geneData <- geneData %>%
     rownames_to_column("Gene") %>%
     mutate(Direction = ifelse(Z_Score > 0, "Up", "Down")) %>%

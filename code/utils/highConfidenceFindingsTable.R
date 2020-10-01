@@ -9,12 +9,12 @@ highConfidenceFindingsTable <- function(snv_pattern) {
 
   # expression is critical
   if(exists('expData')){
-    rnaEvidence <- RNASeqAnalysisOut[[3]] %>%
+    rnaEvidence <- RNASeqAnalysisOut$TPM %>%
       rownames_to_column("Gene")
     
     # Get only significant sets with adj. pvalue < 0.05
-    sigGeneSets <- RNASeqAnalysisOut[[2]][[2]] %>%
-      filter(ADJ_P_VALUE < 0.05)  %>%
+    sigGeneSets <- RNASeqAnalysisOut$pathways %>%
+      filter(ADJ_P_VAL < 0.05)  %>%
       dplyr::select(Pathway, Direction) %>%
       inner_join(geneSetTS, by = c("Pathway" = "ind"))  %>%
       mutate(Pathway = paste0(Pathway, "(", Direction, ")")) %>%

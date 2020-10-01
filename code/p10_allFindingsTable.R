@@ -2,8 +2,11 @@
 # All Findings Table
 #####################
 
-source('code/utils/filterCNV.R')
-source('code/utils/annotateMutations.R')
+# directories
+root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
+source(file.path(root_dir, "code", "utils", "define_directories.R"))
+source(file.path(utils_dir, 'filterCNV.R'))
+source(file.path(utils_dir, 'annotateMutations.R'))
 
 allFindingsTable <- function(snv_pattern) {
   # Add Mutations
@@ -73,7 +76,7 @@ allFindingsTable <- function(snv_pattern) {
   
   # Add Expression
   if(exists('expData')){
-    tmpExp <- RNASeqAnalysisOut[[1]][[2]] %>%
+    tmpExp <- RNASeqAnalysisOut$diffexpr.top20 %>%
       rownames_to_column("Aberration") %>%
       mutate(Type = c(rep("Outlier-High (mRNA)", 20), rep("Outlier-Low (mRNA)", 20)),
              Details = paste0("Z-score: ", round(Z_Score, 2)," | TPM: ",TPM),
@@ -85,20 +88,18 @@ allFindingsTable <- function(snv_pattern) {
   
   # Add Pathway
   if(exists('expData')){
-    tmpPath <- RNASeqAnalysisOut[[2]][[2]]
+    tmpPath <- RNASeqAnalysisOut$pathways
     tmpPathUp <- tmpPath %>%
       filter(Direction == "Up") %>%
-      arrange(ADJ_P_VALUE) %>%
-      top_n(20)
+      top_n(20, wt = rev(ADJ_P_VAL))
     tmpPathDown <- tmpPath %>%
       filter(Direction == "Down") %>%
-      arrange(ADJ_P_VALUE) %>%
-      top_n(20)
+      top_n(20, wt = rev(ADJ_P_VAL))
     tmpPath <- rbind(tmpPathUp, tmpPathDown)
     tmpPath <- tmpPath %>%
       mutate(Aberration = Pathway,
              Type = c(rep("Pathway Up", 20), rep("Pathway Down", 20)),
-             Details = paste0("P-Value: ", formatC(P_VAL, format = "e", digits = 2)),
+             Details = paste0("Adj. P-Value: ", formatC(ADJ_P_VAL, format = "e", digits = 2)),
              Variant_Properties = "") %>%
       dplyr::select(Aberration, Type, Details, Variant_Properties)
   } else {

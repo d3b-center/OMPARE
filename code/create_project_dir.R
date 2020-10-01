@@ -19,47 +19,53 @@ sourceDir <- opt$sourcedir
 topDir <- opt$destdir
 
 # specify destination directories
-cnvdir <- file.path(topDir, 'CNV')
 clinicaldir <- file.path(topDir, 'Clinical')
+cnvdir <- file.path(topDir, 'CNV')
 exprdir <- file.path(topDir, 'ExpressionGene')
 fusionsdir <- file.path(topDir, 'Fusions')
+mutdir <- file.path(topDir, 'MutationsMAF')
 immunescores <- file.path(topDir, 'ImmuneScores')
 gsvascores  <-  file.path(topDir, 'GSVA')
-mutdir <- file.path(topDir, 'MutationsMAF')
 reports <- file.path(topDir, 'Reports')
 summary <- file.path(topDir, 'Summary')
 
-# create destination directories
-system(paste0('mkdir -p ', cnvdir))
-system(paste0('mkdir -p ', clinicaldir))
-system(paste0('mkdir -p ', exprdir))
-system(paste0('mkdir -p ', fusionsdir))
-system(paste0('mkdir -p ', immunescores))
-system(paste0('mkdir -p ', gsvascores))
-system(paste0('mkdir -p ', mutdir))
-system(paste0('mkdir -p ', reports))
-system(paste0('mkdir -p ', summary))
+# create directories to move input files
+dir.create(clinicaldir, showWarnings = F, recursive = T)
+dir.create(cnvdir, showWarnings = F, recursive = T)
+dir.create(exprdir, showWarnings = F, recursive = T)
+dir.create(fusionsdir, showWarnings = F, recursive = T)
+dir.create(mutdir, showWarnings = F, recursive = T)
+
+# create directories to save output
+dir.create(immunescores, showWarnings = F, recursive = T)
+dir.create(gsvascores, showWarnings = F, recursive = T)
+dir.create(reports, showWarnings = F, recursive = T)
+dir.create(summary, showWarnings = F, recursive = T)
 
 # organize data
 # copy number
 cmd <- file.path(sourceDir, '*.{CNVs.p.value.txt,controlfreec.ratio.txt}')
-cmd <- paste0('mv ', cmd, ' ', cnvdir)
+cmd <- paste('mv', cmd, cnvdir)
 system(cmd)
+
 # clinical file
 cmd <- file.path(sourceDir, 'patient_report.txt')
-cmd <- paste0('mv ', cmd, ' ', clinicaldir)
+cmd <- paste('mv', cmd, clinicaldir)
 system(cmd)
+
 # expression
 cmd <- file.path(sourceDir, '*rsem*')
-cmd <- paste0('mv ', cmd, ' ', exprdir)
+cmd <- paste('mv', cmd, exprdir)
 system(cmd)
+
 # fusions
 cmd <- file.path(sourceDir, '*fusion*')
-cmd <- paste0('mv ', cmd, ' ', fusionsdir)
+cmd <- paste('mv', cmd, fusionsdir)
 system(cmd)
+
 # mutations - somatic/germline
 cmd <- file.path(sourceDir, '*.{maf,hg38_multianno.txt.gz}')
-cmd <- paste0('mv ', cmd, ' ', mutdir)
+cmd <- paste('mv', cmd, mutdir)
 system(cmd)
 
 

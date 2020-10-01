@@ -4,13 +4,18 @@
 options(java.parameters = c("-XX:+UseConcMarkSweepGC", "-Xmx8192m"))
 gc()
 
+# directories
+root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
+source(file.path(root_dir, "code", "utils", "define_directories.R"))
+gsea.dir <- file.path(ref_dir, 'GSEA')
+
 # function to get upregulated pathways from top genomically similar patients  
 tabulate_pathways <- function(allCor, prefix, comparison) {
   
   # output file names
-  fname1 <- paste0(topDir, '/Summary/', prefix, 'sig_pathways_gen_similar.txt')
+  fname1 <- file.path(topDir, 'Summary', paste0(prefix, 'sig_pathways_gen_similar.txt'))
   if(comparison == "pediatric"){
-    fname2 <- paste0(topDir, '/Summary/', prefix, 'cnv_pathways.txt')
+    fname2 <- file.path(topDir, 'Summary', paste0(prefix, 'cnv_pathways.txt'))
   }
   
   # check status
@@ -20,16 +25,16 @@ tabulate_pathways <- function(allCor, prefix, comparison) {
     patSamples <- c(patSamples, sampleInfo$subjectID)
     
     # 008 comparisons
-    gtexBrain <- readRDS('data/Reference/GSEA/PNOC008_vs_GTExBrain.RDS')
+    gtexBrain <- readRDS(file.path(gsea.dir, 'PNOC008_vs_GTExBrain.RDS'))
     gtexBrain <- gtexBrain[patSamples]
     gtexBrain <- plyr::ldply(gtexBrain, .fun = function(x) return(x[[1]]), .id = 'sample_name')
-    pbtaAll <- readRDS('data/Reference/GSEA/PNOC008_vs_PBTA.RDS')
+    pbtaAll <- readRDS(file.path(gsea.dir, 'PNOC008_vs_PBTA.RDS'))
     pbtaAll <- pbtaAll[patSamples]
     pbtaAll <- plyr::ldply(pbtaAll, .fun = function(x) return(x[[1]]), .id = 'sample_name')
-    pbtaHGG <- readRDS('data/Reference/GSEA/PNOC008_vs_PBTA_HGG.RDS')
+    pbtaHGG <- readRDS(file.path(gsea.dir, 'PNOC008_vs_PBTA_HGG.RDS'))
     pbtaHGG <- pbtaHGG[patSamples]
     pbtaHGG <- plyr::ldply(pbtaHGG, .fun = function(x) return(x[[1]]), .id = 'sample_name')
-    tcgaGBM <- readRDS('data/Reference/GSEA/PNOC008_vs_TCGA_GBM.RDS')
+    tcgaGBM <- readRDS(file.path(gsea.dir, 'PNOC008_vs_TCGA_GBM.RDS'))
     tcgaGBM <- tcgaGBM[patSamples]
     tcgaGBM <- plyr::ldply(tcgaGBM, .fun = function(x) return(x[[1]]), .id = 'sample_name')
     patPath <- rbind(pbtaAll, pbtaHGG, gtexBrain, tcgaGBM)
@@ -40,13 +45,13 @@ tabulate_pathways <- function(allCor, prefix, comparison) {
       pbtaSamples <- allCor[grep("^BS_", allCor$nearest_neighbor),'nearest_neighbor']
       
       # comparisons
-      gtexBrain <- readRDS('data/Reference/GSEA/PBTA_vs_GTExBrain.RDS')
+      gtexBrain <- readRDS(file.path(gsea.dir, 'PBTA_vs_GTExBrain.RDS'))
       gtexBrain <- gtexBrain[pbtaSamples]
       gtexBrain <- plyr::ldply(gtexBrain, .fun = function(x) return(x[[1]]), .id = 'sample_name')
-      pbtaAll <- readRDS('data/Reference/GSEA/PBTA_vs_PBTA.RDS')
+      pbtaAll <- readRDS(file.path(gsea.dir, 'PBTA_vs_PBTA.RDS'))
       pbtaAll <- pbtaAll[pbtaSamples]
       pbtaAll <- plyr::ldply(pbtaAll, .fun = function(x) return(x[[1]]), .id = 'sample_name')
-      pbtaHGG <- readRDS('data/Reference/GSEA/PBTA_vs_PBTAHGG.RDS')
+      pbtaHGG <- readRDS(file.path(gsea.dir, 'PBTA_vs_PBTAHGG.RDS'))
       pbtaHGG <- pbtaHGG[pbtaSamples]
       pbtaHGG <- plyr::ldply(pbtaHGG, .fun = function(x) return(x[[1]]), .id = 'sample_name')
       tumorPath <- rbind(pbtaAll, pbtaHGG, gtexBrain)
@@ -54,10 +59,10 @@ tabulate_pathways <- function(allCor, prefix, comparison) {
       # top 20 genomically similar TCGA
       tcgaSamples <- allCor[grep("^TCGA-", allCor$nearest_neighbor),'nearest_neighbor']
       
-      gtexBrain <- readRDS('data/Reference/GSEA/TCGA_GBM_vs_GTExBrain.RDS')
+      gtexBrain <- readRDS(file.path(gsea.dir, 'TCGA_GBM_vs_GTExBrain.RDS'))
       gtexBrain <- gtexBrain[tcgaSamples]
       gtexBrain <- plyr::ldply(gtexBrain, .fun = function(x) return(x[[1]]), .id = 'sample_name')
-      tcgaGBM <- readRDS('data/Reference/GSEA/TCGA_GBM_vs_TCGA_GBM.RDS')
+      tcgaGBM <- readRDS(file.path(gsea.dir, 'TCGA_GBM_vs_TCGA_GBM.RDS'))
       tcgaGBM <- tcgaGBM[tcgaSamples]
       tcgaGBM <- plyr::ldply(tcgaGBM, .fun = function(x) return(x[[1]]), .id = 'sample_name')
       tumorPath <- rbind(gtexBrain, tcgaGBM)

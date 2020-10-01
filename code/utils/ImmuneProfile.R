@@ -4,9 +4,6 @@
 
 calc.immune.scores <- function(fullmat, fname){
   # create directory under project directory
-  dir <- paste0(topDir,'/ImmuneScores')
-  cmd <- paste0("mkdir -p ", dir)
-  system(cmd)
   raw.scores <- capture.output(rawEnrichmentAnalysis(as.matrix(fullmat),
                                               xCell.data$signatures,
                                               xCell.data$genes, file.name = fname, 

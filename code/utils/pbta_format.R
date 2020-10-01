@@ -2,6 +2,11 @@
 # Format PBTA data
 #####################
 
+# directories
+root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
+source(file.path(root_dir, "code", "utils", "define_directories.R"))
+pbta.dir <- file.path(ref_dir, 'PBTA')
+
 # PBTA clinical
 pbta.clinData <- pbta.clinData %>%
   filter(experimental_strategy == "RNA-Seq") %>%
@@ -24,11 +29,12 @@ pbta.mat <- pbta.mat[,rownames(pbta.clinData)]
 
 # Correct for batch effect: study_id + library_name
 pbta.clinData$batch <- paste0(pbta.clinData$study_id,'_', pbta.clinData$library_name)
-if(snv_pattern != "lancet" & file.exists('data/Reference/PBTA/pbta_pnoc008_corrected_matrix.rds')){
-  pbta.mat <- readRDS('data/Reference/PBTA/pbta_pnoc008_corrected_matrix.rds')
+fname <- file.path(pbta.dir, 'pbta_pnoc008_corrected_matrix.rds')
+if(snv_pattern != "lancet" & file.exists(fname)){
+  pbta.mat <- readRDS(fname)
 } else {
   pbta.mat <- quiet(batch.correct(mat = pbta.mat, clin = pbta.clinData))
-  saveRDS(pbta.mat, file = 'data/Reference/PBTA/pbta_pnoc008_corrected_matrix.rds')
+  saveRDS(pbta.mat, file = fname)
 }
 
 # keep full matrix for ImmuneProfile.R (only PBTA + PNOC patient of interest)
@@ -65,7 +71,7 @@ pbta.mat.tsne$CV <- NULL # Remove cv
 
 # for clustering
 # use UMAP correlation
-pbta.umap.output <- file.path(topDir, 'Summary/pbta_pnoc008_umap_output.rds')
+pbta.umap.output <- file.path(topDir, 'Summary', 'pbta_pnoc008_umap_output.rds')
 if(file.exists(pbta.umap.output)){
   pbta.umap <- readRDS(file = pbta.umap.output)
 } else {

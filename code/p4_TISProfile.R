@@ -2,20 +2,26 @@
 # Date:  05/11/2020
 # Function:  TCGA + OpenPBTA + PNOC Quantile Norm -> Avg.
 
+# directories
+root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
+source(file.path(root_dir, "code", "utils", "define_directories.R"))
+pbta.dir <- file.path(ref_dir, "PBTA")
+tcga.dir <- file.path(ref_dir, "TCGA")
+
 tisProfile <- function(fname, score){
   
   if(!file.exists(fname)){
     # TCGA counts
-    tcga <- readRDS("data/Reference/TCGA/TCGA_matrix_counts.RDS")
+    tcga <- readRDS(file.path(tcga.dir, "TCGA_matrix_counts.RDS"))
     
     # PBTA counts  (polyA + stranded count data collapsed to gene symbols)
-    pbta.full <- readRDS('data/Reference/PBTA/pbta-gene-expression-rsem-counts-collapsed.polya.stranded.rds')
+    pbta.full <- readRDS(file.path(pbta.dir, 'pbta-gene-expression-rsem-counts-collapsed.polya.stranded.rds'))
     
     # PNOC008 expression
     pnoc008 <- expData.counts[,sampleInfo$subjectID, drop=FALSE]
 
     # read TIS signature
-    tis <- read.delim('data/Reference/TIS_geneset.txt', stringsAsFactors = F)
+    tis <- read.delim(file.path(ref_dir, 'TIS_geneset.txt'), stringsAsFactors = F)
     
     # merge on common genes from TIS signature
     common.genes <- intersect(intersect(rownames(tcga), rownames(pbta.full)), rownames(pnoc008))
@@ -25,13 +31,13 @@ tisProfile <- function(fname, score){
     total <- cbind(tcga, pbta.full, pnoc008)
     
     # now read meta data
-    tcga.meta <- readRDS('data/Reference/TCGA/TCGA_meta.RDS')
+    tcga.meta <- readRDS(file.path(tcga.dir, 'TCGA_meta.RDS'))
     tcga.meta <- tcga.meta %>%
       rownames_to_column("sample_id") %>%
       mutate(Type = "Adult",
              study_id = "TCGA") %>%
       dplyr::select(sample_id, disease, Type, study_id, library_name)
-    pbta.meta <- read.delim('data/Reference/PBTA/pbta-histologies.tsv')
+    pbta.meta <- read.delim(file.path(pbta.dir, 'pbta-histologies.tsv'))
     pbta.meta <- pbta.meta %>%
       filter(experimental_strategy  == "RNA-Seq") %>%
       mutate(sample_id = Kids_First_Biospecimen_ID, 

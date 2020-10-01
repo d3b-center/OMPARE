@@ -22,7 +22,7 @@ Prerequisites
 .. code-block:: bash
 
 	# install packages
-	Rscript code/install_pkgs.R
+	Rscript code/utils/install_pkgs.R
 
 2. Reference Data
    

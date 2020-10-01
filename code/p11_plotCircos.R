@@ -40,9 +40,8 @@ plotCircos <- function(topDir = topDir) {
   }
   
   # Add Expression
-  tmpExp <- data.frame(names(RNASeqAnalysisOut[[1]][[1]]), RNASeqAnalysisOut[[1]][[1]])
-  tmpExp[,2] <- ifelse(tmpExp[,2]>5, 5, ifelse(tmpExp[,2]<(-5), -5, tmpExp[,2]))
-  colnames(tmpExp) <- c("GeneName", "Expression")
+  tmpExp <- data.frame('GeneName' = names(RNASeqAnalysisOut$expr.genes.z.score), 'Expression' = RNASeqAnalysisOut$expr.genes.z.score)
+  tmpExp$Expression <- ifelse(tmpExp$Expression > 5, 5, ifelse(tmpExp$Expression<(-5), -5, tmpExp$Expression))
   RCircos.Heatmap.Data <- merge(chrMap, tmpExp, by.x="HGNC.symbol", by.y="GeneName")
   colnames(RCircos.Heatmap.Data) <- c("GeneName", "chromStart", "chromEnd", "Chromosome", "Expression")
   RCircos.Heatmap.Data <- RCircos.Heatmap.Data[!grepl("CHR_", RCircos.Heatmap.Data[,4]), ]

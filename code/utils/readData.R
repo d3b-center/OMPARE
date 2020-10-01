@@ -3,9 +3,14 @@
 # Save all data to global env
 #############################
 
-source('code/load_reference.R') # load reference data
-source('code/utils/filterFusions.R')  # load filter fusions script to filter fusions
-source('code/utils/createCopyNumber.R') # load script to map copynumber to gene symbol
+# directories
+root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
+source(file.path(root_dir, "code", "utils", "define_directories.R"))
+
+# source functions
+source(file.path(utils_dir, 'load_reference.R'))    # load reference data
+source(file.path(utils_dir, 'filterFusions.R'))     # load filter fusions script to filter fusions
+source(file.path(utils_dir, 'createCopyNumber.R'))  # load script to map copy number to gene symbol
 
 readData <- function(topDir, fusion_method = c("star","arriba"), snv_pattern = "all"){
   
@@ -96,6 +101,11 @@ readData <- function(topDir, fusion_method = c("star","arriba"), snv_pattern = "
       separate(gene_id, c("gene_id", "gene_symbol"), sep = "\\_", extra = "merge") %>%
       mutate(gene_id = gsub('[.].*', '', gene_id))  %>%
       unique()
+    
+    # filter HIST genes
+    expData.full <- expData.full[grep('^HIST', expData.full$gene_symbol, invert = T),]
+    
+    # tpm data
     expData <- expData.full %>% 
       arrange(desc(TPM)) %>% 
       distinct(gene_symbol, .keep_all = TRUE) %>%
@@ -105,6 +115,7 @@ readData <- function(topDir, fusion_method = c("star","arriba"), snv_pattern = "
     rownames(expData) <- expData$gene_symbol
     assign("expData", expData, envir = globalenv())
     
+    # count data
     expData.counts <- expData.full %>%
       filter(expData.full$gene_id  %in% expData$gene_id) %>%
       mutate(!!sampleInfo$subjectID := expected_count) %>%

@@ -1,0 +1,174 @@
+# Author: Komal S. Rathi
+# Accessory functions for pathway enrichment
+
+# z-score and return only patient's value (i.e. last column)
+getZ <- function(x) {
+  x <- log2(x+1)
+  out <- (x-mean(x))/sd(x)
+  return(out[length(out)])
+}
+
+# get outliers
+getAllOutliers <- function(myMergeDF, getTop, thresh, comparison, cancerGeneNames) {
+  
+  # Filter in Patient: TPM > 10
+  myMergeDF <- myMergeDF[myMergeDF$SampleX > 10,] # 5695 1153
+  
+  # z-score
+  output <- apply(myMergeDF, FUN=getZ, MARGIN=1) # 5695
+  
+  # full data
+  # combine TPM and z-score for sample of interest
+  output.df <- data.frame(Z_Score = output, TPM = myMergeDF[names(output),"SampleX"])
+  output.df$DE <- ""
+  output.df$DE[which(output.df$Z_Score < (-1*thresh))] <- "Down"
+  output.df$DE[which(output.df$Z_Score > thresh)] <- "Up"
+  output.df$Comparison <- comparison
+  output.df$CancerGene <- ifelse(rownames(output.df) %in% cancerGeneNames, TRUE, FALSE)
+  
+  # top 20 Up/Down genes 
+  outputCanc <- output[intersect(names(output), cancerGeneNames)] # filter to cancer gene list
+  outputDown <- sort(outputCanc)[1:getTop] # top 20 down
+  outputUp <- sort(outputCanc, T)[1:getTop] # top 20 up
+  outputUpDF <- data.frame(Z_Score = outputUp, TPM = myMergeDF[names(outputUp),"SampleX"])
+  outputDownDF <- data.frame(Z_Score = outputDown, TPM = myMergeDF[names(outputDown),"SampleX"])
+  diffexpr.top20 = rbind(outputUpDF, outputDownDF)
+  
+  return(list(expr.genes.z.score = output,
+              diffexpr.top20 = diffexpr.top20,
+              output.df = output.df))
+}
+
+# functional enrichment
+funcEnrichment <- function(genes, sets, qval=.25, numRet=5, myN=20000, myUniverse=NULL) {
+  
+  out <- lapply(sets, FUN = runHypGeom, genes = genes, n=myN, universe=myUniverse)
+  out <- data.frame(out)
+  out <- data.frame(t(out))
+  out[,4] <- as.numeric(as.character(out[,4]))
+  out$ADJ_P_VAL <- p.adjust(out[,4], method="BH")
+  colnames(out)[1:5] <- c("SET_SIZE", "NUM_GENES_INPUT", "OVERLAP", "P_VAL", "GENES")
+  out$Pathway <- rownames(out)
+  return(out)
+  
+}
+
+# hypergeometric test
+runHypGeom <- function(set, genes, n = 20000, universe = NULL) {
+  
+  if(!is.null(universe)) {
+    set <- intersect(set, universe)
+  }
+  
+  # number of white balls
+  x <- length(intersect(genes, set))
+  ngenes <- as.character(toString(intersect(genes, set)))
+  
+  # white balls
+  m <- length(genes)
+  
+  # black balls
+  n2 <- n-m
+  
+  # balls drawn from the urn
+  k <- length(set)
+  
+  out <- phyper(x-1, m, n2, k, lower.tail=F)
+  setSize <- k
+  overLap <- x
+  numGenes <- m
+  
+  myRet <- c(setSize, numGenes, overLap, out, ngenes)
+  return(myRet)
+}
+
+# function to tabulate DE and Pathway results
+runRNASeqAnalysis <- function(exp.data, refData, thresh = 2, comparison, single_sample = FALSE) {
+  
+  # current sample of interest
+  smp <- unique(as.character(exp.data$Sample))
+  
+  # add genes as rownames and remove sample name
+  exp.data <- exp.data %>%
+    remove_rownames() %>%
+    column_to_rownames('Gene') %>%
+    dplyr::select(-c(Sample))
+  
+  # now remove the current sample from refData
+  refData <- refData[,grep(smp, colnames(refData), invert = T, value = T)]
+  
+  # Merge refData and sample of interest data on common genes
+  intGenesTmp <- intersect(rownames(refData), rownames(exp.data))
+  mergeDF <- cbind(refData[intGenesTmp,], exp.data[intGenesTmp, "TPM"])
+  
+  # Collapse to unique gene symbols
+  # Matrix of reference data and sample of interest TPM data
+  colnames(mergeDF)[ncol(mergeDF)] <- "SampleX"
+  
+  # Calculate Gene Outliers in Patient (top 20 Up and Down)
+  geneAnalysisOut <- getAllOutliers(myMergeDF = mergeDF, getTop = 20, thresh = thresh, comparison = comparison, cancerGeneNames = cancerGenes$Gene_Symbol)
+  
+  # Calculate Pathway Outliers
+  # Get Up and Down Genes
+  expr.genes.z.score <- geneAnalysisOut$expr.genes.z.score
+  upGenes <- names(expr.genes.z.score)[which(expr.genes.z.score > thresh)]
+  downGenes <- names(expr.genes.z.score)[which(expr.genes.z.score < (-1*thresh))]
+  
+  # If not enough genes take top 1000
+  if(length(upGenes) < 1000) {
+    upGenes <- names(sort(geneAnalysisOut[[1]], decreasing = TRUE))[1:1000]
+  }
+  if(length(downGenes) < 1000) {
+    downGenes <- names(sort(geneAnalysisOut[[1]], decreasing = FALSE))[1:1000]
+  }
+  genes.df = list("UpGenes" = upGenes, "DownGenes" = downGenes)
+  
+  # up pathways
+  upPathways <- funcEnrichment(upGenes, geneSet, qval = 1, myN = 25000, myUniverse = rownames(mergeDF))
+  upPathways <- upPathways %>%
+    mutate(Direction = "Up") %>%
+    filter(ADJ_P_VAL < 0.05) %>%
+    arrange(ADJ_P_VAL)
+  
+  # down pathways
+  downPathways <- funcEnrichment(downGenes, geneSet, qval = 1, myN = 25000, myUniverse = rownames(mergeDF))
+  downPathways <- downPathways %>%
+    mutate(Direction = "Down") %>%
+    filter(ADJ_P_VAL < 0.05) %>%
+    arrange(ADJ_P_VAL)
+  
+  # full pathway dataframe
+  pathway.df <- rbind(upPathways, downPathways)
+  pathway.df <- pathway.df[,c("Pathway", "GENES", "SET_SIZE", "NUM_GENES_INPUT", "OVERLAP", "P_VAL", "ADJ_P_VAL", "Direction")]
+  pathway.df$Comparison <- comparison
+  
+  # expand gene names
+  pathway.df.exp <- pathway.df %>%
+    separate_rows(GENES, convert = TRUE) %>%
+    dplyr::select(Pathway, GENES)
+  
+  # now for the full output.df, add drug info and pathway info
+  output.df <- geneAnalysisOut$output.df
+  output.df$Gene_name <- rownames(output.df)
+  output.df <- merge(output.df, dgidb, by = 'Gene_name', all.x = TRUE)
+  output.df <- merge(output.df, pathway.df.exp, by.x = 'Gene_name', by.y = 'GENES', all.x = TRUE)
+  output.df <- output.df %>%
+    group_by(Gene_name) %>%
+    mutate(Pathway = toString(Pathway)) %>%
+    unique() %>%
+    filter(DE != "")
+  
+  if(single_sample == TRUE){
+    finalOut <- list(pathways = pathway.df, 
+                     genes = output.df,
+                     diff.genes = genes.df,
+                     TPM = mergeDF[ncol(mergeDF)],
+                     expr.genes.z.score = geneAnalysisOut$expr.genes.z.score,
+                     diffexpr.top20 = geneAnalysisOut$diffexpr.top20)
+  } else {
+    finalOut <- list(pathways = pathway.df, 
+                     genes = output.df)
+  }
+  
+  return(finalOut)
+}

@@ -2,6 +2,11 @@
 # Format TCGA data
 #####################
 
+# directories
+root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
+source(file.path(root_dir, "code", "utils", "define_directories.R"))
+tcga.dir <- file.path(ref_dir, 'TCGA')
+
 # TCGA specific
 tcga.gbm.clinData <- tcga.gbm.clinData %>%
   dplyr::select(-c(overall_survival_time_in_days, vital_status)) %>%
@@ -18,11 +23,12 @@ tcga.gbm.mat <- tcga.gbm.mat[,rownames(tcga.gbm.clinData)]
 
 # Correct for batch effect: study_id + library_name
 tcga.gbm.clinData$batch <- paste0(tcga.gbm.clinData$study_id,'_', tcga.gbm.clinData$library_name)
-if(snv_pattern != "lancet" & file.exists('data/Reference/TCGA/tcga_gbm_pnoc008_corrected_matrix.rds')){
-  tcga.gbm.mat <- readRDS('data/Reference/TCGA/tcga_gbm_pnoc008_corrected_matrix.rds')
+fname <- file.path(tcga.dir, 'tcga_gbm_pnoc008_corrected_matrix.rds')
+if(snv_pattern != "lancet" & file.exists(fname)){
+  tcga.gbm.mat <- readRDS(fname)
 } else {
   tcga.gbm.mat <- quiet(batch.correct(mat = tcga.gbm.mat, clin = tcga.gbm.clinData))
-  saveRDS(tcga.gbm.mat, file = 'data/Reference/TCGA/tcga_gbm_pnoc008_corrected_matrix.rds')
+  saveRDS(tcga.gbm.mat, file = fname)
 }
 
 # keep full matrix for ImmuneProfile.R (only TCGA + PNOC patient of interest)
@@ -59,7 +65,7 @@ tcga.gbm.mat.tsne$CV <- NULL # Remove cv
 
 # for clustering
 # use UMAP correlation
-tcga.umap.output <- file.path(topDir, 'Summary/tcga_pnoc008_umap_output.rds')
+tcga.umap.output <- file.path(topDir, 'Summary', 'tcga_pnoc008_umap_output.rds')
 if(file.exists(tcga.umap.output)){
   tcga.umap <- readRDS(file = tcga.umap.output)
 } else {

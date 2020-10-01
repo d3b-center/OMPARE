@@ -12,7 +12,7 @@ plotNetwork <- function(numGenes = 250) {
     nodeGenesMut <- c(nodeGenesMut, c(fusData[,"HeadGene"]), c(fusData[,"TailGene"])) # Fusions
   }
   if(exists('expData')){
-    rnaGenes <-RNASeqAnalysisOut[[1]][[1]]
+    rnaGenes <-RNASeqAnalysisOut$expr.genes.z.score
     rnaGenes <- data.frame(names(rnaGenes), rnaGenes)
     upGenes <- as.character(rnaGenes[order(-rnaGenes[,2]),][1:numGenes,1])
     downGenes <- as.character(rnaGenes[order(rnaGenes[,2]),][1:numGenes,1])

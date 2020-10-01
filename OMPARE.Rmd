@@ -25,13 +25,20 @@ title: `r params$set_title`
 knitr::opts_chunk$set(comment = NA)
 ```
 
+```{r define_dirs}
+# directories
+root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
+source(file.path(root_dir, "code", "utils", "define_directories.R"))
+```
+
+
 ```{r load_libraries}
-source('code/utils/load_libraries.R')
+source(file.path(utils_dir, 'load_libraries.R'))
 ```
 
 ```{r read_data}
 # read input files
-source("code/utils/readData.R")
+source(file.path(utils_dir, "readData.R"))
 topDir <- params$topDir
 fusion_method <- params$fusion_method
 snv_pattern <- params$snv_pattern
@@ -43,7 +50,7 @@ readData(topDir = topDir,
 
 ```{r call_driver}
 # call driver to load other libraries/code
-source("code/driver.R")
+source(file.path(code_dir, "driver.R"))
 ```
 
 Key Clinical Findings (P1)
@@ -53,14 +60,15 @@ Row {data-height=200}
 ### {data-width=200}
 
 ```{r, echo=FALSE, out.width = '100%'}
-knitr::include_graphics("figures/d3b_Logo.png")
+knitr::include_graphics(file.path(fig_dir, "d3b_Logo.png"))
 ```
     
 ### Patient & Sample Information
 
 ```{r patient_info}
-x=kable(patientSampleInfo(), format="html") %>%
-    kable_styling(bootstrap_options = c("bordered", "condensed", "responsive")) %>% column_spec(c(1,3), bold=T, border_left = "2px solid gray", border_right = "2px solid gray")
+x = kable(patientSampleInfo(), format="html") %>%
+  kable_styling(bootstrap_options = c("bordered", "condensed", "responsive")) %>% 
+  column_spec(c(1,3), bold=T, border_left = "2px solid gray", border_right = "2px solid gray")
 gsub("<thead>.*</thead>", "", x)
 ```
 
@@ -70,7 +78,7 @@ Row {data-height=500}
 ### Key Clinical Findings
     
 ```{r key_findings}
-datatable(keyClinicalFindingsTable(), rownames=F, escape = F);
+datatable(keyClinicalFindingsTable(), rownames=F, escape = F)
 ```
 
 Row {data-height=300}
@@ -81,7 +89,7 @@ Row {data-height=300}
 ```{r disease_specific_info}
 dsi <- diseaseSpecificInformation(snv_pattern)
 if(nrow(dsi) > 0){
-  x2=kable(dsi, format="html") %>% 
+  x2 = kable(dsi, format="html") %>% 
     kable_styling(bootstrap_options = c("bordered", "condensed", "responsive")) %>% 
     column_spec(c(1), bold=T, border_left = "2px solid gray", border_right = "2px solid gray")
   gsub("<thead>.*</thead>", "", x2)
@@ -107,7 +115,7 @@ if(exists('mutData.germ')){
 ```{r genomic_summary}
 gs <- genomicSummary(snv_pattern)
 if(nrow(gs) > 0){
-  x2=kable(gs, format="html") %>%
+  x2 = kable(gs, format="html") %>%
     kable_styling(bootstrap_options = c("bordered", "condensed", "responsive")) %>% 
     column_spec(c(1), bold=T, border_left = "2px solid gray", border_right = "2px solid gray")
   gsub("<thead>.*</thead>", "", x2)
@@ -123,7 +131,7 @@ Row {data-height=700}
     
 ```{r plot_genes}
 if(exists('expData')){
-  ggplotly(plotGenes()); 
+  ggplotly(plotGenes()) 
 }
 ```
 
@@ -132,7 +140,7 @@ if(exists('expData')){
 ```{r plot_pathway}
 #Bar chart of genes
 if(exists('expData')){
-  ggplotly(plotPathway());
+  ggplotly(plotPathway())
 }
 ```
 
@@ -167,7 +175,7 @@ Row {data-height=700}
 ```{r immune_profile_pbta, fig.width = 28, fig.height=14}
 if(exists('expData')){
   p <- ImmuneProfile(fullmat = pbta.mat.all, 
-                     fname = paste0(topDir,'/ImmuneScores/rawScores_pediatric.txt'))
+                     fname = file.path(topDir, 'ImmuneScores', 'rawScores_pediatric.txt'))
   ggplotly(p)
 }
 ```
@@ -182,7 +190,7 @@ Row {data-height=700}
 ```{r immune_profile_tcga, fig.width = 28, fig.height=14}
 if(exists('expData')){
   p <- ImmuneProfile(fullmat = tcga.gbm.mat, 
-                     fname = paste0(topDir,'/ImmuneScores/rawScores_adult.txt'))
+                     fname = file.path(topDir, 'ImmuneScores', 'rawScores_adult.txt'))
   ggplotly(p)
 }
 ```
@@ -196,7 +204,7 @@ Row {data-height=700}
     
 ```{r tis_profile, fig.width = 28, fig.height=14}
 if(exists('expData')){
-  p <- tisProfile(fname = paste0(topDir,'/ImmuneScores/tisScores.txt'), 
+  p <- tisProfile(fname = file.path(topDir, 'ImmuneScores', 'tisScores.txt'), 
                   score = 'avg')
   ggplotly(p)
 }
@@ -233,7 +241,7 @@ if(exists('expData')){
 ### Treatment/Outcomes - Genomically Similar Patients
     
 ```{r similar_patients_pbta}
-datatable(getSimilarPatients(allCor = pbta.allCor, clinData = pbta.clinData), rownames=F, escape=F);
+datatable(getSimilarPatients(allCor = pbta.allCor, clinData = pbta.clinData), rownames=F, escape=F)
 ```
 
 Tumor Purity (P7) {data-navmenu="Pediatric Tumors Analysis"}
@@ -245,7 +253,7 @@ Row {data-height=700}
     
 ```{r immune_profile_gs, fig.width = 28, fig.height=14}
 if(exists('expData')){
-  p <- ImmuneProfile(fullmat = pbta.topCor, fname = paste0(topDir,'/ImmuneScores/topCor_rawScores.txt'))
+  p <- ImmuneProfile(fullmat = pbta.topCor, fname = file.path(topDir, 'ImmuneScores', 'topCor_rawScores.txt'))
   ggplotly(p)
 }
 ```
@@ -258,8 +266,8 @@ Row {data-height=500}
 ### Pathway Enrichment (Genomically Similar Patients)
     
 ```{r tabulate_pathways_pediatric}
-gsPath <- tabulate_pathways(allCor = pbta.allCor, prefix = "pediatric", comparison = "pediatric")
-datatable(gsPath[[1]], rownames=F, options = list(pageLength = 10));
+gsPath <- tabulate_pathways(allCor = pbta.allCor, prefix = "pediatric_", comparison = "pediatric")
+datatable(gsPath[[1]], rownames=F, options = list(pageLength = 10))
 ```
 
 Row {data-height=500}
@@ -268,7 +276,7 @@ Row {data-height=500}
 ### CNV Mapping 
 
 ```{r cnv_mapping_pediatric}
-datatable(gsPath[[2]], rownames=F, options = list(pageLength = 10));
+datatable(gsPath[[2]], rownames=F, options = list(pageLength = 10))
 ```
 
 ssGSEA (P9) {data-navmenu="Pediatric Tumors Analysis"}
@@ -280,7 +288,7 @@ Row {data-height=700}
     
 ```{r ssgsea_hgg, fig.width = 28, fig.height=14}
 if(exists('expData')){
-  p <- ssGSEA(topCor = pbta.mat.hgg, fname = paste0(topDir,'/GSVA/ssgsea_rawScores.txt'))
+  p <- ssGSEA(topCor = pbta.mat.hgg, fname = file.path(topDir, 'GSVA', 'ssgsea_rawScores.txt'))
   ggplotly(p)
 }
 ```
@@ -294,7 +302,7 @@ Row {data-height=500}
     
 ```{r rec_alt_genes_pediatric}
 total.alt.table <<- recurrent.alterations(topCor = pbta.topCor)
-datatable(total.alt.table[[1]], rownames=F, options = list(pageLength = 10));
+datatable(total.alt.table[[1]], rownames=F, options = list(pageLength = 10))
 ```
 
 Row {data-height=500}
@@ -303,7 +311,7 @@ Row {data-height=500}
 ### Shared Genes 
 
 ```{r shared_genes_pediatric}
-datatable(total.alt.table[[2]], rownames=F, options = list(pageLength = 10));
+datatable(total.alt.table[[2]], rownames=F, options = list(pageLength = 10))
 ```
 
 Genomically Similar Samples (TCGA) (P6) {data-navmenu="Adult Tumors Analysis"}
@@ -337,7 +345,7 @@ if(exists('expData')){
 ### Treatment/Outcomes - Genomically Similar Patients
     
 ```{r similar_patients_tcga}
-datatable(getSimilarPatients(allCor = tcga.gbm.allCor, clinData = tcga.gbm.clinData), rownames=F, escape=F);
+datatable(getSimilarPatients(allCor = tcga.gbm.allCor, clinData = tcga.gbm.clinData), rownames=F, escape=F)
 ```
 
 Pathway Enrichment (P8) {data-navmenu="Adult Tumors Analysis"}
@@ -348,8 +356,8 @@ Row {data-height=500}
 ### Pathway Enrichment (Genomically Similar Patients)
     
 ```{r tabulate_pathways_adult}
-gsPath <- tabulate_pathways(allCor = tcga.gbm.allCor, prefix = "adult", comparison = "adult")
-datatable(gsPath[[1]], rownames=F, options = list(pageLength = 10));
+gsPath <- tabulate_pathways(allCor = tcga.gbm.allCor, prefix = "adult_", comparison = "adult")
+datatable(gsPath[[1]], rownames=F, options = list(pageLength = 10))
 ```
 
 All Findings (P10)
@@ -360,7 +368,7 @@ Row {data-height=700}
 ### All Findings
     
 ```{r all_findings}
-datatable(allFindingsTable(snv_pattern), rownames=F, escape = F, options = list(pageLength = 10));
+datatable(allFindingsTable(snv_pattern), rownames=F, escape = F, options = list(pageLength = 10))
 ```
 
 Genomic Landscape (P11)
@@ -372,7 +380,7 @@ Row
     
 ```{r circos, fig.width = 7, fig.height = 6}
 if(exists('fusData')){
- knitr::include_graphics(paste0(topDir, "/tmpRCircos.png")) 
+ knitr::include_graphics(file.path(topDir, "tmpRCircos.png")) 
 }
 ```
 
@@ -404,7 +412,7 @@ Row {data-height=700}
 ### Expression-CNV Heatmap (PHGG)
     
 ```{r heatmap_phgg, echo=FALSE}
-fname <- paste0(topDir,'/complexHeatmap_phgg.png')
+fname <- file.path(topDir, 'complexHeatmap_phgg.png')
 knitr::include_graphics(fname)
 ```
 
@@ -416,7 +424,7 @@ Row
 ### Expression-CNV Heatmap (CGS)
 
 ```{r heatmap_cgs, echo=FALSE}
-fname <- paste0(topDir,'/complexHeatmap_cgs.png')
+fname <- file.path(topDir, 'complexHeatmap_cgs.png')
 knitr::include_graphics(fname) 
 ```
 
@@ -428,6 +436,6 @@ Row {data-height=700}
 ### Oncogrid (HGG-DMG)
   
 ```{r oncogrid_hgg_dmg, echo=FALSE}
-fname <- file.path(topDir,'complexHeatmap_oncogrid.png')
+fname <- file.path(topDir, 'complexHeatmap_oncogrid.png')
 knitr::include_graphics(fname)
 ```

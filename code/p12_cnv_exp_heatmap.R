@@ -2,6 +2,10 @@
 # Date: 04/25/2020
 # Function: CNV + Expression heatmap for PBTA + PNOC008
 
+# directories
+root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
+source(file.path(root_dir, "code", "utils", "define_directories.R"))
+
 # function to calculate z-score
 getZ <- function(x) {
   x <- log2(x+1)
@@ -52,7 +56,7 @@ create.heatmap <- function(fname, genelist, plot.layout = "h"){
   pnoc.expr <- pnoc008.data
   
   # PBTA clinical
-  pbta.clin <- read.delim('data/Reference/PBTA/pbta-histologies.tsv')
+  pbta.clin <- read.delim(file.path(ref_dir, 'PBTA', 'pbta-histologies.tsv'))
   pbta.clin <- pbta.clin %>%
     filter(short_histology == "HGAT",
            experimental_strategy %in% c("WGS", "RNA-Seq")) %>%
