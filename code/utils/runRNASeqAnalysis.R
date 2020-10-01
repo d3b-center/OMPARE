@@ -21,4 +21,5 @@ RNASeqAnalysisOut <- runRNASeqAnalysis(exp.data = expData.m,    # expression dat
                                        refData = gtexData,      # gtex brain samples
                                        thresh = 2,              # foldchange cutoff 
                                        comparison = comparison, # comparison name
-                                       single_sample = TRUE)    # single sample analysis
+                                       single_sample = TRUE,    # single sample analysis
+                                       sample_name = sampleInfo$subjectID) # pass sample name only for single sample analysis   

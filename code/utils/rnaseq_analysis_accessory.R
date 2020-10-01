@@ -83,7 +83,7 @@ runHypGeom <- function(set, genes, n = 20000, universe = NULL) {
 }
 
 # function to tabulate DE and Pathway results
-runRNASeqAnalysis <- function(exp.data, refData, thresh = 2, comparison, single_sample = FALSE) {
+runRNASeqAnalysis <- function(exp.data, refData, thresh = 2, comparison, single_sample = FALSE, sample_name = "SampleX") {
   
   # current sample of interest
   smp <- unique(as.character(exp.data$Sample))
@@ -159,6 +159,7 @@ runRNASeqAnalysis <- function(exp.data, refData, thresh = 2, comparison, single_
     filter(DE != "")
   
   if(single_sample == TRUE){
+    colnames(mergeDF)[ncol(mergeDF)] <- sample_name
     finalOut <- list(pathways = pathway.df, 
                      genes = output.df,
                      diff.genes = genes.df,

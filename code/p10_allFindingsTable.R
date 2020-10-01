@@ -39,7 +39,7 @@ allFindingsTable <- function(snv_pattern) {
     }
     
     # collapse into Variant_Properties
-    tmpMut <- melt(tmpMut, id.vars = c('Aberration', 'Type', 'Details'))
+    tmpMut <- reshape2::melt(as.data.frame(tmpMut), id.vars = c('Aberration', 'Type', 'Details'))
     tmpMut <- tmpMut %>%
       group_by(Aberration, Type, Details, variable) %>%
       mutate(Variant_Properties = paste0(variable,":", value))  %>%
