@@ -91,9 +91,11 @@ allFindingsTable <- function(snv_pattern) {
     tmpPath <- RNASeqAnalysisOut$pathways
     tmpPathUp <- tmpPath %>%
       filter(Direction == "Up") %>%
+      arrange(ADJ_P_VAL) %>%
       top_n(20, wt = rev(ADJ_P_VAL))
     tmpPathDown <- tmpPath %>%
       filter(Direction == "Down") %>%
+      arrange(ADJ_P_VAL) %>%
       top_n(20, wt = rev(ADJ_P_VAL))
     tmpPath <- rbind(tmpPathUp, tmpPathDown)
     tmpPath <- tmpPath %>%

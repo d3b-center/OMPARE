@@ -12,11 +12,13 @@ plotPathway <- function(myRNASeqAnalysisOut = RNASeqAnalysisOut) {
   # top 10 upregulated pathways
   pathDataUp <- pathData %>%
     filter(Direction == "Up") %>%
+    arrange(ADJ_P_VAL) %>%
     top_n(10, wt = rev(ADJ_P_VAL))
   
   # top 10 downregulated pathways
   pathDataDown <- pathData %>%
     filter(Direction == "Down") %>%
+    arrange(ADJ_P_VAL) %>%
     top_n(10, wt = rev(ADJ_P_VAL))
 
   # combine and plot

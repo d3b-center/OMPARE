@@ -11,7 +11,7 @@ ssGSEA <- function(topCor, fname) {
     
     # Prepare expression data: log2 transform re-cast as matrix
     ### Rownames are genes and column names are samples
-    expression_data_log2_matrix <- as.matrix( log2(expression_data + 1) )
+    expression_data_log2_matrix <- as.matrix(log2(expression_data + 1))
     
     # Prepare REACTOME genes: Create a list of REACTOME gene sets, each of which is a list of genes
     human_geneset_twocols <- human_geneset %>% dplyr::select(gs_name, human_gene_symbol)
@@ -51,7 +51,7 @@ ssGSEA <- function(topCor, fname) {
       filter(IsSample) %>%
       summarise(abs.score = abs(gsea_score - gsea_score_median)) %>%
       arrange(desc(abs.score)) %>%
-      top_n(50) 
+      top_n(50, wt = abs.score) 
     gsea_scores_df_tidy <- gsea_scores_df_tidy %>%
       filter(geneset_name %in% top50$geneset_name)
     
