@@ -92,11 +92,11 @@ allFindingsTable <- function(snv_pattern) {
     tmpPathUp <- tmpPath %>%
       filter(Direction == "Up") %>%
       arrange(ADJ_P_VAL) %>%
-      top_n(20, wt = rev(ADJ_P_VAL))
+      slice_head(n = 20)
     tmpPathDown <- tmpPath %>%
       filter(Direction == "Down") %>%
       arrange(ADJ_P_VAL) %>%
-      top_n(20, wt = rev(ADJ_P_VAL))
+      slice_head(n = 20)
     tmpPath <- rbind(tmpPathUp, tmpPathDown)
     tmpPath <- tmpPath %>%
       mutate(Aberration = Pathway,

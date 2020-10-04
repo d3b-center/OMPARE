@@ -9,6 +9,7 @@ source(file.path(root_dir, "code", "utils", "define_directories.R"))
 source(file.path(utils_dir, "rnaseq_analysis_accessory.R"))
 
 # format input expression data
+# should be data-frame with 3 columns: Gene Sample TPM
 expData.m <- expData %>%
   dplyr::rename('Gene' = 'gene_symbol',
                 'TPM' = sampleInfo$subjectID) %>%

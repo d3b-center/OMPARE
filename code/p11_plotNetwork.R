@@ -3,39 +3,48 @@
 ###########################
 
 plotNetwork <- function(numGenes = 250) {
+  # build network nodes
   nodeGenesMut <- ''
-  # Let's build all our nodes
   if(exists('mutData')){
-    nodeGenesMut <- as.character(filterMutations()[,1]) # Mutations
+    nodeGenesMut <- as.character(filterMutations()[,'Hugo_Symbol']) # Mutations
   }
   if(exists('fusData')){
     nodeGenesMut <- c(nodeGenesMut, c(fusData[,"HeadGene"]), c(fusData[,"TailGene"])) # Fusions
   }
   if(exists('expData')){
-    rnaGenes <-RNASeqAnalysisOut$expr.genes.z.score
-    rnaGenes <- data.frame(names(rnaGenes), rnaGenes)
-    upGenes <- as.character(rnaGenes[order(-rnaGenes[,2]),][1:numGenes,1])
-    downGenes <- as.character(rnaGenes[order(rnaGenes[,2]),][1:numGenes,1])
+    rnaGenes <- RNASeqAnalysisOut$expr.genes.z.score
+    rnaGenes <- data.frame(gene = names(rnaGenes), z.score = rnaGenes)
+    upGenes <- rnaGenes %>% arrange(desc(z.score)) %>% slice_head(n = numGenes) %>% .$gene
+    downGenes <- rnaGenes %>% arrange(z.score) %>% slice_head(n = numGenes)  %>% .$gene
     nodeGenes <- c(nodeGenesMut, upGenes, downGenes)
   } else {
     nodeGenes <- c(nodeGenesMut)
   }
 
-  tmpGeneMania <- geneMania[geneMania$Gene_A_EntrezGeneName %in% nodeGenes,]
-  tmpGeneMania <- tmpGeneMania[tmpGeneMania$Gene_B_EntrezGeneName %in% nodeGenes,]
-  tmpGeneMania <- tmpGeneMania[tmpGeneMania$Network_Group_Name %in% c("Co-localization", "Genetic Interactions", "Pathway", "Physical Interactions"),]
-  cifNetwork <- tmpGeneMania[,c("Gene_A_EntrezGeneName", "Gene_B_EntrezGeneName")]
-  colnames(cifNetwork) <- c("from", "to")
-  cifNetwork$logFC <- ifelse(cifNetwork$from %in% nodeGenesMut, 5, 1)
-  cifNetwork$miRNA <- "No"
+  # subset network objects
+  nodeGenes <- unique(nodeGenes)
+  cifNetwork <- geneMania %>%
+    filter(Gene_A_EntrezGeneName %in% nodeGenes,
+           Gene_B_EntrezGeneName %in% nodeGenes,
+           Network_Group_Name %in% c("Co-localization", "Genetic Interactions", "Pathway", "Physical Interactions")) %>%
+    mutate(from = Gene_A_EntrezGeneName, to = Gene_B_EntrezGeneName,
+           logFC = ifelse(from %in% nodeGenesMut, 5, 1),
+           miRNA = "No") %>%
+    dplyr::select(from, to, logFC, miRNA)
+
+  # plot network    
+  set.seed(100)
   gR <- polishNetwork(cifNetwork)
   tmpNetwork <- igraph.from.graphNEL(gR)
-  p <- ggnetwork(tmpNetwork, layout = "fruchtermanreingold", cell.jitter = 0.75)
-  nodeSize <- data.frame(table(p$vertex.names))
-  colnames(nodeSize)[2] <- "Frequency"
-  p <- merge(p, nodeSize, by.x="vertex.names", by.y="Var1")
-  ggplot(p, aes(x = x, y = y, xend = xend, yend = yend)) +
+  tmpNetwork <- ggnetwork(tmpNetwork, layout = "fruchtermanreingold", cell.jitter = 0.75)
+  nodeSize <- data.frame(table(tmpNetwork$vertex.names))
+  tmpNetwork <- tmpNetwork %>%
+    inner_join(nodeSize, by = c("vertex.names" = "Var1")) %>%
+    dplyr::rename("Frequency" = "Freq") 
+  p <- ggplot(tmpNetwork, aes(x = x, y = y, xend = xend, yend = yend)) +
     geom_edges(color = "grey50")+
-    geom_nodelabel(aes(label = vertex.names, color=Frequency),fontface = "bold")+
-    theme_blank()+scale_color_continuous(low="grey", high="red")
+    geom_nodelabel(aes(label = vertex.names, color = Frequency), fontface = "bold")+
+    theme_blank() + 
+    scale_color_continuous(low = "grey", high = "red")
+  return(p)
 }

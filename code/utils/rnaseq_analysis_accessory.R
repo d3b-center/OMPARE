@@ -8,23 +8,23 @@ getZ <- function(x) {
   return(out[length(out)])
 }
 
-# get outliers
+# get up/down genes using z-score
 getAllOutliers <- function(myMergeDF, getTop, thresh, comparison, cancerGeneNames) {
   
   # Filter in Patient: TPM > 10
-  myMergeDF <- myMergeDF[myMergeDF$SampleX > 10,] # 5695 1153
+  myMergeDF <- myMergeDF[myMergeDF$SampleX > 10,] 
   
   # z-score
-  output <- apply(myMergeDF, FUN=getZ, MARGIN=1) # 5695
+  output <- apply(myMergeDF, FUN = getZ, MARGIN = 1) 
   
   # full data
   # combine TPM and z-score for sample of interest
-  output.df <- data.frame(Z_Score = output, TPM = myMergeDF[names(output),"SampleX"])
-  output.df$DE <- ""
-  output.df$DE[which(output.df$Z_Score < (-1*thresh))] <- "Down"
-  output.df$DE[which(output.df$Z_Score > thresh)] <- "Up"
-  output.df$Comparison <- comparison
-  output.df$CancerGene <- ifelse(rownames(output.df) %in% cancerGeneNames, TRUE, FALSE)
+  genes.df <- data.frame(Z_Score = output, TPM = myMergeDF[names(output),"SampleX"])
+  genes.df$DE <- ""
+  genes.df$DE[which(genes.df$Z_Score < (-1*thresh))] <- "Down"
+  genes.df$DE[which(genes.df$Z_Score > thresh)] <- "Up"
+  genes.df$Comparison <- comparison
+  genes.df$CancerGene <- ifelse(rownames(genes.df) %in% cancerGeneNames, TRUE, FALSE)
   
   # top 20 Up/Down genes 
   outputCanc <- output[intersect(names(output), cancerGeneNames)] # filter to cancer gene list
@@ -36,24 +36,10 @@ getAllOutliers <- function(myMergeDF, getTop, thresh, comparison, cancerGeneName
   
   return(list(expr.genes.z.score = output,
               diffexpr.top20 = diffexpr.top20,
-              output.df = output.df))
+              genes.df = genes.df))
 }
 
-# functional enrichment
-funcEnrichment <- function(genes, sets, qval=.25, numRet=5, myN=20000, myUniverse=NULL) {
-  
-  out <- lapply(sets, FUN = runHypGeom, genes = genes, n=myN, universe=myUniverse)
-  out <- data.frame(out)
-  out <- data.frame(t(out))
-  out[,4] <- as.numeric(as.character(out[,4]))
-  out$ADJ_P_VAL <- p.adjust(out[,4], method="BH")
-  colnames(out)[1:5] <- c("SET_SIZE", "NUM_GENES_INPUT", "OVERLAP", "P_VAL", "GENES")
-  out$Pathway <- rownames(out)
-  return(out)
-  
-}
-
-# hypergeometric test
+# get up/down pathways using hypergeometric test
 runHypGeom <- function(set, genes, n = 20000, universe = NULL) {
   
   if(!is.null(universe)) {
@@ -63,8 +49,6 @@ runHypGeom <- function(set, genes, n = 20000, universe = NULL) {
   # number of white balls
   x <- length(intersect(genes, set))
   ngenes <- as.character(toString(intersect(genes, set)))
-  
-  # white balls
   m <- length(genes)
   
   # black balls
@@ -82,6 +66,20 @@ runHypGeom <- function(set, genes, n = 20000, universe = NULL) {
   return(myRet)
 }
 
+# functional enrichment
+funcEnrichment <- function(genes, sets, qval = 0.25, numRet = 5, myN = 20000, myUniverse = NULL) {
+  
+  out <- lapply(sets, FUN = runHypGeom, genes = genes, n = myN, universe = myUniverse)
+  out <- data.frame(out)
+  out <- data.frame(t(out))
+  out[,4] <- as.numeric(as.character(out[,4]))
+  out$ADJ_P_VAL <- p.adjust(out[,4], method="BH")
+  colnames(out)[1:5] <- c("SET_SIZE", "NUM_GENES_INPUT", "OVERLAP", "P_VAL", "Gene_name")
+  out$Pathway <- rownames(out)
+  return(out)
+  
+}
+
 # function to tabulate DE and Pathway results
 runRNASeqAnalysis <- function(exp.data, refData, thresh = 2, comparison, single_sample = FALSE, sample_name = "SampleX") {
   
@@ -94,43 +92,33 @@ runRNASeqAnalysis <- function(exp.data, refData, thresh = 2, comparison, single_
     column_to_rownames('Gene') %>%
     dplyr::select(-c(Sample))
   
-  # now remove the current sample from refData
+  # now remove the current sample from refData (required when we are doing sample from the same cohort)
   refData <- refData[,grep(smp, colnames(refData), invert = T, value = T)]
   
   # Merge refData and sample of interest data on common genes
-  intGenesTmp <- intersect(rownames(refData), rownames(exp.data))
-  mergeDF <- cbind(refData[intGenesTmp,], exp.data[intGenesTmp, "TPM"])
+  mergeDF <- refData %>% rownames_to_column('gene') %>% 
+    inner_join(exp.data %>% 
+                 rownames_to_column('gene'), by = 'gene') %>% 
+    column_to_rownames('gene')
+  colnames(mergeDF)[ncol(mergeDF)] <- "SampleX" # sample of interest
   
-  # Collapse to unique gene symbols
-  # Matrix of reference data and sample of interest TPM data
-  colnames(mergeDF)[ncol(mergeDF)] <- "SampleX"
-  
-  # Calculate Gene Outliers in Patient (top 20 Up and Down)
+  # get gene outliers (top 20 Up and Down)
   geneAnalysisOut <- getAllOutliers(myMergeDF = mergeDF, getTop = 20, thresh = thresh, comparison = comparison, cancerGeneNames = cancerGenes$Gene_Symbol)
   
-  # Calculate Pathway Outliers
-  # Get Up and Down Genes
+  # get up/down genes (using thresh as z-score cutoff)
   expr.genes.z.score <- geneAnalysisOut$expr.genes.z.score
   upGenes <- names(expr.genes.z.score)[which(expr.genes.z.score > thresh)]
   downGenes <- names(expr.genes.z.score)[which(expr.genes.z.score < (-1*thresh))]
+  diff.genes = list("UpGenes" = upGenes, "DownGenes" = downGenes)
   
-  # If not enough genes take top 1000
-  if(length(upGenes) < 1000) {
-    upGenes <- names(sort(geneAnalysisOut[[1]], decreasing = TRUE))[1:1000]
-  }
-  if(length(downGenes) < 1000) {
-    downGenes <- names(sort(geneAnalysisOut[[1]], decreasing = FALSE))[1:1000]
-  }
-  genes.df = list("UpGenes" = upGenes, "DownGenes" = downGenes)
-  
-  # up pathways
+  # up pathways (using adj. pvalue < 0.05 cutoff)
   upPathways <- funcEnrichment(upGenes, geneSet, qval = 1, myN = 25000, myUniverse = rownames(mergeDF))
   upPathways <- upPathways %>%
     mutate(Direction = "Up") %>%
     filter(ADJ_P_VAL < 0.05) %>%
     arrange(ADJ_P_VAL)
   
-  # down pathways
+  # down pathways (using adj. pvalue < 0.05 cutoff)
   downPathways <- funcEnrichment(downGenes, geneSet, qval = 1, myN = 25000, myUniverse = rownames(mergeDF))
   downPathways <- downPathways %>%
     mutate(Direction = "Down") %>%
@@ -138,37 +126,36 @@ runRNASeqAnalysis <- function(exp.data, refData, thresh = 2, comparison, single_
     arrange(ADJ_P_VAL)
   
   # full pathway dataframe
-  pathway.df <- rbind(upPathways, downPathways)
-  pathway.df <- pathway.df[,c("Pathway", "GENES", "SET_SIZE", "NUM_GENES_INPUT", "OVERLAP", "P_VAL", "ADJ_P_VAL", "Direction")]
-  pathway.df$Comparison <- comparison
+  pathway.df <- upPathways %>% 
+    rbind(downPathways) %>% 
+    dplyr::select(Pathway, Gene_name, SET_SIZE, NUM_GENES_INPUT, OVERLAP, P_VAL, ADJ_P_VAL, Direction) %>% 
+    mutate(Comparison = comparison)
   
-  # expand gene names
+  # expand gene names and get a map of genes + pathways
   pathway.df.exp <- pathway.df %>%
-    separate_rows(GENES, convert = TRUE) %>%
-    dplyr::select(Pathway, GENES)
+    separate_rows(Gene_name, convert = TRUE) %>%
+    dplyr::select(Pathway, Gene_name)
   
-  # now for the full output.df, add drug info and pathway info
-  output.df <- geneAnalysisOut$output.df
-  output.df$Gene_name <- rownames(output.df)
-  output.df <- merge(output.df, dgidb, by = 'Gene_name', all.x = TRUE)
-  output.df <- merge(output.df, pathway.df.exp, by.x = 'Gene_name', by.y = 'GENES', all.x = TRUE)
-  output.df <- output.df %>%
+  # map pathways to individual genes
+  genes.df <- geneAnalysisOut$genes.df  %>%
+    rownames_to_column("Gene_name") %>%
+    left_join(pathway.df.exp, by = "Gene_name") %>%
+    filter(DE != "") %>%
     group_by(Gene_name) %>%
     mutate(Pathway = toString(Pathway)) %>%
-    unique() %>%
-    filter(DE != "")
-  
+    unique() 
+
   if(single_sample == TRUE){
     colnames(mergeDF)[ncol(mergeDF)] <- sample_name
     finalOut <- list(pathways = pathway.df, 
-                     genes = output.df,
-                     diff.genes = genes.df,
+                     genes = genes.df,
+                     diff.genes = diff.genes,
                      TPM = mergeDF[ncol(mergeDF)],
                      expr.genes.z.score = geneAnalysisOut$expr.genes.z.score,
                      diffexpr.top20 = geneAnalysisOut$diffexpr.top20)
   } else {
     finalOut <- list(pathways = pathway.df, 
-                     genes = output.df)
+                     genes = genes.df)
   }
   
   return(finalOut)

@@ -57,9 +57,6 @@ geneSetTS <- stack(geneSet)
 # Mutational signatures
 signatures <- readAlexandrovSignatures(file.path(ref_dir, 'signatures_probabilities.txt'))
 
-# Drug info
-dgidb <- readRDS(file.path(ref_dir, 'dgidb_output.rds'))
-
 # Germline markers
 germlineMarkers <- readRDS(file.path(ref_dir, 'germline_markers_list.rds'))
 

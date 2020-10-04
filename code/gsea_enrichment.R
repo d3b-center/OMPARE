@@ -53,9 +53,6 @@ cancerGenes <- readRDS(file.path(ref_dir, 'cancer_gene_list.rds'))
 geneSet <- getGmt(file.path(ref_dir, 'mSigDB', 'c2.cp.reactome.v6.0.symbols.gmt'), collectionType = BroadCollection(), geneIdType = SymbolIdentifier())
 geneSet <- geneIds(geneSet)
 
-# Drug Interaction DB
-dgidb <- readRDS(file.path(ref_dir, "dgidb_output.rds"))
-
 # input data
 res.pbta <- melt(as.matrix(pbta.full), value.name = "TPM", varnames = c("Gene", "Sample"))
 res.tcga <- melt(as.matrix(tcgaGBMData), value.name = "TPM", varnames = c("Gene", "Sample"))

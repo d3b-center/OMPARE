@@ -142,7 +142,7 @@ Row {data-height=700}
 
 ### Pathway Alterations
 
-```{r plot_pathway, fig.width = 28, fig.height = 10}
+```{r plot_pathway}
 #Bar chart of genes
 if(exists('expData')){
   ggplotly(plotPathway())
@@ -291,10 +291,10 @@ Row {data-height=700}
     
 ### ssGSEA (PBTA HGAT samples)
     
-```{r ssgsea_hgg, fig.width = 28, fig.height = 10}
+```{r ssgsea_hgg, fig.width = 28, fig.height = 14}
 if(exists('expData')){
   p <- ssGSEA(topCor = pbta.mat.hgg, fname = file.path(topDir, 'GSVA', 'ssgsea_rawScores.txt'))
-  ggplotly(p)
+  p
 }
 ```
 

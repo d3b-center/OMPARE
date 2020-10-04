@@ -51,7 +51,7 @@ ssGSEA <- function(topCor, fname) {
       filter(IsSample) %>%
       summarise(abs.score = abs(gsea_score - gsea_score_median)) %>%
       arrange(desc(abs.score)) %>%
-      top_n(50, wt = abs.score) 
+      slice_head(n = 50)
     gsea_scores_df_tidy <- gsea_scores_df_tidy %>%
       filter(geneset_name %in% top50$geneset_name)
     
@@ -60,6 +60,7 @@ ssGSEA <- function(topCor, fname) {
   } else {
     gsea_scores_df_tidy <- read.delim(fname, check.names = F)
   }
+
   # factorize by median
   tmp <- gsea_scores_df_tidy %>%
     dplyr::select(geneset_name, gsea_score_median) %>%
@@ -71,12 +72,12 @@ ssGSEA <- function(topCor, fname) {
   # plot as boxplot
   p <- ggplot(gsea_scores_df_tidy, aes(geneset_name, gsea_score)) + 
     geom_boxplot(outlier.shape = NA) +  
-    theme_bw() + 
-    theme(axis.text.x = element_text(angle = 75, hjust = 1))
+    theme_bw()
   raw.scoresSample <- gsea_scores_df_tidy[gsea_scores_df_tidy$IsSample == T,]
   p <- p + 
     geom_point(data = raw.scoresSample, aes(geneset_name, gsea_score), colour = "red", size = 3, shape = "triangle") +
     theme(axis.text = element_text(size = 8, face = "bold"), 
-          axis.title = element_blank())
+          axis.title = element_blank()) + coord_flip() +
+    theme(plot.margin = unit(c(1, 5, 1, 2), "cm"))
   return(p)  
 }
