@@ -29,7 +29,7 @@ Prerequisites
 .. code-block:: bash
 
 	# get reference data from s3
-	aws s3 --profile saml s3://d3b-bix-dev-data-bucket/PNOC008/Reference /path/to/OMPARE/data/Reference
+	aws s3 --profile saml s3://d3b-bix-dev-data-bucket/PNOC008/Reference /path/to/OMPARE/data/reference
 
 Project Organization
 ====================
@@ -47,7 +47,7 @@ Project Organization
 * Germline Variants: ``*.hg38_multianno.txt.gz``
 
 3. Organize patient data: 
-Run ``create_project.R`` script to create and organize project folder under ``data/``. This script will also create intermediate folders like ``ImmuneScores`` and ``GSVA`` as well as output folders like ``Reports`` for ``*.html`` reports and ``Summary`` for ``*.xlsx`` summary file.
+Run ``create_project.R`` script to create and organize project folder under ``results/``. This script will also create intermediate folders like ``ImmuneScores`` and ``GSVA`` as well as output folders like ``Reports`` for ``*.html`` reports and ``Summary`` for ``*.xlsx`` summary file.
    
 .. code-block:: bash
 
@@ -58,7 +58,7 @@ Run ``create_project.R`` script to create and organize project folder under ``da
 			Source directory containing all files from data delivery project
 
 		-d DESTDIR, --destdir=DESTDIR
-			Destination directory. Should be /path/to/OMPARE/data/PNOC008-21/ for Patient 13
+			Destination directory. Should be /path/to/OMPARE/results/PNOC008-21/ for Patient 13
 
 		-h, --help
 			Show this help message and exit
@@ -66,7 +66,7 @@ Run ``create_project.R`` script to create and organize project folder under ``da
 	# Example for Patient PNOC008-21
 	Rscript code/create_project.R \
 	--sourcedir /path/to/source/PNOC008-21-cavatica-files \
-	--destdir /path/to/OMPARE/data/PNOC008-21/
+	--destdir /path/to/OMPARE/results/PNOC008-21/
 
 4. Create clinical file using the ``create_clinfile.R`` script.
 
@@ -86,16 +86,16 @@ Run ``create_project.R`` script to create and organize project folder under ``da
 
 	# Example for Patient PNOC008-21
 	Rscript code/create_clinfile.R \
-	--sheet data/Reference/Manifest/PNOC008_Manifest.xlsx \
+	--sheet data/reference/Manifest/PNOC008_Manifest.xlsx \
 	--patient PNOC008-21 \
-	--dir /path/to/OMPARE/data/PNOC008-21
+	--dir /path/to/OMPARE/results/PNOC008-21
 
 Steps (3) and (4) should create a folder structure with corresponding files as shown below:
 
 .. code-block:: bash
 
 	# Example for PNOC008-21
-	tree /path/to/OMPARE/data/PNOC008-21/
+	tree /path/to/OMPARE/results/PNOC008-21/
 	.
 	├── CNV
 	│   ├── uuid.controlfreec.CNVs.p.value.txt
@@ -126,7 +126,7 @@ Steps (3) and (4) should create a folder structure with corresponding files as s
 	Rscript code/pnoc_format.R
 
 	# Running the script will update the following files:
-	data/Reference/PNOC008
+	data/reference/PNOC008
 	├── PNOC008_TMBscores.rds
 	├── PNOC008_TPM_matrix.RDS
 	├── PNOC008_clinData.RDS
@@ -142,7 +142,7 @@ Steps (3) and (4) should create a folder structure with corresponding files as s
 	Rscript code/gsea_enrichment.R
 
 	# Running the script will update the following files:
-	data/Reference/GSEA
+	data/reference/GSEA
 	├── PBTA_vs_GTExBrain.RDS
 	├── PBTA_vs_PBTA.RDS
 	├── PBTA_vs_PBTAHGG.RDS
@@ -161,14 +161,14 @@ Steps (3) and (4) should create a folder structure with corresponding files as s
 
 	Options:
 	-i INPUT, --input=INPUT
-		Directory e.g. data/PNOC008-21
+		Directory e.g. results/PNOC008-21
 
 	-o OUTPUT, --output=OUTPUT
 		output excel file with extension i.e. PNOC008-21_summary.xlsx
 
 	# Example for Patient PNOC008-21
 	Rscript code/tabulate_excel.R \
-	--input /path/to/OMPARE/data/PNOC008-21 \
+	--input /path/to/OMPARE/results/PNOC008-21 \
 	--output PNOC008-21_summary.xlsx
 
 8. Generate markdown report:
@@ -183,9 +183,9 @@ Steps (3) and (4) should create a folder structure with corresponding files as s
 	setwd(/path/to/OMPARE)
 	callers <- c("lancet", "mutect2", "strelka2", "vardict", "consensus", "all")
 	for(i in 1:length(callers)) {
-	  outputfile <- paste0("data/PNOC008-21/Reports/PNOC008-21_", callers[i], ".html")
+	  outputfile <- paste0("results/PNOC008-21/Reports/PNOC008-21_", callers[i], ".html")
 	  rmarkdown::render(input = 'OMPARE.Rmd', 
-	                    params = list(topDir = 'data/PNOC008-21/',
+	                    params = list(topDir = 'results/PNOC008-21/',
 	                                  fusion_method = 'arriba',
 	                                  set_title = 'PNOC008-21 Patient Report',
 	                                  snv_pattern = callers[i],
@@ -198,7 +198,7 @@ After running step 8, the project folder should have some intermediate and outpu
 
 .. code-block:: bash
 
-	data/PNOC008-21
+	results/PNOC008-21
 	├── CNV
 	│   ├── uuid.controlfreec.CNVs.p.value.txt
 	│   └── uuid.controlfreec.ratio.txt
@@ -269,15 +269,11 @@ This single script will take the raw data as input and create output files by:
 	-c CLIN_FILE, --clin_file=CLIN_FILE
 		PNOC008 Manifest file (.xlsx)
 
-	-w WORKDIR, --workdir=WORKDIR
-		OMPARE working directory
-
 	# Example run for PNOC008-21
 	Rscript run_OMPARE.R \
 	--patient 21 \
-	--clin_file data/Reference/Manifest/PNOC008_Manifest.xlsx \
-	--workdir ~/Projects/OMPARE \
-	--sourcedir ~/Downloads/p21
+	--clin_file data/reference/Manifest/PNOC008_Manifest.xlsx \
+	--sourcedir /path/to/Downloads/p21
 
 Upload to data-delivery project
 ===============================
@@ -298,5 +294,5 @@ This script uploads the ``Summary/*._summary.xlsx``, ``Summary/*._umap_output.rd
 	# Example run for PNOC008-21
 	Rscript upload_reports.R \
 	--patient 21 \
-	--wordir ~/Projects/OMPARE
+	--wordir /path/to/Projects/OMPARE
 
