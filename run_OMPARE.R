@@ -54,7 +54,7 @@ if(!is.null(clinical_sheet)){
   print("Clinical file present...")
 }
 
-# 3. Update PNOC008 expression matrix for each new patient
+# 3. Update PNOC008 matrices for each new patient
 print("Update PNOC008 expression matrix...")
 pnoc.format <- file.path(code_dir, 'pnoc_format.R')
 cmd3 <- paste('Rscript', pnoc.format)
