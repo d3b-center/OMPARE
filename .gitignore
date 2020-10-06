@@ -5,10 +5,13 @@
 .httr-oauth
 Archive/*
 
-# Code
+# code to be ignored
 code/code_ignored/*
 
-# Data will be uploaded to s3 instead of github
-data/*
-# !data/Reference
-# data/Reference/ICR/
+# data (pushed to s3 instead of github)
+data/
+
+# results directory with all patient data
+results/
+
+

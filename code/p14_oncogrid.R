@@ -3,13 +3,17 @@
 # Function: Script to generat Oncogrid matrix/additional files using CNV, SNV, Fusion and Expression data
 suppressPackageStartupMessages(library(tidyverse))
 
-# Directories
-# oncogrid directories
-oncogrid.path <- file.path('data', 'Reference', 'oncogrid')
+# directories
+root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
+source(file.path(root_dir, "code", "utils", "define_directories.R"))
+
+# oncogrid directory
+oncogrid.path <- file.path(ref_dir, 'oncogrid')
 oncogrid.path.input <- file.path(oncogrid.path, 'input')
 oncogrid.path.output <- file.path(oncogrid.path, 'output')
+
 # pnoc008 directory
-pnoc008.path <- file.path('data', 'Reference', 'PNOC008')
+pnoc008.path <- file.path(ref_dir, 'PNOC008')
 
 ## Oncoprint matrix
 # cohort 3 matrix

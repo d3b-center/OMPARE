@@ -12,9 +12,7 @@ option_list <- list(
               help = "Source directory with all files"),
   make_option(c("-c", "--clin_file"), type = "character",
               default = NULL,
-              help = "PNOC008 Manifest file (.xlsx)"),
-  make_option(c("-w", "--workdir"), type = "character",
-              help = "OMPARE working directory")
+              help = "PNOC008 Manifest file (.xlsx)")
 )
 
 # parameters to pass
@@ -24,18 +22,21 @@ clinical_sheet <- opt$clin_file
 sourceDir <- opt$sourcedir
 workdir <- opt$workdir
 
+# directories
+root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
+source(file.path(root_dir, "code", "utils", "define_directories.R"))
+
 # set variables
-setwd(workdir) # This should be the OMPARE directory
-print(paste0("Working directory:", getwd()))
 patient <- paste0('PNOC008-', p)
-topDir <- file.path(getwd(), 'data', patient)
+topDir <- file.path(root_dir, 'results', patient)
 set_title <- paste0(patient,' Patient Report')
 callers <- c("lancet", "mutect2", "strelka2", "vardict", "consensus", "all")
 
 # 1. Create Project directory (if sourcedir param is provided)
 if(!is.null(sourceDir)){
   print("Create Project Directory...")
-  cmd1 <- paste0('Rscript code/create_project_dir.R -s ', sourceDir, ' -d ', topDir, '/')
+  create.dirs <- file.path(code_dir, 'create_project_dir.R')
+  cmd1 <- paste('Rscript', create.dirs, '-s', sourceDir, '-d', topDir)
   print(cmd1)
   system(cmd1)
 } else {
@@ -45,7 +46,8 @@ if(!is.null(sourceDir)){
 # 2. Create clinical file  (if clin_file param is provided)
 if(!is.null(clinical_sheet)){
   print("Create Clinical file...")
-  cmd2 <- paste0('Rscript code/create_clinfile.R -s ', clinical_sheet, ' -p ', patient, ' -d ', topDir)
+  create.clinfile <- file.path(code_dir, 'create_clinfile.R')
+  cmd2 <- paste('Rscript', create.clinfile, '-s', clinical_sheet, '-p', patient, '-d', topDir)
   print(cmd2)
   system(cmd2)
 } else {
@@ -54,19 +56,22 @@ if(!is.null(clinical_sheet)){
 
 # 3. Update PNOC008 expression matrix for each new patient
 print("Update PNOC008 expression matrix...")
-cmd3 <- 'Rscript code/pnoc_format.R'
+pnoc.format <- file.path(code_dir, 'pnoc_format.R')
+cmd3 <- paste('Rscript', pnoc.format)
 print(cmd3)
 system(cmd3)
 
 # 4. Update GSEA enrichment for each new patient
 print("Update PNOC008 GSEA summary...")
-cmd4 <- 'Rscript code/gsea_enrichment.R'
+gsea.enrichment <- file.path(code_dir, 'gsea_enrichment.R')
+cmd4 <- paste('Rscript', gsea.enrichment)
 print(cmd4)
 system(cmd4)
 
 # 5. Generate excel summary
 print("Generate excel summary...")
-cmd5 <- paste0('Rscript code/tabulate_excel.R -i ', topDir, ' -o ', paste0(patient, '_summary.xlsx'))
+tabulate.excel <- file.path(code_dir, 'tabulate_excel.R')
+cmd5 <- paste('Rscript', tabulate.excel, '-i', topDir, '-o', paste0(patient, '_summary.xlsx'))
 print(cmd5)
 system(cmd5)
 

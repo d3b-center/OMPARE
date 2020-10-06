@@ -7,11 +7,7 @@ root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
 source(file.path(root_dir, "code", "utils", "define_directories.R"))
 
 # function to calculate z-score
-getZ <- function(x) {
-  x <- log2(x+1)
-  out <- (x-mean(x))/sd(x)
-  return(out)
-}
+source(file.path(utils_dir, 'get_zscore.R'))
 
 # function to read cnv, filter by genes and merge
 merge.cnv <- function(cnvData, gene.list){

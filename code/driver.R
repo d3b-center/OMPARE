@@ -13,7 +13,8 @@ source(file.path(root_dir, "code", "utils", "define_directories.R"))
 #############################
 # sourced in order of requirement
 source(file.path(utils_dir, 'pubTheme.R'))                      # univeral plot theme
-source(file.path(utils_dir, 'helper.R'))                        # universal helper functions like z-score etc
+source(file.path(utils_dir, 'quiet.R'))                         # run quietly
+source(file.path(utils_dir, 'get_zscore.R'))                    # get z-score
 source(file.path(utils_dir, 'createCopyNumber.R'))              # create a map of gene symbol and copy number
 source(file.path(utils_dir, 'filterCNV.R'))                     # filter CNV
 source(file.path(utils_dir, 'filterFusions.R'))                 # filter Fusions

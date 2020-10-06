@@ -5,7 +5,7 @@ output:
     theme: cosmo
 params: 
   topDir: 
-    value: 'data/Test/'
+    value: 'results'
   fusion_method:
     value: 'arriba'
   set_title:
@@ -78,7 +78,7 @@ Row {data-height=500}
 ### Key Clinical Findings
     
 ```{r key_findings}
-datatable(keyClinicalFindingsTable(), rownames=F, escape = F)
+datatable(keyClinicalFindingsTable(), rownames = F, escape = F)
 ```
 
 Row {data-height=300}

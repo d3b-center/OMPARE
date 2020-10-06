@@ -4,9 +4,16 @@
 
 suppressPackageStartupMessages(library(ComplexHeatmap))
 
-oncogrid.path <- file.path('data', 'Reference', 'oncogrid')
+# directories
+root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
+source(file.path(root_dir, "code", "utils", "define_directories.R"))
+
+# oncogrid directory
+oncogrid.path <- file.path(ref_dir, 'oncogrid')
 oncogrid.path.input <- file.path(oncogrid.path, 'input')
 oncogrid.path.output <- file.path(oncogrid.path, 'output')
+
+# matrix
 mat = read.table(file.path(oncogrid.path.output, "oncoprint.cohort3.pnoc008.txt"),  header = TRUE, stringsAsFactors=FALSE, sep = "\t",check.names = FALSE)
 mat[is.na(mat)] = ""
 rownames(mat) = mat[, 1]
