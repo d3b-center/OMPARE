@@ -29,6 +29,7 @@ gene.list <- unique(cancerGenes$Gene_Symbol)
 
 # chr coordinates to gene symbol map
 chrMap <- read.delim(file.path(ref_dir, "mart_export_genechr_mapping.txt"), stringsAsFactors =F)
+colnames(chrMap) <- c("hgnc_symbol", "gene_start", "gene_end", "chromosome")
 
 # function to merge expression
 merge.res <- function(nm){

@@ -41,7 +41,8 @@ cancerGenes <- readRDS(file.path(ref_dir, 'cancer_gene_list.rds'))
 tsgGenes <- read.delim(file.path(ref_dir, 'Human_TSGs.txt'), stringsAsFactors = F)
 
 # CNV analysis (chr coordinates to gene symbol map)
-chrMap <- read.delim(file.path(ref_dir, 'mart_export_genechr_mapping.txt'), stringsAsFactors =F)
+chrMap <- read.delim(file.path(ref_dir, 'mart_export_genechr_mapping.txt'), stringsAsFactors = F, check.names = F)
+colnames(chrMap) <- c("hgnc_symbol", "gene_start", "gene_end", "chromosome")
 
 # Network analysis
 geneMania <- read.delim(file.path(ref_dir, 'GeneManiaNetwork.txt'), stringsAsFactors =F)

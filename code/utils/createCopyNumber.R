@@ -6,7 +6,7 @@ createCopyNumber <- function(cnvData, ploidy = NULL){
   
   # Chromosome Map
   chrMap <- chrMap %>%
-    filter(HGNC.symbol != "")
+    filter(hgnc_symbol != "")
   
   getCNV <- function(x) {
     tmpChr <- x['chr']
@@ -14,16 +14,16 @@ createCopyNumber <- function(cnvData, ploidy = NULL){
     tmpEnd <- as.numeric(x['end'])
     tmpValue <- as.numeric(x['copy.number'])
     tmpStatus <- as.character(x['status'])
-    tmpPval <- as.numeric(x['WilcoxonRankSumTestPvalue'])
-    tmpCNA <- chrMap[chrMap$Chromosome.scaffold.name == tmpChr,]
-    tmpCNA <- tmpCNA[((tmpCNA[,2] > tmpStart) & (tmpCNA[,2] < tmpEnd)),1]
-    if(length(tmpCNA)>0) {
+    tmpPval <- scientific(as.numeric(x['WilcoxonRankSumTestPvalue']), digits = 2) 
+    tmpCNA <- chrMap[chrMap$chromosome == tmpChr,]
+    tmpCNA <- tmpCNA[((tmpCNA$gene_start > tmpStart) & (tmpCNA$gene_end < tmpEnd)), 'hgnc_symbol']
+    if(length(tmpCNA) > 0) {
       tmpCNA <- data.frame(tmpCNA, tmpValue, tmpStatus, tmpPval)
     }
     return(tmpCNA)
   }
   
-  outList <- apply(cnvData, FUN=getCNV, MARGIN=1)
+  outList <- apply(cnvData, FUN = getCNV, MARGIN=1)
   output <- do.call("rbind", outList)
   # if ploidy is not supplied explicitly, use value corresponding to neutral status
   if(is.null(ploidy)){
@@ -36,7 +36,7 @@ createCopyNumber <- function(cnvData, ploidy = NULL){
   if(length(ploidy) == 0){
     ploidy <- min(output$tmpValue[output$tmpStatus == "gain"])-1
   }
-  missingGenes <- setdiff(chrMap$HGNC.symbol, output$tmpCNA)
+  missingGenes <- setdiff(chrMap$hgnc_symbol, output$tmpCNA)
   missingGenes <- data.frame(missingGenes, ploidy, 'neutral', 1)
   colnames(missingGenes) <- colnames(output)
   output <- rbind(output, missingGenes)

@@ -66,7 +66,7 @@ source(file.path(code_dir, 'p11_plotCNV.R'))
 source(file.path(code_dir, 'p11_plotNetwork.R'))
 source(file.path(code_dir, 'p11_plotCircos.R'))                 # source and run in driver
 if(exists('fusData')){
-  plotCircos(topDir = topDir)
+  plotCircos(topDir = topDir, chrMap = chrMap)
 }
 
 # Page 12 (source and run in driver)
