@@ -2,7 +2,7 @@
 # Function for UMAP plotting
 #############################
 
-# Top 10000 most variable genes
+# Top 1000 most variable genes
 getDimRedPlot <- function(dat, clindata, study, patient, title) {
   set.seed(100)
   

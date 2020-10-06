@@ -51,15 +51,15 @@ tcga.gbm.clinData <- tcga.gbm.clinData[common.smps,]
 # Constrain columns
 ##########################
 
-# for getTSNEPlot.R
-# Get top 10000 most variable genes
+# for dimensionality reduction visualization (getDimRedPlot.R)
+# Get top 1000 most variable genes
 myCV <- function(x) { sd(x)/mean(x)}
 myCVs <- apply(tcga.gbm.mat, FUN=myCV, MARGIN=1)
 tcga.gbm.mat.tsne <- as.data.frame(tcga.gbm.mat)
 tcga.gbm.mat.tsne$CV <- myCVs
 tcga.gbm.mat.tsne <- tcga.gbm.mat.tsne[order(tcga.gbm.mat.tsne$CV, decreasing = TRUE),]
-if(nrow(tcga.gbm.mat.tsne) >= 10000){
-  tcga.gbm.mat.tsne <- tcga.gbm.mat.tsne[1:10000,]
+if(nrow(tcga.gbm.mat.tsne) >= 1000){
+  tcga.gbm.mat.tsne <- tcga.gbm.mat.tsne[1:1000,]
 }
 tcga.gbm.mat.tsne$CV <- NULL # Remove cv
 

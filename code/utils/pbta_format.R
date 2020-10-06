@@ -45,7 +45,7 @@ pbta.mat.all <- pbta.mat.full[,colnames(pbta.mat.full) %in% smps]
 
 # Now remove genes that have max value < 20 TPM
 maxVals <- apply(pbta.mat, FUN = max, MARGIN = 1)
-pbta.mat <- pbta.mat[maxVals>20,]
+pbta.mat <- pbta.mat[maxVals > 20,]
 
 # Order samples for expression and clinical file
 common.smps <- intersect(colnames(pbta.mat), rownames(pbta.clinData))
@@ -57,15 +57,15 @@ pbta.clinData <- pbta.clinData[common.smps,]
 # Constrain columns
 ##########################
 
-# for getTSNEPlot.R
-# Get top 10000 most variable genes
+# for dimensionality reduction visualization (getDimRedPlot.R)
+# Get top 1000 most variable genes
 myCV <- function(x) { sd(x)/mean(x)}
 myCVs <- apply(pbta.mat, FUN = myCV, MARGIN=1)
 pbta.mat.tsne <- as.data.frame(pbta.mat)
 pbta.mat.tsne$CV <- myCVs
 pbta.mat.tsne <- pbta.mat.tsne[order(pbta.mat.tsne$CV, decreasing = TRUE),]
-if(nrow(pbta.mat.tsne) >= 10000){
-  pbta.mat.tsne <- pbta.mat.tsne[1:10000,]
+if(nrow(pbta.mat.tsne) >= 1000){
+  pbta.mat.tsne <- pbta.mat.tsne[1:1000,]
 }
 pbta.mat.tsne$CV <- NULL # Remove cv
 
