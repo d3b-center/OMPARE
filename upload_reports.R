@@ -1,6 +1,5 @@
 # Author: Komal S. Rathi
-# Date: 07/12/2020
-# Function: Upload patient reports to data delivery project
+# Function: Upload patient output and reports to data delivery project
 
 suppressPackageStartupMessages(library(optparse))
 
@@ -35,9 +34,12 @@ dest.folder <- file.path(patient)
 output <- file.path(topDir, "output") # all output
 reports <- file.path(topDir, "reports") # all reports
 
+# upload output
 cmd1 <- paste(cav, '-t', auth, '-p', project, '-f', dest.folder, '-pf', output, sep = " ")
 print(cmd1)
-# system(cmd1)
+system(cmd1)
+
+# upload reports
 cmd2 <- paste(cav, '-t', auth, '-p', project, '-f', dest.folder, '-pf', reports, sep = " ")
 print(cmd2)
-# system(cmd2)
+system(cmd2)
