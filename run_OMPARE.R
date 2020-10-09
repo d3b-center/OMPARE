@@ -3,6 +3,7 @@
 # Function: Generate patient report
 
 suppressPackageStartupMessages(library(optparse))
+suppressPackageStartupMessages(library(rmarkdown))
 
 option_list <- list(
   make_option(c("-p", "--patient"), type = "character",
@@ -55,22 +56,22 @@ if(!is.null(clinical_sheet)){
 }
 
 # 3. Update PNOC008 matrices for each new patient
-print("Update PNOC008 expression matrix...")
-pnoc.format <- file.path(code_dir, 'pnoc_format.R')
+print("Update PNOC008 data matrices...")
+pnoc.format <- file.path(patient_level_analyses, 'pnoc_format.R')
 cmd3 <- paste('Rscript', pnoc.format)
 print(cmd3)
 system(cmd3)
 
 # 4. Update GSEA enrichment for each new patient
 print("Update PNOC008 GSEA summary...")
-gsea.enrichment <- file.path(code_dir, 'gsea_enrichment.R')
+gsea.enrichment <- file.path(patient_level_analyses, 'gsea_enrichment.R')
 cmd4 <- paste('Rscript', gsea.enrichment)
 print(cmd4)
 system(cmd4)
 
 # 5. Generate excel summary
-print("Generate excel summary...")
-tabulate.excel <- file.path(code_dir, 'tabulate_excel.R')
+print("Generate excel for RNA-seq summary...")
+tabulate.excel <- file.path(patient_level_analyses, 'tabulate_excel.R')
 cmd5 <- paste('Rscript', tabulate.excel, '-i', topDir, '-o', paste0(patient, '_summary.xlsx'))
 print(cmd5)
 system(cmd5)

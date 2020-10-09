@@ -10,7 +10,7 @@ option_list <- list(
   make_option(c("-s", "--sourcedir"), type = "character",
               help = "Source directory with all files"),
   make_option(c("-d", "--destdir"), type = "character",
-              help = "Destination directory. Should be /path/to/OMPARE/data/PNOC008-13/ for Patient 13")
+              help = "Destination directory. Should be /path/to/OMPARE/results/PNOC008-13/ for Patient 13")
 )
 
 # parameters to pass
@@ -19,15 +19,13 @@ sourceDir <- opt$sourcedir
 topDir <- opt$destdir
 
 # specify destination directories
-clinicaldir <- file.path(topDir, 'Clinical')
-cnvdir <- file.path(topDir, 'CNV')
-exprdir <- file.path(topDir, 'ExpressionGene')
-fusionsdir <- file.path(topDir, 'Fusions')
-mutdir <- file.path(topDir, 'MutationsMAF')
-immunescores <- file.path(topDir, 'ImmuneScores')
-gsvascores  <-  file.path(topDir, 'GSVA')
-reports <- file.path(topDir, 'Reports')
-summary <- file.path(topDir, 'Summary')
+clinicaldir <- file.path(topDir, 'clinical')
+cnvdir <- file.path(topDir, 'copy-number-variations')
+exprdir <- file.path(topDir, 'gene-expressions')
+fusionsdir <- file.path(topDir, 'gene-fusions')
+mutdir <- file.path(topDir, 'simple-variants')
+reports <- file.path(topDir, 'reports')
+output <- file.path(topDir, 'output')
 
 # create directories to move input files
 dir.create(clinicaldir, showWarnings = F, recursive = T)
@@ -37,10 +35,8 @@ dir.create(fusionsdir, showWarnings = F, recursive = T)
 dir.create(mutdir, showWarnings = F, recursive = T)
 
 # create directories to save output
-dir.create(immunescores, showWarnings = F, recursive = T)
-dir.create(gsvascores, showWarnings = F, recursive = T)
+dir.create(output, showWarnings = F, recursive = T)
 dir.create(reports, showWarnings = F, recursive = T)
-dir.create(summary, showWarnings = F, recursive = T)
 
 # organize data
 # copy number

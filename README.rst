@@ -47,7 +47,7 @@ Project Organization
 * Germline Variants: ``*.hg38_multianno.txt.gz``
 
 3. Organize patient data: 
-Run ``create_project.R`` script to create and organize project folder under ``results/``. This script will also create intermediate folders like ``ImmuneScores`` and ``GSVA`` as well as output folders like ``Reports`` for ``*.html`` reports and ``Summary`` for ``*.xlsx`` summary file.
+Run ``create_project.R`` script to create and organize project folder under ``results/``. This script will also create and output folder to store all output for plots and tables reported.
    
 .. code-block:: bash
 
@@ -278,7 +278,7 @@ This single script will take the raw data as input and create output files by:
 Upload to data-delivery project
 ===============================
 
-This script uploads the ``Summary/*._summary.xlsx``, ``Summary/*._umap_output.rds``, ``Reports/*.html`` output to the data delivery project folder on cavatica. 
+This script uploads the files under reports and output folder to the data delivery project folder on cavatica. 
 
 .. code-block:: bash
 

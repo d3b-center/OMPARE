@@ -43,5 +43,5 @@ df <- dat %>%
   dplyr::select(subjectID, reportDate, tumorType,	tumorLocation, ethnicity, sex, age_diagnosis_days, age_collection_days, KF_ParticipantID, library_name)
 
 # write out
-fname <- file.path(dir, "Clinical", "patient_report.txt")
+fname <- file.path(dir, "clinical", "patient_report.txt")
 write.table(df, file = fname, sep = "\t", quote = F, row.names = F)
