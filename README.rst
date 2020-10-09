@@ -49,14 +49,14 @@ Scripts
 Master script
 -------------
 
-run_OMPARE.R: Master script that runs the following scripts:
+**run_OMPARE.R**: Master script that runs the following scripts:
    
-1. code/create_project_dir.R: creating project directory and organize files.
-2. code/create_clinfile.R: creating clinical file for patint of interest.
-3. code/patient_level_analyses/pnoc_format.R: updating PNOC008 data matrices (cnv, mutations, fusions, expression) with each new patient.
-4. code/patient_level_analyses/gsea_enrichment.R: updating GSEA enrichment outputs with each new patient.
-5. code/patient_level_analyses/tabulate_excel.R: generating excel file with up/down pathways and genes.
-6. OMPARE.Rmd: running html reports
+1. **code/create_project_dir.R**: creating project directory and organize files.
+2. **code/create_clinfile.R**: creating clinical file for patint of interest.
+3. **code/patient_level_analyses/pnoc_format.R**: updating PNOC008 data matrices (cnv, mutations, fusions, expression) with each new patient.
+4. **code/patient_level_analyses/gsea_enrichment.R**: updating GSEA enrichment outputs with each new patient.
+5. **code/patient_level_analyses/tabulate_excel.R**: generating excel file with up/down pathways and genes.
+6. **OMPARE.Rmd**: running html reports
 
 .. code-block:: bash
 	
@@ -82,7 +82,7 @@ run_OMPARE.R: Master script that runs the following scripts:
 Create project directory
 ------------------------
 
-code/create_project_dir.R: this script creates and organizes input files under ``results``. Creates ``output`` folder to store all output for plots and tables reported and ``reports`` folder to store all html output.
+**code/create_project_dir.**R: this script creates and organizes input files under ``results``. Creates ``output`` folder to store all output for plots and tables reported and ``reports`` folder to store all html output.
    
 .. code-block:: bash
 
@@ -106,7 +106,7 @@ code/create_project_dir.R: this script creates and organizes input files under `
 Create clinical file
 --------------------
 
-code/create_clinfile.R: this script creates clinical file for patient of interest and stores under ``results/PNOC008-patient_num/clinical/``.
+**code/create_clinfile.R**: this script creates clinical file for patient of interest and stores under ``results/PNOC008-patient_num/clinical/``.
 
 .. code-block:: bash
 
@@ -158,7 +158,7 @@ NOTE: The above steps will create a directory structure for the patient of inter
 Update PNOC008 data matrices:
 -----------------------------
 
-code/patient_level_analyses/pnoc_format.R: this script updates the 008 patient matrices (cnv, mutations, fusions, expression) by adding current patient of interest
+**code/patient_level_analyses/pnoc_format.R**: this script updates the 008 patient matrices (cnv, mutations, fusions, expression) by adding current patient of interest
    
 .. code-block:: bash
 
@@ -177,7 +177,7 @@ code/patient_level_analyses/pnoc_format.R: this script updates the 008 patient m
 Update GSEA enrichment:
 -----------------------
 
-code/patient_level_analyses/gsea_enrichment.R: this script will update GSEA enrichment output with each new patient data.
+**code/patient_level_analyses/gsea_enrichment.R**: this script will update GSEA enrichment output with each new patient data.
    
 .. code-block:: bash
 
@@ -198,7 +198,7 @@ code/patient_level_analyses/gsea_enrichment.R: this script will update GSEA enri
 Excel file with differential results:
 -------------------------------------
 
-code/patient_level_analyses/tabulate_excel.R: this script will create an excel summary containing up/down pathways and genes of patient of interest vs ``GTEx Brain``, ``PBTA HGG`` and ``PBTA all histologies``:
+**code/patient_level_analyses/tabulate_excel.R**: this script will create an excel summary containing up/down pathways and genes of patient of interest vs ``GTEx Brain``, ``PBTA HGG`` and ``PBTA all histologies``:
 
 .. code-block:: bash
 
@@ -310,7 +310,7 @@ After running the reports, the project folder will have all output files with pl
 Upload to data-delivery project
 -------------------------------
 
-This script uploads the files under ``reports`` and ``output`` folder to the data delivery project folder on cavatica. 
+**upload_reports.R**: this script uploads the files under ``reports`` and ``output`` folder to the data delivery project folder on cavatica. 
 
 .. code-block:: bash
 
