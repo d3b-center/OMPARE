@@ -35,13 +35,13 @@ Prerequisites
 
 4. Download input files from data delivery project:
 
-	* Copy Number: ``*.CNVs.p.value.txt``
-	* Copy Number: ``*.controlfreec.ratio.txt``
-	* Expression: ``*.genes.results``
-	* Fusions: ``*.arriba.fusions.tsv``
-	* Fusions: ``*.star-fusion.fusion_candidates.final``
-	* Somatic Variants: ``*.maf``
-	* Germline Variants: ``*.hg38_multianno.txt.gz``
+* Copy Number: ``*.CNVs.p.value.txt``
+* Copy Number: ``*.controlfreec.ratio.txt``
+* Expression: ``*.genes.results``
+* Fusions: ``*.arriba.fusions.tsv``
+* Fusions: ``*.star-fusion.fusion_candidates.final``
+* Somatic Variants: ``*.maf``
+* Germline Variants: ``*.hg38_multianno.txt.gz``
 
 Scripts
 =======
