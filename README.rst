@@ -51,12 +51,12 @@ Master script
 
 run_OMPARE.R: Master script that runs the following scripts:
    
-	1. code/create_project_dir.R: creating project directory and organize files.
-	2. code/create_clinfile.R: creating clinical file for patint of interest.
-	3. code/patient_level_analyses/pnoc_format.R: updating PNOC008 data matrices (cnv, mutations, fusions, expression) with each new patient.
-	4. code/patient_level_analyses/gsea_enrichment.R: updating GSEA enrichment outputs with each new patient.
-	5. code/patient_level_analyses/tabulate_excel.R: generating excel file with up/down pathways and genes.
-	6. OMPARE.Rmd: running html reports
+1. code/create_project_dir.R: creating project directory and organize files.
+2. code/create_clinfile.R: creating clinical file for patint of interest.
+3. code/patient_level_analyses/pnoc_format.R: updating PNOC008 data matrices (cnv, mutations, fusions, expression) with each new patient.
+4. code/patient_level_analyses/gsea_enrichment.R: updating GSEA enrichment outputs with each new patient.
+5. code/patient_level_analyses/tabulate_excel.R: generating excel file with up/down pathways and genes.
+6. OMPARE.Rmd: running html reports
 
 .. code-block:: bash
 	
