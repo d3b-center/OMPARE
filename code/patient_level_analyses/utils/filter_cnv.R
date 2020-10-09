@@ -1,6 +1,6 @@
 # filter cnvs by oncogenes/tsgs as well as copy number status cutoff
 
-filter_cnv <- function(myCNVData = cnvGenes, myCancerGenes = cancerGenes, myTSGenes = tsgGenes) {
+filter_cnv <- function(myCNVData = cnvGenes, myCancerGenes = cancerGenes) {
 
   myTSGenes <- cancerGenes %>%
     filter(type == "TumorSuppressorGene") %>%

@@ -74,7 +74,7 @@ readData <- function(topDir, fusion_method = c("star","arriba"), snv_pattern = "
     assign("cnvGenes", cnvGenes, envir = globalenv())
     
     # filter cnv
-    cnvDataFilt <- filter_cnv(myCNVData = cnvGenes, myCancerGenes = cancerGenes, myTSGenes = tsgGenes)
+    cnvDataFilt <- filter_cnv(myCNVData = cnvGenes, myCancerGenes = cancerGenes)
     assign("cnvDataFilt", cnvDataFilt, envir = globalenv())
   }
   

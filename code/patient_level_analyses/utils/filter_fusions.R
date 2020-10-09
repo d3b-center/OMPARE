@@ -1,6 +1,4 @@
-######################################
-# Universal Function to filter fusions
-######################################
+# filter fusions
 
 filter_fusions <- function(myFusFile = fusFile, myCancerGenes = cancerGenes, myJunctionReads = 2) {
   
@@ -14,7 +12,7 @@ filter_fusions <- function(myFusFile = fusFile, myCancerGenes = cancerGenes, myJ
   myFusData <- read.delim(myFusFile)
   fusDataFilt <- myFusData
   
-  # Format column names
+  # format column names
   if(method == "star"){
     fusDataFilt <- fusDataFilt %>%
       mutate(X.fusion_name = gsub('--','_', X.fusion_name),
@@ -28,7 +26,7 @@ filter_fusions <- function(myFusFile = fusFile, myCancerGenes = cancerGenes, myJ
              TailGene = gene2)
   }
   
-  # Filter by Number of Reads (STAR) or by Confidence (Arriba)
+  # filter by number of reads (star) or confidence (arriba)
   if(method == "star"){
     fusDataFilt <- fusDataFilt %>% 
       filter(JunctionReads > myJunctionReads)
@@ -37,7 +35,7 @@ filter_fusions <- function(myFusFile = fusFile, myCancerGenes = cancerGenes, myJ
       filter(confidence != "low")
   }
   
-  # Filter by Cancer Gene List (Annofuse)
+  # filter by cancer genes (from annoFuse)
   myCancerGenes <- as.character(myCancerGenes$Gene_Symbol)
   fusDataFilt <- fusDataFilt %>%
     filter(HeadGene %in% myCancerGenes | TailGene %in% myCancerGenes) %>%

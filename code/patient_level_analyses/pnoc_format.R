@@ -3,7 +3,8 @@
 # create a matrix of expression
 # create metadata using clinical files
 # create full summary data files of cnv, mutations and fusions
-# This is to be run everytime a new patient comes in - before generating the report
+# this is to be run everytime a new patient comes in - before generating the report
+# these summary files are required by mutational analysis and oncogrid
 
 suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library(readxl))

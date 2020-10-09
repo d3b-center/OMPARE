@@ -36,9 +36,8 @@ tcga.gbm.survData <- tcga.gbm.clinData %>%
          OS_days = as.numeric(overall_survival_time_in_days)) %>%
   dplyr::select(sample_barcode, OS_days, OS_status)
 
-# Cancer Genes
+# Cancer Genes (annoFuse)
 cancerGenes <- readRDS(file.path(ref_dir, 'cancer_gene_list.rds'))
-tsgGenes <- read.delim(file.path(ref_dir, 'Human_TSGs.txt'), stringsAsFactors = F)
 
 # CNV analysis (chr coordinates to gene symbol map)
 chrMap <- read.delim(file.path(ref_dir, 'mart_export_genechr_mapping.txt'), stringsAsFactors = F, check.names = F)
