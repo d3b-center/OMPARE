@@ -15,7 +15,8 @@ filter_mutations <- function(myMutData = mutData, myCancerGenes = cancerGenes) {
   # gene filters
   myCancerGenes <- as.character(myCancerGenes$Gene_Symbol)
   
-  # filter by biotype, variant class, impact and cancer gene list (annoFuse)
+  # filter by biotype, variant class, impact
+  # filter by cancer gene list (annoFuse)
   mutDataFilt <- myMutData %>%
     filter(BIOTYPE == "protein_coding" &
              Variant_Classification %in% keepVC &
