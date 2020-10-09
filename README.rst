@@ -17,37 +17,72 @@ Omics Patient Report
 Prerequisites
 =============
 
-1. R Packages
+1. Clone the repository.
+
+2. Install R Packages:
 
 .. code-block:: bash
 
 	# install packages
 	Rscript code/utils/install_pkgs.R
 
-2. Reference Data
+3. Download reference Data:
    
 .. code-block:: bash
 
 	# get reference data from s3
 	aws s3 --profile saml s3://d3b-bix-dev-data-bucket/PNOC008/Reference /path/to/OMPARE/data/reference
 
-Project Organization
-====================
+4. Download input files from data delivery project:
 
-1. Clone the OMPARE repository.
+	* Copy Number: ``*.CNVs.p.value.txt``
+	* Copy Number: ``*.controlfreec.ratio.txt``
+	* Expression: ``*.genes.results``
+	* Fusions: ``*.arriba.fusions.tsv``
+	* Fusions: ``*.star-fusion.fusion_candidates.final``
+	* Somatic Variants: ``*.maf``
+	* Germline Variants: ``*.hg38_multianno.txt.gz``
 
-2. Download required files from data delivery project:
+Scripts
+=======
 
-* Copy Number: ``*.CNVs.p.value.txt``
-* Copy Number: ``*.controlfreec.ratio.txt``
-* Expression: ``*.genes.results``
-* Fusions: ``*.arriba.fusions.tsv``
-* Fusions: ``*.star-fusion.fusion_candidates.final``
-* Somatic Variants: ``*.maf``
-* Germline Variants: ``*.hg38_multianno.txt.gz``
+Master script
+-------------
 
-3. Organize patient data: 
-Run ``create_project.R`` script to create and organize project folder under ``results/``. This script will also create and output folder to store all output for plots and tables reported.
+run_OMPARE.R: Master script that runs the following scripts:
+   
+	1. code/create_project_dir.R: creating project directory and organize files.
+	2. code/create_clinfile.R: creating clinical file for patint of interest.
+	3. code/patient_level_analyses/pnoc_format.R: updating PNOC008 data matrices (cnv, mutations, fusions, expression) with each new patient.
+	4. code/patient_level_analyses/gsea_enrichment.R: updating GSEA enrichment outputs with each new patient.
+	5. code/patient_level_analyses/tabulate_excel.R: generating excel file with up/down pathways and genes.
+	6. OMPARE.Rmd: running html reports
+
+.. code-block:: bash
+	
+	Rscript run_OMPARE.R --help
+
+	Options:
+	-p PATIENT, --patient=PATIENT
+		Patient Number (1, 2...)
+
+	-s SOURCEDIR, --sourcedir=SOURCEDIR
+		Source directory with all files
+
+	-c CLIN_FILE, --clin_file=CLIN_FILE
+		PNOC008 Manifest file (.xlsx)
+
+	# Example run for PNOC008-21
+	Rscript run_OMPARE.R \
+	--patient 21 \
+	--clin_file data/reference/Manifest/PNOC008_Manifest.xlsx \
+	--sourcedir /path/to/downloaded_files_from_cavatica
+
+
+Create project directory
+------------------------
+
+code/create_project_dir.R: this script creates and organizes input files under ``results``. Creates ``output`` folder to store all output for plots and tables reported and ``reports`` folder to store all html output.
    
 .. code-block:: bash
 
@@ -58,7 +93,7 @@ Run ``create_project.R`` script to create and organize project folder under ``re
 			Source directory containing all files from data delivery project
 
 		-d DESTDIR, --destdir=DESTDIR
-			Destination directory. Should be /path/to/OMPARE/results/PNOC008-21/ for Patient 13
+			Destination directory. Should be /path/to/OMPARE/results/PNOC008-21/ for Patient 21
 
 		-h, --help
 			Show this help message and exit
@@ -68,7 +103,10 @@ Run ``create_project.R`` script to create and organize project folder under ``re
 	--sourcedir /path/to/source/PNOC008-21-cavatica-files \
 	--destdir /path/to/OMPARE/results/PNOC008-21/
 
-4. Create clinical file using the ``create_clinfile.R`` script.
+Create clinical file
+--------------------
+
+code/create_clinfile.R: this script creates clinical file for patient of interest and stores under ``results/PNOC008-patient_num/clinical/``.
 
 .. code-block:: bash
 
@@ -90,40 +128,41 @@ Run ``create_project.R`` script to create and organize project folder under ``re
 	--patient PNOC008-21 \
 	--dir /path/to/OMPARE/results/PNOC008-21
 
-Steps (3) and (4) should create a folder structure with corresponding files as shown below:
+NOTE: The above steps will create a directory structure for the patient of interest: 
 
 .. code-block:: bash
 
 	# Example for PNOC008-21
-	tree /path/to/OMPARE/results/PNOC008-21/
 	.
-	├── CNV
+	results/PNOC008-21
+	├── clinical
+	│   └── patient_report.txt
+	├── copy-number-variations
 	│   ├── uuid.controlfreec.CNVs.p.value.txt
 	│   └── uuid.controlfreec.ratio.txt
-	├── Clinical
-	│   └── patient_report.txt
-	├── ExpressionGene
+	├── gene-expressions
 	│   └── uuid.rsem.genes.results.gz
-	├── Fusions
+	├── gene-fusions
 	│   ├── uuid.STAR.fusion_predictions.abridged.coding_effect.tsv
 	│   └── uuid.arriba.fusions.tsv
-	├── GSVA
-	├── ImmuneScores
-	├── MutationsMAF
-	│   ├── uuid.consensus_somatic.vep.maf
-	│   ├── uuid.gatk.hardfiltered.PASS.vcf.gz.hg38_multianno.txt.gz
-	│   ├── uuid.lancet_somatic.vep.maf
-	│   ├── uuid.mutect2_somatic.vep.maf
-	│   ├── uuid.strelka2_somatic.vep.maf
-	│   ├── uuid.vardict_somatic.vep.maf
-	├── Reports
-	├── Summary
+	├── output
+	├── reports
+	└── simple-variants
+	    ├── uuid.lancet_somatic.vep.maf
+	    ├── uuid.mutect2_somatic.vep.maf
+	    ├── uuid.strelka2_somatic.vep.maf
+	    ├── uuid.vardict_somatic.vep.maf
+	    ├── uuid.consensus_somatic.vep.maf
+	    └── uuid.gatk.PASS.vcf.gz.hg38_multianno.txt.gz
 
-5. Update PNOC008 patient matrices (cnv, mutations, fusions, expression) with each new patient data.
+Update PNOC008 data matrices:
+-----------------------------
+
+code/patient_level_analyses/pnoc_format.R: this script updates the 008 patient matrices (cnv, mutations, fusions, expression) by adding current patient of interest
    
 .. code-block:: bash
 
-	Rscript code/pnoc_format.R
+	Rscript code/patient_level_analyses/pnoc_format.R
 
 	# Running the script will update the following files:
 	data/reference/PNOC008
@@ -135,11 +174,14 @@ Steps (3) and (4) should create a folder structure with corresponding files as s
 	├── PNOC008_deg_GTExBrain.rds
 	└── PNOC008_fusData_filtered.rds
 
-6. Update GSEA enrichment output with each new patient data.
+Update GSEA enrichment:
+-----------------------
+
+code/patient_level_analyses/gsea_enrichment.R: this script will update GSEA enrichment output with each new patient data.
    
 .. code-block:: bash
 
-	Rscript code/gsea_enrichment.R
+	Rscript code/patient_level_analyses/gsea_enrichment.R
 
 	# Running the script will update the following files:
 	data/reference/GSEA
@@ -153,11 +195,14 @@ Steps (3) and (4) should create a folder structure with corresponding files as s
 	├── TCGA_GBM_vs_GTExBrain.RDS
 	└── TCGA_GBM_vs_TCGA_GBM.RDS
 
-7. Excel summary containing up/down pathways and genes of patient of interest vs ``GTEx Brain``, ``PBTA HGG`` and ``PBTA all histologies``:
+Excel file with differential results:
+-------------------------------------
+
+code/patient_level_analyses/tabulate_excel.R: this script will create an excel summary containing up/down pathways and genes of patient of interest vs ``GTEx Brain``, ``PBTA HGG`` and ``PBTA all histologies``:
 
 .. code-block:: bash
 
-	Rscript code/tabulate_excel.R --help
+	Rscript code/patient_level_analyses/tabulate_excel.R --help
 
 	Options:
 	-i INPUT, --input=INPUT
@@ -170,6 +215,9 @@ Steps (3) and (4) should create a folder structure with corresponding files as s
 	Rscript code/tabulate_excel.R \
 	--input /path/to/OMPARE/results/PNOC008-21 \
 	--output PNOC008-21_summary.xlsx
+
+HTML reports:
+-------------
 
 8. Generate markdown report:
 
@@ -194,91 +242,75 @@ Steps (3) and (4) should create a folder structure with corresponding files as s
 	}
 
 
-After running step 8, the project folder should have some intermediate and output files:
+After running the reports, the project folder will have all output files with plots and tables under ``output`` and all html reports under ``reports``:
 
 .. code-block:: bash
 
 	results/PNOC008-21
-	├── CNV
+	├── clinical
+	│   └── patient_report.txt
+	├── copy-number-variations
 	│   ├── uuid.controlfreec.CNVs.p.value.txt
 	│   └── uuid.controlfreec.ratio.txt
-	├── Clinical
-	│   └── patient_report.txt
-	├── ExpressionGene
+	├── gene-expressions
 	│   └── uuid.rsem.genes.results.gz
-	├── Fusions
+	├── gene-fusions
 	│   ├── uuid.STAR.fusion_predictions.abridged.coding_effect.tsv
 	│   └── uuid.arriba.fusions.tsv
-	├── GSVA
-	│   └── ssgsea_rawScores.txt
-	├── ImmuneScores
-	│   ├── rawScores_adult.txt
-	│   ├── rawScores_pediatric.txt
-	│   ├── tisScores.txt
-	│   └── topCor_rawScores.txt
-	├── MutationsMAF
-	│   ├── uuid.lancet_somatic.vep.maf
-	│   ├── uuid.mutect2_somatic.vep.maf
-	│   ├── uuid.strelka2_somatic.vep.maf
-	│   ├── uuid.vardict_somatic.vep.maf
-	│   ├── uuid.consensus_somatic.vep.maf
-	│   ├── uuid.gatk.PASS.vcf.gz.hg38_multianno.txt.gz
-	│   └── mpfDataFormat.txt
-	├── Reports
+	├── output
+	│   ├── PNOC008-21_summary.xlsx
+	│   ├── adult_immune_profile.rds
+	│   ├── circos_plot.png
+	│   ├── cnv_plot.png
+	│   ├── complexheatmap_cgs.png
+	│   ├── complexheatmap_oncogrid.png
+	│   ├── complexheatmap_phgg.png
+	│   ├── consensus_mpf_output.txt
+	│   ├── diffexpr_genes_barplot_output.rds
+	│   ├── diffreg_pathways_barplot_output.rds
+	│   ├── dim_reduction_plot_adult.rds
+	│   ├── dim_reduction_plot_pediatric.rds
+	│   ├── filtered_germline_vars.rds
+	│   ├── immune_scores_adult.txt
+	│   ├── immune_scores_pediatric.txt
+	│   ├── immune_scores_topcor_pediatric.txt
+	│   ├── kaplan_meier_adult.rds
+	│   ├── kaplan_meier_pediatric.rds
+	│   ├── mutational_analysis_pediatric.rds
+	│   ├── network_plot_output.rds
+	│   ├── pathway_analysis_adult.rds
+	│   ├── pathway_analysis_pediatric.rds
+	│   ├── pbta_pnoc008_umap_output.rds
+	│   ├── pediatric_immune_profile.rds
+	│   ├── pediatric_topcor_immune_profile.rds
+	│   ├── ssgsea_pediatric.rds
+	│   ├── ssgsea_scores_pediatric.txt
+	│   ├── tcga_pnoc008_umap_output.rds
+	│   ├── tis_profile.rds
+	│   ├── tis_scores.txt
+	│   ├── tmb_profile_output.rds
+	│   ├── transciptomically_similar_adult.rds
+	│   ├── transciptomically_similar_pediatric.rds
+	│   └── tumor_signature_output.rds
+	├── reports
 	│   ├── PNOC008-21_all.html
 	│   ├── PNOC008-21_consensus.html
 	│   ├── PNOC008-21_lancet.html
 	│   ├── PNOC008-21_mutect2.html
 	│   ├── PNOC008-21_strelka2.html
 	│   └── PNOC008-21_vardict.html
-	├── Summary
-	│   ├── PNOC008-21_summary.xlsx
-	│   ├── adultsig_pathways_gen_similar.txt
-	│   ├── pbta_pnoc008_umap_output.rds
-	│   ├── pediatriccnv_pathways.txt
-	│   ├── pediatricsig_pathways_gen_similar.txt
-	│   └── tcga_pnoc008_umap_output.rds
-	├── complexHeatmap_cgs.png
-	├── complexHeatmap_oncogrid.png
-	├── complexHeatmap_phgg.png
-	└── tmpRCircos.png
-
-Run everything
-==============
-
-This single script will take the raw data as input and create output files by:
-
-1. Creating project directory and organize files
-2. Creating clinical file
-3. Updating PNOC008 data matrices (cnv, mutations, fusions, expression) with each new patient
-4. Updating GSEA enrichment outputs with each new patient
-5. Generating excel summary
-6. Running html reports
-
-.. code-block:: bash
-	
-	Rscript run_OMPARE.R --help
-
-	Options:
-	-p PATIENT, --patient=PATIENT
-		Patient Number (1, 2...)
-
-	-s SOURCEDIR, --sourcedir=SOURCEDIR
-		Source directory with all files
-
-	-c CLIN_FILE, --clin_file=CLIN_FILE
-		PNOC008 Manifest file (.xlsx)
-
-	# Example run for PNOC008-21
-	Rscript run_OMPARE.R \
-	--patient 21 \
-	--clin_file data/reference/Manifest/PNOC008_Manifest.xlsx \
-	--sourcedir /path/to/Downloads/p21
+	└── simple-variants
+	    ├── uuid.lancet_somatic.vep.maf
+	    ├── uuid.mutect2_somatic.vep.maf
+	    ├── uuid.strelka2_somatic.vep.maf
+	    ├── uuid.vardict_somatic.vep.maf
+	    ├── uuid.consensus_somatic.vep.maf
+	    └── uuid.gatk.PASS.vcf.gz.hg38_multianno.txt.gz
 
 Upload to data-delivery project
-===============================
+-------------------------------
 
-This script uploads the files under reports and output folder to the data delivery project folder on cavatica. 
+This script uploads the files under ``reports`` and ``output`` folder to the data delivery project folder on cavatica. 
 
 .. code-block:: bash
 

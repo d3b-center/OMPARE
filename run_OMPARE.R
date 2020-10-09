@@ -21,7 +21,6 @@ opt <- parse_args(OptionParser(option_list = option_list))
 p <- opt$patient
 clinical_sheet <- opt$clin_file
 sourceDir <- opt$sourcedir
-workdir <- opt$workdir
 
 # directories
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
