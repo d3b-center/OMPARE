@@ -82,7 +82,7 @@ Master script
 Create project directory
 ------------------------
 
-**code/create_project_dir.**R: this script creates and organizes input files under ``results``. Creates ``output`` folder to store all output for plots and tables reported and ``reports`` folder to store all html output.
+**code/create_project_dir.R**: this script creates and organizes input files under ``results``. Creates ``output`` folder to store all output for plots and tables reported and ``reports`` folder to store all html output.
    
 .. code-block:: bash
 
