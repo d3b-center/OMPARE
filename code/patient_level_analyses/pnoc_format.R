@@ -63,12 +63,17 @@ merge_cnv <- function(cnvData, genelist){
   sample_name <- gsub('/.*', '', sample_name)
   cnvData <- data.table::fread(cnvData, header = T, check.names = T)
   ploidy <- NULL
+  
+  # wilcoxon pvalue < 0.05
   cnvData <- cnvData %>% 
     dplyr::select(chr, start, end, copy.number, status, WilcoxonRankSumTestPvalue) %>%
     filter(WilcoxonRankSumTestPvalue < 0.05) %>%
     as.data.frame()
+  
   # map coordinates to gene symbol
   cnvOut <- create_copy_number(cnvData = cnvData, ploidy = ploidy)
+  
+  # filter to cancer genes with gain/loss
   cnvOut <- cnvOut %>%
     filter(hgnc_symbol %in% genelist,
            status != "neutral") %>% 
