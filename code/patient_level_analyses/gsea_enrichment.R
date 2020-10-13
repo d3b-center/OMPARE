@@ -46,7 +46,7 @@ pnoc008_tpm <- readRDS(file.path(ref_dir, 'pnoc008', 'pnoc008_tpm_matrix.rds'))
 pnoc008_tpm <- pnoc008_tpm[grep("^HIST", rownames(pnoc008_tpm), invert = T),]
 
 # Cancer Genes
-cancerGenes <- readRDS(file.path(ref_dir, 'cancer_gene_list.rds'))
+cancer_genes <- readRDS(file.path(ref_dir, 'cancer_gene_list.rds'))
 
 # Genesets (c2 reactome)
 gene_set <- getGmt(file.path(ref_dir, 'msigdb', 'c2.cp.reactome.v6.0.symbols.gmt'), collectionType = BroadCollection(), geneIdType = SymbolIdentifier())

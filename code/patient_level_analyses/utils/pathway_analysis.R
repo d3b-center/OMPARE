@@ -64,7 +64,7 @@ pathway_analysis <- function(all_cor, prefix, comparison) {
   if(comparison == "pediatric"){
     n.perc = 18 # 90%
   } else {
-    n.perc = 16 # 80%
+    n.perc = 12 # 60%
   }
 
   # highly significant up/down pathways only (adj. pvalue < 0.01)

@@ -265,7 +265,7 @@ Pathway Enrichment (P5) {data-navmenu="Pediatric Tumors Analysis"}
 Row {data-height=500}
 ---
 
-### Shared Pathways (Transcriptomically Similar Patients)
+### Shared Pathways (80% of Transcriptomically Similar Patients)
 
 ```{r tabulate_pathways_pediatric}
 if(exists('pathway_analysis_pediatric')){
@@ -366,7 +366,7 @@ Pathway Enrichment (P6) {data-navmenu="Adult Tumors Analysis"}
 Row {data-height=500}
 ---
 
-### Pathway Enrichment (Transcriptomically Similar Patients)
+### Shared Pathways (60% of Transcriptomically Similar Patients)
 
 ```{r tabulate_pathways_adult}
 if(exists('pathway_analysis_adult')){
