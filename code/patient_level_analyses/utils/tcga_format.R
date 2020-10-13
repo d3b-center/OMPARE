@@ -5,87 +5,87 @@
 # directories
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
 source(file.path(root_dir, "code", "utils", "define_directories.R"))
-tcga.dir <- file.path(ref_dir, 'TCGA')
+tcga_dir <- file.path(ref_dir, 'tcga')
 
 # source functions
 source(file.path(patient_level_analyses_utils, 'quiet.R'))
 source(file.path(patient_level_analyses_utils, 'batch_correct.R'))
 
 # TCGA specific
-tcga.gbm.clinData <- tcga.gbm.clinData %>%
+tcga_gbm_clinical <- tcga_gbm_clinical %>%
   dplyr::select(-c(overall_survival_time_in_days, vital_status)) %>%
   as.data.frame()
-pat.clinData <- pnoc008.clinData[,c(rep('subjectID', 2), 'sex', 'age_diagnosis_days', 'ethnicity', rep('tumorType',2), 'study_id', 'library_name')] 
-colnames(pat.clinData) <- colnames(tcga.gbm.clinData)
-tcga.gbm.clinData <- rbind(tcga.gbm.clinData, pat.clinData)
-rownames(tcga.gbm.clinData) <- tcga.gbm.clinData$sample_barcode
+pnoc008_clinical_sub <- pnoc008_clinical[,c(rep('subjectID', 2), 'sex', 'age_diagnosis_days', 'ethnicity', rep('tumorType',2), 'study_id', 'library_name')] 
+colnames(pnoc008_clinical_sub) <- colnames(tcga_gbm_clinical)
+tcga_gbm_clinical <- rbind(tcga_gbm_clinical, pnoc008_clinical_sub)
+rownames(tcga_gbm_clinical) <- tcga_gbm_clinical$sample_barcode
 
 # Combine tcga.gbm and PNOC Patients
-combGenes <- intersect(rownames(tcga.gbm.mat), rownames(pnoc008.data))
-tcga.gbm.mat <- cbind(tcga.gbm.mat[combGenes,], pnoc008.data[combGenes,])
-tcga.gbm.mat <- tcga.gbm.mat[,rownames(tcga.gbm.clinData)]
+combGenes <- intersect(rownames(tcga_gbm_tpm), rownames(pnoc008_tpm))
+tcga_gbm_tpm <- cbind(tcga_gbm_tpm[combGenes,], pnoc008_tpm[combGenes,])
+tcga_gbm_tpm <- tcga_gbm_tpm[,rownames(tcga_gbm_clinical)]
 
 # Correct for batch effect: study_id + library_name
-tcga.gbm.clinData$batch <- paste0(tcga.gbm.clinData$study_id,'_', tcga.gbm.clinData$library_name)
-fname <- file.path(tcga.dir, 'tcga_gbm_pnoc008_corrected_matrix.rds')
+tcga_gbm_clinical$batch <- paste0(tcga_gbm_clinical$study_id,'_', tcga_gbm_clinical$library_name)
+fname <- file.path(tcga_dir, 'tcga_gbm_pnoc008_corrected_matrix.rds')
 if(snv_pattern != "lancet" & file.exists(fname)){
-  tcga.gbm.mat <- readRDS(fname)
+  tcga_gbm_tpm <- readRDS(fname)
 } else {
-  tcga.gbm.mat <- quiet(batch.correct(mat = tcga.gbm.mat, clin = tcga.gbm.clinData))
-  saveRDS(tcga.gbm.mat, file = fname)
+  tcga_gbm_tpm <- quiet(batch.correct(mat = tcga_gbm_tpm, clin = tcga_gbm_clinical))
+  saveRDS(tcga_gbm_tpm, file = fname)
 }
 
 # keep full matrix for ImmuneProfile.R (only TCGA + PNOC patient of interest)
-tcga.gbm.mat.full <- tcga.gbm.mat 
-smps <- grep('TCGA_', colnames(tcga.gbm.mat.full), value = T)
+tcga_gbm_tpm_full <- tcga_gbm_tpm 
+smps <- grep('TCGA', colnames(tcga_gbm_tpm_full), value = T)
 smps <- c(smps, sampleInfo$subjectID)
-tcga.gbm.mat.all <- tcga.gbm.mat.full[,colnames(tcga.gbm.mat.full) %in% smps]
+tcga_gbm_tpm_all <- tcga_gbm_tpm_full[,colnames(tcga_gbm_tpm_full) %in% smps]
 
 # Now remove genes that have max value < 20 TPM
-maxVals <- apply(tcga.gbm.mat, FUN = max, MARGIN = 1)
-tcga.gbm.mat <- tcga.gbm.mat[maxVals>20,]
+maxVals <- apply(tcga_gbm_tpm, FUN = max, MARGIN = 1)
+tcga_gbm_tpm <- tcga_gbm_tpm[maxVals>20,]
 
 # Order samples for expression and clinical file
-common.smps <- intersect(colnames(tcga.gbm.mat), rownames(tcga.gbm.clinData))
-tcga.gbm.mat <- tcga.gbm.mat[,common.smps]
-tcga.gbm.clinData <- tcga.gbm.clinData[common.smps,]
+common.smps <- intersect(colnames(tcga_gbm_tpm), rownames(tcga_gbm_clinical))
+tcga_gbm_tpm <- tcga_gbm_tpm[,common.smps]
+tcga_gbm_clinical <- tcga_gbm_clinical[common.smps,]
 
 # for dimensionality reduction visualization (dim_reduction_plot.R)
 # Get top 1000 most variable genes
 myCV <- function(x) { sd(x)/mean(x)}
-myCVs <- apply(tcga.gbm.mat, FUN=myCV, MARGIN=1)
-tcga.gbm.mat.tsne <- as.data.frame(tcga.gbm.mat)
-tcga.gbm.mat.tsne$CV <- myCVs
-tcga.gbm.mat.tsne <- tcga.gbm.mat.tsne[order(tcga.gbm.mat.tsne$CV, decreasing = TRUE),]
-if(nrow(tcga.gbm.mat.tsne) >= 1000){
-  tcga.gbm.mat.tsne <- tcga.gbm.mat.tsne[1:1000,]
+myCVs <- apply(tcga_gbm_tpm, FUN=myCV, MARGIN=1)
+tcga_gbm_tpm_tsne <- as.data.frame(tcga_gbm_tpm)
+tcga_gbm_tpm_tsne$CV <- myCVs
+tcga_gbm_tpm_tsne <- tcga_gbm_tpm_tsne[order(tcga_gbm_tpm_tsne$CV, decreasing = TRUE),]
+if(nrow(tcga_gbm_tpm_tsne) >= 1000){
+  tcga_gbm_tpm_tsne <- tcga_gbm_tpm_tsne[1:1000,]
 }
-tcga.gbm.mat.tsne$CV <- NULL # Remove cv
+tcga_gbm_tpm_tsne$CV <- NULL # Remove cv
 
 # for clustering
 # use UMAP correlation
-tcga.umap.output <- file.path(topDir, 'output', 'tcga_pnoc008_umap_output.rds')
-if(file.exists(tcga.umap.output)){
-  tcga.umap <- readRDS(file = tcga.umap.output)
+tcga_umap_output <- file.path(topDir, 'output', 'tcga_pnoc008_umap_output.rds')
+if(file.exists(tcga_umap_output)){
+  tcga_umap <- readRDS(file = tcga_umap_output)
 } else {
   set.seed(100)
-  tcga.umap <- uwot::umap(X = t(log2(tcga.gbm.mat.tsne+1)), n_neighbors = 21, n_components = 2, metric = "correlation", ret_nn = TRUE, n_sgd_threads = 123L)
-  saveRDS(tcga.umap, file = tcga.umap.output)
+  tcga_umap <- uwot::umap(X = t(log2(tcga_gbm_tpm_tsne+1)), n_neighbors = 21, n_components = 2, metric = "correlation", ret_nn = TRUE, n_sgd_threads = 123L)
+  saveRDS(tcga_umap, file = tcga_umap_output)
 }
-tcga.gbm.embedding <- as.data.frame(tcga.umap$embedding)
-colnames(tcga.gbm.embedding) <- c("UMAP1", "UMAP2")
+tcga_gbm_embedding <- as.data.frame(tcga_umap$embedding)
+colnames(tcga_gbm_embedding) <- c("UMAP1", "UMAP2")
 
 # for getKMPlot.R and getSimilarPatients.R
 # extract nearest neighbor info
-corr <- as.data.frame(tcga.umap$nn$correlation$idx) # nn
-dist <- as.data.frame(tcga.umap$nn$correlation$dist) # distances
-corr <- t(apply(corr, MARGIN = 1, FUN = function(x) colnames(tcga.gbm.mat.tsne)[x]))
-rownames(corr) <- colnames(tcga.gbm.mat.tsne)
-rownames(dist) <- colnames(tcga.gbm.mat.tsne)
+corr <- as.data.frame(tcga_umap$nn$correlation$idx) # nn
+dist <- as.data.frame(tcga_umap$nn$correlation$dist) # distances
+corr <- t(apply(corr, MARGIN = 1, FUN = function(x) colnames(tcga_gbm_tpm_tsne)[x]))
+rownames(corr) <- colnames(tcga_gbm_tpm_tsne)
+rownames(dist) <- colnames(tcga_gbm_tpm_tsne)
 tcga_nn_table <- data.frame(nearest_neighbor = as.character(corr[grep(sampleInfo$subjectID, rownames(corr)),]), 
                        distance = as.numeric(dist[grep(sampleInfo$subjectID, rownames(dist)),]))
 tcga_nn_table$distance <- round(tcga_nn_table$distance, digits = 3)
-tcga.gbm.allCor <- tcga_nn_table[grep(sampleInfo$subjectID, tcga_nn_table$nearest_neighbor, invert = TRUE),]
+tcga_gbm_allcor <- tcga_nn_table[grep(sampleInfo$subjectID, tcga_nn_table$nearest_neighbor, invert = TRUE),]
 
 # Immune profile, ssGSEA, recurrent alterations (keep POI)
-tcga.gbm.topCor <- tcga.gbm.mat.full[,colnames(tcga.gbm.mat.full) %in% tcga_nn_table$nearest_neighbor]
+tcga_gbm_topcor <- tcga_gbm_tpm_full[,colnames(tcga_gbm_tpm_full) %in% tcga_nn_table$nearest_neighbor]

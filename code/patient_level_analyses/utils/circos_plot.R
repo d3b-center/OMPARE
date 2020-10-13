@@ -1,4 +1,4 @@
-circos_plot <- function(topDir = topDir, chrMap = chrMap, fname) {
+circos_plot <- function(topDir = topDir, chrMap, cancerGenes, fname) {
   
   # filter chrMap to chr 1:22, X and Y
   chrMap.subset <- chrMap %>% 

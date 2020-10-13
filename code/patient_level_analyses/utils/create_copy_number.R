@@ -7,14 +7,14 @@ suppressPackageStartupMessages(library(scales))
 create_copy_number <- function(cnvData, ploidy = NULL){
   
   # chromosome map
-  chrMap <- chrMap %>%
+  chr_map <- chr_map %>%
     filter(hgnc_symbol != "")
   
   # map to cnvData
   output <- cnvData %>%
     mutate(WilcoxonRankSumTestPvalue = as.numeric(scales::scientific(WilcoxonRankSumTestPvalue, digits = 3))) %>%
     rowwise() %>%
-    inner_join(chrMap, by = c("chr" = "chromosome")) %>%
+    inner_join(chr_map, by = c("chr" = "chromosome")) %>%
     filter(gene_start > start, 
            gene_end < end) %>%
     dplyr::select(hgnc_symbol, copy.number, status, WilcoxonRankSumTestPvalue) %>%
@@ -36,7 +36,7 @@ create_copy_number <- function(cnvData, ploidy = NULL){
       .$copy.number %>%
       min-1
   }
-  missingGenes <- setdiff(chrMap$hgnc_symbol, output$hgnc_symbol)
+  missingGenes <- setdiff(chr_map$hgnc_symbol, output$hgnc_symbol)
   missingGenes <- data.frame(missingGenes, ploidy, 'neutral', 1)
   colnames(missingGenes) <- colnames(output)
   output <- unique(rbind(output, missingGenes))

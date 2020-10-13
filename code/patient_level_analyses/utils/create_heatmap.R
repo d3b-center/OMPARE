@@ -13,25 +13,6 @@ source(file.path(patient_level_analyses_utils, 'quiet.R'))
 source(file.path(patient_level_analyses_utils, 'create_copy_number.R'))
 source(file.path(patient_level_analyses_utils, 'batch_correct.R'))
 
-# # function to read cnv, filter by genes and merge
-# merge.cnv <- function(cnvData, gene.list){
-#   if(length(grep("Kids_First_Biospecimen_ID", colnames(cnvData))) == 1){
-#     
-#   } else {
-#    
-#   }
-#   cnvData <- cnvData %>% 
-#     dplyr::select(chr, start, end, copy.number, 
-#                   status, WilcoxonRankSumTestPvalue) %>%
-#     as.data.frame()
-#   cnvOut <- create_copy_number(cnvData = cnvData, ploidy = ploidy) # map coordinates to gene symbol
-#   cnvOut <- cnvOut %>%
-#     filter(Gene %in% gene.list) %>% # filter to gene list
-#     mutate(sample_name = sample_name) %>% # add PNOC008 patient id
-#     mutate(CNA = ifelse(CNA >=5, 5, CNA)) # anything > 4 is a deep amplification
-#   return(cnvOut)
-# }
-
 # merge cnv pnoc008
 merge_cnv_pnoc <- function(cnvData, gene.list){
   sample_name <- gsub(".*PNOC", "PNOC", cnvData)
@@ -66,7 +47,7 @@ create_heatmap <- function(fname, genelist, plot.layout = "h"){
   
   ## Expression
   # PNOC008 clinical
-  pnoc.clin <- pnoc008.clinData
+  pnoc.clin <- pnoc008_clinical
   pnoc.clin <- pnoc.clin %>%
     mutate(disease = "HGG",
            disease_subtype = tumorType,
@@ -74,7 +55,7 @@ create_heatmap <- function(fname, genelist, plot.layout = "h"){
     dplyr::select(subjectID, sample_id, disease, disease_subtype, sex, ethnicity, library_name)
   
   # PNOC008 mRNA
-  pnoc.expr <- pnoc008.data
+  pnoc.expr <- pnoc008_tpm
   
   # PBTA clinical
   pbta.clin <- read.delim(file.path(ref_dir, 'PBTA', 'pbta-histologies.tsv'))
@@ -107,7 +88,7 @@ create_heatmap <- function(fname, genelist, plot.layout = "h"){
     column_to_rownames("subjectID")
   
   # PBTA HGG mRNA expression (n = 186)
-  pbta.expr <- pbta.full
+  pbta.expr <- pbta_full_tpm
   rna.sids <- intersect(colnames(pbta.expr), rownames(pbta.rna.clin))
   pbta.rna.clin  <- pbta.rna.clin[rna.sids,]
   pbta.expr <- pbta.expr[,rna.sids]
@@ -152,13 +133,13 @@ create_heatmap <- function(fname, genelist, plot.layout = "h"){
   
   ## Copy number
   # PBTA
-  pbta.cnv <- pbta.cnv %>%
+  pbta_cnv <- pbta_cnv %>%
     inner_join(pbta.cnv.clin %>% 
                  dplyr::select(sample_id) %>% 
                  rownames_to_column("subjectID"), by = c("Kids_First_Biospecimen_ID" = "subjectID"))
   
   # subset to genelist
-  pbta.cnv.genelist <- plyr::ddply(.data = pbta.cnv, 
+  pbta.cnv.genelist <- plyr::ddply(.data = pbta_cnv, 
                                    .variables = 'Kids_First_Biospecimen_ID', 
                                    .fun = function(x) merge_cnv_pbta(cnvData = x, gene.list = genelist))
   

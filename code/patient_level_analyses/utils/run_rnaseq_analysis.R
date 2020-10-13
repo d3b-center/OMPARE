@@ -19,8 +19,13 @@ comparison = paste0(sampleInfo$subjectID, '_vs_GTExBrain')
 
 # run single sample level analysis
 rnaseq_analysis_output <- run_rnaseq_analysis(exp.data = expData.m,    # expression data (long format)
-                                       refData = gtexData,      # gtex brain samples
-                                       thresh = 2,              # foldchange cutoff 
-                                       comparison = comparison, # comparison name
-                                       single_sample = TRUE,    # single sample analysis
-                                       sample_name = sampleInfo$subjectID) # pass sample name only for single sample analysis   
+                                              refData = gtex_brain_tpm,      # gtex brain samples
+                                              thresh = 2,              # foldchange cutoff 
+                                              gene_set = gene_set, # reactome
+                                              comparison = comparison, # comparison name
+                                              single_sample = TRUE,    # single sample analysis
+                                              sample_name = sampleInfo$subjectID) # pass sample name only for single sample analysis   
+
+# save output
+fname <- file.path(topDir, "output", "rnaseq_analysis_output.rds")
+saveRDS(rnaseq_analysis_output, file = fname)

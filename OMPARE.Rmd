@@ -37,15 +37,10 @@ source(file.path(utils_dir, 'load_libraries.R'))
 ```
 
 ```{r set_params}
-# read input files
-# source(file.path(patient_level_analyses_utils, "read_patient_data.R"))
 topDir <- params$topDir
 fusion_method <- params$fusion_method
 snv_pattern <- params$snv_pattern
 tmb <- params$tmb
-# readData(topDir = topDir, 
-#          fusion_method = fusion_method, 
-#          snv_pattern = snv_pattern)
 ```
 
 ```{r call_driver}

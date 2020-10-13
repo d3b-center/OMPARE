@@ -3,17 +3,17 @@ root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
 source(file.path(root_dir, "code", "utils", "define_directories.R"))
 
 # reference directories
-pbta.dir <- file.path(ref_dir, "PBTA")
-tcga.dir <- file.path(ref_dir, "TCGA")
+pbta_dir <- file.path(ref_dir, "pbta")
+tcga_dir <- file.path(ref_dir, "tcga")
 
 tis_profile <- function(fname, score){
   
   if(!file.exists(fname)){
     # TCGA counts
-    tcga <- readRDS(file.path(tcga.dir, "TCGA_matrix_counts.RDS"))
+    tcga <- readRDS(file.path(tcga_dir, "tcga_matrix_counts.rds"))
     
     # PBTA counts  (polyA + stranded count data collapsed to gene symbols)
-    pbta.full <- readRDS(file.path(pbta.dir, 'pbta-gene-expression-rsem-counts-collapsed.polya.stranded.rds'))
+    pbta.full <- readRDS(file.path(pbta_dir, 'pbta-gene-expression-rsem-counts-collapsed.polya.stranded.rds'))
     
     # PNOC008 expression
     pnoc008 <- expData.counts[,sampleInfo$subjectID, drop=FALSE]
@@ -29,13 +29,13 @@ tis_profile <- function(fname, score){
     total <- cbind(tcga, pbta.full, pnoc008)
     
     # now read meta data
-    tcga.meta <- readRDS(file.path(tcga.dir, 'TCGA_meta.RDS'))
+    tcga.meta <- readRDS(file.path(tcga_dir, 'tcga_clinical.rds'))
     tcga.meta <- tcga.meta %>%
       rownames_to_column("sample_id") %>%
       mutate(Type = "Adult",
              study_id = "TCGA") %>%
       dplyr::select(sample_id, disease, Type, study_id, library_name)
-    pbta.meta <- read.delim(file.path(pbta.dir, 'pbta-histologies.tsv'))
+    pbta.meta <- read.delim(file.path(pbta_dir, 'pbta-histologies.tsv'))
     pbta.meta <- pbta.meta %>%
       filter(experimental_strategy  == "RNA-Seq") %>%
       mutate(sample_id = Kids_First_Biospecimen_ID, 

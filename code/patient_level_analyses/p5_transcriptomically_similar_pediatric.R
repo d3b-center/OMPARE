@@ -6,8 +6,8 @@ source(file.path(root_dir, "code", "utils", "define_directories.R"))
 source(file.path(patient_level_analyses_utils, 'transcriptomically_similar.R'))
 
 # recurrent alterations
-transciptomically_similar_pediatric <- transciptomically_similar(all_cor = pbta.allCor, 
-                                                                 clin_data = pbta.clinData)
+transciptomically_similar_pediatric <- transciptomically_similar(all_cor = pbta_allcor, 
+                                                                 clin_data = pbta_clinical)
 
 # save output
 saveRDS(transciptomically_similar_pediatric, file = file.path(topDir, "output", "transciptomically_similar_pediatric.rds"))

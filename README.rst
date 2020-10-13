@@ -53,8 +53,8 @@ Master script
    
 1. **code/create_project_dir.R**: creating project directory and organize files.
 2. **code/create_clinfile.R**: creating clinical file for patint of interest.
-3. **code/patient_level_analyses/pnoc_format.R**: updating PNOC008 data matrices (cnv, mutations, fusions, expression) with each new patient.
-4. **code/patient_level_analyses/gsea_enrichment.R**: updating GSEA enrichment outputs with each new patient.
+3. **code/patient_level_analyses/gsea_enrichment.R**: updating GSEA enrichment outputs with each new patient.
+4. **code/patient_level_analyses/pnoc_format.R**: updating PNOC008 data matrices (cnv, mutations, fusions, expression) with each new patient.
 5. **code/patient_level_analyses/tabulate_excel.R**: generating excel file with up/down pathways and genes.
 6. **OMPARE.Rmd**: running html reports
 
@@ -155,25 +155,6 @@ NOTE: The above steps will create a directory structure for the patient of inter
 	    ├── uuid.consensus_somatic.vep.maf
 	    └── uuid.gatk.PASS.vcf.gz.hg38_multianno.txt.gz
 
-Update PNOC008 data matrices:
------------------------------
-
-**code/patient_level_analyses/pnoc_format.R**: this script updates the 008 patient matrices (cnv, mutations, fusions, expression) by adding current patient of interest
-   
-.. code-block:: bash
-
-	Rscript code/patient_level_analyses/pnoc_format.R
-
-	# Running the script will update the following files:
-	data/reference/PNOC008
-	├── PNOC008_TMBscores.rds
-	├── PNOC008_TPM_matrix.RDS
-	├── PNOC008_clinData.RDS
-	├── PNOC008_cnvData_filtered.rds
-	├── PNOC008_consensus_mutData_filtered.rds
-	├── PNOC008_deg_GTExBrain.rds
-	└── PNOC008_fusData_filtered.rds
-
 Update GSEA enrichment:
 -----------------------
 
@@ -184,16 +165,35 @@ Update GSEA enrichment:
 	Rscript code/patient_level_analyses/gsea_enrichment.R
 
 	# Running the script will update the following files:
-	data/reference/GSEA
-	├── PBTA_vs_GTExBrain.RDS
-	├── PBTA_vs_PBTA.RDS
-	├── PBTA_vs_PBTAHGG.RDS
-	├── PNOC008_vs_GTExBrain.RDS
-	├── PNOC008_vs_PBTA.RDS
-	├── PNOC008_vs_PBTA_HGG.RDS
-	├── PNOC008_vs_TCGA_GBM.RDS
-	├── TCGA_GBM_vs_GTExBrain.RDS
-	└── TCGA_GBM_vs_TCGA_GBM.RDS
+	data/reference/gsea
+	├── pbta_vs_gtex_brain.rds
+	├── pbta_vs_pbta.rds
+	├── pbta_vs_pbta_hgg.rds
+	├── pnoc008_vs_gtex_brain.rds
+	├── pnoc008_vs_pbta.rds
+	├── pnoc008_vs_pbta_hgg.rds
+	├── pnoc008_vs_tcga_gbm.rds
+	├── tcga_gbm_vs_gtex_brain.rds
+	└── tcga_gbm_vs_tcga_gbm.rds
+
+Update PNOC008 data matrices:
+-----------------------------
+
+**code/patient_level_analyses/pnoc_format.R**: this script updates the 008 patient matrices (cnv, mutations, fusions, expression) by adding current patient of interest
+   
+.. code-block:: bash
+
+	Rscript code/patient_level_analyses/pnoc_format.R
+
+	# Running the script will update the following files:
+	data/reference/pnoc008
+	├── pnoc008_clinical.rds
+	├── pnoc008_cnv_filtered.rds
+	├── pnoc008_consensus_mutation_filtered.rds
+	├── pnoc008_fusions_filtered.rds
+	├── pnoc008_tmb_scores.rds
+	├── pnoc008_tpm_matrix.rds
+	└── pnoc008_vs_gtex_brain_degs.rds
 
 Excel file with differential results:
 -------------------------------------

@@ -17,7 +17,7 @@ annotate_mutations <- function(myMutData = mutData, myCancerGenes = cancerGenes)
   
   # filter by biotype, variant class, impact 
   # annotate by cancer gene list (annoFuse)
-  mutDataFilt <- v %>%
+  mutDataFilt <- mutData %>%
     filter(BIOTYPE == "protein_coding" &
              Variant_Classification %in% keepVC &
              IMPACT %in% keepVI) %>%

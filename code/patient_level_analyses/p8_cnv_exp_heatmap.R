@@ -7,10 +7,10 @@ source(file.path(patient_level_analyses_utils, 'create_heatmap.R'))
 
 # heatmap with phgg genes
 create_heatmap(fname = file.path(topDir, "output", "complexheatmap_phgg.png"),
-               genelist = genelist.heatmap$pHGG_Gene_List,
+               genelist = genelist_heatmap$pHGG_Gene_List,
                plot.layout = "h")
 
 # heatmap with cgs genes
 create_heatmap(fname = file.path(topDir, "output", "complexheatmap_cgs.png"),
-               genelist = genelist.heatmap$Cancer_Gene_Census_CNVs,
+               genelist = genelist_heatmap$Cancer_Gene_Census_CNVs,
                plot.layout = "h")

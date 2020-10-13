@@ -1,4 +1,4 @@
-tmb.calculate <- function(myTMB = TMBFileBED) {
+tmb.calculate <- function(myTMB = tmb_bed_file) {
   
   # read mutect2 for TMB profile
   somatic.mut.pattern <- '*.maf'
@@ -27,9 +27,9 @@ tmb.calculate <- function(myTMB = TMBFileBED) {
 }
 
 
-tmb_profile <- function(pedTMBScores = pedTMB, adultTMBScores = adultTMB, TMB) {
+tmb_profile <- function(pedTMBScores = ped_tmb, adultTMBScores = adult_tmb, TMB, tmb_bed_file) {
   
-  TMB <- tmb.calculate()/TMB
+  TMB <- tmb.calculate(myTMB = tmb_bed_file)/TMB
   pedTMBScores$Type <- "Pediatric"
   adultTMBScores$Type <- "Adult"
   tmbScores <- rbind(pedTMBScores, adultTMBScores)

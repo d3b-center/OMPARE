@@ -14,7 +14,12 @@ source(file.path(patient_level_analyses_utils, "read_patient_data.R"))
 readData(topDir = topDir, fusion_method = fusion_method, snv_pattern = snv_pattern)
 
 # run rna-seq analysis (output of this is required by several downstream scripts)
-source(file.path(patient_level_analyses_utils, "run_rnaseq_analysis.R"))             
+fname <- file.path(topDir, "output", "rnaseq_analysis_output.rds")
+if(file.exists(fname)){
+  rnaseq_analysis_output <- readRDS(fname)
+} else {
+  source(file.path(patient_level_analyses_utils, "run_rnaseq_analysis.R"))
+}
 
 ## page 1 modules
 # patient/sample information to display

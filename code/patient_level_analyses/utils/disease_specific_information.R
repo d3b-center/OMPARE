@@ -4,7 +4,7 @@
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
 source(file.path(root_dir, "code", "utils", "define_directories.R"))
 
-disease_specific_information <- function(snv_pattern, all_findings_output) {
+disease_specific_information <- function(disease_specific_fields, snv_pattern, all_findings_output) {
   
   # only up/down genes, fusions, mutations, vus, cnv
   tmpGeneFindings <- all_findings_output %>%
@@ -22,10 +22,10 @@ disease_specific_information <- function(snv_pattern, all_findings_output) {
           collapse=", ")  # get Aberration and Type info 
   }
   
-  diseaseSpecificFields <- diseaseSpecificFields %>% 
-    mutate(Value = apply(diseaseSpecificFields, FUN = function(x) getStatus(x = x, tmpGeneFindings = tmpGeneFindings), MARGIN=1)) %>%
+  disease_specific_fields <- disease_specific_fields %>% 
+    mutate(Value = apply(disease_specific_fields, FUN = function(x) getStatus(x = x, tmpGeneFindings = tmpGeneFindings), MARGIN=1)) %>%
     mutate(Value = ifelse(Value == " ()", "Normal", Value)) %>%
     dplyr::select(Field_name, Value)
   
-  return(diseaseSpecificFields)
+  return(disease_specific_fields)
 }

@@ -5,80 +5,80 @@ root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
 source(file.path(root_dir, "code", "utils", "define_directories.R"))
 
 # reference directories
-pbta.dir <- file.path(ref_dir, 'PBTA')
-pnoc008.dir <- file.path(ref_dir, 'PNOC008')
+pbta_dir <- file.path(ref_dir, 'pbta')
+pnoc008_dir <- file.path(ref_dir, 'pnoc008')
 
 mutational_analysis <- function(top_cor, key_clinical_findings_output){
   
   # matrix of top 20 correlated samples
   top20 <- colnames(top_cor)
   
-  # PBTA corresponding sample ids
-  pbta.clinData <- read.delim(file.path(pbta.dir, 'pbta-histologies.tsv'))
-  pbta.clinData <- pbta.clinData %>%
+  # pbta corresponding sample ids
+  pbta_clinical <- read.delim(file.path(pbta_dir, 'pbta-histologies.tsv'))
+  pbta_clinical <- pbta_clinical %>%
     filter(Kids_First_Biospecimen_ID %in% top20)  %>%
     mutate(SampleID = sample_id) %>%
     dplyr::select(SampleID, Kids_First_Biospecimen_ID)
   
-  # PNOC008 corresponding sample ids
-  pnoc008.top20.clinData <- pnoc008.clinData %>%
+  # pnoc008 corresponding sample ids
+  pnoc008_clinical <- readRDS(file.path(pnoc008_dir, 'pnoc008_clinical.rds'))
+  pnoc008_top20_clinical <- pnoc008_clinical %>%
     filter(subjectID %in% top20) %>%
     mutate(SampleID = subjectID, Kids_First_Biospecimen_ID = subjectID) %>%
     dplyr::select(SampleID, Kids_First_Biospecimen_ID)
-  clinData <- rbind(pbta.clinData, pnoc008.top20.clinData)
+  combined_clinical <- rbind(pbta_clinical, pnoc008_top20_clinical)
   
-  # merge PBTA + PNOC008 mutations, copy number and fusions
-  
+  # merge pbta + pnoc008 mutations, copy number and fusions
   # mutations
-  pbta.mutations <- readRDS(file.path(pbta.dir, 'pbta-snv-consensus-mutation-filtered.rds'))
-  pnoc.mutations <- readRDS(file.path(pnoc008.dir, 'PNOC008_consensus_mutData_filtered.rds'))
-  total.mutations <- rbind(pbta.mutations, pnoc.mutations)
+  pbta_mutations <- readRDS(file.path(pbta_dir, 'pbta-snv-consensus-mutation-filtered.rds'))
+  pnoc_mutations <- readRDS(file.path(pnoc008_dir, 'pnoc008_consensus_mutation_filtered.rds'))
+  total_mutations <- rbind(pbta_mutations, pnoc_mutations)
   
   # copy number
-  pbta.cnv <- readRDS(file.path(pbta.dir, 'pbta-cnv-controlfreec-filtered.rds'))
-  pnoc.cnv <- readRDS(file.path(pnoc008.dir, 'PNOC008_cnvData_filtered.rds'))
-  total.cnv <- rbind(pbta.cnv, pnoc.cnv)
+  pbta_cnv <- readRDS(file.path(pbta_dir, 'pbta-cnv-controlfreec-filtered.rds'))
+  pnoc_cnv <- readRDS(file.path(pnoc008_dir, 'pnoc008_cnv_filtered.rds'))
+  total_cnv <- rbind(pbta_cnv, pnoc_cnv)
   
   # fusions
-  pbta.fusions <- readRDS(file.path(pbta.dir, 'pbta-fusion-putative-oncogenic-filtered.rds'))
-  pnoc.fusions <- readRDS(file.path(pnoc008.dir, 'PNOC008_fusData_filtered.rds'))
-  total.fusions <- rbind(pbta.fusions, pnoc.fusions)
+  pbta_fusions <- readRDS(file.path(pbta_dir, 'pbta-fusion-putative-oncogenic-filtered.rds'))
+  pnoc_fusions <- readRDS(file.path(pnoc008_dir, 'pnoc008_fusions_filtered.rds'))
+  total_fusions <- rbind(pbta_fusions, pnoc_fusions)
   
   # merge
-  total.alterations <- rbind(total.mutations, total.cnv, total.fusions)
+  total_alterations <- rbind(total_mutations, total_cnv, total_fusions)
   
   # filter to top 20 genomically similar patients
-  total.alterations <- total.alterations %>%
-    filter(SampleID %in% clinData$SampleID)
+  total_alterations <- total_alterations %>%
+    filter(SampleID %in% combined_clinical$SampleID)
   
   # alterations in genomically similar patients
-  total.alt.table1 <- total.alterations %>%
-    inner_join(total.alterations %>%
+  total_alt_table1 <- total_alterations %>%
+    inner_join(total_alterations %>%
                  dplyr::select(Gene, Kids_First_Biospecimen_ID) %>%
                  unique() %>%
                  group_by(Gene) %>% 
                  summarise(SampleCount = n()), by = c("Gene"))
   
   # at least 5/20 genomically similar patients
-  total.alt.table1 <- total.alt.table1 %>%
+  total_alt_table1 <- total_alt_table1 %>%
     filter(SampleCount >= 5)
   
   # overlap with key clinical findings
   key.clinical <- key_clinical_findings_output
   key.genes <- unique(key.clinical$Aberration)
-  total.alt.table2 <- total.alterations %>%
+  total_alt_table2 <- total_alterations %>%
     filter(Gene %in% key.genes)
   
   # shared genes that are present in patient of interest + at least 1 more sample
-  total.alt.table2 <- total.alt.table2 %>%
-    inner_join(total.alt.table2 %>%
+  total_alt_table2 <- total_alt_table2 %>%
+    inner_join(total_alt_table2 %>%
                  dplyr::select(Gene, SampleID) %>% 
                  unique() %>%
                  group_by(Gene) %>% 
                  summarise(SampleCount = n()), by = c("Gene")) %>%
     filter(SampleCount != 1)
   
-  alt.tables <- list(recurrent_alterations = total.alt.table1, 
-                     shared_genes = total.alt.table2)
-  return(alt.tables)
+  alt_tables <- list(recurrent_alterations = total_alt_table1, 
+                     shared_genes = total_alt_table2)
+  return(alt_tables)
 }

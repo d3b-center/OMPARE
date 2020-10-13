@@ -18,57 +18,57 @@ option_list <- list(
 opt <- parse_args(OptionParser(option_list = option_list))
 topDir <- opt$input
 fname <- opt$output
-pnoc008.patient <- gsub('.*/','',topDir)
+pnoc008_patient <- gsub('.*/','',topDir)
 
 # directories
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
 source(file.path(root_dir, "code", "utils", "define_directories.R"))
-gsea.dir <- file.path(ref_dir, 'GSEA')
+gsea.dir <- file.path(ref_dir, 'gsea')
 
 # output filename
 fname <- file.path(topDir, "output", fname)
 
 # read output from gsea enrichment
 # gtex brain
-GTExBrain <- readRDS(file.path(gsea.dir, 'PNOC008_vs_GTExBrain.RDS'))
-GTExBrain <- GTExBrain[[pnoc008.patient]]
+pnoc008_vs_gtex_brain <- readRDS(file.path(gsea.dir, 'pnoc008_vs_gtex_brain.rds'))
+pnoc008_vs_gtex_brain <- pnoc008_vs_gtex_brain[[pnoc008_patient]]
 
 # pbta hgg
-PBTA_HGG <- readRDS(file.path(gsea.dir, 'PNOC008_vs_PBTA_HGG.RDS'))
-PBTA_HGG <- PBTA_HGG[[pnoc008.patient]]
+pnoc008_vs_pbta_hgg <- readRDS(file.path(gsea.dir, 'pnoc008_vs_pbta_hgg.rds'))
+pnoc008_vs_pbta_hgg <- pnoc008_vs_pbta_hgg[[pnoc008_patient]]
 
 # pbta all histologies
-PBTA_All <- readRDS(file.path(gsea.dir, 'PNOC008_vs_PBTA.RDS'))
-PBTA_All <- PBTA_All[[pnoc008.patient]]
+pnoc008_vs_pbta <- readRDS(file.path(gsea.dir, 'pnoc008_vs_pbta.rds'))
+pnoc008_vs_pbta <- pnoc008_vs_pbta[[pnoc008_patient]]
 
 # up/down pathways
-pathway.df <- rbind(GTExBrain$pathways, PBTA_HGG$pathways, PBTA_All$pathways)
-pathway.df <- pathway.df %>%
-  group_by(Pathway, Direction) %>%
+pathway_df <- rbind(pnoc008_vs_gtex_brain$pathways, pnoc008_vs_pbta_hgg$pathways, pnoc008_vs_pbta$pathways)
+pathway_df <- pathway_df %>%
+  group_by(pathway, direction) %>%
   mutate(Freq = n()) %>%
   as.data.frame()
-pathway.df.up <- pathway.df %>%
-  filter(Direction == "Up") %>%
+pathway_df.up <- pathway_df %>%
+  filter(direction == "up") %>%
   as.data.frame()
-pathway.df.down <- pathway.df %>%
-  filter(Direction == "Down") %>%
+pathway_df.down <- pathway_df %>%
+  filter(direction == "down") %>%
   as.data.frame()
 
 # up/down genes
-genes.df <- rbind(GTExBrain$genes, PBTA_HGG$genes, PBTA_All$genes)
-genes.df <- genes.df %>%
-  group_by(Gene_name, DE) %>%
+genes_df <- rbind(pnoc008_vs_gtex_brain$genes, pnoc008_vs_pbta_hgg$genes, pnoc008_vs_pbta$genes)
+genes_df <- genes_df %>%
+  group_by(genes, diff_expr) %>%
   mutate(Freq = n()) %>%
   as.data.frame()
-genes.df.up <- genes.df %>%
-  filter(DE == "Up") %>%
+genes_df.up <- genes_df %>%
+  filter(diff_expr == "up") %>%
   as.data.frame()
-genes.df.down <- genes.df %>%
-  filter(DE == "Down") %>%
+genes_df.down <- genes_df %>%
+  filter(diff_expr == "down") %>%
   as.data.frame()
 
 # write out to excel
-write.xlsx(x = pathway.df.up, file = fname, sheetName = "Pathways_Up", row.names = F)
-write.xlsx(x = genes.df.up, file = fname, sheetName = "DE_Genes_Up", row.names = F, append = TRUE)
-write.xlsx(x = pathway.df.down, file = fname, sheetName = "Pathways_Down", row.names = F, append = TRUE)
-write.xlsx(x = genes.df.down, file = fname, sheetName = "DE_Genes_Down", row.names = F, append = TRUE)
+write.xlsx(x = pathway_df.up, file = fname, sheetName = "Pathways_Up", row.names = F)
+write.xlsx(x = genes_df.up, file = fname, sheetName = "DE_Genes_Up", row.names = F, append = TRUE)
+write.xlsx(x = pathway_df.down, file = fname, sheetName = "Pathways_Down", row.names = F, append = TRUE)
+write.xlsx(x = genes_df.down, file = fname, sheetName = "DE_Genes_Down", row.names = F, append = TRUE)

@@ -54,17 +54,17 @@ if(!is.null(clinical_sheet)){
   print("Clinical file present...")
 }
 
-# 3. Update PNOC008 matrices for each new patient
-print("Update PNOC008 data matrices...")
-pnoc.format <- file.path(patient_level_analyses, 'pnoc_format.R')
-cmd3 <- paste('Rscript', pnoc.format)
+# 3. Update GSEA enrichment for each new patient
+print("Update PNOC008 GSEA summary...")
+gsea.enrichment <- file.path(patient_level_analyses, 'gsea_enrichment.R')
+cmd3 <- paste('Rscript', gsea.enrichment)
 print(cmd3)
 system(cmd3)
 
-# 4. Update GSEA enrichment for each new patient
-print("Update PNOC008 GSEA summary...")
-gsea.enrichment <- file.path(patient_level_analyses, 'gsea_enrichment.R')
-cmd4 <- paste('Rscript', gsea.enrichment)
+# 4. Update PNOC008 matrices for each new patient
+print("Update PNOC008 data matrices...")
+pnoc.format <- file.path(patient_level_analyses, 'pnoc_format.R')
+cmd4 <- paste('Rscript', pnoc.format)
 print(cmd4)
 system(cmd4)
 

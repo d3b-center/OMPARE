@@ -17,7 +17,6 @@ source(file.path(patient_level_analyses_utils, 'annotate_mutations.R')) # annota
 readData <- function(topDir, fusion_method = c("star","arriba"), snv_pattern = "all"){
   
   # patient sample info (at most one with .txt extension)
-  # assign n/a if no clinical info is present
   sampleInfo <- list.files(path = topDir, pattern = "patient_report.txt", recursive = T, full.names = T)
   if(length(sampleInfo) == 1){
     sampleInfo <- read.delim(sampleInfo, stringsAsFactors = F)
@@ -41,11 +40,11 @@ readData <- function(topDir, fusion_method = c("star","arriba"), snv_pattern = "
     assign("mutData", mutData, envir = globalenv())
     
     # filter mutations
-    mutDataFilt <- filter_mutations(myMutData = mutData, myCancerGenes = cancerGenes)
+    mutDataFilt <- filter_mutations(myMutData = mutData, myCancerGenes = cancer_genes)
     assign("mutDataFilt", mutDataFilt, envir = globalenv())
     
     # annotate mutations
-    mutDataAnnot <- annotate_mutations(myMutData = mutData, myCancerGenes = cancerGenes)
+    mutDataAnnot <- annotate_mutations(myMutData = mutData, myCancerGenes = cancer_genes)
     assign("mutDataAnnot", mutDataAnnot, envir = globalenv())
   } 
   
@@ -70,11 +69,11 @@ readData <- function(topDir, fusion_method = c("star","arriba"), snv_pattern = "
     assign("cnvData", cnvData, envir = globalenv())
     
     # map to gene symbol
-    cnvGenes <- create_copy_number(cnvData = cnvData)
+    cnvGenes <- create_copy_number(cnvData = cnvData, ploidy = NULL)
     assign("cnvGenes", cnvGenes, envir = globalenv())
     
     # filter cnv
-    cnvDataFilt <- filter_cnv(myCNVData = cnvGenes, myCancerGenes = cancerGenes)
+    cnvDataFilt <- filter_cnv(myCNVData = cnvGenes, myCancerGenes = cancer_genes)
     assign("cnvDataFilt", cnvDataFilt, envir = globalenv())
   }
   
@@ -87,7 +86,6 @@ readData <- function(topDir, fusion_method = c("star","arriba"), snv_pattern = "
   }
   
   # fusion data (chose either star or arriba or both)
-  # fusion_method determines the pattern to be searched
   if(fusion_method == "star"){
     fusPattern = "*star-fusion.fusion_candidates.final"
   } else if(fusion_method == "arriba") {
@@ -98,7 +96,7 @@ readData <- function(topDir, fusion_method = c("star","arriba"), snv_pattern = "
   # read fusion files + filter and merge them
   fusFiles <- list.files(path = topDir, pattern = fusPattern, recursive = TRUE, full.names = T)
   if(length(fusFiles) >= 1){
-    fusFiles <- lapply(fusFiles, filter_fusions)
+    fusFiles <- lapply(fusFiles, filter_fusions, myCancerGenes = cancer_genes)
     fusData <- do.call('rbind', fusFiles)
     fusData <- unique(fusData)
     if(nrow(fusData) >= 1){

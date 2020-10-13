@@ -72,7 +72,7 @@ all_findings <- function(snv_pattern) {
     tmpExp <- rnaseq_analysis_output$diffexpr.top20 %>%
       rownames_to_column("Aberration") %>%
       mutate(Type = c(rep("Outlier-High (mRNA)", 20), rep("Outlier-Low (mRNA)", 20)),
-             Details = paste0("Z-score: ", round(Z_Score, 2)," | TPM: ",TPM),
+             Details = paste0("Z-score: ", round(z_score, 2)," | TPM: ", tpm),
              Variant_Properties = "")  %>%
       dplyr::select(Aberration, Type, Details, Variant_Properties)
   } else {
@@ -83,18 +83,19 @@ all_findings <- function(snv_pattern) {
   if(exists('expData')){
     tmpPath <- rnaseq_analysis_output$pathways
     tmpPathUp <- tmpPath %>%
-      filter(Direction == "Up") %>%
-      arrange(ADJ_P_VAL) %>%
+      filter(direction == "up") %>%
+      mutate(Type = "Pathway Up") %>%
+      arrange(padj) %>%
       slice_head(n = 20)
     tmpPathDown <- tmpPath %>%
-      filter(Direction == "Down") %>%
-      arrange(ADJ_P_VAL) %>%
+      filter(direction == "down") %>%
+      mutate(Type = "Pathway Down") %>%
+      arrange(padj) %>%
       slice_head(n = 20)
     tmpPath <- rbind(tmpPathUp, tmpPathDown)
     tmpPath <- tmpPath %>%
-      mutate(Aberration = Pathway,
-             Type = c(rep("Pathway Up", 20), rep("Pathway Down", 20)),
-             Details = paste0("Adj. P-Value: ", formatC(ADJ_P_VAL, format = "e", digits = 2)),
+      mutate(Aberration = pathway,
+             Details = paste0("Adj. P-Value: ", formatC(padj, format = "e", digits = 2)),
              Variant_Properties = "") %>%
       dplyr::select(Aberration, Type, Details, Variant_Properties)
   } else {

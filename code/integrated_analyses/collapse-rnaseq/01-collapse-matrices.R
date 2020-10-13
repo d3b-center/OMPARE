@@ -14,11 +14,11 @@ outdir <- file.path(ref_dir, "hgg-dmg-integration", "merged_ngs_files", "rna-seq
 # parameters
 option_list <- list(
   make_option(c("--mat"), type = "character",
-              help = "Expression Matrix (RSEM TPM) (.RDS)"),
+              help = "Expression Matrix (RSEM TPM) (.rds)"),
   make_option(c("--gene_sym"),  type = "logical",
               help = "Is gene symbol present?"),
   make_option(c("--outfile"), type = "character",
-              help = "Output filename (.RDS)"))
+              help = "Output filename (.rds)"))
 
 # parse parameters
 opt <- parse_args(OptionParser(option_list = option_list))

@@ -2,30 +2,28 @@
 diffreg_pathways_barplot <- function(rnaseq_analysis_output = rnaseq_analysis_output) {
   pathData <- rnaseq_analysis_output$pathways
   
-  # only significant pathways
-  pathData <- pathData %>%
-    filter(ADJ_P_VAL < 0.05)
-  
   # top 10 upregulated pathways
   pathDataUp <- pathData %>%
-    filter(Direction == "Up") %>%
-    arrange(ADJ_P_VAL) %>%
+    filter(direction == "up") %>%
+    arrange(padj) %>%
     slice_head(n = 10)
   
   # top 10 downregulated pathways
   pathDataDown <- pathData %>%
-    filter(Direction == "Down") %>%
-    arrange(ADJ_P_VAL) %>%
+    filter(direction == "down") %>%
+    arrange(padj) %>%
     slice_head(n = 10)
   
   # combine and plot
   pathData <- rbind(pathDataDown, pathDataUp)
-  pathData$Pathway <- factor(pathData$Pathway, levels = unique(pathData$Pathway))
-  pathData$Direction <- factor(pathData$Direction, levels = c("Down", "Up"))
-  p <- ggplot(pathData, aes(Pathway, y = (-1)*log10(ADJ_P_VAL), fill=Direction)) + 
+  pathData$direction <- str_to_title(pathData$direction)
+  pathData$pathway <- factor(pathData$pathway, levels = unique(pathData$pathway))
+  pathData$direction <- factor(pathData$direction, levels = c("Down", "Up"))
+  p <- ggplot(pathData, aes(pathway, y = (-1)*log10(padj), fill = direction)) + 
     geom_bar(stat="identity") + coord_flip() + theme_bw() +
     xlab("") + 
-    ylab("-log10 Adj. P-Value") + scale_fill_manual(values = c("forest green", "red")) +
+    ylab("-log10 Adj. P-Value") + 
+    scale_fill_manual(name = "Direction", values = c("forest green", "red")) +
     theme(plot.margin = unit(c(1, 5, 1, 7), "cm"))
   return(p)
 }

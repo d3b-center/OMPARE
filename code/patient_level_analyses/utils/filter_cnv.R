@@ -2,11 +2,11 @@
 
 filter_cnv <- function(myCNVData = cnvGenes, myCancerGenes = cancerGenes) {
 
-  myTSGenes <- cancerGenes %>%
+  myTSGenes <- myCancerGenes %>%
     filter(type == "TumorSuppressorGene") %>%
     .$Gene_Symbol %>%
     unique()
-  myOncogenes <- cancerGenes %>%
+  myOncogenes <- myCancerGenes %>%
     filter(type %in% c("Oncogene", "OncoKB")) %>%
     .$Gene_Symbol %>%
     unique()

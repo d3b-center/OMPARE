@@ -1,5 +1,5 @@
 # code to filter germline variants
-filter_germline_vars <- function(mutData.germ = mutData.germ, myGermlineMarkers = germlineMarkers){
+filter_germline_vars <- function(mutData.germ = mutData.germ, myGermlineMarkers = germline_markers){
   
   # group by genes
   myGermlineMarkers <- myGermlineMarkers %>% 

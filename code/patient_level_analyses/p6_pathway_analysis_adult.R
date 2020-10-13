@@ -6,7 +6,7 @@ source(file.path(root_dir, "code", "utils", "define_directories.R"))
 source(file.path(patient_level_analyses_utils, 'pathway_analysis.R'))
 
 # pathway enrichment top correlated samples
-pathway_analysis_adult <- pathway_analysis(all_cor = tcga.gbm.allCor, prefix = "adult_", comparison = "adult")
+pathway_analysis_adult <- pathway_analysis(all_cor = tcga_gbm_allcor, prefix = "adult_", comparison = "adult")
 
 # save output
 saveRDS(pathway_analysis_adult, file = file.path(topDir, "output", "pathway_analysis_adult.rds"))

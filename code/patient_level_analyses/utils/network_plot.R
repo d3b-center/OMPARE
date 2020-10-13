@@ -1,4 +1,4 @@
-network_plot <- function(numGenes = 250) {
+network_plot <- function(numGenes = 250, geneMania) {
   
   # build network nodes
   nodeGenesMut <- ''

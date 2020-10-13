@@ -1,6 +1,6 @@
 # filter fusions
 
-filter_fusions <- function(myFusFile = fusFile, myCancerGenes = cancerGenes, myJunctionReads = 2) {
+filter_fusions <- function(myFusFile = fusFile, myCancerGenes = cancer_genes, myJunctionReads = 2) {
   
   nm <- grep('star', myFusFile)
   if(length(nm) == 1){

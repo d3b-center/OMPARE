@@ -11,18 +11,18 @@ key_clinical_findings <- function(snv_pattern, all_findings_output) {
 
   # expression is critical
   if(exists('rnaseq_analysis_output')){
-    rnaEvidence <- rnaseq_analysis_output$TPM %>%
+    rnaEvidence <- rnaseq_analysis_output$tpm %>%
       rownames_to_column("Gene")
     
     # Get only significant sets with adj. pvalue < 0.05
     sigGeneSets <- rnaseq_analysis_output$pathways %>%
-      filter(ADJ_P_VAL < 0.05)  %>%
-      dplyr::select(Pathway, Direction) %>%
-      inner_join(geneSetTS, by = c("Pathway" = "ind"))  %>%
-      mutate(Pathway = paste0(Pathway, "(", Direction, ")")) %>%
-      dplyr::select(Pathway, values) %>%
+      filter(padj < 0.05)  %>%
+      dplyr::select(pathway, direction) %>%
+      inner_join(gene_set_ts, by = c("pathway" = "ind"))  %>%
+      mutate(pathway = paste0(pathway, "(", direction, ")")) %>%
+      dplyr::select(pathway, values) %>%
       group_by(values) %>%
-      summarise(Pathway = toString(Pathway))
+      summarise(Pathway = toString(pathway))
     
     # Supporting Evidence for Deletions
     myTableDel <- myTable %>%
