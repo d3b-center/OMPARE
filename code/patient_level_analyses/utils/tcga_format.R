@@ -62,30 +62,39 @@ if(nrow(tcga_gbm_tpm_tsne) >= 1000){
 }
 tcga_gbm_tpm_tsne$CV <- NULL # Remove cv
 
-# for clustering
-# use UMAP correlation
+# clustering using umap correlation
 tcga_umap_output <- file.path(topDir, 'output', 'tcga_pnoc008_umap_output.rds')
 if(file.exists(tcga_umap_output)){
   tcga_umap <- readRDS(file = tcga_umap_output)
 } else {
   set.seed(100)
   tcga_umap <- uwot::umap(X = t(log2(tcga_gbm_tpm_tsne+1)), n_neighbors = 21, n_components = 2, metric = "correlation", ret_nn = TRUE, n_sgd_threads = 123L)
+  
+  # add colnames/rownames to embeddings
+  colnames(tcga_umap$embedding) <- c("UMAP1", "UMAP2")
+  rownames(tcga_umap$embedding) <- colnames(tcga_gbm_tpm_tsne)
+  
+  # add rownames to nearest neighbor
+  rownames(tcga_umap$nn$correlation$idx) <- colnames(tcga_gbm_tpm_tsne)
+  rownames(tcga_umap$nn$correlation$dist) <- colnames(tcga_gbm_tpm_tsne)
+  
+  # save output  
   saveRDS(tcga_umap, file = tcga_umap_output)
 }
-tcga_gbm_embedding <- as.data.frame(tcga_umap$embedding)
-colnames(tcga_gbm_embedding) <- c("UMAP1", "UMAP2")
 
-# for getKMPlot.R and getSimilarPatients.R
+# embeddings: required for umap clustering plot
+tcga_gbm_embedding <- as.data.frame(tcga_umap$embedding)
+
 # extract nearest neighbor info
 corr <- as.data.frame(tcga_umap$nn$correlation$idx) # nn
 dist <- as.data.frame(tcga_umap$nn$correlation$dist) # distances
 corr <- t(apply(corr, MARGIN = 1, FUN = function(x) colnames(tcga_gbm_tpm_tsne)[x]))
-rownames(corr) <- colnames(tcga_gbm_tpm_tsne)
-rownames(dist) <- colnames(tcga_gbm_tpm_tsne)
 tcga_nn_table <- data.frame(nearest_neighbor = as.character(corr[grep(sampleInfo$subjectID, rownames(corr)),]), 
-                       distance = as.numeric(dist[grep(sampleInfo$subjectID, rownames(dist)),]))
+                            distance = as.numeric(dist[grep(sampleInfo$subjectID, rownames(dist)),]))
 tcga_nn_table$distance <- round(tcga_nn_table$distance, digits = 3)
+
+# required for pathway_analysis, kaplan meier, transcriptomically_similar analyses
 tcga_gbm_allcor <- tcga_nn_table[grep(sampleInfo$subjectID, tcga_nn_table$nearest_neighbor, invert = TRUE),]
 
-# Immune profile, ssGSEA, recurrent alterations (keep POI)
-tcga_gbm_topcor <- tcga_gbm_tpm_full[,colnames(tcga_gbm_tpm_full) %in% tcga_nn_table$nearest_neighbor]
+# immune_profile, ssgsea, mutational_analysis
+# tcga_gbm_topcor <- tcga_gbm_tpm_full[,colnames(tcga_gbm_tpm_full) %in% tcga_nn_table$nearest_neighbor]

@@ -43,7 +43,7 @@ if(file.exists(fname)){
 }
 
 # genomic summary table
-source(file.path(patient_level_analyses, 'p1_genomic_summary.R'))              
+source(file.path(patient_level_analyses, 'p1_genomic_summary.R'))   
 
 ## page 2 modules
 # barplot of top 20 up/down genes

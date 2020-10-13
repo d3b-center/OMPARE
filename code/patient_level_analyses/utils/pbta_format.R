@@ -68,35 +68,44 @@ if(nrow(pbta_tpm_tsne) >= 1000){
 }
 pbta_tpm_tsne$CV <- NULL # Remove cv
 
-# for clustering
-# use UMAP correlation
+# clustering using umap correlation
 pbta_umap_output <- file.path(topDir, 'output', 'pbta_pnoc008_umap_output.rds')
 if(file.exists(pbta_umap_output)){
   pbta_umap <- readRDS(file = pbta_umap_output)
 } else {
   set.seed(100)
   pbta_umap <- uwot::umap(X = t(log2(pbta_tpm_tsne+1)), n_neighbors = 21, n_components = 2, metric = "correlation", ret_nn = TRUE, n_sgd_threads = 123L)
+  
+  # add colnames/rownames to embeddings
+  colnames(pbta_umap$embedding) <- c("UMAP1", "UMAP2")
+  rownames(pbta_umap$embedding) <- colnames(pbta_tpm_tsne)
+  
+  # add rownames to nearest neighbor
+  rownames(pbta_umap$nn$correlation$idx) <- colnames(pbta_tpm_tsne)
+  rownames(pbta_umap$nn$correlation$dist) <- colnames(pbta_tpm_tsne)
+  
+  # save output
   saveRDS(pbta_umap, file = pbta_umap_output)
 }
-pbta_embedding <- as.data.frame(pbta_umap$embedding)
-colnames(pbta_embedding) <- c("UMAP1", "UMAP2")
 
-# for getKMPlot.R and getSimilarPatients.R
+# embeddings: required for umap clustering plot
+pbta_embedding <- as.data.frame(pbta_umap$embedding)
+
 # extract nearest neighbor info
 corr <- as.data.frame(pbta_umap$nn$correlation$idx) # nn
 dist <- as.data.frame(pbta_umap$nn$correlation$dist) # distances
 corr <- t(apply(corr, MARGIN = 1, FUN = function(x) colnames(pbta_tpm_tsne)[x]))
-rownames(corr) <- colnames(pbta_tpm_tsne)
-rownames(dist) <- colnames(pbta_tpm_tsne)
 pbta_nn_table <- data.frame(nearest_neighbor = as.character(corr[grep(sampleInfo$subjectID, rownames(corr)),]), 
-                       distance = as.numeric(dist[grep(sampleInfo$subjectID, rownames(dist)),]))
+                            distance = as.numeric(dist[grep(sampleInfo$subjectID, rownames(dist)),]))
 pbta_nn_table$distance <- round(pbta_nn_table$distance, digits = 3)
+
+# required for pathway_analysis, kaplan meier, transcriptomically_similar 
 pbta_allcor <- pbta_nn_table[grep(sampleInfo$subjectID, pbta_nn_table$nearest_neighbor, invert = TRUE),]
 
 # HGAT samples + POI (ssGSEA)
-pbta_hgg_clinical <- pbta_clinical %>% filter(short_histology == "HGAT")
-pbta_hgg_clinical <- c(sampleInfo$subjectID, pbta_hgg_clinical$sample_barcode)
-pbta_hgg_tpm <- pbta_tpm_full[,colnames(pbta_tpm_full) %in% pbta_hgg_clinical]
+# pbta_hgg_clinical <- pbta_clinical %>% filter(short_histology == "HGAT")
+# pbta_hgg_clinical <- c(sampleInfo$subjectID, pbta_hgg_clinical$sample_barcode)
+# pbta_hgg_tpm <- pbta_tpm_full[,colnames(pbta_tpm_full) %in% pbta_hgg_clinical]
 
-# Immune profile, recurrent alterations (top 20 genomically similar + POI)
+# immune_profile_topcor, ssgsea, mutational_analysis
 pbta_topcor <- pbta_tpm_full[,colnames(pbta_tpm_full) %in% pbta_nn_table$nearest_neighbor]
