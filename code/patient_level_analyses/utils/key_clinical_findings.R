@@ -11,12 +11,12 @@ key_clinical_findings <- function(snv_pattern, all_findings_output) {
 
   # expression is critical
   if(exists('rnaseq_analysis_output')){
+    # gene expression as tpm
     rnaEvidence <- rnaseq_analysis_output$tpm %>%
       rownames_to_column("Gene")
     
-    # Get only significant sets with adj. pvalue < 0.05
+    # map genes to significant pathways
     sigGeneSets <- rnaseq_analysis_output$pathways %>%
-      filter(padj < 0.05)  %>%
       dplyr::select(pathway, direction) %>%
       inner_join(gene_set_ts, by = c("pathway" = "ind"))  %>%
       mutate(pathway = paste0(pathway, "(", direction, ")")) %>%
@@ -24,7 +24,8 @@ key_clinical_findings <- function(snv_pattern, all_findings_output) {
       group_by(values) %>%
       summarise(Pathway = toString(pathway))
     
-    # Supporting Evidence for Deletions
+    # cnv filters
+    # filter to deletions that have TPM < 10
     myTableDel <- myTable %>%
       filter(Type == "Deletion") %>%
       left_join(rnaEvidence, by = c("Aberration" = "Gene")) %>%
@@ -33,7 +34,7 @@ key_clinical_findings <- function(snv_pattern, all_findings_output) {
       filter(!!as.name(sampleInfo$subjectID) < 10)  %>%
       dplyr::select(Aberration, Type,  Details, Variant_Properties, SupportEv)
     
-    # Supporting Evidence for Amplifications
+    # filter to amplifications that have TPM > 100
     myTableAmp <- myTable %>%
       filter(Type == "Amplification") %>%
       left_join(rnaEvidence, by = c("Aberration" = "Gene")) %>%
@@ -42,7 +43,7 @@ key_clinical_findings <- function(snv_pattern, all_findings_output) {
       filter(!!as.name(sampleInfo$subjectID) > 100)  %>%
       dplyr::select(Aberration, Type,  Details, Variant_Properties, SupportEv)
     
-    # Supporting Evidence for Mutations Oncogene - Expression is listed, Pathway is significant
+    # mutation filters
     myTableMut <- myTable %>%
       filter(Type == "Mutation")  %>%
       left_join(rnaEvidence, by = c("Aberration" = "Gene")) %>%
@@ -50,7 +51,7 @@ key_clinical_findings <- function(snv_pattern, all_findings_output) {
       mutate(SupportEv = paste0("TPM: ", !!as.name(sampleInfo$subjectID), ifelse(is.na(Pathway), "", paste0(", Pathway: ", Pathway)))) %>%
       dplyr::select(Aberration, Type,  Details, Variant_Properties, SupportEv)
     
-    # Supporting Evidence for Mutations Oncogene - Expression is listed, Pathway is significant
+    # fusion filters
     myTableFus <- myTable %>%
       filter(Type == "Fusion") %>%
       mutate(Gene1 = sapply(Aberration, FUN = function(x) strsplit(x, "_")[[1]][[1]]),
