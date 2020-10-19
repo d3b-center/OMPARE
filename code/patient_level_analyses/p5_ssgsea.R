@@ -6,7 +6,7 @@ source(file.path(root_dir, "code", "utils", "define_directories.R"))
 source(file.path(patient_level_analyses_utils, 'ssgsea.R'))
 
 # recurrent alterations
-ssgsea_pediatric <- ssgsea(top_cor = pbta_topcor, 
+ssgsea_pediatric <- ssgsea(top_cor = pbta_pnoc008_nn_tpm, 
                            fname = file.path(topDir, 'output', 'ssgsea_scores_pediatric.txt'))
 
 # save output

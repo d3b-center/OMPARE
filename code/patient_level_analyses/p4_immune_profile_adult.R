@@ -8,7 +8,7 @@ source(file.path(root_dir, "code", "utils", "define_directories.R"))
 source(file.path(patient_level_analyses_utils, 'immune_profile.R'))
 
 # immune profile and save scores as well
-adult_immune_profile <- immune_profile(fullmat = tcga_gbm_tpm_all, 
+adult_immune_profile <- immune_profile(fullmat = tcga_gbm_pnoc008_immune_profile, 
                                            fname = file.path(topDir, 'output', 'immune_scores_adult.txt'))
 
 # save output

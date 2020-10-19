@@ -6,8 +6,8 @@ source(file.path(root_dir, "code", "utils", "define_directories.R"))
 source(file.path(patient_level_analyses_utils, 'dim_reduction_plot.R'))
 
 # recurrent alterations
-dim_reduction_plot_pediatric <- dim_reduction_plot(dat = pbta_embedding,
-                                                   clindata = pbta_clinical,
+dim_reduction_plot_pediatric <- dim_reduction_plot(dat = pbta_pnoc008_embedding,
+                                                   clindata = pbta_pnoc008_clinical,
                                                    study = "PBTA",
                                                    patient = sampleInfo$subjectID,
                                                    title =  "UMAP Correlation Clustering")

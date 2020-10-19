@@ -6,7 +6,8 @@ source(file.path(root_dir, "code", "utils", "define_directories.R"))
 source(file.path(patient_level_analyses_utils, 'kaplan_meier.R'))
 
 # recurrent alterations
-kaplan_meier_adult <- kaplan_meier(all_cor = tcga_gbm_allcor, surv_data = tcga_gbm_survival)
+kaplan_meier_adult <- kaplan_meier(all_cor = tcga_gbm_pnoc008_nn_table, 
+                                   surv_data = tcga_gbm_survival)
 
 # save output
 saveRDS(kaplan_meier_adult, file = file.path(topDir, "output", "kaplan_meier_adult.rds"))

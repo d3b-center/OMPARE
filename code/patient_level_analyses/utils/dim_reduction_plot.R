@@ -2,13 +2,17 @@
 # Function for UMAP plotting
 #############################
 
-# Top 1000 most variable genes
+# Top 10000 most variable genes
 dim_reduction_plot <- function(dat, clindata, study, patient, title) {
   set.seed(100)
   
   # add clinical data
   colnames(dat)[1:2] <- c("Dim1", "Dim2")
-  dat <- cbind(clindata, dat)
+  dat <- dat %>%
+    rownames_to_column('tmp')  %>%
+    inner_join(clindata %>%
+                 rownames_to_column('tmp'), by = 'tmp') %>%
+    column_to_rownames('tmp')
   
   # reverse factors to set PNOC to lowest
   # this is for shape
@@ -20,10 +24,10 @@ dim_reduction_plot <- function(dat, clindata, study, patient, title) {
   dat$study_id <- as.factor(dat$study_id)
   dat$study_id <- relevel(dat$study_id, ref = "PNOC008")
   dat$study_id <- fct_rev(dat$study_id)
-  if(study != "PBTA"){
-    dat$pathology_diagnosis <- dat$short_histology
-    dat$integrated_diagnosis <- dat$broad_histology
-  }
+  # if(study != "PBTA"){
+  #   dat$pathology_diagnosis <- dat$short_histology
+  #   dat$integrated_diagnosis <- dat$broad_histology
+  # }
   
   # plot
   p <- ggplot(dat, aes(Dim1, Dim2,

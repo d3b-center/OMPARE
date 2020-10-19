@@ -80,14 +80,8 @@ if(file.exists(fname)){
 }
 
 # prepare pbta and tcga gbm data for downstream functions 
-fname <- file.path(topDir, "output", "tcga_pnoc008_umap_output.rds")
-if(!file.exists(fname)){
-  source(file.path(patient_level_analyses_utils, 'tcga_format.R'))
-}
-fname <- file.path(topDir, "output", "pbta_pnoc008_umap_output.rds")
-if(!file.exists(fname)){
-  source(file.path(patient_level_analyses_utils, 'pbta_format.R'))
-}
+source(file.path(patient_level_analyses, 'tcga_format.R'))
+source(file.path(patient_level_analyses, 'pbta_format.R'))
 
 ## page 4
 # pediatric immune profiling using xcell (pbta)
