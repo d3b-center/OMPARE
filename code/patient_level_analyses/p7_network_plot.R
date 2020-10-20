@@ -6,7 +6,8 @@ source(file.path(root_dir, "code", "utils", "define_directories.R"))
 source(file.path(patient_level_analyses_utils, 'network_plot.R'))
 
 # network plot
-network_plot_output <- network_plot(numGenes = 250, geneMania = gene_mania)
+network_plot_output <- network_plot(numGenes = 250, 
+                                    geneMania = gene_mania)
 
 # save output
-saveRDS(network_plot_output, file = file.path(topDir, "output", "network_plot_output.rds"))
+# saveRDS(network_plot_output, file = file.path(topDir, "output", "network_plot_output.rds"))

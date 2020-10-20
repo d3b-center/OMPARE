@@ -23,13 +23,13 @@ if(file.exists(fname)){
 
 ## page 1 modules
 # patient/sample information to display
-source(file.path(patient_level_analyses, 'p1_patient_sample_info.R'))           
+source(file.path(patient_level_analyses, 'p1_patient_sample_info.R'))    
 
 # all findings table  
 source(file.path(patient_level_analyses, 'p1_all_findings.R'))
 
 # key findings table
-source(file.path(patient_level_analyses, 'p1_key_clinical_findings.R'))   
+source(file.path(patient_level_analyses, 'p1_key_clinical_findings.R'))
 
 # disease specific information
 source(file.path(patient_level_analyses, 'p1_disease_specific_information.R'))  
@@ -199,11 +199,9 @@ if(file.exists(fname)){
 }
 
 ## page 7
-# circos plot
-fname <- file.path(topDir, "output", "circos_plot.png")
-if(!file.exists(fname)){
-  source(file.path(patient_level_analyses, 'p7_circos_plot.R'))
-}
+# circos plot - changes with snv caller
+# fname <- file.path(topDir, "output", "circos_plot.png")
+source(file.path(patient_level_analyses, 'p7_circos_plot.R'))
 
 # cnv plot
 fname <- file.path(topDir, "output", "cnv_plot.png")
@@ -211,13 +209,9 @@ if(!file.exists(fname)){
   source(file.path(patient_level_analyses, 'p7_cnv_plot.R'))
 }
 
-# network plot
-fname <- file.path(topDir, "output", "network_plot_output.rds")
-if(file.exists(fname)){
-  network_plot_output <- readRDS(fname)
-} else {
-  source(file.path(patient_level_analyses, 'p7_network_plot.R'))
-}
+# network plot - changes with snv caller
+# fname <- file.path(topDir, "output", "network_plot_output.rds")
+source(file.path(patient_level_analyses, 'p7_network_plot.R'))
 
 ## page 8 
 fname_cgs <- file.path(topDir, "output", "complexheatmap_cgs.png")

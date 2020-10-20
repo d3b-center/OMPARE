@@ -6,4 +6,7 @@ source(file.path(root_dir, "code", "utils", "define_directories.R"))
 source(file.path(patient_level_analyses_utils, 'circos_plot.R'))
 
 # circos plot
-circos_plot(topDir = topDir, chrMap = chr_map, cancerGenes = cancer_genes, fname = file.path(topDir, "output", "circos_plot.png"))
+circos_plot(topDir = topDir, 
+            chrMap = chr_map, 
+            cancerGenes = cancer_genes, 
+            fname = file.path(topDir, "output", "circos_plot.png"))
