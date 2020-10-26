@@ -7,13 +7,15 @@ library(tidyverse)
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
 source(file.path(root_dir, "code", "utils", "define_directories.R"))
 
-# from Pichai
+# from oncokb.org
 cancerGenes <- read.delim(file.path(ref_input_file_dir, "CancerGeneList.tsv"), stringsAsFactors = F)
 cancerGenes <- cancerGenes %>%
-  filter(Gene_Symbol != "") %>%
-  dplyr::select(-Count) %>%
-  gather(key = "file", value = "type", -Gene_Symbol) %>%
-  mutate(type = file)
+  dplyr::select(-c(Entrez.Gene.ID, GRCh37.Isoform, GRCh37.RefSeq, GRCh38.Isoform, GRCh38.RefSeq,
+                   X..of.occurrence.within.resources..Column.D.J.)) %>%  
+  dplyr::rename(Gene_Symbol = Hugo.Symbol) %>%
+  gather(key = "type", value = "file", -Gene_Symbol) %>%
+  filter(file != "No") %>%
+  mutate(file = type) 
 
 # from annofuse
 geneListRef <- read.delim(file.path(ref_input_file_dir, "genelistreference.txt"), stringsAsFactors = F)

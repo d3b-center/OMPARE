@@ -1,4 +1,10 @@
-tmb.calculate <- function(myTMB = tmb_bed_file) {
+tmb.calculate <- function(myTMB = tmb_bed_file, var_class = c('Missense_Mutation', 
+                                                              'Nonsense_Mutation', 
+                                                              'Frame_Shift_Del', 
+                                                              'Frame_Shift_Ins', 
+                                                              'In_Frame_Del', 
+                                                              'In_Frame_Ins'), 
+                          vaf_cutoff = 0.05, var_count = 3, tumor_depth = 25) {
   
   # read mutect2 for TMB profile
   somatic.mut.pattern <- '*.maf'
@@ -13,8 +19,11 @@ tmb.calculate <- function(myTMB = tmb_bed_file) {
   
   # filter to nonsense and missense
   myMutData <- mutData.mutect2 %>%
-    filter(Variant_Classification %in% c("Missense_Mutation", "Nonsense_Mutation")) %>%
-    dplyr::select(Hugo_Symbol, Variant_Classification, Chromosome, Start_Position, End_Position)
+    mutate(vaf = t_alt_count/(t_alt_count+t_ref_count)) %>%
+    filter(Variant_Classification %in% var_class,
+           t_depth >= tumor_depth,
+           vaf <= vaf_cutoff) %>%
+  dplyr::select(Hugo_Symbol, Variant_Classification, Chromosome, Start_Position, End_Position)
   
   # intersect with bed file
   subject <- with(myTMB, GRanges(chr, IRanges(start = start, end = end)))

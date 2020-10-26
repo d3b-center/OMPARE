@@ -2,24 +2,20 @@
 # calculate immune scores only if doesn't exist already
 ########################################################
 
-calc_immune_scores <- function(fullmat, fname){
-  # create directory under project directory
-  raw.scores <- capture.output(rawEnrichmentAnalysis(as.matrix(fullmat),
-                                              xCell.data$signatures,
-                                              xCell.data$genes, 
-                                              file.name = fname, 
-                                              parallel.type = 'FORK'), file = '/dev/null')
-  return(raw.scores)
-}
+source(file.path(patient_level_analyses_utils, 'quiet.R'))
 
 immune_profile <- function(fullmat, fname) {
-  # if file does not exist, create one
+  # immune scores
   if(!file.exists(fname)){
-    calc_immune_scores(fullmat, fname)
+    raw.scores <- as.data.frame(quiet(xCellAnalysis(expr = fullmat)))
+    write.table(raw.scores, file = fname, quote = F, sep = "\t")
+  } else {
+    raw.scores <- read.delim(fname, check.names = F)
   }
-  raw.scores <- read.delim(fname, check.names = F)
+  
+  # format data
   raw.scores <- raw.scores %>%
-    dplyr::rename(CellType = 1) %>%
+    rownames_to_column('CellType') %>%
     gather("Sample", "Score", -CellType) %>%
     mutate("IsSample" = ifelse(grepl(sampleInfo$subjectID, Sample), T, F))
   raw.scores.sample <- raw.scores %>%

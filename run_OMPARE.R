@@ -38,7 +38,7 @@ if(!is.null(sourceDir)){
   create.dirs <- file.path(code_dir, 'create_project_dir.R')
   cmd1 <- paste('Rscript', create.dirs, '-s', sourceDir, '-d', topDir)
   print(cmd1)
-  system(cmd1)
+#  system(cmd1)
 } else {
   print("Project Directory found...")
 }
@@ -49,7 +49,7 @@ if(!is.null(clinical_sheet)){
   create.clinfile <- file.path(code_dir, 'create_clinfile.R')
   cmd2 <- paste('Rscript', create.clinfile, '-s', clinical_sheet, '-p', patient, '-d', topDir)
   print(cmd2)
-  system(cmd2)
+#  system(cmd2)
 } else {
   print("Clinical file present...")
 }
@@ -59,21 +59,21 @@ print("Update PNOC008 GSEA summary...")
 gsea.enrichment <- file.path(patient_level_analyses, 'gsea_enrichment.R')
 cmd3 <- paste('Rscript', gsea.enrichment)
 print(cmd3)
-system(cmd3)
+#system(cmd3)
 
 # 4. Update PNOC008 matrices for each new patient
 print("Update PNOC008 data matrices...")
 pnoc.format <- file.path(patient_level_analyses, 'pnoc_format.R')
 cmd4 <- paste('Rscript', pnoc.format)
 print(cmd4)
-system(cmd4)
+#system(cmd4)
 
 # 5. Generate excel summary
 print("Generate excel for RNA-seq summary...")
 tabulate.excel <- file.path(patient_level_analyses, 'tabulate_excel.R')
 cmd5 <- paste('Rscript', tabulate.excel, '-i', topDir, '-o', paste0(patient, '_summary.xlsx'))
 print(cmd5)
-system(cmd5)
+#system(cmd5)
 
 # 6. Run html reports
 # fusion_method can be either arriba, star, both or not specified

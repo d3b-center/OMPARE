@@ -69,3 +69,5 @@ colnames(tmb_bed_file)  <- c('chr', 'start', 'end')
 # genelist for heatmaps
 genelist_heatmap <- read.delim(file.path(ref_dir, '2020-03-30_Glioma_GeneList.txt'), stringsAsFactors = F)
 
+# cancer hotspot (https://www.cancerhotspots.org/#/download)
+cancer_hotspots_v2  <- readRDS(file.path(ref_dir, 'cancer_hotspots_v2.rds'))

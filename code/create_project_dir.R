@@ -44,10 +44,7 @@ cmd <- file.path(sourceDir, '*.{CNVs.p.value.txt,controlfreec.ratio.txt}')
 cmd <- paste('mv', cmd, cnvdir)
 system(cmd)
 
-# clinical file
-cmd <- file.path(sourceDir, 'patient_report.txt')
-cmd <- paste('mv', cmd, clinicaldir)
-system(cmd)
+# clinical file is to be obtained from KF data tracker
 
 # expression
 cmd <- file.path(sourceDir, '*rsem*')

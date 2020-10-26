@@ -82,19 +82,31 @@ merge_cnv <- function(cnvData, genelist){
 }
 
 # list of all PNOC patients
-pnoc008_tpm <- list.files(path = results_dir, pattern = "*.genes.results*", recursive = TRUE, full.names = T)
-pnoc008_tpm <- pnoc008_tpm[grep('PNOC008-',  pnoc008_tpm)]
-pnoc008_tpm <- lapply(pnoc008_tpm, FUN = function(x) merge_files(x))
-pnoc008_tpm <- data.table::rbindlist(pnoc008_tpm)
+pnoc008_expr <- list.files(path = results_dir, pattern = "*.genes.results*", recursive = TRUE, full.names = T)
+pnoc008_expr <- pnoc008_expr[grep('PNOC008-',  pnoc008_expr)]
+pnoc008_expr <- lapply(pnoc008_expr, FUN = function(x) merge_files(x))
+pnoc008_expr <- data.table::rbindlist(pnoc008_expr)
 
 # separate gene_id and gene_symbol
-pnoc008_tpm <- pnoc008_tpm %>% 
+pnoc008_expr <- pnoc008_expr %>% 
   mutate(gene_id = str_replace(gene_id, "_PAR_Y_", "_"))  %>%
   separate(gene_id, c("gene_id", "gene_symbol"), sep = "\\_", extra = "merge") %>%
   unique()
 
-# uniquify gene_symbol
-pnoc008_tpm <- pnoc008_tpm %>% 
+# fpkm matrix
+pnoc008_fpkm <- pnoc008_expr %>% 
+  group_by(sample_name) %>%
+  arrange(desc(FPKM)) %>% 
+  distinct(gene_symbol, .keep_all = TRUE) %>%
+  dplyr::select(gene_symbol, sample_name, FPKM) %>%
+  spread(sample_name, FPKM) %>%
+  column_to_rownames('gene_symbol')
+pnoc008_fpkm <- pnoc008_fpkm[,grep('CHOP', colnames(pnoc008_fpkm), invert = T)]
+colnames(pnoc008_fpkm)  <- gsub("-NANT", "", colnames(pnoc008_fpkm))
+saveRDS(pnoc008_fpkm, file = file.path(pnoc008.dir, 'pnoc008_fpkm_matrix.rds'))
+
+# uniquify gene_symbol (tpm)
+pnoc008_tpm <- pnoc008_expr %>% 
   group_by(sample_name) %>%
   arrange(desc(TPM)) %>% 
   distinct(gene_symbol, .keep_all = TRUE) %>%
