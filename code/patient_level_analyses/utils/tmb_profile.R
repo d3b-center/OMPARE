@@ -17,12 +17,13 @@ tmb.calculate <- function(myTMB = tmb_bed_file, var_class = c('Missense_Mutation
     mutData.mutect2 <- unique(mutData.mutect2)
   }
   
-  # filter to nonsense and missense
+  # apply filters using Friends of Cancer Research Project Standards 
   myMutData <- mutData.mutect2 %>%
     mutate(vaf = t_alt_count/(t_alt_count+t_ref_count)) %>%
     filter(Variant_Classification %in% var_class,
            t_depth >= tumor_depth,
-           vaf <= vaf_cutoff) %>%
+           vaf <= vaf_cutoff,
+           t_alt_count >= var_count) %>%
   dplyr::select(Hugo_Symbol, Variant_Classification, Chromosome, Start_Position, End_Position)
   
   # intersect with bed file
