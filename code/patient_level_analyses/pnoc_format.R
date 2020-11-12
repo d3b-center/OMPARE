@@ -66,7 +66,6 @@ merge_cnv <- function(cnvData, genelist){
   
   # wilcoxon pvalue < 0.05
   cnvData <- cnvData %>% 
-    dplyr::select(chr, start, end, copy.number, status, WilcoxonRankSumTestPvalue) %>%
     filter(WilcoxonRankSumTestPvalue < 0.05) %>%
     as.data.frame()
   

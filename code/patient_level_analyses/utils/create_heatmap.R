@@ -150,11 +150,12 @@ create_heatmap <- function(fname, genelist, plot.layout = "h"){
   
   # merge PBTA and PNOC
   genelist.cnv <- rbind(pbta.cnv.genelist %>%
-                          dplyr::select(-c(Kids_First_Biospecimen_ID)), pnoc.cnv.genelist)
+                          dplyr::select(sample_name, copy.number, hgnc_symbol), 
+                        pnoc.cnv.genelist %>%
+                          dplyr::select(sample_name, copy.number, hgnc_symbol))
   
   # convert to matrix
   genelist.cnv <- genelist.cnv %>%
-    dplyr::select(-c(WilcoxonRankSumTestPvalue, status)) %>%
     spread(sample_name, copy.number) %>%
     column_to_rownames("hgnc_symbol")
   
@@ -163,10 +164,15 @@ create_heatmap <- function(fname, genelist, plot.layout = "h"){
   colnames(genelist.cnv)  <- gsub("-NANT", "", colnames(genelist.cnv))
   
   # plot with ComplexHeatmap
-  # make cnv matrix consistent with expression
+  # make cnv matrix consistent with expression using common genes and samples
   expr.mat <- genelist.expr
   cnv.mat <- genelist.cnv
-  cnv.mat <- cnv.mat[rownames(expr.mat),colnames(expr.mat)]
+  common.samples <- intersect(colnames(expr.mat), colnames(cnv.mat))
+  common.genes <- intersect(rownames(expr.mat), rownames(cnv.mat))
+  cnv.mat <- cnv.mat[common.genes, common.samples]
+  expr.mat <- expr.mat[common.genes, common.samples]
+  clin <- clin %>%
+    filter(sample_id %in% common.samples)
   
   # define color scheme
   # disease_subtype: assign ggplot2 default colors 

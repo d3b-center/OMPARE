@@ -61,7 +61,7 @@ all_findings <- function(snv_pattern) {
       mutate(Aberration = hgnc_symbol,
              Type = ifelse(status == "gain", "Amplification", "Deletion"),
              Details = paste0("Copy Number Value: ", copy.number),
-             Variant_Properties = "") %>%
+             Variant_Properties = ifelse(genotype == "A", "LOH", NA)) %>%
       dplyr::select(Aberration, Type, Details, Variant_Properties)
   } else {
     tmpCnv <- data.frame()

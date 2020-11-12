@@ -84,8 +84,7 @@ pathway_analysis <- function(all_cor, prefix, comparison) {
   # this is only for PNOC008 patient of interest
   # cnv gain/loss with WilcoxonRankSumTestPvalue < 0.05
   if(comparison == "pediatric"){
-    cnv_mapping <- cnvGenes %>%
-      filter(status %in% c("gain", "loss") & WilcoxonRankSumTestPvalue < 0.05)
+    cnv_mapping <- cnvDataFilt
     cnv_mapping$status <- ifelse(cnv_mapping$status == "gain", "Amplification", "Deletion")
     cnv_mapping <- shared_pathways %>%
       filter(sample_name == sampleInfo$subjectID) %>%

@@ -63,8 +63,7 @@ readData <- function(topDir, fusion_method = c("star","arriba"), snv_pattern = "
   if(length(cnvData) == 1){
     cnvData <- data.table::fread(cnvData, header = T, check.names = T)
     cnvData <- cnvData %>% 
-      dplyr::select(chr, start, end, copy.number, 
-                    status, WilcoxonRankSumTestPvalue) %>%
+      filter(WilcoxonRankSumTestPvalue < 0.05) %>%
       as.data.frame()
     assign("cnvData", cnvData, envir = globalenv())
     
@@ -77,13 +76,13 @@ readData <- function(topDir, fusion_method = c("star","arriba"), snv_pattern = "
     assign("cnvDataFilt", cnvDataFilt, envir = globalenv())
   }
   
-  # copy number ratio data for plot
-  cnvRatioData <- list.files(path = topDir, pattern = "*controlfreec.ratio.txt$", recursive = TRUE, full.names = T)
-  if(length(cnvRatioData) == 1){
-    cnvRatioData <- data.table::fread(cnvRatioData, header = T)
-    cnvRatioData <- as.data.frame(cnvRatioData)
-    assign("cnvRatioData", cnvRatioData, envir = globalenv())
-  }
+  # # copy number ratio data for plot
+  # cnvRatioData <- list.files(path = topDir, pattern = "*controlfreec.ratio.txt$", recursive = TRUE, full.names = T)
+  # if(length(cnvRatioData) == 1){
+  #   cnvRatioData <- data.table::fread(cnvRatioData, header = T)
+  #   cnvRatioData <- as.data.frame(cnvRatioData)
+  #   assign("cnvRatioData", cnvRatioData, envir = globalenv())
+  # }
   
   # fusion data (chose either star or arriba or both)
   if(fusion_method == "star"){
