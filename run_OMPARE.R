@@ -7,18 +7,18 @@ suppressPackageStartupMessages(library(rmarkdown))
 
 option_list <- list(
   make_option(c("-p", "--patient"), type = "character",
-              help = "Patient Number (1, 2...)"),
+              help = "Patient identifier (PNOC008-22, C3342894...)"),
   make_option(c("-s", "--sourcedir"), type = "character", 
               default = NULL,
               help = "Source directory with all files"),
   make_option(c("-c", "--clin_file"), type = "character",
               default = NULL,
-              help = "PNOC008 Manifest file (.xlsx)")
+              help = "Manifest file (.xlsx)")
 )
 
 # parameters to pass
 opt <- parse_args(OptionParser(option_list = option_list))
-p <- opt$patient
+patient <- opt$patient
 clinical_sheet <- opt$clin_file
 sourceDir <- opt$sourcedir
 
@@ -27,7 +27,6 @@ root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
 source(file.path(root_dir, "code", "utils", "define_directories.R"))
 
 # set variables
-patient <- paste0('PNOC008-', p)
 topDir <- file.path(root_dir, 'results', patient)
 set_title <- paste0(patient,' Patient Report')
 callers <- c("lancet", "mutect2", "strelka2", "vardict", "consensus", "all")
@@ -54,17 +53,17 @@ if(!is.null(clinical_sheet)){
   print("Clinical file present...")
 }
 
-# 3. Update GSEA enrichment for each new patient
-print("Update PNOC008 GSEA summary...")
-gsea.enrichment <- file.path(patient_level_analyses, 'gsea_enrichment.R')
-cmd3 <- paste('Rscript', gsea.enrichment)
+# 3. Update PNOC008 matrices for each new patient
+print("Update PNOC008 data matrices...")
+pnoc.format <- file.path(patient_level_analyses, 'pnoc_format.R')
+cmd3 <- paste('Rscript', pnoc.format, '--clin_file', clinical_sheet)
 print(cmd3)
 system(cmd3)
 
-# 4. Update PNOC008 matrices for each new patient
-print("Update PNOC008 data matrices...")
-pnoc.format <- file.path(patient_level_analyses, 'pnoc_format.R')
-cmd4 <- paste('Rscript', pnoc.format)
+# 4. Update GSEA enrichment for each new patient
+print("Update PNOC008 GSEA summary...")
+gsea.enrichment <- file.path(patient_level_analyses, 'gsea_enrichment.R')
+cmd4 <- paste('Rscript', gsea.enrichment)
 print(cmd4)
 system(cmd4)
 

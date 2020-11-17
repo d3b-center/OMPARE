@@ -6,7 +6,8 @@ source(file.path(root_dir, "code", "utils", "define_directories.R"))
 source(file.path(patient_level_analyses_utils, 'tis_profile.R'))
 
 # immune profile and save scores as well
-tis_profile <- tis_profile(fname = file.path(topDir, 'output', 'tis_scores.txt'),  
+tis_profile <- tis_profile(fname = file.path(topDir, 'output', 'tis_scores.txt'),
+                           patient_clinical = pnoc008_clinical,
                            score = "avg")
 
 # save output

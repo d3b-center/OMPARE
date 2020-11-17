@@ -59,12 +59,25 @@ pnoc008_tpm_melt <- melt(as.matrix(pnoc008_tpm), value.name = "TPM", varnames = 
 
 # create output directory
 gsea.dir <- file.path(ref_dir, 'gsea')
+pnoc008.dir <- file.path(ref_dir, 'pnoc008')
 dir.create(gsea.dir, showWarnings = F, recursive = T)
+dir.create(pnoc008.dir, showWarnings = F, recursive = T)
 
 # overwrite pnoc008 comparisons with addition of each new patient
 # pnoc008 vs gtex brain
 pnoc008_vs_gtex_brain <-  plyr::dlply(pnoc008_tpm_melt, .variables = "Sample", .fun = function(x) run_rnaseq_analysis(exp.data = x, refData = gtex_brain_tpm, gene_set = gene_set, comparison = paste0("GTExBrain_", ncol(gtex_brain_tpm))), .parallel = TRUE)
 saveRDS(pnoc008_vs_gtex_brain, file = file.path(ref_dir, 'gsea', 'pnoc008_vs_gtex_brain.rds'))
+
+# function to merge degs for pnoc008 vs gtex brain
+merge_deg_list <- function(x){
+  degs <- x$genes
+  degs <- degs %>%
+    dplyr::select(genes, diff_expr)
+  return(degs)
+}
+pnoc008_deg <- sapply(pnoc008_vs_gtex_brain, FUN = function(x) merge_deg_list(x = x), simplify = F, USE.NAMES = T)
+pnoc008_deg <- data.table::rbindlist(pnoc008_deg, idcol = 'sample_name', use.names = T)
+saveRDS(pnoc008_deg, file = file.path(pnoc008.dir, "pnoc008_vs_gtex_brain_degs.rds"))
 
 # pnoc008 vs pbta
 pnoc008_vs_pbta <- plyr::dlply(pnoc008_tpm_melt, .variables = "Sample", .fun = function(x) run_rnaseq_analysis(exp.data = x, refData = pbta_full_tpm, gene_set = gene_set, comparison = paste0("PBTA_All_", ncol(pbta_full_tpm))), .parallel = TRUE)

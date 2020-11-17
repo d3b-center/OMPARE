@@ -10,7 +10,7 @@ option_list <- list(
   make_option(c("-s", "--sourcedir"), type = "character",
               help = "Source directory with all files"),
   make_option(c("-d", "--destdir"), type = "character",
-              help = "Destination directory. Should be /path/to/OMPARE/results/PNOC008-13/ for Patient 13")
+              help = "Destination directory. Should be /path/to/OMPARE/results/PNOC008-22/ for Patient 22")
 )
 
 # parameters to pass

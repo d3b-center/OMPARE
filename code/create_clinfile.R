@@ -9,11 +9,11 @@ suppressPackageStartupMessages(library(dplyr))
 
 option_list <- list(
   make_option(c("-s", "--sheet"), type = "character",
-              help = "PNOC008 Manifest file (.xlsx)"),
+              help = "Manifest file (.xlsx)"),
   make_option(c("-d", "--dir"), type = "character",
-              help = "Path to PNOC008 patient folder (top directory)"),
+              help = "Path to patient folder (top directory)"),
   make_option(c("-p", "--patient"), type = "character",
-              help = "Patient identifier for PNOC008. e.g. PNOC008-1, PNOC008-10 etc")
+              help = "Patient identifier for e.g. PNOC008-1, PNOC008-10 etc")
 )
 
 opt <- parse_args(OptionParser(option_list = option_list))
@@ -21,7 +21,7 @@ sheet <- opt$sheet
 dir <- opt$dir
 patient <- opt$patient
 
-# read from google sheets (would need authentication the first time)
+# read from excel file
 dat <- readxl::read_xlsx(sheet, sheet = 1)
 colnames(dat) <- gsub('[() ]', '.', colnames(dat))
 dat <- dat %>%

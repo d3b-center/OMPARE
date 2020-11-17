@@ -11,23 +11,29 @@ suppressPackageStartupMessages(library(readxl))
 suppressPackageStartupMessages(library(stringr))
 suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(GenomicRanges))
+suppressPackageStartupMessages(library(optparse))
 
 # directories
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
 source(file.path(root_dir, "code", "utils", "define_directories.R"))
+
+option_list <- list(
+  make_option(c("--clin_file"), type = "character",
+              default = NULL,
+              help = "Manifest file (.xlsx)")
+)
+# parameters to pass
+opt <- parse_args(OptionParser(option_list = option_list))
+clin_file <- opt$clin_file
 
 # source functions
 source(file.path(patient_level_analyses_utils, 'create_copy_number.R'))
 source(file.path(patient_level_analyses_utils, 'filter_mutations.R'))
 
 # create output directory
-gsea.dir <- file.path(ref_dir, 'gsea')
 pnoc008.dir <- file.path(ref_dir, 'pnoc008')
 
 # reference data
-# 008 vs gtex brain degs
-pnoc008_vs_gtex_brain <- readRDS(file.path(gsea.dir, 'pnoc008_vs_gtex_brain.rds'))
-
 # cancer genes 
 cancer_genes <- readRDS(file.path(ref_dir, 'cancer_gene_list.rds'))
 gene_list <- unique(cancer_genes$Gene_Symbol)
@@ -38,8 +44,8 @@ colnames(chr_map) <- c("hgnc_symbol", "gene_start", "gene_end", "chromosome")
 
 # function to merge files
 merge_files <- function(nm){
-  sample_name <- gsub(".*PNOC","PNOC",nm)
-  sample_name <- gsub('/.*','',sample_name)
+  sample_name <- gsub(".*results/", "", nm)
+  sample_name <- gsub("/.*", "", sample_name)
   x <- data.table::fread(nm)
   if(nrow(x) > 1){
     x <- as.data.frame(x)
@@ -48,19 +54,10 @@ merge_files <- function(nm){
   } 
 }
 
-# function to merge degs
-merge_deg_list <- function(x){
-  degs <- x$genes
-  degs <- degs %>%
-    dplyr::select(genes, diff_expr)
-  return(degs)
-}
-
 # function to read cnv, filter by cancer genes and merge
 # only gain/loss
 merge_cnv <- function(cnvData, genelist){
-  sample_name <- gsub(".*PNOC", "PNOC", cnvData)
-  sample_name <- gsub('/.*', '', sample_name)
+  sample_name <- gsub(".*results[/]|[/]copy-number.*", "", cnvData)
   cnvData <- data.table::fread(cnvData, header = T, check.names = T)
   ploidy <- NULL
   
@@ -82,7 +79,6 @@ merge_cnv <- function(cnvData, genelist){
 
 # list of all PNOC patients
 pnoc008_expr <- list.files(path = results_dir, pattern = "*.genes.results*", recursive = TRUE, full.names = T)
-pnoc008_expr <- pnoc008_expr[grep('PNOC008-',  pnoc008_expr)]
 pnoc008_expr <- lapply(pnoc008_expr, FUN = function(x) merge_files(x))
 pnoc008_expr <- data.table::rbindlist(pnoc008_expr)
 
@@ -118,14 +114,13 @@ pnoc008_tpm <- pnoc008_tpm[,grep('CHOP', colnames(pnoc008_tpm), invert = T)]
 colnames(pnoc008_tpm)  <- gsub("-NANT", "", colnames(pnoc008_tpm))
 
 # now merge all clinical data for all patients
-pnoc008_clinical <- readxl::read_xlsx(file.path(ref_dir, 'manifest' , 'pnoc008_manifest.xlsx'), sheet = 1)
+pnoc008_clinical <- readxl::read_xlsx(clin_file, sheet = 1)
 colnames(pnoc008_clinical) <- gsub('[() ]', '.', colnames(pnoc008_clinical))
 pnoc008_clinical <- pnoc008_clinical %>%
   filter_all(any_vars(!is.na(.))) %>%
   mutate(PNOC.Subject.ID = gsub('P-','PNOC008-', PNOC.Subject.ID))
 pnoc008_clinical <- pnoc008_clinical %>%
-  mutate(study_id = "PNOC008",
-         KF_ParticipantID = PNOC.Subject.ID,
+  mutate(KF_ParticipantID = PNOC.Subject.ID,
          subjectID = PNOC.Subject.ID,
          reportDate = Sys.Date(),
          tumorType = Diagnosis.a,
@@ -148,7 +143,6 @@ saveRDS(pnoc008_clinical, file = file.path(pnoc008.dir, "pnoc008_clinical.rds"))
 
 # copy number
 pnoc008_cnv <- list.files(path = results_dir, pattern = "*.CNVs.p.value.txt", recursive = TRUE, full.names = T)
-pnoc008_cnv <- pnoc008_cnv[grep('PNOC008-',  pnoc008_cnv)]
 pnoc008_cnv <- lapply(pnoc008_cnv, FUN = function(x) merge_cnv(cnvData = x, genelist = gene_list))
 pnoc008_cnv <- data.table::rbindlist(pnoc008_cnv)
 # only keep NANT sample for PNOC008-5
@@ -169,7 +163,6 @@ saveRDS(pnoc008_cnv, file = file.path(pnoc008.dir, "pnoc008_cnv_filtered.rds"))
 
 # fusions
 pnoc008_fusions <- list.files(path = results_dir, pattern = "*.arriba.fusions.tsv", recursive = TRUE, full.names = T)
-pnoc008_fusions <- pnoc008_fusions[grep('PNOC008-',  pnoc008_fusions)]
 pnoc008_fusions <- lapply(pnoc008_fusions, FUN = function(x) merge_files(x))
 pnoc008_fusions <- data.table::rbindlist(pnoc008_fusions)
 colnames(pnoc008_fusions)[1] <- "gene1"
@@ -186,18 +179,20 @@ pnoc008_fusions <- pnoc008_fusions %>%
          Alteration_Type = stringr::str_to_title(reading_frame),
          Alteration = paste0(gene1, '_',  gene2),
          Kids_First_Biospecimen_ID = sample_name,
-         SampleID = sample_name,
-         Study = "PNOC008") %>%
+         SampleID = sample_name) %>%
   unite(col = "Gene", gene1, gene2, sep = ", ", na.rm = T) %>%
-  dplyr::select(Gene, Alteration_Datatype, Alteration_Type, Alteration, Kids_First_Biospecimen_ID, SampleID, Study) %>%
+  dplyr::select(Gene, Alteration_Datatype, Alteration_Type, Alteration, Kids_First_Biospecimen_ID, SampleID) %>%
   separate_rows(Gene, convert = TRUE) %>%
   filter(Gene %in% gene_list) %>%
   unique()
+pnoc008_fusions <- pnoc008_fusions %>%
+  inner_join(pnoc008_clinical %>%
+               dplyr::select(subjectID, study_id), by = c("Kids_First_Biospecimen_ID" = "subjectID")) %>%
+  dplyr::rename('Study' = 'study_id')
 saveRDS(pnoc008_fusions, file = file.path(pnoc008.dir, "pnoc008_fusions_filtered.rds"))
 
 # mutations
 pnoc008_mutations <- list.files(path = results_dir, pattern = "*consensus_somatic.vep.maf", recursive = TRUE, full.names = T)
-pnoc008_mutations <- pnoc008_mutations[grep('PNOC008-',  pnoc008_mutations)]
 pnoc008_mutations <- lapply(pnoc008_mutations, FUN = function(x) merge_files(x))
 pnoc008_mutations <- data.table::rbindlist(pnoc008_mutations)
 # only keep NANT sample for PNOC008-5
@@ -212,16 +207,15 @@ pnoc008_mutations <- pnoc008_mutations %>%
          Alteration_Type = Variant_Classification,
          Alteration = HGVSp_Short,
          Kids_First_Biospecimen_ID = sample_name,
-         SampleID = sample_name,
-         Study = "PNOC008") %>%
-  dplyr::select(Gene, Alteration_Datatype, Alteration_Type, Alteration, Kids_First_Biospecimen_ID, SampleID, Study) %>%
+         SampleID = sample_name) %>%
+  dplyr::select(Gene, Alteration_Datatype, Alteration_Type, Alteration, Kids_First_Biospecimen_ID, SampleID) %>%
   unique()
+pnoc008_mutations <- pnoc008_mutations %>%
+  inner_join(pnoc008_clinical %>%
+               dplyr::select(subjectID, study_id), by = c("Kids_First_Biospecimen_ID" = "subjectID")) %>%
+  dplyr::rename('Study' = 'study_id')
 saveRDS(pnoc008_mutations, file = file.path(pnoc008.dir, "pnoc008_consensus_mutation_filtered.rds"))
 
-# cohort level degs
-pnoc008_deg <- sapply(pnoc008_vs_gtex_brain, FUN = function(x) merge_deg_list(x = x), simplify = F, USE.NAMES = T)
-pnoc008_deg <- data.table::rbindlist(pnoc008_deg, idcol = 'sample_name', use.names = T)
-saveRDS(pnoc008_deg, file = file.path(pnoc008.dir, "pnoc008_vs_gtex_brain_degs.rds"))
 
 # cohort level tmb scores
 tmb_bed_file <- data.table::fread(file.path(ref_dir, "xgen-exome-research-panel-targets_hg38_ucsc_liftover.100bp_padded.sort.merged.bed"))
@@ -229,7 +223,6 @@ colnames(tmb_bed_file)  <- c("chr", "start", "end")
 
 # read mutect2 for TMB profile
 pnoc008_mutect2 <- list.files(path = results_dir, pattern = 'mutect2_somatic.vep.maf', recursive = TRUE, full.names = T)
-pnoc008_mutect2 <- pnoc008_mutect2[grep('PNOC008-',  pnoc008_mutect2)]
 pnoc008_mutect2 <- lapply(pnoc008_mutect2, FUN = function(x) merge_files(x))
 pnoc008_mutect2 <- data.table::rbindlist(pnoc008_mutect2, fill = T)
 # only keep NANT sample for PNOC008-5

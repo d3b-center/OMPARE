@@ -6,7 +6,7 @@ source(file.path(root_dir, "code", "utils", "define_directories.R"))
 pbta_dir <- file.path(ref_dir, "pbta")
 tcga_dir <- file.path(ref_dir, "tcga")
 
-tis_profile <- function(fname, score){
+tis_profile <- function(fname, patient_clinical, score){
   
   if(!file.exists(fname)){
     # TCGA counts
@@ -44,7 +44,14 @@ tis_profile <- function(fname, score){
              study_id = "PBTA",
              library_name = RNA_library) %>%
       dplyr::select(sample_id, disease, Type, study_id, library_name)
-    pnoc.meta <- data.frame(sample_id =  sampleInfo$subjectID, disease = "HGAT", Type = "Pediatric", study_id = "PNOC008", library_name = sampleInfo$library_name)
+    pnoc.meta <- patient_clinical %>%
+      filter(subjectID == sampleInfo$subjectID) %>%
+      mutate(sample_id = sampleInfo$subjectID, 
+             disease = "HGAT",
+             Type = "Pediatric",
+             study_id = study_id, 
+             library_name = sampleInfo$library_name) %>%
+      dplyr::select(all_of(colnames(pbta.meta)))
     total.meta <- rbind(tcga.meta, pbta.meta, pnoc.meta)
     total.meta$batch <- paste0(total.meta$study_id, '_',  total.meta$library_name)
     
@@ -99,18 +106,23 @@ tis_profile <- function(fname, score){
     total  <- read.delim(fname, stringsAsFactors = F)
   }
   # use sum or average
-  pnoc008.scoreSum <- total[grep('PNOC008', total$sample_barcode),'scoreSum']
-  pnoc008.scoreAvg <- total[grep('PNOC008', total$sample_barcode),'scoreAvg']
-  total <- total[grep('PNOC008', total$sample_barcode, invert = T),]
+  patient.scoreSum <- total %>%
+    filter(sample_barcode == sampleInfo$subjectID) %>%
+    .$scoreSum
+  patient.scoreAvg <- total %>%
+    filter(sample_barcode == sampleInfo$subjectID) %>%
+    .$scoreAvg
+  total <- total %>%
+    filter(sample_barcode != sampleInfo$subjectID)
   if(score == 'sum'){
     total <- total %>% 
       mutate(score = scoreSum)
-    yint <- pnoc008.scoreSum
+    yint <- patient.scoreSum
     ylab <- "TIS Signature Score (Sum)"
   } else {
     total <- total %>% 
       mutate(score = scoreAvg)
-    yint <- pnoc008.scoreAvg
+    yint <- patient.scoreAvg
     ylab <- "TIS Signature Score (Avg.)"
   }
   

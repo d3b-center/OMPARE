@@ -133,18 +133,21 @@ write.table(tmb_mat, file = file.path(oncogrid_path_output, 'tmb.cohort3.pnoc008
 # add annotation info
 annot_info <- annot_info %>% 
   dplyr::rename(Sample = 1)
-annot_info_p <- data.frame(Sample = grep('PNOC', cohort3.pnoc008.matrix$Sample, value = T),
-                           Sequencing_Experiment = "WXS,RNA-Seq",
-                           Cohort = "PNOC008",
-                           Tumor_Descriptor = "Primary",
-                           Integrated_Diagnosis = "High_grade_glioma",
-                           OS_Status = "LIVING")
+annot_info_p <- pnoc008_clinical 
+annot_info_p <- annot_info_p %>%
+  mutate(Sample = subjectID,
+         Sequencing_Experiment = "WXS,RNA-Seq",
+         Cohort = study_id,
+         Tumor_Descriptor = "Primary",
+         Integrated_Diagnosis = "High_grade_glioma",
+         OS_Status = "LIVING") %>%
+  dplyr::select(all_of(colnames(annot_info)))
 annot_info <- unique(rbind(annot_info, annot_info_p))
 annot_info <- annot_info[match(cohort3.pnoc008.matrix$Sample, annot_info$Sample),]
 write.table(annot_info, file = file.path(oncogrid_path_output, 'annotation.cohort3.pnoc008.txt'), quote = F, sep = "\t", row.names = F)
 
 ## Split samples
-split_samples_p <- data.frame(Sample = grep('PNOC', cohort3.pnoc008.matrix$Sample, value = T),
+split_samples_p <- data.frame(Sample = pnoc008_clinical$subjectID,
                               split_samples = "Others")
 split_samples <- unique(rbind(split_samples, split_samples_p))
 split_samples <- split_samples[match(cohort3.pnoc008.matrix$Sample, split_samples$Sample),]
