@@ -19,11 +19,12 @@ if(file.exists(fname) & snv_pattern != "lancet"){
   res <- combine_and_batch_correct(expr1 = pbta_tpm, expr2 = pnoc008_tpm,  clinical1 = pbta_clinical, clinical2 = pnoc008_clinical)
   saveRDS(res, file = fname)
 }
+pbta_pnoc008_expr_uncorrected <- res$expr_uc
 pbta_pnoc008_expr_corrected <- res$expr
 pbta_pnoc008_clinical <- res$clinical
 
 # get data for immune profile
-pbta_pnoc008_immune_profile <- get_data_for_immune_profile(expr_corrected = pbta_pnoc008_expr_corrected, expr1 = pbta_tpm, sampleInfo = sampleInfo)
+pbta_pnoc008_immune_profile <- get_data_for_immune_profile(expr_uncorrected = pbta_pnoc008_expr_uncorrected, expr1 = pbta_tpm, sampleInfo = sampleInfo)
 
 # get 10000 most variable genes for umap plotting & nearest neighbor analysis
 pbta_pnoc008_most_var <- get_most_variable_for_umap(expr_corrected = pbta_pnoc008_expr_corrected)

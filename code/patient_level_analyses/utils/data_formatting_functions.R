@@ -26,28 +26,28 @@ combine_and_batch_correct <- function(expr1, expr2 = pnoc008_tpm, clinical1, cli
     column_to_rownames('tmp')
 
   # combine tpm matrix
-  expr <- expr1 %>%
+  expr_uncorrected <- expr1 %>%
     rownames_to_column('genes') %>%
     inner_join(expr2 %>%
                  rownames_to_column('genes'), by = 'genes') %>%
     column_to_rownames('genes')
   
   # correct for batch effect: study_id + library_name
-  expr <- quiet(batch.correct(mat = expr, clin = clinical))
+  expr_corrected <- quiet(batch.correct(mat = expr_uncorrected, clin = clinical))
   
   # return batch corrected matrix and combined clinical
-  res <- list(expr = expr, clinical = clinical)
+  res <- list(expr = expr_corrected, expr_uc = expr_uncorrected, clinical = clinical)
   return(res)
 }
 
 # subset dataset
-# only patient of interest and tcga/pbta
-get_data_for_immune_profile <- function(expr_corrected, expr1, sampleInfo){
+# only patient of interest and tcga/pbta (use uncorrected TPM)
+get_data_for_immune_profile <- function(expr_uncorrected, expr1, sampleInfo){
   # for immune profile
   # now get only sample of interest + samples from expr1
   smps <- c(colnames(expr1), sampleInfo$subjectID)
-  expr_corrected_subset <- expr_corrected[,colnames(expr_corrected) %in% smps]
-  return(expr_corrected_subset)
+  expr_uncorrected_subset <- expr_uncorrected[,colnames(expr_uncorrected) %in% smps]
+  return(expr_uncorrected_subset)
 }
 
 # get 10000 most variable genes for umap plotting & nearest neighbor analysis
