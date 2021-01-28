@@ -100,6 +100,18 @@ pnoc008_fpkm <- pnoc008_fpkm[,grep('CHOP', colnames(pnoc008_fpkm), invert = T)]
 colnames(pnoc008_fpkm)  <- gsub("-NANT", "", colnames(pnoc008_fpkm))
 saveRDS(pnoc008_fpkm, file = file.path(pnoc008.dir, 'pnoc008_fpkm_matrix.rds'))
 
+# counts matrix
+pnoc008_counts <- pnoc008_expr %>% 
+  group_by(sample_name) %>%
+  arrange(desc(expected_count)) %>% 
+  distinct(gene_symbol, .keep_all = TRUE) %>%
+  dplyr::select(gene_symbol, sample_name, expected_count) %>%
+  spread(sample_name, expected_count) %>%
+  column_to_rownames('gene_symbol')
+pnoc008_counts <- pnoc008_counts[,grep('CHOP', colnames(pnoc008_counts), invert = T)]
+colnames(pnoc008_counts)  <- gsub("-NANT", "", colnames(pnoc008_counts))
+saveRDS(pnoc008_counts, file = file.path(pnoc008.dir, 'pnoc008_counts_matrix.rds'))
+
 # uniquify gene_symbol (tpm)
 pnoc008_tpm <- pnoc008_expr %>% 
   group_by(sample_name) %>%

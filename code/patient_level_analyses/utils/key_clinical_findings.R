@@ -53,20 +53,26 @@ key_clinical_findings <- function(snv_pattern, all_findings_output) {
     
     # fusion filters
     myTableFus <- myTable %>%
-      filter(Type == "Fusion") %>%
-      mutate(Gene1 = sapply(Aberration, FUN = function(x) strsplit(x, "_")[[1]][[1]]),
-             Gene2 = sapply(Aberration, FUN = function(x) strsplit(x, "_")[[1]][[2]])) %>%
-      left_join(rnaEvidence, by = c("Gene1" = "Gene"))  %>%
-      dplyr::rename("Gene1_TPM" = !!as.name(sampleInfo$subjectID)) %>%
-      left_join(rnaEvidence, by = c("Gene2" = "Gene"))  %>%
-      dplyr::rename("Gene2_TPM" = !!as.name(sampleInfo$subjectID))  %>%
-      left_join(sigGeneSets, by = c("Gene1" = "values")) %>%
-      left_join(sigGeneSets, by = c("Gene2" = "values")) %>%
-      mutate(SupportEv = paste0("Gene1_TPM: ", Gene1_TPM, ", ",
-                               "Gene2_TPM: ", Gene2_TPM,
-                               ifelse(is.na(Pathway.x), "", paste0(", Gene1_Pathway: ", Pathway.x)),
-                               ifelse(is.na(Pathway.y), "", paste0(", Gene2_Pathway: ", Pathway.y)))) %>%
-      dplyr::select(Aberration, Type,  Details, Variant_Properties, SupportEv)
+      filter(Type == "Fusion")
+    if(nrow(myTableFus) > 0){
+      myTableFus <- myTableFus %>%
+        mutate(Gene1 = sapply(Aberration, FUN = function(x) strsplit(x, "_")[[1]][[1]]),
+               Gene2 = sapply(Aberration, FUN = function(x) strsplit(x, "_")[[1]][[2]])) %>%
+        left_join(rnaEvidence, by = c("Gene1" = "Gene"))  %>%
+        dplyr::rename("Gene1_TPM" = !!as.name(sampleInfo$subjectID)) %>%
+        left_join(rnaEvidence, by = c("Gene2" = "Gene"))  %>%
+        dplyr::rename("Gene2_TPM" = !!as.name(sampleInfo$subjectID))  %>%
+        left_join(sigGeneSets, by = c("Gene1" = "values")) %>%
+        left_join(sigGeneSets, by = c("Gene2" = "values")) %>%
+        mutate(SupportEv = paste0("Gene1_TPM: ", Gene1_TPM, ", ",
+                                  "Gene2_TPM: ", Gene2_TPM,
+                                  ifelse(is.na(Pathway.x), "", paste0(", Gene1_Pathway: ", Pathway.x)),
+                                  ifelse(is.na(Pathway.y), "", paste0(", Gene2_Pathway: ", Pathway.y)))) %>%
+        dplyr::select(Aberration, Type,  Details, Variant_Properties, SupportEv)
+    } else {
+      myTableFus <- data.frame()
+    }
+    
     
     # merge all data
     myTable <- rbind(myTableAmp, myTableDel, myTableMut, myTableFus)

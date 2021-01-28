@@ -61,8 +61,9 @@ pathway_analysis <- function(all_cor, prefix, comparison) {
   shared_pathways <- rbind(pnoc008_comparisons, other_comparisons)
   
   # different cutoff for pediatric and adult tumors
+  # keeping it 60% for both
   if(comparison == "pediatric"){
-    n.perc = 18 # 90%
+    n.perc = 12 # 60%
   } else {
     n.perc = 12 # 60%
   }

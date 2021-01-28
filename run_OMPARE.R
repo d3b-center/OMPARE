@@ -67,10 +67,10 @@ cmd4 <- paste('Rscript', gsea.enrichment)
 print(cmd4)
 system(cmd4)
 
-# 5. Generate excel summary
-print("Generate excel for RNA-seq summary...")
-tabulate.excel <- file.path(patient_level_analyses, 'tabulate_excel.R')
-cmd5 <- paste('Rscript', tabulate.excel, '-i', topDir, '-o', paste0(patient, '_summary.xlsx'))
+# 5. Generate genes and pathway enrichment output
+print("Generate output for RNA-seq enrichment...")
+rnaseq_enrichment <- file.path(patient_level_analyses, 'enrichment_output.R')
+cmd5 <- paste('Rscript', rnaseq_enrichment, '-i', topDir, '-o', paste0(patient, '_summary'), '-t text')
 print(cmd5)
 system(cmd5)
 

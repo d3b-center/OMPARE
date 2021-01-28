@@ -8,6 +8,7 @@ source(file.path(root_dir, 'code', 'utils', 'define_directories.R'))
 
 # GTEx Normals Brain TPM (1152 samples)
 gtex_brain_tpm <- readRDS(file.path(ref_dir, 'gtex', 'gtex_brain_tpm.rds'))
+gtex_brain_counts <- readRDS(file.path(ref_dir, 'gtex', 'gtex_brain_counts.rds'))
 
 # All PNOC008 patients (TPM matrix + clinical)
 pnoc008_tpm <- readRDS(file.path(ref_dir, 'pnoc008', 'pnoc008_tpm_matrix.rds'))
@@ -50,7 +51,7 @@ gene_mania <- read.delim(file.path(ref_dir, 'GeneManiaNetwork.txt'), stringsAsFa
 disease_specific_fields <- read.delim(file.path(ref_dir, 'DiseaseSpecificFields.txt'))
 
 # Gene sets (c2 reactome)
-gene_set <- getGmt(file.path(ref_dir, 'msigdb', 'c2.cp.reactome.v7.1.symbols.gmt'), collectionType = BroadCollection(), geneIdType = SymbolIdentifier())
+gene_set <- getGmt(file.path(ref_dir, 'msigdb', 'c2.cp.reactome.v6.0.symbols.gmt'), collectionType = BroadCollection(), geneIdType = SymbolIdentifier())
 gene_set <- geneIds(gene_set)
 gene_set_ts <- stack(gene_set)
 

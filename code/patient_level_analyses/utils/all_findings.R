@@ -72,7 +72,7 @@ all_findings <- function(snv_pattern) {
     tmpExp <- rnaseq_analysis_output$diffexpr.top20 %>%
       rownames_to_column("Aberration") %>%
       mutate(Type = c(rep("Outlier-High (mRNA)", 20), rep("Outlier-Low (mRNA)", 20)),
-             Details = paste0("Z-score: ", round(z_score, 2)," | TPM: ", tpm),
+             Details = paste0("logFC: ", round(logfc, 2)," | TPM: ", tpm),
              Variant_Properties = "")  %>%
       dplyr::select(Aberration, Type, Details, Variant_Properties)
   } else {

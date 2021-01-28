@@ -1,4 +1,4 @@
-network_plot <- function(numGenes = 250, geneMania) {
+network_plot <- function(numGenes = 1000, geneMania) {
   
   # build network nodes
   nodeGenesMut <- ''
@@ -11,12 +11,12 @@ network_plot <- function(numGenes = 250, geneMania) {
   if(exists('fusData')){
     nodeGenesMut <- c(nodeGenesMut, c(fusData$HeadGene), c(fusData$TailGene)) 
   }
-  # expression z-scores
+  # expression logfc
   if(exists('expData')){
-    rnaGenes <- rnaseq_analysis_output$expr.genes.z.score
-    rnaGenes <- data.frame(gene = names(rnaGenes), z.score = rnaGenes)
-    upGenes <- rnaGenes %>% arrange(desc(z.score)) %>% slice_head(n = numGenes) %>% .$gene
-    downGenes <- rnaGenes %>% arrange(z.score) %>% slice_head(n = numGenes)  %>% .$gene
+    rnaGenes <- rnaseq_analysis_output$expr.genes.logfc
+    rnaGenes <- data.frame(gene = names(rnaGenes), logfc = rnaGenes)
+    upGenes <- rnaGenes %>% arrange(desc(logfc)) %>% slice_head(n = numGenes) %>% .$gene
+    downGenes <- rnaGenes %>% arrange(logfc) %>% slice_head(n = numGenes)  %>% .$gene
     nodeGenes <- c(nodeGenesMut, upGenes, downGenes)
   } else {
     nodeGenes <- c(nodeGenesMut)

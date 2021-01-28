@@ -6,7 +6,7 @@ source(file.path(root_dir, "code", "utils", "define_directories.R"))
 source(file.path(patient_level_analyses_utils, 'network_plot.R'))
 
 # network plot
-network_plot_output <- network_plot(numGenes = 250, 
+network_plot_output <- network_plot(numGenes = 1000, 
                                     geneMania = gene_mania)
 
 # save output

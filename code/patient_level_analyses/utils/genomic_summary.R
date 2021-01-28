@@ -18,7 +18,7 @@ genomic_summary <- function(snv_pattern, key_clinical_findings_output, all_findi
     
     # highly upreg genes (z-score > 3)
     numTranscripts <- rnaseq_analysis_output$diffexpr.top20 %>%
-      filter(z_score > 3) %>%
+      filter(logfc > 3) %>%
       nrow()
     
     # adj. pval < 0.05 (highly significant pathways)
