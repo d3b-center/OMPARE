@@ -6,19 +6,41 @@ source(file.path(root_dir, "code", "utils", "define_directories.R"))
 
 # reference directories
 pbta_dir <- file.path(ref_dir, 'pbta')
+tcga_dir <- file.path(ref_dir, 'tcga')
 pnoc008_dir <- file.path(ref_dir, 'pnoc008')
 
-mutational_analysis <- function(top_cor, key_clinical_findings_output){
+mutational_analysis <- function(top_cor, key_clinical_findings_output, comparison){
   
   # matrix of top 20 correlated samples
   top20 <- colnames(top_cor)
   
-  # pbta corresponding sample ids
-  pbta_clinical <- read.delim(file.path(pbta_dir, 'pbta-histologies.tsv'))
-  pbta_clinical <- pbta_clinical %>%
-    filter(Kids_First_Biospecimen_ID %in% top20)  %>%
-    mutate(SampleID = sample_id) %>%
-    dplyr::select(SampleID, Kids_First_Biospecimen_ID)
+  if(comparison == "pediatric"){
+    # pbta corresponding sample ids
+    pbta_clinical <- read.delim(file.path(pbta_dir, 'pbta-histologies.tsv'))
+    tumor_clinical <- pbta_clinical %>%
+      filter(Kids_First_Biospecimen_ID %in% top20)  %>%
+      mutate(SampleID = sample_id) %>%
+      dplyr::select(SampleID, Kids_First_Biospecimen_ID)
+    
+    # mutations, cnv, fusions
+    tumor_mutations <- readRDS(file.path(pbta_dir, 'pbta-snv-consensus-mutation-filtered.rds'))
+    tumor_cnv <- readRDS(file.path(pbta_dir, 'pbta-cnv-controlfreec-filtered.rds'))
+    tumor_fusions <- readRDS(file.path(pbta_dir, 'pbta-fusion-putative-oncogenic-filtered.rds'))
+    
+  } else {
+    # tcga clinical
+    tcga_clinical <- readRDS(file.path(tcga_dir, 'tcga_gbm_clinical.rds'))
+    tumor_clinical <- tcga_clinical %>%
+      mutate(SampleID = gsub('-[0-9]{2}[A-Z].*','', sample_barcode),
+             Kids_First_Biospecimen_ID = sample_barcode) %>%
+      filter(Kids_First_Biospecimen_ID %in% top20) %>%
+      dplyr::select(SampleID, Kids_First_Biospecimen_ID)
+    
+    # mutations and cnv
+    tumor_mutations <- readRDS(file.path(tcga_dir, 'tcga_gbm_mutation_filtered.rds'))
+    tumor_cnv <- readRDS(file.path(tcga_dir, 'tcga_gbm_cnv_filtered.rds'))
+    tumor_fusions <- data.frame()
+  }
   
   # pnoc008 corresponding sample ids
   pnoc008_clinical <- readRDS(file.path(pnoc008_dir, 'pnoc008_clinical.rds'))
@@ -26,23 +48,22 @@ mutational_analysis <- function(top_cor, key_clinical_findings_output){
     filter(subjectID %in% top20) %>%
     mutate(SampleID = subjectID, Kids_First_Biospecimen_ID = subjectID) %>%
     dplyr::select(SampleID, Kids_First_Biospecimen_ID)
-  combined_clinical <- rbind(pbta_clinical, pnoc008_top20_clinical)
   
-  # merge pbta + pnoc008 mutations, copy number and fusions
+  # combine other tumors with pnoc008
+  combined_clinical <- rbind(tumor_clinical, pnoc008_top20_clinical)
+  
+  # merge other tumor + pnoc008 mutations, copy number and fusions
   # mutations
-  pbta_mutations <- readRDS(file.path(pbta_dir, 'pbta-snv-consensus-mutation-filtered.rds'))
   pnoc_mutations <- readRDS(file.path(pnoc008_dir, 'pnoc008_consensus_mutation_filtered.rds'))
-  total_mutations <- rbind(pbta_mutations, pnoc_mutations)
+  total_mutations <- rbind(tumor_mutations, pnoc_mutations)
   
   # copy number
-  pbta_cnv <- readRDS(file.path(pbta_dir, 'pbta-cnv-controlfreec-filtered.rds'))
   pnoc_cnv <- readRDS(file.path(pnoc008_dir, 'pnoc008_cnv_filtered.rds'))
-  total_cnv <- rbind(pbta_cnv, pnoc_cnv)
+  total_cnv <- rbind(tumor_cnv, pnoc_cnv)
   
   # fusions
-  pbta_fusions <- readRDS(file.path(pbta_dir, 'pbta-fusion-putative-oncogenic-filtered.rds'))
   pnoc_fusions <- readRDS(file.path(pnoc008_dir, 'pnoc008_fusions_filtered.rds'))
-  total_fusions <- rbind(pbta_fusions, pnoc_fusions)
+  total_fusions <- rbind(tumor_fusions, pnoc_fusions)
   
   # merge
   total_alterations <- rbind(total_mutations, total_cnv, total_fusions)

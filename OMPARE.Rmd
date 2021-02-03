@@ -265,7 +265,7 @@ Pathway Enrichment (P5) {data-navmenu="Pediatric Tumors Analysis"}
 Row {data-height=500}
 ---
 
-### Shared Pathways (80% of Transcriptomically Similar Patients)
+### Shared Pathways (60% of Transcriptomically Similar Patients)
 
 ```{r tabulate_pathways_pediatric}
 if(exists('pathway_analysis_pediatric')){
@@ -376,16 +376,46 @@ if(exists('pathway_analysis_adult')){
 }
 ```
 
-<!-- All Findings (P10) -->
-<!-- === -->
-<!-- Row {data-height=700} -->
-<!-- --- -->
+Row {data-height=500}
+---
 
-<!-- ### All Findings -->
+### CNV Mapping
 
-<!-- ```{r all_findings} -->
-<!-- datatable(allFindingsTable(snv_pattern), rownames=F, escape = F, options = list(pageLength = 10)) -->
-<!-- ``` -->
+```{r cnv_mapping_adult}
+if(exists('pathway_analysis_adult')){
+  datatable(pathway_analysis_adult$cnv_mapping, 
+            rownames = F, 
+            options = list(pageLength = 10))
+}
+```
+
+Mutational Analysis (P6) {data-navmenu="Adult Tumors Analysis"}
+===
+Row {data-height=500}
+---
+
+### Recurrently Altered Genes (Transcriptomically Similar Patients)
+
+```{r rec_alt_genes_adult}
+if(exists('mutational_analysis_adult')){
+  datatable(mutational_analysis_adult$recurrent_alterations, 
+          rownames = F, 
+          options = list(pageLength = 10))
+}
+```
+
+Row {data-height=500}
+---
+
+### Shared Genes
+
+```{r shared_genes_adult}
+if(exists('mutational_analysis_adult')){
+  datatable(mutational_analysis_adult$shared_genes, 
+            rownames = F, 
+            options = list(pageLength = 10))
+}
+```
 
 Genomic Landscape (P7)
 ===

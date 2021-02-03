@@ -40,6 +40,9 @@ tcga_gbm_pnoc008_embedding <- as.data.frame(tcga_gbm_pnoc008_umap_output$embeddi
 # extract nearest neighbor info
 tcga_gbm_pnoc008_nn_table <- extract_umap_nearest_neighbor_table(umap_out = tcga_gbm_pnoc008_umap_output, expr_most_var = tcga_gbm_pnoc008_most_var, sampleInfo = sampleInfo)
 
+# mutational_analysis
+tcga_gbm_pnoc008_nn_tpm <- tcga_gbm_pnoc008_expr_corrected[,colnames(tcga_gbm_pnoc008_expr_corrected) %in% tcga_gbm_pnoc008_nn_table$nearest_neighbor]
+
 # required for pathway_analysis, kaplan meier, transcriptomically_similar analyses
 tcga_gbm_pnoc008_nn_table <- tcga_gbm_pnoc008_nn_table[grep(sampleInfo$subjectID, tcga_gbm_pnoc008_nn_table$nearest_neighbor, invert = TRUE),]
 

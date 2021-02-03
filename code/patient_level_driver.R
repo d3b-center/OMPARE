@@ -174,7 +174,15 @@ if(file.exists(fname)){
   source(file.path(patient_level_analyses, 'p6_pathway_analysis_adult.R'))
 }
 
-# adult dimention reduction clustering
+# mutational analysis
+fname <- file.path(topDir, "output", "mutational_analysis_adult.rds")
+if(file.exists(fname)){
+  mutational_analysis_adult <- readRDS(fname)
+} else {
+  source(file.path(patient_level_analyses, 'p6_mutational_analysis_adult.R'))
+}
+
+# adult dimension reduction clustering
 fname <- file.path(topDir, "output", "dim_reduction_plot_adult.rds")
 if(file.exists(fname)){
   dim_reduction_plot_adult <- readRDS(fname)

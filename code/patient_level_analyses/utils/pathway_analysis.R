@@ -84,21 +84,18 @@ pathway_analysis <- function(all_cor, prefix, comparison) {
   # now create table2 in which we will have genes, pathway and copy number info
   # this is only for PNOC008 patient of interest
   # cnv gain/loss with WilcoxonRankSumTestPvalue < 0.05
-  if(comparison == "pediatric"){
-    cnv_mapping <- cnvDataFilt
-    cnv_mapping$status <- ifelse(cnv_mapping$status == "gain", "Amplification", "Deletion")
-    cnv_mapping <- shared_pathways %>%
-      filter(sample_name == sampleInfo$subjectID) %>%
-      ungroup() %>%
-      mutate(pathway = paste0(pathway,' (', direction,')')) %>%
-      dplyr::select(sample_name, pathway, genes, direction, comparison) %>%
-      separate_rows(genes) %>%
-      filter(genes != 1) %>%
-      group_by(sample_name, genes, comparison) %>%
-      summarise(pathway = toString(pathway)) %>%
-      inner_join(cnv_mapping, by = c("genes"="hgnc_symbol"))
-  } else {
-    cnv_mapping <- data.frame()
-  }
+  cnv_mapping <- cnvDataFilt
+  cnv_mapping$status <- ifelse(cnv_mapping$status == "gain", "Amplification", "Deletion")
+  cnv_mapping <- shared_pathways %>%
+    filter(sample_name == sampleInfo$subjectID) %>%
+    ungroup() %>%
+    mutate(pathway = paste0(pathway,' (', direction,')')) %>%
+    dplyr::select(sample_name, pathway, genes, direction, comparison) %>%
+    separate_rows(genes) %>%
+    filter(genes != 1) %>%
+    group_by(sample_name, genes, comparison) %>%
+    summarise(pathway = toString(pathway)) %>%
+    inner_join(cnv_mapping, by = c("genes"="hgnc_symbol"))
+  
   return(list(shared_pathways = shared_pathways, cnv_mapping = cnv_mapping))
 }
