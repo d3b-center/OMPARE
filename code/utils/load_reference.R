@@ -6,6 +6,11 @@
 root_dir <- rprojroot::find_root(rprojroot::has_dir('.git'))
 source(file.path(root_dir, 'code', 'utils', 'define_directories.R'))
 
+# gencode reference
+gencode_v27 <- read.delim(file.path(ref_dir, 'pnoc008', 'gencode.v27.primary_assembly.annotation.txt'))
+gencode_v27_pc <- gencode_v27 %>%
+  filter(biotype == "protein_coding")
+
 # GTEx Normals Brain TPM (1152 samples)
 gtex_brain_tpm <- readRDS(file.path(ref_dir, 'gtex', 'gtex_brain_tpm.rds'))
 gtex_brain_counts <- readRDS(file.path(ref_dir, 'gtex', 'gtex_brain_counts.rds'))

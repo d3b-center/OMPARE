@@ -116,6 +116,10 @@ readData <- function(topDir, fusion_method = c("star","arriba"), snv_pattern = "
     # filter HIST genes
     expData.full <- expData.full[grep('^HIST', expData.full$gene_symbol, invert = T),]
     
+    # filter to protein coding genes
+    expData.full <- expData.full %>%
+      filter(gene_symbol %in% gencode_v27_pc$gene_symbol)
+    
     # tpm data
     expData <- expData.full %>% 
       arrange(desc(TPM)) %>% 

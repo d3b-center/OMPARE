@@ -32,7 +32,7 @@ uq.pgQ2 <- function(X, f = 100){
   return(res)  
 }
 
-ss_expr <- function(expr, norm_method = c("uq", "tmm"), housekeeping_genes){
+ss_expr <- function(expr, norm_method = c("uq", "tmm"), housekeeping_genes = NULL){
   
   # create groups
   sample_subject <- grep('SampleX', colnames(expr))
@@ -56,16 +56,21 @@ ss_expr <- function(expr, norm_method = c("uq", "tmm"), housekeeping_genes){
     y <- calcNormFactors(object = y)
   }
   
-  ### Copy normalized DGEList object (new object y1) and replace group variable with only one treatment group
-  y1 = y
-  y1$samples$group <- 1
-  
-  # housekeeping genes index
-  housekeeping_genes <- which(rownames(y1$counts) %in% housekeeping_genes)
-  
-  ### Estimate common dispersion from a set of housekeeping genes (linked below).
-  y0 <- estimateDisp(y1[housekeeping_genes,], trend="none", tagwise=FALSE)
-  y$common.dispersion <- y0$common.dispersion
+  if(!is.null(housekeeping_genes)){
+    # copy normalized DGEList object (new object y1) and replace group variable with only one treatment group
+    y1 = y
+    y1$samples$group <- 1
+    
+    # housekeeping genes index
+    housekeeping_genes <- which(rownames(y1$counts) %in% housekeeping_genes)
+    
+    # estimate common dispersion from a set of housekeeping genes (linked below).
+    y0 <- estimateDisp(y1[housekeeping_genes,], trend="none", tagwise=FALSE)
+    y$common.dispersion <- y0$common.dispersion
+  } else{
+    # set bcv to 0.5
+    y$common.dispersion <- 0.5
+  }
   
   ### Make design matrix 
   design <- model.matrix(~group)

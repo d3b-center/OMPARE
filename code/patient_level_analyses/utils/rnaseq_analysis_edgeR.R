@@ -9,14 +9,14 @@ suppressPackageStartupMessages(library(fgsea))
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
 source(file.path(patient_level_analyses_utils, 'rnaseq_edger_normalizations.R'))
 
-# housekeeping genes
+# housekeeping genes (optional)
 housekeeping_genes <- read.csv(file.path(ref_dir, 'pnoc008', 'Housekeeping_GenesHuman.csv'), sep = ';')
 housekeeping_genes <- unique(housekeeping_genes$Gene.name)
 
 # get up/down genes using edgeR
 get_all_outliers <- function(myMergeDF.counts, expr.tpm, getTop, thresh, comparison, cancerGeneNames){
   
-  genes.df <- ss_expr(expr = myMergeDF.counts, norm_method = "tmm", housekeeping_genes = housekeeping_genes)
+  genes.df <- ss_expr(expr = myMergeDF.counts, norm_method = "tmm", housekeeping_genes = NULL)
   genes.df <- genes.df %>%
     rownames_to_column('Gene') %>%
     inner_join(expr.tpm, by = 'Gene') %>%
