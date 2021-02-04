@@ -31,7 +31,7 @@ mutational_analysis <- function(top_cor, key_clinical_findings_output, compariso
     # tcga clinical
     tcga_clinical <- readRDS(file.path(tcga_dir, 'tcga_gbm_clinical.rds'))
     tumor_clinical <- tcga_clinical %>%
-      mutate(SampleID = gsub('-[0-9]{2}[A-Z].*','', sample_barcode),
+      mutate(SampleID = sample_barcode,
              Kids_First_Biospecimen_ID = sample_barcode) %>%
       filter(Kids_First_Biospecimen_ID %in% top20) %>%
       dplyr::select(SampleID, Kids_First_Biospecimen_ID)
