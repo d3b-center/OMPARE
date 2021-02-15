@@ -1,7 +1,7 @@
 tmb.calculate <- function(myTMB = tmb_bed_file, var_class = c('Missense_Mutation', 
-                                                              'Nonsense_Mutation', 
+                                                              'Nonsense_Mutation',
                                                               'Frame_Shift_Del', 
-                                                              'Frame_Shift_Ins', 
+                                                              'Frame_Shift_Ins',  
                                                               'In_Frame_Del', 
                                                               'In_Frame_Ins'), 
                           vaf_cutoff = 0.05, var_count = 3, tumor_depth = 25) {
@@ -22,7 +22,7 @@ tmb.calculate <- function(myTMB = tmb_bed_file, var_class = c('Missense_Mutation
     mutate(vaf = t_alt_count/(t_alt_count+t_ref_count)) %>%
     filter(Variant_Classification %in% var_class,
            t_depth >= tumor_depth,
-           vaf <= vaf_cutoff,
+           vaf >= vaf_cutoff,
            t_alt_count >= var_count) %>%
   dplyr::select(Hugo_Symbol, Variant_Classification, Chromosome, Start_Position, End_Position)
   

@@ -237,13 +237,22 @@ colnames(tmb_bed_file)  <- c("chr", "start", "end")
 pnoc008_mutect2 <- list.files(path = results_dir, pattern = 'mutect2_somatic.vep.maf', recursive = TRUE, full.names = T)
 pnoc008_mutect2 <- lapply(pnoc008_mutect2, FUN = function(x) merge_files(x))
 pnoc008_mutect2 <- data.table::rbindlist(pnoc008_mutect2, fill = T)
+
 # only keep NANT sample for PNOC008-5
 pnoc008_mutect2 <- pnoc008_mutect2[grep('CHOP', pnoc008_mutect2$sample_name, invert = T),]
 pnoc008_mutect2$sample_name  <- gsub("-NANT", "", pnoc008_mutect2$sample_name)
 
 # mutect2 nonsense and missense mutations
+var_class = c('Missense_Mutation', 'Nonsense_Mutation', 'Frame_Shift_Del', 'Frame_Shift_Ins',  'In_Frame_Del', 'In_Frame_Ins')
+vaf_cutoff = 0.05
+var_count = 3
+tumor_depth = 25
 pnoc008_mutect2 <- pnoc008_mutect2 %>%
-  filter(Variant_Classification %in% c("Missense_Mutation", "Nonsense_Mutation")) %>%
+  mutate(vaf = t_alt_count/(t_alt_count+t_ref_count)) %>%
+  filter(Variant_Classification %in% var_class,
+         t_depth >= tumor_depth,
+         vaf >= vaf_cutoff,
+         t_alt_count >= var_count) %>%
   dplyr::select(sample_name, Hugo_Symbol, Variant_Classification, Chromosome, Start_Position, End_Position) %>%
   unique()
   
@@ -253,7 +262,7 @@ query <- with(pnoc008_mutect2, GRanges(Chromosome, IRanges(start = Start_Positio
 pnoc008_tmb <- findOverlaps(query = query, subject = subject, type = "within")
 pnoc008_tmb <- data.frame(pnoc008_mutect2[queryHits(pnoc008_tmb),], tmb_bed_file[subjectHits(pnoc008_tmb),])
   
-# return the number of missense + nonsense overlapping with the bed file/77.46
+# return the number of filtered variants overlapping with the bed file/77.46
 pnoc008_tmb <- pnoc008_tmb %>%
   group_by(sample_name) %>%
   mutate(num.mis.non = n()) %>%
