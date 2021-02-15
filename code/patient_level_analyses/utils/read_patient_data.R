@@ -64,6 +64,7 @@ readData <- function(topDir, fusion_method = c("star","arriba"), snv_pattern = "
     cnvData <- data.table::fread(cnvData, header = T, check.names = T)
     cnvData <- cnvData %>% 
       filter(WilcoxonRankSumTestPvalue < 0.05) %>%
+      mutate(chr = as.character(chr)) %>%
       as.data.frame()
     assign("cnvData", cnvData, envir = globalenv())
     

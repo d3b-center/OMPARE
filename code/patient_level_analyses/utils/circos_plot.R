@@ -67,17 +67,20 @@ circos_plot <- function(topDir = topDir, chrMap, cancerGenes, fname) {
       link.data <- fusion.data %>%
         dplyr::select(chromosome.x, gene_start.x, gene_end.x,
                       chromosome.y, gene_start.y, gene_end.y)
-      RCircos.Link.Plot(link.data = link.data, track.num = 12, by.chromosome = TRUE)
       
-      # add fusion gene names
-      gene.data.head <- fusion.data %>%
-        dplyr::select(chromosome.x, gene_start.x, gene_end.x, HeadGene) %>%
-        setNames(., c("chromosome", "gene_start", "gene_end", "hgnc_symbol"))
-      gene.data.tail <- fusion.data %>%
-        dplyr::select(chromosome.y, gene_start.y, gene_end.y, TailGene) %>%
-        setNames(., c("chromosome", "gene_start", "gene_end", "hgnc_symbol"))
-      gene.data <- rbind(gene.data.head, gene.data.tail)
-      RCircos.Gene.Name.Plot(gene.data = gene.data, name.col = 4, track.num = 9, inside.pos = 50)
+      if(nrow(link.data) > 0){
+        RCircos.Link.Plot(link.data = link.data, track.num = 12, by.chromosome = TRUE)
+        
+        # add fusion gene names
+        gene.data.head <- fusion.data %>%
+          dplyr::select(chromosome.x, gene_start.x, gene_end.x, HeadGene) %>%
+          setNames(., c("chromosome", "gene_start", "gene_end", "hgnc_symbol"))
+        gene.data.tail <- fusion.data %>%
+          dplyr::select(chromosome.y, gene_start.y, gene_end.y, TailGene) %>%
+          setNames(., c("chromosome", "gene_start", "gene_end", "hgnc_symbol"))
+        gene.data <- rbind(gene.data.head, gene.data.tail)
+        RCircos.Gene.Name.Plot(gene.data = gene.data, name.col = 4, track.num = 9, inside.pos = 50)
+      }
     }
   }
   

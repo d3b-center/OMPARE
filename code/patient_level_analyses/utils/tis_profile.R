@@ -37,7 +37,8 @@ tis_profile <- function(fname, patient_clinical, score){
       dplyr::select(sample_id, disease, Type, study_id, library_name)
     pbta.meta <- read.delim(file.path(pbta_dir, 'pbta-histologies.tsv'))
     pbta.meta <- pbta.meta %>%
-      filter(experimental_strategy  == "RNA-Seq") %>%
+      filter(experimental_strategy  == "RNA-Seq",
+             Kids_First_Biospecimen_ID %in% colnames(pbta.full)) %>%
       mutate(sample_id = Kids_First_Biospecimen_ID, 
              disease = short_histology,
              Type = "Pediatric",

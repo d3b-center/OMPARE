@@ -18,6 +18,9 @@ merge_cnv_pnoc <- function(cnvData, gene.list){
   sample_name <- gsub(".*PNOC", "PNOC", cnvData)
   sample_name <- gsub('/.*', '', sample_name)
   cnvData <- data.table::fread(cnvData, header = T, check.names = T)
+  
+  cnvData <- cnvData %>%
+    mutate(chr = as.character(chr))
 
   # map coordinates to gene symbol
   cnvOut <- create_copy_number(cnvData = cnvData, ploidy = NULL) 
@@ -96,10 +99,10 @@ create_heatmap <- function(fname, genelist, plot.layout = "h"){
     colnames(pbta.expr) <- pbta.rna.clin$sample_id
   }
   
-  # combine PBTA + PNOC008 expression matrix
+  # combine PBTA + PNOC008 expression matrix (protein coding only)
   expr <- pnoc.expr %>%
     rownames_to_column("gene_symbol") %>%
-    full_join(pbta.expr %>%
+    inner_join(pbta.expr %>%
                 rownames_to_column("gene_symbol"), by = "gene_symbol") %>%
     column_to_rownames("gene_symbol") 
   

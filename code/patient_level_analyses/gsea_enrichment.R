@@ -8,11 +8,19 @@ suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(GSEABase))
 suppressPackageStartupMessages(library(reshape2))
 suppressPackageStartupMessages(library(doMC))
+suppressPackageStartupMessages(library(optparse))
 registerDoMC(cores = 2)
 
 # directories
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
 source(file.path(root_dir, "code", "utils", "define_directories.R"))
+
+option_list <- list(
+  make_option(c("-p", "--patient"), type = "character",
+              help = "Patient identifier for e.g. PNOC008-1, PNOC008-10 etc")
+)
+opt <- parse_args(OptionParser(option_list = option_list))
+sample_to_add <- opt$patient
 
 # source function for RNA-seq diffexpr & pathway analysis
 source(file.path(patient_level_analyses_utils, "rnaseq_analysis_edgeR.R"))
@@ -75,12 +83,34 @@ pnoc008.dir <- file.path(ref_dir, 'pnoc008')
 dir.create(gsea.dir, showWarnings = F, recursive = T)
 dir.create(pnoc008.dir, showWarnings = F, recursive = T)
 
-# overwrite pnoc008 comparisons with addition of each new patient
+# function to read existing gsea output, process and add current subject to it if not already present
+gsea_enrichment <- function(sample_to_add, gsea_output, exp.data.counts, exp.data.tpm, refData.counts, gene_set, comparison){
+  x <- exp.data.counts %>%
+    filter(Sample %in% sample_to_add)
+  existing_gsea_output <- readRDS(gsea_output)
+  
+  # run only if sample does not exist
+  if(length(intersect(names(existing_gsea_output), sample_to_add)) == 0){
+    res <- run_rnaseq_analysis_edger(exp.data.counts = x, 
+                                     exp.data.tpm = exp.data.tpm, 
+                                     refData.counts = refData.counts, 
+                                     gene_set = gene_set, 
+                                     comparison = comparison)
+    existing_gsea_output[[sample_to_add]] <- res
+    saveRDS(existing_gsea_output, file = gsea_output)
+  }
+}
+
+# pnoc008 comparisons need to be updated with each new patient
 # pnoc008 vs gtex brain
-pnoc008_vs_gtex_brain <-  plyr::dlply(pnoc008_counts_melt,
-                                      .variables = "Sample",
-                                      .fun = function(x) run_rnaseq_analysis_edger(exp.data.counts = x, exp.data.tpm = pnoc008_tpm_melt, refData.counts = gtex_brain_counts, gene_set = gene_set, comparison = paste0("GTExBrain_", ncol(gtex_brain_counts))), .parallel = TRUE)
-saveRDS(pnoc008_vs_gtex_brain, file = file.path(ref_dir, 'gsea', 'pnoc008_vs_gtex_brain.rds'))
+gsea_output <- file.path(ref_dir, 'gsea', 'pnoc008_vs_gtex_brain.rds')
+gsea_enrichment(sample_to_add = sample_to_add, 
+                gsea_output = gsea_output, 
+                exp.data.counts = pnoc008_counts_melt, 
+                exp.data.tpm = pnoc008_tpm_melt,
+                refData.counts = gtex_brain_counts, 
+                gene_set = gene_set, 
+                comparison = paste0("GTExBrain_", ncol(gtex_brain_counts)))
 
 # function to merge degs for pnoc008 vs gtex brain
 merge_deg_list <- function(x){
@@ -89,27 +119,40 @@ merge_deg_list <- function(x){
     dplyr::select(genes, diff_expr)
   return(degs)
 }
+pnoc008_vs_gtex_brain <- readRDS(gsea_output)
 pnoc008_deg <- sapply(pnoc008_vs_gtex_brain, FUN = function(x) merge_deg_list(x = x), simplify = F, USE.NAMES = T)
 pnoc008_deg <- data.table::rbindlist(pnoc008_deg, idcol = 'sample_name', use.names = T)
 saveRDS(pnoc008_deg, file = file.path(pnoc008.dir, "pnoc008_vs_gtex_brain_degs.rds"))
 
 # pnoc008 vs pbta
-pnoc008_vs_pbta <- plyr::dlply(pnoc008_counts_melt,
-                               .variables = "Sample",
-                               .fun = function(x) run_rnaseq_analysis_edger(exp.data.counts = x, exp.data.tpm = pnoc008_tpm_melt, refData.counts = pbta_full_counts, gene_set = gene_set, comparison = paste0("PBTA_All_", ncol(pbta_full_counts))), .parallel = TRUE)
-saveRDS(pnoc008_vs_pbta, file = file.path(ref_dir, 'gsea', 'pnoc008_vs_pbta.rds'))
+gsea_output <- file.path(ref_dir, 'gsea', 'pnoc008_vs_pbta.rds')
+gsea_enrichment(sample_to_add = sample_to_add, 
+                gsea_output = gsea_output, 
+                exp.data.counts = pnoc008_counts_melt, 
+                exp.data.tpm = pnoc008_tpm_melt,
+                refData.counts = pbta_full_counts, 
+                gene_set = gene_set, 
+                comparison = paste0("PBTA_All_", ncol(pbta_full_counts)))
 
 # pnoc008 vs pbta hgg
-pnoc008_vs_pbta_hgg <- plyr::dlply(pnoc008_counts_melt,
-                                   .variables = "Sample",
-                                   .fun = function(x) run_rnaseq_analysis_edger(exp.data.counts = x, exp.data.tpm = pnoc008_tpm_melt, refData.counts = pbta_hgg_counts, gene_set = gene_set, comparison = paste0("PBTA_HGG_", ncol(pbta_hgg_counts))), .parallel = TRUE)
-saveRDS(pnoc008_vs_pbta_hgg, file = file.path(ref_dir, 'gsea', 'pnoc008_vs_pbta_hgg.rds'))
+gsea_output <- file.path(ref_dir, 'gsea', 'pnoc008_vs_pbta_hgg.rds')
+gsea_enrichment(sample_to_add = sample_to_add, 
+                gsea_output = gsea_output, 
+                exp.data.counts = pnoc008_counts_melt, 
+                exp.data.tpm = pnoc008_tpm_melt,
+                refData.counts = pbta_hgg_counts, 
+                gene_set = gene_set, 
+                comparison = paste0("PBTA_HGG_", ncol(pbta_hgg_counts)))
 
 # pnoc008 vs tcga gbm
-pnoc008_vs_tcga_gbm <- plyr::dlply(pnoc008_counts_melt,
-                                   .variables = "Sample",
-                                   .fun = function(x) run_rnaseq_analysis_edger(exp.data.counts = x, exp.data.tpm = pnoc008_tpm_melt, refData.counts = tcga_gbm_counts, gene_set = gene_set, comparison = paste0("TCGA_GBM_", ncol(tcga_gbm_counts))), .parallel = TRUE)
-saveRDS(pnoc008_vs_tcga_gbm, file = file.path(ref_dir, 'gsea', 'pnoc008_vs_tcga_gbm.rds'))
+gsea_output <- file.path(ref_dir, 'gsea', 'pnoc008_vs_tcga_gbm.rds')
+gsea_enrichment(sample_to_add = sample_to_add, 
+                gsea_output = gsea_output, 
+                exp.data.counts = pnoc008_counts_melt, 
+                exp.data.tpm = pnoc008_tpm_melt,
+                refData.counts = tcga_gbm_counts, 
+                gene_set = gene_set, 
+                comparison = paste0("TCGA_GBM_", ncol(tcga_gbm_counts)))
 
 # pbta comparisons only need to be run once
 # pbta vs gtex brain

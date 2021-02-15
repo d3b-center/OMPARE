@@ -63,7 +63,7 @@ system(cmd3)
 # 4. Update GSEA enrichment for each new patient
 print("Update PNOC008 GSEA summary...")
 gsea.enrichment <- file.path(patient_level_analyses, 'gsea_enrichment.R')
-cmd4 <- paste('Rscript', gsea.enrichment)
+cmd4 <- paste('Rscript', gsea.enrichment, '-p', patient)
 print(cmd4)
 system(cmd4)
 

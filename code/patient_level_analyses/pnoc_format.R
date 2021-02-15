@@ -38,6 +38,11 @@ pnoc008.dir <- file.path(ref_dir, 'pnoc008')
 cancer_genes <- readRDS(file.path(ref_dir, 'cancer_gene_list.rds'))
 gene_list <- unique(cancer_genes$Gene_Symbol)
 
+# gencode reference
+gencode_v27 <- read.delim(file.path(ref_dir, 'pnoc008', 'gencode.v27.primary_assembly.annotation.txt'))
+gencode_v27_pc <- gencode_v27 %>%
+  filter(biotype == "protein_coding")
+
 # chr coordinates to gene symbol map
 chr_map <- read.delim(file.path(ref_dir, "mart_export_genechr_mapping.txt"), stringsAsFactors =F)
 colnames(chr_map) <- c("hgnc_symbol", "gene_start", "gene_end", "chromosome")
@@ -64,6 +69,7 @@ merge_cnv <- function(cnvData, genelist){
   # wilcoxon pvalue < 0.05
   cnvData <- cnvData %>% 
     filter(WilcoxonRankSumTestPvalue < 0.05) %>%
+    mutate(chr = as.character(chr)) %>%
     as.data.frame()
   
   # map coordinates to gene symbol
@@ -87,6 +93,13 @@ pnoc008_expr <- pnoc008_expr %>%
   mutate(gene_id = str_replace(gene_id, "_PAR_Y_", "_"))  %>%
   separate(gene_id, c("gene_id", "gene_symbol"), sep = "\\_", extra = "merge") %>%
   unique()
+
+# filter to protein coding genes
+pnoc008_expr <- pnoc008_expr %>%
+  filter(gene_symbol %in% gencode_v27_pc$gene_symbol)
+
+# filter HIST genes
+pnoc008_expr <- pnoc008_expr[grep('^HIST', pnoc008_expr$gene_symbol, invert = T),]
 
 # fpkm matrix
 pnoc008_fpkm <- pnoc008_expr %>% 
