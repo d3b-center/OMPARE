@@ -153,7 +153,8 @@ pnoc008_clinical <- pnoc008_clinical %>%
          ethnicity = Ethnicity,
          age_diagnosis_days = Age.at.Diagnosis..in.days.,
          age_collection_days = Age.at.Collection..in.days.,
-         sex = Gender) %>%
+         sex = Gender,
+         library_name = RNA_library) %>%
   dplyr::select(subjectID, KF_ParticipantID, tumorType, tumorLocation, ethnicity, sex, age_diagnosis_days, age_collection_days, study_id, library_name) %>%
   as.data.frame()
 rownames(pnoc008_clinical) <- pnoc008_clinical$subjectID

@@ -39,7 +39,8 @@ df <- dat %>%
          ethnicity = Ethnicity,
          age_diagnosis_days = Age.at.Diagnosis..in.days.,
          age_collection_days = Age.at.Collection..in.days.,
-         sex = Gender) %>%
+         sex = Gender,
+         library_name = RNA_library) %>%
   dplyr::select(subjectID, reportDate, tumorType,	tumorLocation, ethnicity, sex, age_diagnosis_days, age_collection_days, KF_ParticipantID, library_name)
 
 # write out
