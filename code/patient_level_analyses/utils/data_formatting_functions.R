@@ -23,6 +23,7 @@ combine_and_batch_correct <- function(expr1, expr2 = pnoc008_tpm, clinical1, cli
     rbind(clinical2) %>%
     mutate(tmp = sample_barcode,
            batch = paste0(study_id, '_', library_name)) %>%
+    remove_rownames() %>%
     column_to_rownames('tmp')
 
   # combine tpm matrix

@@ -128,7 +128,7 @@ readData <- function(topDir, fusion_method = c("star","arriba"), snv_pattern = "
       mutate(!!sampleInfo$subjectID := TPM) %>%
       dplyr::select(!!sampleInfo$subjectID, gene_id, gene_symbol) %>%
       unique()
-    rownames(expData) <- expData$gene_symbol
+    # rownames(expData) <- expData$gene_symbol
     assign("expData", expData, envir = globalenv())
     
     # count data
