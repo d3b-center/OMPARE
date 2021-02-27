@@ -26,6 +26,8 @@ Prerequisites
 	# install packages
 	Rscript code/utils/install_pkgs.R
 
+	# NOTE: ggnetwork v0.5.1 is required
+
 3. Download reference Data:
    
 .. code-block:: bash
