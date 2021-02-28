@@ -31,7 +31,6 @@ root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
 source(file.path(root_dir, "code", "utils", "define_directories.R"))
 ```
 
-
 ```{r load_libraries}
 source(file.path(utils_dir, 'load_libraries.R'))
 ```
@@ -44,6 +43,8 @@ tmb <- params$tmb
 ```
 
 ```{r call_driver}
+# function for viewing datatables
+source(file.path(utils_dir, 'view_dt.R'))
 # call driver to load other libraries/code
 source(file.path(code_dir, "patient_level_driver.R"))
 ```
@@ -74,7 +75,7 @@ Row {data-height=500}
     
 ```{r key_findings}
 if(nrow(key_clinical_findings_output) >= 1){
-  datatable(key_clinical_findings_output, rownames = F, escape = F)
+  view_dt(key_clinical_findings_output)
 }
 ```
 
@@ -122,9 +123,7 @@ Row {data-height=700}
     
 ```{r all_findings}
 if(nrow(all_findings_output) >= 1){
-  datatable(all_findings_output, 
-          rownames = F, escape = F, 
-          options = list(pageLength = 10))
+  view_dt(all_findings_output)
 }
 ```
 
@@ -243,7 +242,7 @@ if(exists('kaplan_meier_pediatric')){
 
 ```{r similar_patients_pbta}
 if(exists('transciptomically_similar_pediatric')){
-  datatable(transciptomically_similar_pediatric, rownames = F, escape = F)
+  view_dt(transciptomically_similar_pediatric)
 }
 ```
 
@@ -269,9 +268,7 @@ Row {data-height=500}
 
 ```{r tabulate_pathways_pediatric}
 if(exists('pathway_analysis_pediatric')){
-  datatable(pathway_analysis_pediatric$shared_pathways, 
-          rownames = F, 
-          options = list(pageLength = 10))
+  view_dt(pathway_analysis_pediatric$shared_pathways)
 }
 ```
 
@@ -282,9 +279,7 @@ Row {data-height=500}
 
 ```{r cnv_mapping_pediatric}
 if(exists('pathway_analysis_pediatric')){
-  datatable(pathway_analysis_pediatric$cnv_mapping, 
-            rownames = F, 
-            options = list(pageLength = 10))
+  view_dt(pathway_analysis_pediatric$cnv_mapping)
 }
 ```
 
@@ -310,9 +305,7 @@ Row {data-height=500}
 
 ```{r rec_alt_genes_pediatric}
 if(exists('mutational_analysis_pediatric')){
-  datatable(mutational_analysis_pediatric$recurrent_alterations, 
-          rownames = F, 
-          options = list(pageLength = 10))
+  view_dt(mutational_analysis_pediatric$recurrent_alterations)
 }
 ```
 
@@ -323,9 +316,7 @@ Row {data-height=500}
 
 ```{r shared_genes_pediatric}
 if(exists('mutational_analysis_pediatric')){
-  datatable(mutational_analysis_pediatric$shared_genes, 
-            rownames = F, 
-            options = list(pageLength = 10))
+  view_dt(mutational_analysis_pediatric$shared_genes)
 }
 ```
 
@@ -357,7 +348,7 @@ if(exists('kaplan_meier_adult')){
 
 ```{r similar_patients_tcga}
 if(exists('transciptomically_similar_adult')){
-  datatable(transciptomically_similar_adult, rownames = F, escape = F)
+  view_dt(transciptomically_similar_adult)
 }
 ```
 
@@ -370,9 +361,7 @@ Row {data-height=500}
 
 ```{r tabulate_pathways_adult}
 if(exists('pathway_analysis_adult')){
-  datatable(pathway_analysis_adult$shared_pathways, 
-          rownames = F, 
-          options = list(pageLength = 10))
+  view_dt(pathway_analysis_adult$shared_pathways)
 }
 ```
 
@@ -383,9 +372,7 @@ Row {data-height=500}
 
 ```{r cnv_mapping_adult}
 if(exists('pathway_analysis_adult')){
-  datatable(pathway_analysis_adult$cnv_mapping, 
-            rownames = F, 
-            options = list(pageLength = 10))
+  view_dt(pathway_analysis_adult$cnv_mapping)
 }
 ```
 
@@ -398,9 +385,7 @@ Row {data-height=500}
 
 ```{r rec_alt_genes_adult}
 if(exists('mutational_analysis_adult')){
-  datatable(mutational_analysis_adult$recurrent_alterations, 
-          rownames = F, 
-          options = list(pageLength = 10))
+  view_dt(mutational_analysis_adult$recurrent_alterations)
 }
 ```
 
@@ -411,9 +396,7 @@ Row {data-height=500}
 
 ```{r shared_genes_adult}
 if(exists('mutational_analysis_adult')){
-  datatable(mutational_analysis_adult$shared_genes, 
-            rownames = F, 
-            options = list(pageLength = 10))
+  view_dt(mutational_analysis_adult$shared_genes)
 }
 ```
 
