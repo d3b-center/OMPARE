@@ -15,10 +15,11 @@ act_genes <- act_genes %>%
   filter(`Drugs (for therapeutic implications only)` != '') %>%
   mutate(Alterations = strsplit(as.character(Alterations), ", ")) %>% 
   unnest(Alterations)
-act_genes$Alteration_detailed <- gsub(' Fusion','', act_genes$Alterations)
-act_genes$Alterations <- gsub('.*Fusion$', 'Fusions', act_genes$Alterations)
-act_genes$Alterations[act_genes$Alterations == "Fusions"] <- "Fusion"
+act_genes$Alterations <- gsub('.*Fusion$|^Fusions$', 'Fusion', act_genes$Alterations)
 
 # merge actionable genes with merged annotated oncokb output (no result)
-merged_file <- merged_file %>%
-  inner_join(act_genes, by = c('GENE' = 'Gene', 'ALTERATION' = 'Alterations'))
+final_file <- merged_file %>%
+  inner_join(act_genes, by = c('GENE' = 'Gene', 'ALTERATION' = 'Alterations')) %>%
+  unique()
+write.table(final_file, file = file.path(output_dir, 'oncokb_merged_annotated_actgenes.txt'), quote = F, sep = "\t", row.names = F)
+
