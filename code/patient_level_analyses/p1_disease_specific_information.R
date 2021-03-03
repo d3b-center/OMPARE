@@ -7,5 +7,5 @@ source(file.path(patient_level_analyses_utils, 'disease_specific_information.R')
 
 # call function
 disease_specific_information_output <- disease_specific_information(disease_specific_fields = disease_specific_fields,
-                                                                    snv_pattern = snv_pattern,  
+                                                                    snv_caller = snv_caller,  
                                                                     all_findings_output = all_findings_output)

@@ -4,7 +4,7 @@
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
 source(file.path(root_dir, "code", "utils", "define_directories.R"))
 
-key_clinical_findings <- function(snv_pattern, all_findings_output) {
+key_clinical_findings <- function(snv_caller, all_findings_output) {
 
   # use all findings as base
   myTable <- all_findings_output

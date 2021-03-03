@@ -4,7 +4,7 @@
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
 source(file.path(root_dir, "code", "utils", "define_directories.R"))
 
-disease_specific_information <- function(disease_specific_fields, snv_pattern, all_findings_output) {
+disease_specific_information <- function(disease_specific_fields, snv_caller, all_findings_output) {
   
   # only up/down genes, fusions, mutations, vus, cnv
   tmpGeneFindings <- all_findings_output %>%

@@ -10,7 +10,7 @@ params:
     value: 'arriba'
   set_title:
     value: 'Patient Report'
-  snv_pattern:
+  snv_caller:
     value: NULL
   tmb:
     value: NULL
@@ -38,7 +38,7 @@ source(file.path(utils_dir, 'load_libraries.R'))
 ```{r set_params}
 topDir <- params$topDir
 fusion_method <- params$fusion_method
-snv_pattern <- params$snv_pattern
+snv_caller <- params$snv_caller
 tmb <- params$tmb
 ```
 
@@ -127,30 +127,84 @@ if(nrow(all_findings_output) >= 1){
 }
 ```
 
-Gene Alterations (P2) {data-navmenu="Transcriptomic Alterations"}
+Gene Alterations: GTEx Brain (P2) {data-navmenu="Transcriptomic Alterations"}
 ===
 Row {data-height=700}
 ---
 
-### Gene Alterations
+### Gene Alterations (GTEx Brain)
     
-```{r plot_genes}
+```{r plot_genes_gtex}
 if(exists('diffexpr_genes_barplot_output')){
-  ggplotly(diffexpr_genes_barplot_output) 
+  ggplotly(diffexpr_genes_barplot_output$diffexpr_genes_barplot_gtex) 
 }
 ```
 
-Pathway Alterations (P2) {data-navmenu="Transcriptomic Alterations"}
+Gene Alterations: PBTA HGG (P2) {data-navmenu="Transcriptomic Alterations"}
 ===
 Row {data-height=700}
 ---
 
-### Pathway Alterations
+### Gene Alterations (PBTA HGG)
+    
+```{r plot_genes_pbta_hgg}
+if(exists('diffexpr_genes_barplot_output')){
+  ggplotly(diffexpr_genes_barplot_output$diffexpr_genes_barplot_pbta_hgg) 
+}
+```
 
-```{r plot_pathway}
+Gene Alterations: PBTA (P2) {data-navmenu="Transcriptomic Alterations"}
+===
+Row {data-height=700}
+---
+
+### Gene Alterations (PBTA)
+    
+```{r plot_genes_pbta}
+if(exists('diffexpr_genes_barplot_output')){
+  ggplotly(diffexpr_genes_barplot_output$diffexpr_genes_barplot_pbta) 
+}
+```
+
+Pathway Alterations: GTEx Brain (P2) {data-navmenu="Transcriptomic Alterations"}
+===
+Row {data-height=700}
+---
+
+### Pathway Alterations (GTEx Brain)
+
+```{r plot_pathway_gtex}
 #Bar chart of genes
 if(exists('diffreg_pathways_barplot_output')){
-  ggplotly(diffreg_pathways_barplot_output)
+  ggplotly(diffreg_pathways_barplot_output$diffreg_pathways_barplot_gtex)
+}
+```
+
+Pathway Alterations: PBTA HGG (P2) {data-navmenu="Transcriptomic Alterations"}
+===
+Row {data-height=700}
+---
+
+### Pathway Alterations (PBTA HGG)
+
+```{r plot_pathway_pbta_hgg}
+#Bar chart of genes
+if(exists('diffreg_pathways_barplot_output')){
+  ggplotly(diffreg_pathways_barplot_output$diffreg_pathways_barplot_pbta_hgg)
+}
+```
+
+Pathway Alterations: PBTA (P2) {data-navmenu="Transcriptomic Alterations"}
+===
+Row {data-height=700}
+---
+
+### Pathway Alterations (PBTA)
+
+```{r plot_pathway_pbta}
+#Bar chart of genes
+if(exists('diffreg_pathways_barplot_output')){
+  ggplotly(diffreg_pathways_barplot_output$diffreg_pathways_barplot_pbta)
 }
 ```
 
@@ -473,5 +527,20 @@ Row {data-height=700}
 fname <- file.path(topDir, "output", "complexheatmap_oncogrid.png")
 if(file.exists(fname)){
   knitr::include_graphics(fname)
+}
+```
+
+Drug Recommendations (P10)
+===
+Row {data-height=700}
+---
+
+### Drug Recommendations
+
+```{r drug_rec, echo=FALSE}
+fname <- file.path(topDir, "output", paste0('oncokb_merged_', snv_caller, '_annotated_actgenes.txt'))
+if(file.exists(fname)){
+  fname <- read.delim(fname, stringsAsFactors = F)
+  view_dt(fname)
 }
 ```

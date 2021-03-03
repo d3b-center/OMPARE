@@ -6,7 +6,7 @@ tcga_dir <- file.path(ref_dir, 'tcga')
 
 # combine and correct tcga gbm + pnoc008
 fname <- file.path(tcga_dir, "tcga_gbm_pnoc008_corrected_matrix.rds")
-if(file.exists(fname) & snv_pattern != "lancet"){
+if(file.exists(fname) & snv_caller != "lancet"){
   res <- readRDS(fname)
 } else {
   tcga_gbm_clinical <- tcga_gbm_clinical %>%

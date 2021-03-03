@@ -14,7 +14,7 @@ source(file.path(patient_level_analyses_utils, 'filter_cnv.R')) # filter copy nu
 source(file.path(patient_level_analyses_utils, 'filter_mutations.R')) # filter mutations
 source(file.path(patient_level_analyses_utils, 'annotate_mutations.R')) # annotate mutations
 
-readData <- function(topDir, fusion_method = c("star","arriba"), snv_pattern = "all"){
+readData <- function(topDir, fusion_method = c("star","arriba"), snv_caller = "all"){
   
   # patient sample info (at most one with .txt extension)
   sampleInfo <- list.files(path = topDir, pattern = "patient_report.txt", recursive = T, full.names = T)
@@ -24,13 +24,13 @@ readData <- function(topDir, fusion_method = c("star","arriba"), snv_pattern = "
   }
   
   # mutation data (can be multiple with .maf extension)
-  # if snv_pattern is all, then use all files except consensus
+  # if snv_caller is all, then use all files except consensus
   somatic.mut.pattern <- '*.maf'
   mutFiles <- list.files(path = topDir, pattern = somatic.mut.pattern, recursive = TRUE, full.names = T)
-  if(snv_pattern == "all"){ 
+  if(snv_caller == "all"){ 
     mutFiles <- grep('consensus', mutFiles, invert = TRUE, value = TRUE)
   } else {
-    mutFiles <- grep(snv_pattern, mutFiles, value = TRUE)
+    mutFiles <- grep(snv_caller, mutFiles, value = TRUE)
   }
   if(length(mutFiles) >= 1){
     mutFiles <- lapply(mutFiles, data.table::fread, skip = 1, stringsAsFactors = F)

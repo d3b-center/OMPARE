@@ -11,7 +11,7 @@ source(file.path(utils_dir, 'load_reference.R'))
 
 # read patient data
 source(file.path(patient_level_analyses_utils, "read_patient_data.R"))
-readData(topDir = topDir, fusion_method = fusion_method, snv_pattern = snv_pattern)
+readData(topDir = topDir, fusion_method = fusion_method, snv_caller = snv_caller)
 
 # run rna-seq analysis (output of this is required by several downstream scripts)
 fname <- file.path(topDir, "output", "rnaseq_analysis_output.rds")
@@ -233,3 +233,7 @@ fname <- file.path(topDir, "output", "complexheatmap_oncogrid.png")
 if(!file.exists(fname)){
   source(file.path(patient_level_analyses, 'p9_oncogrid.R'))
 }
+
+## page 10
+source(file.path(patient_level_analyses, 'p10_run_oncokb.R'))
+

@@ -4,7 +4,7 @@
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
 source(file.path(root_dir, "code", "utils", "define_directories.R"))
 
-genomic_summary <- function(snv_pattern, key_clinical_findings_output, all_findings_output) {
+genomic_summary <- function(snv_caller, key_clinical_findings_output, all_findings_output) {
   if(exists('expData')){
     headers <- c("High Confidence Genomic Alterations", "Total Genomic Alterations", "Transcriptomic Alterations", "Aberrant Pathway Activity")
     

@@ -6,7 +6,7 @@ pbta_dir <- file.path(ref_dir, 'pbta')
 
 # combine and correct pbta + pnoc008
 fname <- file.path(pbta_dir, "pbta_pnoc008_corrected_matrix.rds")
-if(file.exists(fname) & snv_pattern != "lancet"){
+if(file.exists(fname) & snv_caller != "lancet"){
   res <- readRDS(fname)
 } else {
   pbta_clinical <- pbta_clinical %>%
