@@ -1,16 +1,15 @@
 # barplot of differentially regulated up/down pathways
-diffreg_pathways_barplot <- function(rnaseq_analysis_output = rnaseq_analysis_output) {
-  pathData <- rnaseq_analysis_output$pathways
+diffreg_pathways_barplot <- function(pathways_up, pathways_down, comparison_study) {
   
   # top 10 upregulated pathways
-  pathDataUp <- pathData %>%
-    filter(direction == "up") %>%
+  pathDataUp <- pathways_up %>%
+    filter(comparison == comparison_study) %>%
     arrange(padj) %>%
     slice_head(n = 10)
   
   # top 10 downregulated pathways
-  pathDataDown <- pathData %>%
-    filter(direction == "down") %>%
+  pathDataDown <- pathways_down %>%
+    filter(comparison == comparison_study) %>%
     arrange(padj) %>%
     slice_head(n = 10)
   
@@ -24,6 +23,7 @@ diffreg_pathways_barplot <- function(rnaseq_analysis_output = rnaseq_analysis_ou
     xlab("") + 
     ylab("-log10 Adj. P-Value") + 
     scale_fill_manual(name = "Direction", values = c("Down" = "forest green", "Up" = "red")) +
-    theme(plot.margin = unit(c(1, 5, 1, 7), "cm"))
+    theme(plot.margin = unit(c(1, 5, 1, 7), "cm")) + 
+    ggtitle(paste0("Comparison against ", comparison_study))
   return(p)
 }

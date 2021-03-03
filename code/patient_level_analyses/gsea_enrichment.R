@@ -25,19 +25,30 @@ sample_to_add <- opt$patient
 # source function for RNA-seq diffexpr & pathway analysis
 source(file.path(patient_level_analyses_utils, "rnaseq_analysis_edgeR.R"))
 
+# gencode reference
+gencode_v27 <- read.delim(file.path(ref_dir, 'pnoc008', 'gencode.v27.primary_assembly.annotation.txt'))
+gencode_v27_pc <- gencode_v27 %>%
+  filter(biotype == "protein_coding")
+
 # Dataset1: GTex Brain
 gtex_brain_clinical <- readRDS(file.path(ref_dir, 'gtex', 'gtex_brain_clinical.rds'))
 gtex_brain_tpm <- readRDS(file.path(ref_dir, "gtex", "gtex_brain_tpm.rds"))
 gtex_brain_tpm <- gtex_brain_tpm[grep("^HIST", rownames(gtex_brain_tpm), invert = T),]
+gtex_brain_tpm <- gtex_brain_tpm[rownames(gtex_brain_tpm) %in% gencode_v27_pc$gene_symbol,]
+
 gtex_brain_counts <- readRDS(file.path(ref_dir, "gtex", "gtex_brain_counts.rds"))
 gtex_brain_counts <- gtex_brain_counts[grep("^HIST", rownames(gtex_brain_counts), invert = T),]
+gtex_brain_counts <- gtex_brain_counts[rownames(gtex_brain_counts) %in% gencode_v27_pc$gene_symbol,]
 
 # Dataset2: TCGA GBM
 tcga_gbm_clinical <- readRDS(file.path(ref_dir, 'tcga', 'tcga_gbm_clinical.rds'))
 tcga_gbm_tpm <- readRDS(file.path(ref_dir, 'tcga', 'tcga_gbm_tpm_matrix.rds'))
 tcga_gbm_tpm <- tcga_gbm_tpm[grep("^HIST", rownames(tcga_gbm_tpm), invert = T),]
+tcga_gbm_tpm <- tcga_gbm_tpm[rownames(tcga_gbm_tpm) %in% gencode_v27_pc$gene_symbol,]
+
 tcga_gbm_counts <- readRDS(file.path(ref_dir, 'tcga', 'tcga_gbm_counts_matrix.rds'))
 tcga_gbm_counts <- tcga_gbm_counts[grep("^HIST", rownames(tcga_gbm_counts), invert = T),]
+tcga_gbm_counts <- tcga_gbm_counts[rownames(tcga_gbm_counts) %in% gencode_v27_pc$gene_symbol,]
 
 # Dataset3: PBTA (polyA + corrected stranded n = 1028)
 # clinical
@@ -49,8 +60,11 @@ pbta_clinical <- pbta_clinical %>%
 # expression  (polyA + stranded combined data collapsed to gene symbols)
 pbta_full_tpm <- readRDS(file.path(ref_dir, 'pbta','pbta-gene-expression-rsem-tpm-collapsed.polya.stranded.rds'))
 pbta_full_tpm <- pbta_full_tpm[grep("^HIST", rownames(pbta_full_tpm), invert = T),]
+pbta_full_tpm <- pbta_full_tpm[rownames(pbta_full_tpm) %in% gencode_v27_pc$gene_symbol,]
+
 pbta_full_counts <- readRDS(file.path(ref_dir, 'pbta','pbta-gene-expression-rsem-counts-collapsed.polya.stranded.rds'))
 pbta_full_counts <- pbta_full_counts[grep("^HIST", rownames(pbta_full_counts), invert = T),]
+pbta_full_counts <- pbta_full_counts[rownames(pbta_full_counts) %in% gencode_v27_pc$gene_symbol,]
 
 # Dataset4: PBTA (polyA + corrected stranded HGG n = 186)
 pbta_hgg_tpm <- pbta_full_tpm[,colnames(pbta_full_tpm) %in% pbta_clinical$Kids_First_Biospecimen_ID]
@@ -59,8 +73,11 @@ pbta_hgg_counts <- pbta_full_counts[,colnames(pbta_full_counts) %in% pbta_clinic
 # Dataset5: PNOC008
 pnoc008_tpm <- readRDS(file.path(ref_dir, 'pnoc008', 'pnoc008_tpm_matrix.rds'))
 pnoc008_tpm <- pnoc008_tpm[grep("^HIST", rownames(pnoc008_tpm), invert = T),]
+pnoc008_tpm <- pnoc008_tpm[rownames(pnoc008_tpm) %in% gencode_v27_pc$gene_symbol,]
+
 pnoc008_counts <- readRDS(file.path(ref_dir, 'pnoc008', 'pnoc008_counts_matrix.rds'))
 pnoc008_counts <- pnoc008_counts[grep("^HIST", rownames(pnoc008_counts), invert = T),]
+pnoc008_counts <- pnoc008_counts[rownames(pnoc008_counts) %in% gencode_v27_pc$gene_symbol,]
 
 # Cancer Genes
 cancer_genes <- readRDS(file.path(ref_dir, 'cancer_gene_list.rds'))

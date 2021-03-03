@@ -1,6 +1,6 @@
 # all findings table 
 
-all_findings <- function(snv_pattern) {
+all_findings <- function(snv_caller) {
   # Add Mutations
   if(exists('mutDataAnnot')){
     # annotate mutations, add Aberration and Details
@@ -19,8 +19,8 @@ all_findings <- function(snv_pattern) {
       mutate(DOMAINS = toString(na.omit(DOMAINS))) %>%
       unique()
     
-    # now add Variant Properties depending on snv_pattern
-    if(snv_pattern == "all"){
+    # now add Variant Properties depending on snv_caller
+    if(snv_caller == "all"){
       tmpMut <- tmpMut %>%
         dplyr::select(Aberration, Type, Details, SIFT, DOMAINS) %>%
         unique()
@@ -60,7 +60,8 @@ all_findings <- function(snv_pattern) {
       rowwise() %>%
       mutate(Aberration = hgnc_symbol,
              Type = ifelse(status == "gain", "Amplification", "Deletion"),
-             Details = paste0("Copy Number Value: ", copy.number),
+             Details = paste0("Copy Number: ", copy.number, 
+                              " | Pos: ", chr, ":", start, "-", end),
              Variant_Properties = ifelse(genotype == "A", "LOH", NA)) %>%
       dplyr::select(Aberration, Type, Details, Variant_Properties)
   } else {

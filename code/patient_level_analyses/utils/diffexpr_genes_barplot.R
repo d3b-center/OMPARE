@@ -1,18 +1,36 @@
 # barplot of differentially expressed genes
 
-diffexpr_genes_barplot <- function(rnaseq_analysis_output = rnaseq_analysis_output) {
+diffexpr_genes_barplot <- function(genes_up, genes_down, comparison_study, cancer_genes) {
   
-  geneData <- rnaseq_analysis_output$diffexpr.top20 %>%
-    rownames_to_column("Gene") %>%
-    mutate(Direction = ifelse(logfc > 0, "Up", "Down")) %>%
-    arrange(logfc)
+  # filter by comparison
+  geneDataUp <- genes_up %>%
+    filter(comparison == comparison_study,
+           diff_expr == "up",
+           genes %in% cancer_genes) %>%
+    arrange(desc(logFC)) %>%
+    slice_head(n = 20)
+  
+  geneDataDown <- genes_down %>%
+    filter(comparison == comparison_study,
+           diff_expr == "down",
+           genes %in% cancer_genes) %>%
+    arrange(logFC) %>%
+    slice_head(n = 20)
+  
+  # combine both
+  geneData <- rbind(geneDataUp, geneDataDown)
+  geneData <- geneData %>%
+    mutate(Direction = diff_expr,
+           Gene = genes) %>%
+    arrange(logFC)
   geneData$Gene <- factor(geneData$Gene, levels = geneData$Gene)
+  geneData$Direction <- factor(geneData$Direction, levels = c("up", "down"))
   
   # plot barplot of top 20 up/down genes
-  geneData$Direction <- factor(geneData$Direction, levels = c("Up", "Down"))
-  p <- ggplot(geneData, aes(Gene, y = logfc, fill = Direction)) + 
+  p <- ggplot(geneData, aes(Gene, y = logFC, fill = Direction)) + 
     geom_bar(stat="identity") + coord_flip() + theme_bw() + 
-    xlab("") + scale_fill_manual(values = c("Down" = "forest green", "Up" = "red")) +
-    theme(plot.margin = unit(c(1, 5, 1, 5), "cm"))
+    xlab("") + scale_fill_manual(values = c("up" = "red", "down" = "forest green")) +
+    theme(plot.margin = unit(c(1, 5, 1, 5), "cm")) +
+    ggtitle(paste0("Comparison against ", comparison_study))
   return(p)
 }
