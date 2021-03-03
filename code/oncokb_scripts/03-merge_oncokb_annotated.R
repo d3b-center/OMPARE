@@ -10,9 +10,14 @@ maf_files <- grep('fusion|cnv', annotated_files, invert = T, value = T)
 cnv_file <- grep('cnv', annotated_files, value = T)
 fusion_file <- grep('fusion', annotated_files, value = T)
 
-# read cancer genes
+# read cancer genes and split into oncogenes and tsgs
 cancer_genes <- readRDS(file.path(ref_dir, 'cancer_gene_list.rds'))
-cancer_genes <- unique(cancer_genes$Gene_Symbol)
+oncogenes <- cancer_genes %>%
+  filter(type %in% c("Is.Oncogene", "Oncogene")) %>%
+  .$Gene_Symbol %>% unique
+tsgs <- cancer_genes %>%
+  filter(type %in% c("Is.Tumor.Suppressor.Gene", "TumorSuppressorGene")) %>%
+  .$Gene_Symbol %>% unique
 
 # mutation
 for(i in 1:length(maf_files)){
@@ -23,11 +28,11 @@ for(i in 1:length(maf_files)){
            ALTERATION = gsub('^p.', '', HGVSp_Short), # add HGVSp short
            ALTERATION = ifelse(ALTERATION == "", NA, ALTERATION), # replace "" with NAs
            ALTERATION_v2 = ifelse(Variant_Classification %in% c('Missense_Mutation', 'Nonsense_Mutation', # add Oncogenic mutations
-                                                             'Frame_Shift_Del', 'Frame_Shift_Ins', 
-                                                             'In_Frame_Del', 'In_Frame_Ins', 'CDS_position') & 
-                                 IMPACT %in% c('MODERATE', 'HIGH'), 
-                               yes = 'Oncogenic Mutations', 
-                               no = NA)) %>%
+                                                                'Frame_Shift_Del', 'Frame_Shift_Ins', 
+                                                                'In_Frame_Del', 'In_Frame_Ins', 'CDS_position') & 
+                                    IMPACT %in% c('MODERATE', 'HIGH'), 
+                                  yes = 'Oncogenic Mutations', 
+                                  no = NA)) %>%
     unite(., col = "ALTERATION",  ALTERATION, ALTERATION_v2, na.rm=TRUE, sep = ", ") %>% # create comma separated values in case of HGVSp and "Oncogenic Mutations"
     mutate(ALTERATION = strsplit(ALTERATION, ", ")) %>% 
     unnest(ALTERATION) %>% # split into new rows
@@ -43,7 +48,8 @@ for(i in 1:length(maf_files)){
 cnv <- read.delim(cnv_file)
 cnv <- cnv %>%
   mutate(GENE = HUGO_SYMBOL) %>%
-  mutate(ALTERATION_v2 = ifelse(GENE %in% cancer_genes, 'Oncogenic Mutations', NA)) %>% # use cancer genes to define Oncogenic Mutations
+  mutate(ALTERATION_v2 = ifelse((GENE %in% oncogenes & ALTERATION == "Amplification") | 
+                                  (GENE %in% tsgs & ALTERATION == "Deletion"), yes = 'Oncogenic Mutations', no = NA)) %>% # use cancer genes to define Oncogenic Mutations
   unite(., col = "ALTERATION",  ALTERATION, ALTERATION_v2, na.rm=TRUE, sep = ", ") %>% # create comma separated values of "Amplification/Deletion" and "Oncogenic Mutations"
   mutate(ALTERATION = strsplit(ALTERATION, ", ")) %>% 
   unnest(ALTERATION) %>% # split into new rows
