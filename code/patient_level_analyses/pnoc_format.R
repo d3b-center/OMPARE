@@ -111,7 +111,6 @@ pnoc008_fpkm <- pnoc008_expr %>%
   column_to_rownames('gene_symbol')
 pnoc008_fpkm <- pnoc008_fpkm[,grep('CHOP', colnames(pnoc008_fpkm), invert = T)]
 colnames(pnoc008_fpkm)  <- gsub("-NANT", "", colnames(pnoc008_fpkm))
-saveRDS(pnoc008_fpkm, file = file.path(pnoc008.dir, 'pnoc008_fpkm_matrix.rds'))
 
 # counts matrix
 pnoc008_counts <- pnoc008_expr %>% 
@@ -123,7 +122,6 @@ pnoc008_counts <- pnoc008_expr %>%
   column_to_rownames('gene_symbol')
 pnoc008_counts <- pnoc008_counts[,grep('CHOP', colnames(pnoc008_counts), invert = T)]
 colnames(pnoc008_counts)  <- gsub("-NANT", "", colnames(pnoc008_counts))
-saveRDS(pnoc008_counts, file = file.path(pnoc008.dir, 'pnoc008_counts_matrix.rds'))
 
 # uniquify gene_symbol (tpm)
 pnoc008_tpm <- pnoc008_expr %>% 
@@ -133,8 +131,6 @@ pnoc008_tpm <- pnoc008_expr %>%
   dplyr::select(gene_symbol, sample_name, TPM) %>%
   spread(sample_name, TPM) %>%
   column_to_rownames('gene_symbol')
-
-# only keep NANT sample for PNOC008-5
 pnoc008_tpm <- pnoc008_tpm[,grep('CHOP', colnames(pnoc008_tpm), invert = T)]
 colnames(pnoc008_tpm)  <- gsub("-NANT", "", colnames(pnoc008_tpm))
 
@@ -145,8 +141,7 @@ pnoc008_clinical <- pnoc008_clinical %>%
   filter_all(any_vars(!is.na(.))) %>%
   mutate(PNOC.Subject.ID = gsub('P-','PNOC008-', PNOC.Subject.ID))
 pnoc008_clinical <- pnoc008_clinical %>%
-  mutate(KF_ParticipantID = PNOC.Subject.ID,
-         subjectID = PNOC.Subject.ID,
+  mutate(subjectID = PNOC.Subject.ID,
          reportDate = Sys.Date(),
          tumorType = Diagnosis.a,
          tumorLocation = Primary.Site.a,
@@ -154,18 +149,41 @@ pnoc008_clinical <- pnoc008_clinical %>%
          age_diagnosis_days = Age.at.Diagnosis..in.days.,
          age_collection_days = Age.at.Collection..in.days.,
          sex = Gender,
-         library_name = RNA_library) %>%
-  dplyr::select(subjectID, KF_ParticipantID, tumorType, tumorLocation, ethnicity, sex, age_diagnosis_days, age_collection_days, study_id, library_name) %>%
+         library_name = RNA_library,
+         cohort_participant_id = Research.ID) %>%
+  dplyr::select(subjectID, tumorType, tumorLocation, ethnicity, sex, age_diagnosis_days, age_collection_days, study_id, library_name, cohort_participant_id) %>%
   as.data.frame()
+
+# add other identifiers from PBTA base histology
+pbta_hist <- read.delim(file.path(ref_dir, 'pbta', 'pbta-histologies-base.tsv'))
+pbta_hist <- pbta_hist %>%
+  filter(experimental_strategy == "RNA-Seq",
+         Kids_First_Biospecimen_ID != "BS_862NMAR7",
+         cohort_participant_id %in% pnoc008_clinical$cohort_participant_id) %>%
+  dplyr::select(Kids_First_Biospecimen_ID, sample_id, cohort_participant_id)
+
+# combine both
+pnoc008_clinical <- pnoc008_clinical %>%
+  left_join(pbta_hist, by = 'cohort_participant_id')
+
+# assign subjectID as rownames
 rownames(pnoc008_clinical) <- pnoc008_clinical$subjectID
 
 common.pnoc008 <- intersect(rownames(pnoc008_clinical), colnames(pnoc008_tpm))
 pnoc008_clinical <- pnoc008_clinical[common.pnoc008,]
 pnoc008_tpm <- pnoc008_tpm[,common.pnoc008]
+pnoc008_fpkm <- pnoc008_fpkm[,common.pnoc008]
+pnoc008_counts <- pnoc008_counts[,common.pnoc008]
 
 # save expression and clinical
 saveRDS(pnoc008_tpm, file = file.path(pnoc008.dir, 'pnoc008_tpm_matrix.rds'))
+saveRDS(pnoc008_fpkm, file = file.path(pnoc008.dir, 'pnoc008_fpkm_matrix.rds'))
+saveRDS(pnoc008_counts, file = file.path(pnoc008.dir, 'pnoc008_counts_matrix.rds'))
 saveRDS(pnoc008_clinical, file = file.path(pnoc008.dir, "pnoc008_clinical.rds"))
+
+# now subset to id columns
+pnoc008_clinical <- pnoc008_clinical %>%
+  dplyr::select(subjectID, Kids_First_Biospecimen_ID, cohort_participant_id, sample_id, study_id)
 
 # copy number
 pnoc008_cnv <- list.files(path = results_dir, pattern = "*.CNVs.p.value.txt", recursive = TRUE, full.names = T)
@@ -176,13 +194,13 @@ pnoc008_cnv <- pnoc008_cnv[grep('CHOP', pnoc008_cnv$sample_name, invert = T),]
 pnoc008_cnv$sample_name  <- gsub("-NANT", "", pnoc008_cnv$sample_name)
 
 pnoc008_cnv <- pnoc008_cnv %>%
+  inner_join(pnoc008_clinical, by = c("sample_name" = "subjectID")) %>%
   mutate(Gene = hgnc_symbol,
          Alteration_Datatype = "CNV",
          Alteration_Type = stringr::str_to_title(status),
          Alteration = paste0('Copy Number Value:', copy.number),
-         Kids_First_Biospecimen_ID = sample_name,
          SampleID = sample_name,
-         Study = "PNOC008") %>%
+         Study = study_id) %>%
   dplyr::select(Gene, Alteration_Datatype, Alteration_Type, Alteration, Kids_First_Biospecimen_ID, SampleID, Study) %>%
   unique()
 saveRDS(pnoc008_cnv, file = file.path(pnoc008.dir, "pnoc008_cnv_filtered.rds"))
@@ -197,6 +215,7 @@ pnoc008_fusions <- pnoc008_fusions[grep('CHOP', pnoc008_fusions$sample_name, inv
 pnoc008_fusions$sample_name  <- gsub("-NANT", "", pnoc008_fusions$sample_name)
 
 pnoc008_fusions <- pnoc008_fusions %>%
+  inner_join(pnoc008_clinical, by = c("sample_name" = "subjectID")) %>%
   separate_rows(gene1, gene2, sep = ",", convert = TRUE) %>%
   mutate(gene1 = gsub('[(].*', '', gene1),
          gene2 = gsub('[(].*',' ', gene2),
@@ -204,17 +223,13 @@ pnoc008_fusions <- pnoc008_fusions %>%
   mutate(Alteration_Datatype = "Fusion",
          Alteration_Type = stringr::str_to_title(reading_frame),
          Alteration = paste0(gene1, '_',  gene2),
-         Kids_First_Biospecimen_ID = sample_name,
-         SampleID = sample_name) %>%
+         SampleID = sample_name,
+         Study = study_id) %>%
   unite(col = "Gene", gene1, gene2, sep = ", ", na.rm = T) %>%
-  dplyr::select(Gene, Alteration_Datatype, Alteration_Type, Alteration, Kids_First_Biospecimen_ID, SampleID) %>%
+  dplyr::select(Gene, Alteration_Datatype, Alteration_Type, Alteration, Kids_First_Biospecimen_ID, SampleID, Study) %>%
   separate_rows(Gene, convert = TRUE) %>%
   filter(Gene %in% gene_list) %>%
   unique()
-pnoc008_fusions <- pnoc008_fusions %>%
-  inner_join(pnoc008_clinical %>%
-               dplyr::select(subjectID, study_id), by = c("Kids_First_Biospecimen_ID" = "subjectID")) %>%
-  dplyr::rename('Study' = 'study_id')
 saveRDS(pnoc008_fusions, file = file.path(pnoc008.dir, "pnoc008_fusions_filtered.rds"))
 
 # mutations
@@ -228,18 +243,15 @@ pnoc008_mutations$sample_name  <- gsub("-NANT", "", pnoc008_mutations$sample_nam
 # filter mutations
 pnoc008_mutations <- filter_mutations(myMutData = pnoc008_mutations, myCancerGenes = cancer_genes)
 pnoc008_mutations <- pnoc008_mutations %>%
+  inner_join(pnoc008_clinical, by = c("sample_name" = "subjectID")) %>%
   mutate(Gene = Hugo_Symbol,
          Alteration_Datatype = "Mutation",
          Alteration_Type = Variant_Classification,
          Alteration = HGVSp_Short,
-         Kids_First_Biospecimen_ID = sample_name,
-         SampleID = sample_name) %>%
-  dplyr::select(Gene, Alteration_Datatype, Alteration_Type, Alteration, Kids_First_Biospecimen_ID, SampleID) %>%
+         SampleID = sample_name,
+         Study = study_id) %>%
+  dplyr::select(Gene, Alteration_Datatype, Alteration_Type, Alteration, Kids_First_Biospecimen_ID, SampleID, Study) %>%
   unique()
-pnoc008_mutations <- pnoc008_mutations %>%
-  inner_join(pnoc008_clinical %>%
-               dplyr::select(subjectID, study_id), by = c("Kids_First_Biospecimen_ID" = "subjectID")) %>%
-  dplyr::rename('Study' = 'study_id')
 saveRDS(pnoc008_mutations, file = file.path(pnoc008.dir, "pnoc008_consensus_mutation_filtered.rds"))
 
 

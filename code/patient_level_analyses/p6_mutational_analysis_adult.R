@@ -8,6 +8,7 @@ source(file.path(patient_level_analyses_utils, 'mutational_analysis.R'))
 # recurrent alterations
 mutational_analysis_adult <- mutational_analysis(top_cor = tcga_gbm_pnoc008_nn_tpm, 
                                                  key_clinical_findings_output = key_clinical_findings_output,
+                                                 clinical = tcga_gbm_pnoc008_clinical,
                                                  comparison = "adult")
 
 # save output
