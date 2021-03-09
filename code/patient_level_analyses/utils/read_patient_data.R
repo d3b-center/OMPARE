@@ -17,7 +17,7 @@ source(file.path(patient_level_analyses_utils, 'annotate_mutations.R')) # annota
 readData <- function(topDir, fusion_method = c("star","arriba"), snv_caller = "all"){
   
   # patient sample info (at most one with .txt extension)
-  sampleInfo <- list.files(path = topDir, pattern = "patient_report.txt", recursive = T, full.names = T)
+  sampleInfo <- list.files(path = file.path(topDir, 'clinical'), pattern = "patient_report.txt", recursive = T, full.names = T)
   if(length(sampleInfo) == 1){
     sampleInfo <- read.delim(sampleInfo, stringsAsFactors = F)
     assign("sampleInfo", sampleInfo, envir = globalenv())
@@ -26,7 +26,7 @@ readData <- function(topDir, fusion_method = c("star","arriba"), snv_caller = "a
   # mutation data (can be multiple with .maf extension)
   # if snv_caller is all, then use all files except consensus
   somatic.mut.pattern <- '*.maf'
-  mutFiles <- list.files(path = topDir, pattern = somatic.mut.pattern, recursive = TRUE, full.names = T)
+  mutFiles <- list.files(path = file.path(topDir, 'simple-variants'), pattern = somatic.mut.pattern, recursive = TRUE, full.names = T)
   if(snv_caller == "all"){ 
     mutFiles <- grep('consensus', mutFiles, invert = TRUE, value = TRUE)
   } else {
@@ -48,18 +48,8 @@ readData <- function(topDir, fusion_method = c("star","arriba"), snv_caller = "a
     assign("mutDataAnnot", mutDataAnnot, envir = globalenv())
   } 
   
-  # germline data
-  mutFiles <- list.files(path = topDir, pattern = 'hg38_multianno.txt.gz', recursive = TRUE, full.names = T)
-  if(length(mutFiles) >= 1){
-    mutFiles <- lapply(mutFiles, data.table::fread, stringsAsFactors = F)
-    mutData.germ <- data.table::rbindlist(mutFiles)
-    mutData.germ <- as.data.frame(mutData.germ)
-    mutData.germ <- unique(mutData.germ)
-    assign("mutData.germ", mutData.germ, envir = globalenv())
-  } 
-  
   # copy number pvalue file
-  cnvData <- list.files(path = topDir, pattern = "*.CNVs.p.value.txt", recursive = TRUE, full.names = T)
+  cnvData <- list.files(path = file.path(topDir, 'copy-number-variations'), pattern = "*.CNVs.p.value.txt", recursive = TRUE, full.names = T)
   if(length(cnvData) == 1){
     cnvData <- data.table::fread(cnvData, header = T, check.names = T)
     cnvData <- cnvData %>% 
@@ -77,14 +67,6 @@ readData <- function(topDir, fusion_method = c("star","arriba"), snv_caller = "a
     assign("cnvDataFilt", cnvDataFilt, envir = globalenv())
   }
   
-  # # copy number ratio data for plot
-  # cnvRatioData <- list.files(path = topDir, pattern = "*controlfreec.ratio.txt$", recursive = TRUE, full.names = T)
-  # if(length(cnvRatioData) == 1){
-  #   cnvRatioData <- data.table::fread(cnvRatioData, header = T)
-  #   cnvRatioData <- as.data.frame(cnvRatioData)
-  #   assign("cnvRatioData", cnvRatioData, envir = globalenv())
-  # }
-  
   # fusion data (chose either star or arriba or both)
   if(fusion_method == "star"){
     fusPattern = "*star-fusion.fusion_candidates.final"
@@ -94,7 +76,7 @@ readData <- function(topDir, fusion_method = c("star","arriba"), snv_caller = "a
     fusPattern = "*star-fusion.fusion_candidates.final|*.arriba.fusions.tsv"
   }
   # read fusion files + filter and merge them
-  fusFiles <- list.files(path = topDir, pattern = fusPattern, recursive = TRUE, full.names = T)
+  fusFiles <- list.files(path = file.path(topDir, 'gene-fusions'), pattern = fusPattern, recursive = TRUE, full.names = T)
   if(length(fusFiles) >= 1){
     fusFiles <- lapply(fusFiles, filter_fusions, myCancerGenes = cancer_genes)
     fusData <- do.call('rbind', fusFiles)
@@ -105,7 +87,7 @@ readData <- function(topDir, fusion_method = c("star","arriba"), snv_caller = "a
   }
   
   # expression data: TPM (can be only 1 per patient with .genes.results)
-  expDat <- list.files(path = topDir, pattern = "*.genes.results*", recursive = TRUE, full.names = T)
+  expDat <- list.files(path = file.path(topDir, 'gene-expressions'), pattern = "*.genes.results*", recursive = TRUE, full.names = T)
   if(length(expDat) == 1){
     expData <- read.delim(expDat)
     expData.full <- expData %>% 

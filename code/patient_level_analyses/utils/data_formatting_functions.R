@@ -6,22 +6,41 @@ source(file.path(patient_level_analyses_utils, 'batch_correct.R'))
 # step 1
 combine_and_batch_correct <- function(expr1, expr2 = pnoc008_tpm, clinical1, clinical2 = pnoc008_clinical){
   # common columns
-  cols <- c('sample_barcode', 'sample_id', 
+  cols <- c('kids_first_biospecimen_id', 'sample_id', 'cohort_participant_id', 'subject_id',
             'gender', 'ethnicity', 'age_at_diagnosis_in_days',
             'short_histology', 'broad_histology', 
             'pathology_diagnosis', 'integrated_diagnosis',
             'study_id', 'library_name')
   
-  # subset clinical filee
-  clinical1 <- clinical1 %>%
+  # subset clinical file
+  if(unique(clinical1$study_id) == "PBTA"){
+    clinical1 <- clinical1 %>%
+      mutate(kids_first_biospecimen_id = Kids_First_Biospecimen_ID,
+             subject_id = Kids_First_Biospecimen_ID) %>%
+      dplyr::select(cols)
+  } else if(unique(clinical1$study_id == "TCGA")){
+    clinical1 <- clinical1 %>%
+      mutate(kids_first_biospecimen_id = '',
+              subject_id = sample_barcode,
+              cohort_participant_id = '') %>%
+      dplyr::select(cols)
+  }
+  
+  clinical2 <- clinical2 %>%
+    mutate(kids_first_biospecimen_id = Kids_First_Biospecimen_ID,
+           subject_id = subjectID,
+           gender = sex,
+           age_at_diagnosis_in_days = age_diagnosis_days,
+           short_histology = tumorType,
+           broad_histology = tumorType,
+           pathology_diagnosis = tumorType, 
+           integrated_diagnosis = tumorType) %>%
     dplyr::select(cols)
-  clinical2 <- clinical2[,c(rep('subjectID', 2), 'sex', 'age_diagnosis_days', 'ethnicity', rep('tumorType', 4), 'study_id', 'library_name')] 
-  colnames(clinical2) <- colnames(clinical1)
   
   # combine both clinical files
   clinical <- clinical1 %>%
     rbind(clinical2) %>%
-    mutate(tmp = sample_barcode,
+    mutate(tmp = subject_id,
            batch = paste0(study_id, '_', library_name)) %>%
     remove_rownames() %>%
     column_to_rownames('tmp')
@@ -32,6 +51,9 @@ combine_and_batch_correct <- function(expr1, expr2 = pnoc008_tpm, clinical1, cli
     inner_join(expr2 %>%
                  rownames_to_column('genes'), by = 'genes') %>%
     column_to_rownames('genes')
+  
+  # match clinical file to expression data
+  clinical <- clinical[colnames(expr_uncorrected),]
   
   # correct for batch effect: study_id + library_name
   expr_corrected <- quiet(batch.correct(mat = expr_uncorrected, clin = clinical))

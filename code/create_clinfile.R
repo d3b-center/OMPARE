@@ -31,8 +31,8 @@ dat <- dat %>%
 
 # create clinical file
 df <- dat %>%
-  mutate(KF_ParticipantID = PNOC.Subject.ID,
-         subjectID = PNOC.Subject.ID,
+  mutate(subjectID = PNOC.Subject.ID,
+         cohort_participant_id = Research.ID,
          reportDate = Sys.Date(),
          tumorType = Diagnosis.a,
          tumorLocation = Primary.Site.a,
@@ -41,7 +41,7 @@ df <- dat %>%
          age_collection_days = Age.at.Collection..in.days.,
          sex = Gender,
          library_name = RNA_library) %>%
-  dplyr::select(subjectID, reportDate, tumorType,	tumorLocation, ethnicity, sex, age_diagnosis_days, age_collection_days, KF_ParticipantID, library_name)
+  dplyr::select(subjectID, cohort_participant_id, reportDate, tumorType,	tumorLocation, ethnicity, sex, age_diagnosis_days, age_collection_days, library_name)
 
 # write out
 fname <- file.path(dir, "clinical", "patient_report.txt")

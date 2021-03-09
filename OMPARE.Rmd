@@ -537,10 +537,8 @@ Row {data-height=700}
 
 ### Drug Recommendations
 
-```{r drug_rec, echo=FALSE}
-fname <- file.path(topDir, "output", paste0('oncokb_merged_', snv_caller, '_annotated_actgenes.txt'))
-if(file.exists(fname)){
-  fname <- read.delim(fname, stringsAsFactors = F)
-  view_dt(fname)
+```{r drug_rec}
+if(exists('oncokb_output')){
+  view_dt(oncokb_output)
 }
 ```

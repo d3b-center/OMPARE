@@ -53,7 +53,7 @@ cnv_genes <- cnv_genes %>%
   mutate(label = ifelse(Alteration_Type == "Gain", "GAI", "LOS")) %>%
   filter(Gene %in% cnv$V1) %>%
   mutate(Gene_name = Gene,
-         sample_name = Kids_First_Biospecimen_ID) %>%
+         sample_name = SampleID) %>%
   dplyr::select(sample_name, Gene_name, label) %>%
   unique()
 
@@ -70,7 +70,7 @@ mut_genes <- mut_genes %>%
                            Alteration_Type %in% "Splice_Site" ~ "SPS")) %>%
   filter(Gene %in% snv$V1) %>%
   mutate(Gene_name = Gene,
-         sample_name = Kids_First_Biospecimen_ID) %>%
+         sample_name = SampleID) %>%
   dplyr::select(sample_name, Gene_name, label) %>%
   unique()
 
@@ -81,7 +81,7 @@ fus_genes <- fus_genes %>%
   mutate(label = "FUS") %>%
   filter(Gene %in% fusion$V1) %>%
   mutate(Gene_name = Gene,
-         sample_name = Kids_First_Biospecimen_ID) %>%
+         sample_name = SampleID) %>%
   dplyr::select(sample_name, Gene_name, label) %>%
   unique()
 

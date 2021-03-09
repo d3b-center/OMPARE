@@ -12,8 +12,7 @@ if(file.exists(fname) & snv_caller != "lancet"){
   pbta_clinical <- pbta_clinical %>%
     filter(experimental_strategy == "RNA-Seq",
            Kids_First_Biospecimen_ID %in% colnames(pbta_tpm)) %>% # will remove this after updating everything to v18
-    mutate(sample_barcode = Kids_First_Biospecimen_ID,
-           study_id = "PBTA",
+    mutate(study_id = "PBTA",
            library_name = RNA_library,
            gender = reported_gender, 
            age_at_diagnosis_in_days = age_at_diagnosis_days)

@@ -89,8 +89,8 @@ tis_profile <- function(fname, patient_clinical, score){
       total.norm <- total.norm[rownames(total.norm) %in% genelist,]
       total.sums <- colSums(total.norm)
       total.avg <- colMeans(total.norm)
-      total.norm <- data.frame(sample_barcode = names(total.sums), scoreSum = total.sums, scoreAvg = total.avg)
-      total.norm <- total.norm[order(total.norm$sample_barcode),]
+      total.norm <- data.frame(subject_id = names(total.sums), scoreSum = total.sums, scoreAvg = total.avg)
+      total.norm <- total.norm[order(total.norm$subject_id),]
       
       # merge with meta file
       total.norm <- meta %>% 
@@ -108,13 +108,13 @@ tis_profile <- function(fname, patient_clinical, score){
   }
   # use sum or average
   patient.scoreSum <- total %>%
-    filter(sample_barcode == sampleInfo$subjectID) %>%
+    filter(subject_id == sampleInfo$subjectID) %>%
     .$scoreSum
   patient.scoreAvg <- total %>%
-    filter(sample_barcode == sampleInfo$subjectID) %>%
+    filter(subject_id == sampleInfo$subjectID) %>%
     .$scoreAvg
   total <- total %>%
-    filter(sample_barcode != sampleInfo$subjectID)
+    filter(subject_id != sampleInfo$subjectID)
   if(score == 'sum'){
     total <- total %>% 
       mutate(score = scoreSum)

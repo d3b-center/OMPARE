@@ -24,11 +24,14 @@ pbta_full_tpm <- readRDS(file.path(ref_dir, 'pbta', 'pbta-gene-expression-rsem-t
 pbta_tpm <- pbta_full_tpm
 pbta_clinical <- read.delim(file.path(ref_dir, 'pbta', 'pbta-histologies.tsv'), stringsAsFactors = F)
 pbta_survival <- pbta_clinical %>%
-  filter(experimental_strategy == 'RNA-Seq') %>%
-  mutate(sample_barcode = Kids_First_Biospecimen_ID) %>%
-  dplyr::select(sample_barcode, sample_id, OS_days, OS_status) %>%
-  filter(!is.na(OS_status)) %>%
-  mutate(OS_status = ifelse(OS_status == 'DECEASED', 1, 0))
+  filter(experimental_strategy == 'RNA-Seq',
+         !is.na(OS_status)) %>%
+  mutate(subject_id = Kids_First_Biospecimen_ID,
+         OS_status = ifelse(OS_status == 'DECEASED', 1, 0)) %>%
+  dplyr::select(subject_id, OS_days, OS_status) 
+
+# base histology for transcriptomically similar table (pediatric) 
+pbta_histology_base <- read.delim(file.path(ref_dir, 'pbta', 'pbta-histologies-base.tsv'), stringsAsFactors = F)
 
 # PBTA specific CNV data
 pbta_cnv <- data.table::fread(file.path(ref_dir, 'pbta', 'pbta-cnv-controlfreec.tsv.gz'))
@@ -38,9 +41,10 @@ tcga_gbm_tpm <- readRDS(file.path(ref_dir, 'tcga', 'tcga_gbm_tpm_matrix.rds'))
 tcga_gbm_clinical <- readRDS(file.path(ref_dir, 'tcga', 'tcga_gbm_clinical.rds'))
 tcga_gbm_survival <- tcga_gbm_clinical %>%
   filter(overall_survival_time_in_days != 'unavailable') %>%
-  mutate(OS_status = as.numeric(vital_status),
+  mutate(subject_id = sample_barcode,
+         OS_status = as.numeric(vital_status),
          OS_days = as.numeric(overall_survival_time_in_days)) %>%
-  dplyr::select(sample_barcode, OS_days, OS_status)
+  dplyr::select(subject_id, OS_days, OS_status)
 
 # Cancer Genes (annoFuse)
 cancer_genes <- readRDS(file.path(ref_dir, 'cancer_gene_list.rds'))
