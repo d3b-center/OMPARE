@@ -86,6 +86,10 @@ cancer_genes <- readRDS(file.path(ref_dir, 'cancer_gene_list.rds'))
 gene_set <- getGmt(file.path(ref_dir, 'msigdb', 'c2.cp.reactome.v6.0.symbols.gmt'), collectionType = BroadCollection(), geneIdType = SymbolIdentifier())
 gene_set <- geneIds(gene_set)
 
+# DSigDb geneset
+dsigdb_gene_set <- getGmt(file.path(ref_dir, 'dsigdb', 'DSigDB_All.gmt'))
+dsigdb_gene_set <- geneIds(dsigdb_gene_set)
+
 # input data
 pbta_full_tpm_melt <- melt(as.matrix(pbta_full_tpm), value.name = "TPM", varnames = c("Gene", "Sample"))
 tcga_gbm_tpm_melt <- melt(as.matrix(tcga_gbm_tpm), value.name = "TPM", varnames = c("Gene", "Sample"))
@@ -104,7 +108,11 @@ dir.create(pnoc008.dir, showWarnings = F, recursive = T)
 gsea_enrichment <- function(sample_to_add, gsea_output, exp.data.counts, exp.data.tpm, refData.counts, gene_set, comparison){
   x <- exp.data.counts %>%
     filter(Sample %in% sample_to_add)
-  existing_gsea_output <- readRDS(gsea_output)
+  if(file.exists(gsea_output)){
+    existing_gsea_output <- readRDS(gsea_output)
+  } else {
+    existing_gsea_output <- list()
+  }
   
   # run only if sample does not exist
   if(length(intersect(names(existing_gsea_output), sample_to_add)) == 0){
@@ -141,6 +149,16 @@ pnoc008_deg <- sapply(pnoc008_vs_gtex_brain, FUN = function(x) merge_deg_list(x 
 pnoc008_deg <- data.table::rbindlist(pnoc008_deg, idcol = 'sample_name', use.names = T)
 saveRDS(pnoc008_deg, file = file.path(pnoc008.dir, "pnoc008_vs_gtex_brain_degs.rds"))
 
+# pnoc008 vs gtex brain (dsigdb)
+gsea_output <- file.path(ref_dir, 'dsigdb', 'pnoc008_vs_gtex_brain.rds')
+gsea_enrichment(sample_to_add = sample_to_add, 
+                gsea_output = gsea_output, 
+                exp.data.counts = pnoc008_counts_melt, 
+                exp.data.tpm = pnoc008_tpm_melt,
+                refData.counts = gtex_brain_counts, 
+                gene_set = dsigdb_geneset, 
+                comparison = paste0("GTExBrain_", ncol(gtex_brain_counts)))
+
 # pnoc008 vs pbta
 gsea_output <- file.path(ref_dir, 'gsea', 'pnoc008_vs_pbta.rds')
 gsea_enrichment(sample_to_add = sample_to_add, 
@@ -151,6 +169,18 @@ gsea_enrichment(sample_to_add = sample_to_add,
                 gene_set = gene_set, 
                 comparison = paste0("PBTA_All_", ncol(pbta_full_counts)))
 
+
+# pnoc008 vs pbta (dsigdb)
+gsea_output <- file.path(ref_dir, 'dsigdb', 'pnoc008_vs_pbta.rds')
+gsea_enrichment(sample_to_add = sample_to_add, 
+                gsea_output = gsea_output, 
+                exp.data.counts = pnoc008_counts_melt, 
+                exp.data.tpm = pnoc008_tpm_melt,
+                refData.counts = pbta_full_counts, 
+                gene_set = dsigdb_geneset, 
+                comparison = paste0("PBTA_All_", ncol(pbta_full_counts)))
+
+
 # pnoc008 vs pbta hgg
 gsea_output <- file.path(ref_dir, 'gsea', 'pnoc008_vs_pbta_hgg.rds')
 gsea_enrichment(sample_to_add = sample_to_add, 
@@ -159,6 +189,17 @@ gsea_enrichment(sample_to_add = sample_to_add,
                 exp.data.tpm = pnoc008_tpm_melt,
                 refData.counts = pbta_hgg_counts, 
                 gene_set = gene_set, 
+                comparison = paste0("PBTA_HGG_", ncol(pbta_hgg_counts)))
+
+
+# pnoc008 vs pbta hgg (dsigdb)
+gsea_output <- file.path(ref_dir, 'dsigdb', 'pnoc008_vs_pbta_hgg.rds')
+gsea_enrichment(sample_to_add = sample_to_add, 
+                gsea_output = gsea_output, 
+                exp.data.counts = pnoc008_counts_melt, 
+                exp.data.tpm = pnoc008_tpm_melt,
+                refData.counts = pbta_hgg_counts, 
+                gene_set = dsigdb_gene_set, 
                 comparison = paste0("PBTA_HGG_", ncol(pbta_hgg_counts)))
 
 # pnoc008 vs tcga gbm

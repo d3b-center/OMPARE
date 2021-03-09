@@ -235,6 +235,7 @@ if(!file.exists(fname)){
 }
 
 ## page 10
+# targeted findings
 fname <- file.path(topDir, "output", paste0('oncokb_merged_', snv_caller, '_annotated_actgenes.txt'))
 if(file.exists(fname)){
   oncokb_output <- read.delim(fname, stringsAsFactors = F)
@@ -242,4 +243,18 @@ if(file.exists(fname)){
   source(file.path(patient_level_analyses, 'p10_run_oncokb.R'))
 }
 
+# transcriptome based drug recommendations
+fname <- file.path(topDir, "output", "transcriptome_drug_rec.rds")
+if(file.exists(fname)){
+  transcriptome_drug_rec_output <- readRDS(fname)
+} else {
+  source(file.path(patient_level_analyses, 'p10_transcriptome_drug_rec.R'))
+}
 
+# drug pathways
+fname <- file.path(topDir, "output", "drug_pathways_barplot.rds")
+if(file.exists(fname)){
+  drug_pathways_barplot <- readRDS(fname)
+} else {
+  source(file.path(patient_level_analyses, 'p10_drug_pathways.R'))
+}

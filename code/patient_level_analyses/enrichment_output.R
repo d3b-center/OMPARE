@@ -3,7 +3,6 @@
 ####################################
 
 # Function to return all results from RNA-Seq Analysis
-suppressPackageStartupMessages(library(GSEABase))
 suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(xlsx))
 suppressPackageStartupMessages(library(optparse))

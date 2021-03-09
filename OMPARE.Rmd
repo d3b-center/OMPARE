@@ -530,15 +530,67 @@ if(file.exists(fname)){
 }
 ```
 
-Drug Recommendations (P10)
+Targeted findings (P10) {data-navmenu="Drug Recommendations"}
 ===
 Row {data-height=700}
 ---
 
 ### Drug Recommendations
 
-```{r drug_rec}
+```{r targeted_findings}
 if(exists('oncokb_output')){
   view_dt(oncokb_output)
+}
+```
+
+DGE (P10) {data-navmenu="Drug Recommendations"}
+===
+Row {data-height=700}
+---
+
+### DGE
+
+```{r transcriptome_drug_rec}
+if(exists('transcriptome_drug_rec_output')){
+  view_dt(transcriptome_drug_rec_output)
+}
+```
+
+Drug Pathways: GTEx Brain (P10) {data-navmenu="Drug Recommendations"}
+===
+Row {data-height=700}
+---
+
+### GTEx Brain
+
+```{r drug_pathways_gtex}
+if(exists('drug_pathways_barplot')){
+  ggplotly(drug_pathways_barplot$diffreg_pathways_barplot_gtex)
+}
+```
+
+Drug Pathways: PBTA HGG (P10) {data-navmenu="Drug Recommendations"}
+===
+Row {data-height=700}
+---
+
+### PBTA HGG
+
+```{r drug_pathways_pbta_hgg}
+if(exists('drug_pathways_barplot')){
+  ggplotly(drug_pathways_barplot$diffreg_pathways_barplot_pbta_hgg)
+}
+```
+
+Drug Pathways: PBTA (P10) {data-navmenu="Drug Recommendations"}
+===
+Row {data-height=700}
+---
+
+### PBTA
+
+```{r drug_pathways_pbta}
+if(exists('drug_pathways_barplot')){
+  ggplotly(drug_pathways_barplot$diffreg_pathways_barplot_pbta)
 }
 ```
