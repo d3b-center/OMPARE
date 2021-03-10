@@ -87,8 +87,9 @@ gene_set <- getGmt(file.path(ref_dir, 'msigdb', 'c2.cp.reactome.v6.0.symbols.gmt
 gene_set <- geneIds(gene_set)
 
 # DSigDb geneset
-dsigdb_gene_set <- getGmt(file.path(ref_dir, 'dsigdb', 'DSigDB_All.gmt'))
-dsigdb_gene_set <- geneIds(dsigdb_gene_set)
+dsigdb_geneset <- getGmt(file.path(ref_dir, 'dsigdb', 'DSigDB_All.gmt'))
+dsigdb_geneset <- geneIds(dsigdb_geneset)
+dsigdb_geneset <- dsigdb_geneset[grep('_TTD_|_BOSS$|_CTD_', names(dsigdb_geneset), value = T, invert = T)]
 
 # input data
 pbta_full_tpm_melt <- melt(as.matrix(pbta_full_tpm), value.name = "TPM", varnames = c("Gene", "Sample"))
@@ -199,7 +200,7 @@ gsea_enrichment(sample_to_add = sample_to_add,
                 exp.data.counts = pnoc008_counts_melt, 
                 exp.data.tpm = pnoc008_tpm_melt,
                 refData.counts = pbta_hgg_counts, 
-                gene_set = dsigdb_gene_set, 
+                gene_set = dsigdb_geneset, 
                 comparison = paste0("PBTA_HGG_", ncol(pbta_hgg_counts)))
 
 # pnoc008 vs tcga gbm

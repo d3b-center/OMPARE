@@ -9,6 +9,7 @@ transcriptome_drug_rec <- function(diffexpr_genes, dsigdb_dat){
   diffexpr_genes <- dsigdb_dat %>%
     inner_join(diffexpr_genes, by = c("Gene" = "genes")) %>%
     rename("Comparison" = "comparison") %>%
+    filter(logFC > 0) %>%
     dplyr::select(Drug, Gene, Type, Source, Comparison, logFC)
   return(diffexpr_genes)
 }
