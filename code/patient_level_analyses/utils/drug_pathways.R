@@ -26,6 +26,7 @@ drug_pathways <- function(pnoc008_patient, output_dir){
   # up/down pathways
   pathway_df <- rbind(pnoc008_vs_gtex_brain$pathways, pnoc008_vs_pbta_hgg$pathways, pnoc008_vs_pbta$pathways)
   pathway_df <- pathway_df %>%
+    mutate(genes = as.character(genes)) %>%
     group_by(pathway, direction) %>%
     mutate(Freq = n()) %>%
     as.data.frame()
