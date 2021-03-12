@@ -103,7 +103,7 @@ if(file.exists(fname)){
 # tumor inflammation signature
 fname <- file.path(topDir, "output", "tis_profile.rds")
 if(file.exists(fname)){
-  tis_profile <- readRDS(fname)
+  tis_profile_output <- readRDS(fname)
 } else {
   source(file.path(patient_level_analyses, 'p4_tis_profile.R'))
 }

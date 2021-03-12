@@ -136,7 +136,8 @@ tis_profile <- function(fname, patient_clinical, score){
   total$disease <- factor(total$disease, levels = disease.order)
   
   # remove subject identifier as saving the plot takes lots of space
-  total$subject_id <- NULL
+  total <- total %>%
+    dplyr::select(-c(scoreSum, scoreAvg, subject_id))
   
   # plot
   p <- ggplot(total, aes(disease, score, fill = Type)) +

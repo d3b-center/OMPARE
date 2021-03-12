@@ -6,14 +6,9 @@ source(file.path(root_dir, "code", "utils", "define_directories.R"))
 source(file.path(patient_level_analyses_utils, 'tis_profile.R'))
 
 # immune profile and save scores as well
-tis_profile <- tis_profile(fname = file.path(topDir, 'output', 'tis_scores.txt'),
-                           patient_clinical = pnoc008_clinical,
-                           score = "avg")
+tis_profile_output <- tis_profile(fname = file.path(topDir, 'output', 'tis_scores.txt'),
+                                  patient_clinical = pnoc008_clinical,
+                                  score = "avg")
 
 # save output
-saveRDS(tis_profile, file = file.path(topDir, "output", "tis_profile.rds"))
-
-
-
-
-
+saveRDS(tis_profile_output, file = file.path(topDir, "output", "tis_profile.rds"))
