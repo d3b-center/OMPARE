@@ -330,3 +330,12 @@ Upload to data-delivery project
 	--patient 21 \
 	--wordir /path/to/Projects/OMPARE
 
+Dependencies on HGG-DMG files
+=============================
+
+List of files to download in each patient:
+
+1. pbta-tgen-gtex-gene-expression-rsem-tpm-collapsed.combined.rds
+2. pbta-histologies-base-adapt.tsv
+3. pbta-histologies.tsv
+
