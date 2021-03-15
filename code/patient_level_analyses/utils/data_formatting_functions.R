@@ -1,5 +1,7 @@
 # functions to get tpm matrix subsets for various modules
 # source functions
+root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
+source(file.path(root_dir, "code", "utils", "define_directories.R"))
 source(file.path(patient_level_analyses_utils, 'quiet.R'))
 source(file.path(patient_level_analyses_utils, 'batch_correct.R'))
 

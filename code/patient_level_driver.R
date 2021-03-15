@@ -251,6 +251,12 @@ if(file.exists(fname)){
   source(file.path(patient_level_analyses, 'p10_transcriptome_drug_rec.R'))
 }
 
+# dge density plots
+fname <- file.path(topDir, 'output', 'drug_dge_density_plots', 'top_drug_dge_density_plots.png')
+if(!file.exists(fname)){
+  source(file.path(patient_level_analyses, 'p10_drug_dge_density_plots.R'))
+}
+
 # drug pathways
 fname <- file.path(topDir, "output", "drug_pathways_barplot.rds")
 if(file.exists(fname)){
@@ -258,3 +264,4 @@ if(file.exists(fname)){
 } else {
   source(file.path(patient_level_analyses, 'p10_drug_pathways.R'))
 }
+
