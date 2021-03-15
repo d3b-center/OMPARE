@@ -556,6 +556,20 @@ if(exists('transcriptome_drug_rec_output')){
 }
 ```
 
+DGE Plots (P10) {data-navmenu="Drug Recommendations"}
+===
+Row {data-height=700}
+---
+
+### DGE Plots
+
+```{r dge_plots, fig.width = 28, fig.height = 14}
+fname <- file.path(topDir, 'output', 'drug_dge_density_plots', 'top_drug_dge_density_plots.png')
+if(file.exists(fname)){
+ knitr::include_graphics(fname)
+}
+```
+
 Drug Pathways: GTEx Brain (P10) {data-navmenu="Drug Recommendations"}
 ===
 Row {data-height=700}
