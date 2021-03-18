@@ -21,8 +21,9 @@ editor_options:
 title: `r params$set_title`
 ---
 
-```{r include=FALSE, echo=FALSE}
+```{r set_options, include=FALSE, echo=FALSE}
 knitr::opts_chunk$set(comment = NA)
+`%>%` <- dplyr::`%>%`
 ```
 
 ```{r define_dirs}
@@ -33,6 +34,11 @@ source(file.path(root_dir, "code", "utils", "define_directories.R"))
 
 ```{r load_libraries}
 source(file.path(utils_dir, 'load_libraries.R'))
+clean_tmpfiles_mod <- function() {
+  message("Calling clean_tmpfiles_mod()")
+}
+
+assignInNamespace("clean_tmpfiles", clean_tmpfiles_mod, ns = "rmarkdown")
 ```
 
 ```{r set_params}
@@ -55,7 +61,7 @@ Row {data-height=200}
 ---   
 ### {data-width=200}
 
-```{r, echo=FALSE, out.width = '100%'}
+```{r d3b_logo, echo=FALSE, out.width = '100%'}
 knitr::include_graphics(file.path(fig_dir, "d3b_logo.png"))
 ```
     
