@@ -125,10 +125,10 @@ interactions_data(cem) <- int_df # add interactions
 cem <- plot_interactions(cem) # generate plot
 
 # save interaction plots for all modules
-diagnostic_report(cem, clean = TRUE, directory = cemitools_dir, force = T)
+diagnostic_report(cem, directory = cemitools_dir, force = T)
 
 # output
-generate_report(cem, clean = TRUE, directory = cemitools_dir, force = T)
+generate_report(cem, directory = cemitools_dir, force = T)
 write_files(cem, directory = cemitools_dir, force = T)
 save_plots(cem, "all", directory = cemitools_dir, force = T)
 

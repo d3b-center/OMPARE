@@ -34,11 +34,6 @@ source(file.path(root_dir, "code", "utils", "define_directories.R"))
 
 ```{r load_libraries}
 source(file.path(utils_dir, 'load_libraries.R'))
-clean_tmpfiles_mod <- function() {
-  message("Calling clean_tmpfiles_mod()")
-}
-
-assignInNamespace("clean_tmpfiles", clean_tmpfiles_mod, ns = "rmarkdown")
 ```
 
 ```{r set_params}
