@@ -33,6 +33,7 @@ dest.folder <- file.path(patient)
 # source folders
 output <- file.path(topDir, "output") # all output
 reports <- file.path(topDir, "reports") # all reports
+cemitools_reports <- file.path(topDir, "CEMITools") # cemitools output
 
 # upload output
 cmd1 <- paste(cav, '-t', auth, '-p', project, '-f', dest.folder, '-pf', output, sep = " ")
@@ -43,3 +44,9 @@ system(cmd1)
 cmd2 <- paste(cav, '-t', auth, '-p', project, '-f', dest.folder, '-pf', reports, sep = " ")
 print(cmd2)
 system(cmd2)
+
+# upload cemitools reports and output
+cmd3 <- paste(cav, '-t', auth, '-p', project, '-f', dest.folder, '-pf', cemitools_reports, sep = " ")
+print(cmd3)
+system(cmd3)
+
