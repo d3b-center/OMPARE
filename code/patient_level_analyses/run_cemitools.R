@@ -63,6 +63,7 @@ counts_mat <- counts_mat[,rownames(clinical)]
 
 # batch correct using Combat_seq (used for counts)
 exp_counts_corrected <- ComBat_seq(counts = as.matrix(counts_mat), batch = clinical$batch)
+saveRDS(exp_counts_corrected, file = file.path(cemitools_dir, "expected_counts_corrected.rds"))
 
 # umap and get top 20 nearest neighbors
 exp_most_var <- get_most_variable_for_umap(expr_corrected = exp_counts_corrected)
@@ -79,6 +80,7 @@ clinical[pnoc008_clinical$Kids_First_Biospecimen_ID,'CC'] <- pnoc008_cluster
 clinical <- clinical %>%
   tibble::rownames_to_column('Kids_First_Biospecimen_ID') %>%
   dplyr::select(Kids_First_Biospecimen_ID, CC)
+saveRDS(clinical, file = file.path(cemitools_dir, "clustered_samples.rds"))
 
 # run CEMItools
 n <- 100
@@ -125,10 +127,12 @@ interactions_data(cem) <- int_df # add interactions
 cem <- plot_interactions(cem) # generate plot
 
 # save interaction plots for all modules
-diagnostic_report(cem, directory = cemitools_dir, force = T)
+r(function(x, y) { CEMiTool::diagnostic_report(cem = x, directory = y, force = T) }, args = list(cem, cemitools_dir))
+# diagnostic_report(cem, directory = cemitools_dir, force = T)
 
 # output
-generate_report(cem, directory = cemitools_dir, force = T)
+r(function(x, y) { CEMiTool::generate_report(cem = x, directory = y, force = T) }, args = list(cem, cemitools_dir))
+# generate_report(cem, directory = cemitools_dir, force = T)
 write_files(cem, directory = cemitools_dir, force = T)
 save_plots(cem, "all", directory = cemitools_dir, force = T)
 
