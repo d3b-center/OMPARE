@@ -79,14 +79,17 @@ system(cmd5)
 print("Run reports...")
 if(dir.exists(topDir)){
   for(i in 1:length(callers)) {
-    outputfile <- paste0(patient, '_', callers[i], '.html')
-    outputfile <- file.path(topDir, 'Reports', outputfile)
-    rmarkdown::render(input = 'OMPARE.Rmd',
+    output_dir <- file.path(topDir, 'Reports')
+    output_file <- paste0(patient, '_', callers[i], '.html')
+    input_file <- file.path(root_dir, 'OMPARE.Rmd')
+    rmarkdown::render(input = input_file,
                       params = list(topDir = topDir,
                                     fusion_method = 'arriba',
                                     set_title = set_title,
                                     snv_caller = callers[i],
-                                    tmb = 77.46),
-                      output_file = outputfile)
+                                    tmb = 77.46), 
+                      output_dir = output_dir, 
+                      intermediates_dir = output_dir,
+                      output_file = output_file)
   }
 }
