@@ -93,10 +93,11 @@ cem <- cemitool(as.data.frame(exp_counts_corrected),
                 sample_name_column = 'Kids_First_Biospecimen_ID',
                 class_column = 'CC',
                 merge_similar = T,
-                apply_vst = T)
+                apply_vst = T, 
+                verbose = F)
 
 # write out hubs and summary
-hubs <- get_hubs(cem,n)
+hubs <- get_hubs(cem, n)
 summary <- mod_summary(cem)
 saveRDS(hubs, file = file.path(cemitools_dir, 'hubs.rds'))
 saveRDS(summary, file = file.path(cemitools_dir, 'summary.rds'))
@@ -143,9 +144,16 @@ corr_modules <- corr_modules %>%
   .$pathway
 
 # genes-module mapping for positively correlated modules
-corr_modules <- module_genes(cem) %>%
-  filter(modules %in% corr_modules)
+# corr_modules <- module_genes(cem) %>%
+#  filter(modules %in% corr_modules)
 
+# get top 20 hub genes per positively correlated modules
+corr_modules <- stack(hubs) %>% 
+  rownames_to_column("genes") %>%
+  group_by(ind) %>%
+  slice_head(n = 20) %>%
+  filter(ind %in% corr_modules)
+  
 # annotate targetable hubs
 fname <- file.path(patient_output_dir, "transcriptome_drug_rec.rds")
 dge_genes <- readRDS(fname)
