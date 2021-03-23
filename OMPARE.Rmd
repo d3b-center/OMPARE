@@ -21,6 +21,13 @@ editor_options:
 title: `r params$set_title`
 ---
 
+<style>
+/* Fix DT / Flexdashboard container cut off */
+.chart-stage-flex {
+  overflow: scroll !important;
+}
+</style>
+
 ```{r set_options, include=FALSE, echo=FALSE}
 knitr::opts_chunk$set(comment = NA)
 `%>%` <- dplyr::`%>%`

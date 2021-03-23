@@ -4,6 +4,7 @@ library(ggridges)
 library(ggplot2)
 library(patchwork)
 library(optparse)
+library(dplyr)
 
 # functions
 source(file.path(patient_level_analyses_utils, 'quiet.R'))
