@@ -158,7 +158,7 @@ corr_modules <- stack(hubs) %>%
 fname <- file.path(patient_output_dir, "transcriptome_drug_rec.rds")
 dge_genes <- readRDS(fname)
 dge_genes <- dge_genes %>% 
-  mutate(Hub_Gene = ifelse(Comparison == "PBTA_HGG_182" & Gene %in% corr_modules$genes, TRUE, FALSE))
+  mutate(Network_Hub = ifelse(Comparison == "PBTA_HGG_182" & Gene %in% corr_modules$genes, "Yes", "No"))
 
 # rewrite transcriptiomic based drug recommendations
 saveRDS(dge_genes, file = fname)
