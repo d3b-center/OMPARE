@@ -1,5 +1,6 @@
 # drug pathways
 suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(dplyr))
 
 # directories
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
