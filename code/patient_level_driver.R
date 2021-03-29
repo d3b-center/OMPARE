@@ -252,7 +252,7 @@ if(file.exists(fname)){
 }
 
 # run CEMiTool to annotate hub genes on above output
-test_file <- file.path(topDir, "CEMITools", "qq.pdf") # last file to be written by CEMITools
+test_file <- file.path(topDir, "output", "ora_plots.png")
 if(file.exists(test_file)){
   fname <- file.path(topDir, "output", "transcriptome_drug_rec.rds")
   transcriptome_drug_rec_output <- readRDS(fname)

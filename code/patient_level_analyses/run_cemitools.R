@@ -2,12 +2,14 @@
 library(sva)
 library(CEMiTool)
 library(tidyverse)
+library(patchwork)
 library(dplyr)
 
 # directories
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
 source(file.path(root_dir, "code", "utils", "define_directories.R"))
 source(file.path(patient_level_analyses_utils, "data_formatting_functions.R"))
+source(file.path(patient_level_analyses_utils, "pubTheme.R"))
 
 # depends on this version of hgg-dmg data
 hgg_dmg_20201202 <- file.path(ref_dir, 'hgg-dmg-integration', '20201202-data')
@@ -97,7 +99,7 @@ cem <- cemitool(as.data.frame(exp_counts_corrected),
                 verbose = F)
 
 # write out hubs and summary
-hubs <- get_hubs(cem, n)
+hubs <- get_hubs(cem, n, method = "kME")
 summary <- mod_summary(cem)
 saveRDS(hubs, file = file.path(cemitools_dir, 'hubs.rds'))
 saveRDS(summary, file = file.path(cemitools_dir, 'summary.rds'))
@@ -137,28 +139,55 @@ r(function(x, y) { CEMiTool::generate_report(cem = x, directory = y, force = T) 
 write_files(cem, directory = cemitools_dir, force = T)
 save_plots(cem, "all", directory = cemitools_dir, force = T)
 
-# positively correlated modules for pnoc008 cluster
-corr_modules <- cem@enrichment$es
-corr_modules <- corr_modules %>%
-  filter(get(as.character(pnoc008_cluster)) > 0) %>%
-  .$pathway
+# get pos/neg correlated modules for pnoc008 cluster using p-adj < 0.05 cut-off
+corr_modules <- cem@enrichment$padj %>%
+  filter(get(as.character(pnoc008_cluster)) < 0.05) %>%
+    .$pathway
+corr_modules <- cem@enrichment$nes %>%
+  filter(pathway %in% corr_modules,
+         pathway != "Not.Correlated") %>%
+  mutate(direction = ifelse(get(as.character(pnoc008_cluster)) > 0, "pos", "neg"))
 
-# genes-module mapping for positively correlated modules
-# corr_modules <- module_genes(cem) %>%
-#  filter(modules %in% corr_modules)
-
-# get top 20 hub genes per positively correlated modules
-corr_modules <- stack(hubs) %>% 
-  rownames_to_column("genes") %>%
-  group_by(ind) %>%
-  slice_head(n = 20) %>%
-  filter(ind %in% corr_modules)
+# get hub genes for pos/neg correlated modules with a cutoff of 0.7
+# note: when using method = "kME", the hubs object does not behave like a normal list and so I am unable to use stack to unlist the list recursively
+network_hubs <- stack(unlist(hubs, use.names = T))
+network_hubs <-  cbind(values = network_hubs$values, reshape2::colsplit(network_hubs$ind, pattern = '[.]', names = c("module", "genes")))
+network_hubs <- network_hubs %>%
+  filter(module %in% corr_modules$pathway,
+         values >= 0.7)
   
 # annotate targetable hubs
 fname <- file.path(patient_output_dir, "transcriptome_drug_rec.rds")
 dge_genes <- readRDS(fname)
 dge_genes <- dge_genes %>% 
-  mutate(Network_Hub = ifelse(Comparison == "PBTA_HGG_182" & Gene %in% corr_modules$genes, "Yes", "No"))
+  mutate(Network_Hub = ifelse(Comparison == "PBTA_HGG_182" & Gene %in% network_hubs$genes, "Yes", "No"))
 
 # rewrite transcriptiomic based drug recommendations
 saveRDS(dge_genes, file = fname)
+
+# get ora data for pos/neg correlated moduless
+ora_dat <- ora_data(cem = cem)
+ora_dat <- ora_dat %>%
+  inner_join(corr_modules %>% dplyr::select(pathway, direction), by = c("Module" = "pathway"))
+ora_dat <- ora_dat %>%
+  group_by(Module) %>%
+  mutate(order_val = row_number()) %>%
+  arrange(p.adjust) %>%
+  slice_head(n = 10) 
+modules <- unique(ora_dat$Module)
+p <- list()
+for(i in 1:length(modules)){
+  tmp <- ora_dat %>%
+    filter(Module %in% modules[i])
+  title <- paste("Module: ", unique(tmp$Module), "| Direction: ", unique(tmp$direction))
+  p[[i]] <- ggplot(tmp, aes(x = reorder(ID, -p.adjust), y = -log10(p.adjust), fill = -log10(p.adjust))) +
+    geom_bar(stat = "identity") +
+    coord_flip() +
+    xlab('') + ylab('−log10(adjusted p−value)') + ggtitle(title) +
+    theme_bw() +
+    theme_Publication(base_size = 12) +
+    scale_x_discrete(labels = function(x) str_wrap(x, width = 50))
+}
+ggsave(plot = wrap_plots(p, ncol = 2), 
+       filename = file.path(patient_output_dir, 'ora_plots.png'), 
+       width = 20, height = 16, device = 'png')

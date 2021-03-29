@@ -216,6 +216,21 @@ if(exists('diffreg_pathways_barplot_output')){
 }
 ```
 
+Network Alterations: PBTA HGG (P2) {data-navmenu="Transcriptomic Alterations"}
+===
+Row {data-height=700}
+---
+
+### Pathway Alterations (PBTA)
+
+```{r network_alt_pbta_hgg, fig.width = 28, fig.height = 14}
+fname <- file.path(topDir, 'output', 'ora_plots.png')
+if(file.exists(fname)){
+ knitr::include_graphics(fname)
+}
+```
+
+
 Tumor Burden/Signatures (P3)
 ===
 Row {data-height=700}
