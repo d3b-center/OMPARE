@@ -148,13 +148,14 @@ corr_modules <- cem@enrichment$nes %>%
          pathway != "Not.Correlated") %>%
   mutate(direction = ifelse(get(as.character(pnoc008_cluster)) > 0, "pos", "neg"))
 
-# get hub genes for pos/neg correlated modules with a cutoff of 0.7
+# get hub genes for pos/neg correlated modules with a cutoff of 0.5
 # note: when using method = "kME", the hubs object does not behave like a normal list and so I am unable to use stack to unlist the list recursively
 network_hubs <- stack(unlist(hubs, use.names = T))
-network_hubs <-  cbind(values = network_hubs$values, reshape2::colsplit(network_hubs$ind, pattern = '[.]', names = c("module", "genes")))
+network_hubs$ind <- gsub('Not.Correlated','Not_Correlated', network_hubs$ind)
+network_hubs <-  cbind(values = network_hubs$values, reshape2::colsplit(network_hubs$ind, pattern = '\\.', names = c("module", "genes")))
 network_hubs <- network_hubs %>%
   filter(module %in% corr_modules$pathway,
-         values >= 0.7)
+         values >= 0.5)
   
 # annotate targetable hubs
 fname <- file.path(patient_output_dir, "transcriptome_drug_rec.rds")
