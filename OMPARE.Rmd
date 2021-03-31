@@ -300,7 +300,7 @@ Row
 
 ```{r dimred_plot_pbta}
 if(exists('dim_reduction_plot_pediatric')){
-  dim_reduction_plot_pediatric
+  ggplotly(dim_reduction_plot_pediatric, tooltip = "text")
 }
 ```
 
@@ -406,7 +406,7 @@ Row
 
 ```{r dimred_plot_tcga}
 if(exists('dim_reduction_plot_adult')){
-  dim_reduction_plot_adult
+  ggplotly(dim_reduction_plot_adult, tooltip = "text")
 }
 ```
 

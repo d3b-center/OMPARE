@@ -15,4 +15,5 @@ data/
 # results directory with all patient data (pushed to cavatica)
 results/
 
-
+# testing script
+test.R

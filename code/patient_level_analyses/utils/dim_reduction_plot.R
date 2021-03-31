@@ -41,5 +41,5 @@ dim_reduction_plot <- function(dat, clindata, study, patient, title) {
           legend.title=element_text(size = 8),
           legend.text=element_text(size = 8)) +
     guides(size = FALSE, shape = F, color = F)
-  ggplotly(p, tooltip = "text")
+  return(p)
 }

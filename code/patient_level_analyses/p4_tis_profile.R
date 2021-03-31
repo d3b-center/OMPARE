@@ -4,11 +4,16 @@ source(file.path(root_dir, "code", "utils", "define_directories.R"))
 
 # source functions
 source(file.path(patient_level_analyses_utils, 'tis_profile.R'))
+source(file.path(patient_level_analyses_utils, 'plot_tis_profile.R'))
 
-# immune profile and save scores as well
-tis_profile_output <- tis_profile(fname = file.path(topDir, 'output', 'tis_scores.txt'),
-                                  patient_clinical = pnoc008_clinical,
-                                  score = "avg")
+# save only scores
+fname = file.path(topDir, 'output', 'tis_scores.rds')
+if(file.exists(fname)){
+  tis_profile_output <- readRDS(fname)
+} else {
+  tis_profile_output <- tis_profile(patient_clinical = pnoc008_clinical, sampleInfo)
+  saveRDS(tis_profile_output, file = fname)
+}
 
-# save output
-saveRDS(tis_profile_output, file = file.path(topDir, "output", "tis_profile.rds"))
+# call function to plot data
+tis_profile_output <- plot_tis_profile(tis_input = tis_profile_output, score = "avg", sampleInfo = sampleInfo)

@@ -85,37 +85,17 @@ source(file.path(patient_level_analyses, 'pbta_format.R'))
 
 ## page 4
 # pediatric immune profiling using xcell (pbta)
-fname <- file.path(topDir, "output", "pediatric_immune_profile.rds")
-if(file.exists(fname)){
-  pediatric_immune_profile <- readRDS(fname)
-} else {
-  source(file.path(patient_level_analyses, 'p4_immune_profile_pediatric.R'))
-}
+source(file.path(patient_level_analyses, 'p4_immune_profile_pediatric.R'))
 
 # adult immune profiling using xcell (tcga gbm)
-fname <- file.path(topDir, "output", "adult_immune_profile.rds")
-if(file.exists(fname)){
-  adult_immune_profile <- readRDS(fname)
-} else {
-  source(file.path(patient_level_analyses, 'p4_immune_profile_adult.R'))
-}
+source(file.path(patient_level_analyses, 'p4_immune_profile_adult.R'))
 
 # tumor inflammation signature
-fname <- file.path(topDir, "output", "tis_profile.rds")
-if(file.exists(fname)){
-  tis_profile_output <- readRDS(fname)
-} else {
-  source(file.path(patient_level_analyses, 'p4_tis_profile.R'))
-}
+source(file.path(patient_level_analyses, 'p4_tis_profile.R'))
 
 ## page 5 (pediatric analysis: pbta tumors)
 # ssgsea
-fname <- file.path(topDir, "output", "ssgsea_pediatric.rds")
-if(file.exists(fname)){
-  ssgsea_pediatric <- readRDS(fname)
-} else {
-  source(file.path(patient_level_analyses, 'p5_ssgsea.R'))
-}
+source(file.path(patient_level_analyses, 'p5_ssgsea.R'))
 
 # mutational analysis
 fname <- file.path(topDir, "output", "mutational_analysis_pediatric.rds")
@@ -134,12 +114,7 @@ if(file.exists(fname)){
 }
 
 # pediatric immune profiling using xcell (pbta transcriptomically correlated)
-fname <- file.path(topDir, "output", "pediatric_topcor_immune_profile.rds")
-if(file.exists(fname)){
-  pediatric_topcor_immune_profile <- readRDS(fname)
-} else {
-  source(file.path(patient_level_analyses, 'p5_immune_profile_topcor_pediatric.R'))
-}
+source(file.path(patient_level_analyses, 'p5_immune_profile_topcor_pediatric.R'))
 
 # pediatric dimention reduction clustering
 fname <- file.path(topDir, "output", "dim_reduction_plot_pediatric.rds")

@@ -30,9 +30,6 @@ pbta_survival <- pbta_clinical %>%
          OS_status = ifelse(OS_status == 'DECEASED', 1, 0)) %>%
   dplyr::select(subject_id, OS_days, OS_status) 
 
-# base histology for transcriptomically similar table (pediatric) 
-pbta_histology_base <- read.delim(file.path(ref_dir, 'pbta', 'pbta-histologies-base.tsv'), stringsAsFactors = F)
-
 # PBTA specific CNV data
 pbta_cnv <- data.table::fread(file.path(ref_dir, 'pbta', 'pbta-cnv-controlfreec.tsv.gz'))
 
