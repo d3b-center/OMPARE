@@ -72,7 +72,7 @@ create_heatmap <- function(fname, genelist, plot.layout = "h"){
            library_name = RNA_library) %>%
     dplyr::select(subjectID, sample_id, disease, disease_subtype, sex, ethnicity, experimental_strategy, library_name)
   
-  # sample ids with unique WGS + RNA-seq mapping (n = 48)
+  # sample ids with unique WGS + RNA-seq mapping (n = 73)
   sids <- pbta.clin %>%
     group_by(sample_id, experimental_strategy) %>%
     summarise(count = n()) %>%

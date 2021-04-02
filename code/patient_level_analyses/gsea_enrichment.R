@@ -66,7 +66,7 @@ pbta_full_counts <- readRDS(file.path(ref_dir, 'pbta','pbta-gene-expression-rsem
 pbta_full_counts <- pbta_full_counts[grep("^HIST", rownames(pbta_full_counts), invert = T),]
 pbta_full_counts <- pbta_full_counts[rownames(pbta_full_counts) %in% gencode_v27_pc$gene_symbol,]
 
-# Dataset4: PBTA (polyA + corrected stranded HGG n = 186)
+# Dataset4: PBTA (polyA + corrected stranded HGG n = 189)
 pbta_hgg_tpm <- pbta_full_tpm[,colnames(pbta_full_tpm) %in% pbta_clinical$Kids_First_Biospecimen_ID]
 pbta_hgg_counts <- pbta_full_counts[,colnames(pbta_full_counts) %in% pbta_clinical$Kids_First_Biospecimen_ID]
 

@@ -10,7 +10,7 @@ root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
 source(file.path(patient_level_analyses_utils, 'rnaseq_edger_normalizations.R'))
 
 # housekeeping genes (optional)
-housekeeping_genes <- read.csv(file.path(ref_dir, 'pnoc008', 'Housekeeping_GenesHuman.csv'), sep = ';')
+housekeeping_genes <- read.csv(file.path(ref_dir, 'Housekeeping_GenesHuman.csv'), sep = ';')
 housekeeping_genes <- unique(housekeeping_genes$Gene.name)
 
 # get up/down genes using edgeR

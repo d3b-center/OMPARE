@@ -155,9 +155,10 @@ pnoc008_clinical <- pnoc008_clinical %>%
   as.data.frame()
 
 # add other identifiers from PBTA base histology
-pbta_hist <- read.delim(file.path(ref_dir, 'pbta', 'pbta-histologies-base.tsv'))
+pbta_hist <- read.delim(file.path(ref_dir, 'pbta', 'pbta-histologies-base-adapt.tsv'))
 pbta_hist <- pbta_hist %>%
   filter(experimental_strategy == "RNA-Seq",
+         kf_visibility == "True",
          Kids_First_Biospecimen_ID != "BS_862NMAR7",
          cohort_participant_id %in% pnoc008_clinical$cohort_participant_id) %>%
   dplyr::select(Kids_First_Biospecimen_ID, sample_id, cohort_participant_id)
