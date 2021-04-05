@@ -7,13 +7,17 @@ option_list <- list(
   make_option(c("-p", "--patient"), type = "character",
               help = "Patient Identifier (PNOC008-22, etc...)"),
   make_option(c("-w", "--workdir"), type = "character",
-              help = "OMPARE working directory")
+              help = "OMPARE working directory"),
+  make_option(c("-s", "--study"), type = "character", 
+              default = "PNOC008",
+              help = "PNOC008 or CBTN")
 )
 
 # parameters to pass
 opt <- parse_args(OptionParser(option_list = option_list))
 patient <- opt$patient
 workdir <- opt$workdir
+study <- opt$study
 
 # set variables
 setwd(workdir) # This should be the OMPARE directory
@@ -24,8 +28,11 @@ topDir <- file.path(getwd(), 'results', patient)
 readRenviron("~/.Renviron")
 cav <- Sys.getenv('CAV') # path to cavatica-uploader.sh
 auth <- Sys.getenv('AUTH_TOKEN') # authentication token
-project <- file.path('cavatica', 'sd-8y99qzjj') # pnoc008 project id
-# project <- file.path('cavatica', 'sd-bhjxbdqk-realtime') # cbtn project id
+if(study == "PNOC008"){
+  project <- file.path('cavatica', 'sd-8y99qzjj') # pnoc008 project id
+} else {
+  project <- file.path('d3b-bixu', 'sd-bhjxbdqk-realtime') # cbtn project id
+}
 
 # destination folder
 dest.folder <- file.path(patient) 
