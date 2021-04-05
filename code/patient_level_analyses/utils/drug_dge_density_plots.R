@@ -15,7 +15,7 @@ source(file.path(patient_level_analyses_utils, "pubTheme.R"))
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
 source(file.path(root_dir, "code", "utils", "define_directories.R"))
 pnoc008_dir <- file.path(ref_dir, 'pnoc008')
-hgg_dmg_dir <- file.path(ref_dir, 'hgg-dmg-integration')
+pbta_dir <- file.path(ref_dir, 'pbta')
 gtex_dir <- file.path(ref_dir, 'gtex')
 
 # output
@@ -73,11 +73,11 @@ dge_density_plots <- function(topDir){
   tgen_samples <- c("BC", "BR", "BS", "FB", "XX")
   
   # reference file
-  combined_tpm <- readRDS(file.path(hgg_dmg_dir, 'pbta-tgen-gtex-gene-expression-rsem-tpm-collapsed.combined.rds'))
+  combined_tpm <- readRDS(file.path(pbta_dir, 'pbta-tgen-gtex-gene-expression-rsem-tpm-collapsed.combined.rds'))
   combined_tpm <- combined_tpm[,!colnames(combined_tpm) %in% c(tgen_samples, pnoc008_clinical_remove)]
   
   # histology file
-  histology <- read_tsv(file.path(hgg_dmg_dir, 'pbta-histologies.tsv'))
+  histology <- read_tsv(file.path(pbta_dir, 'pbta-histologies.tsv'))
   histology <- histology %>%
     filter(experimental_strategy == 'RNA-Seq',
            Kids_First_Biospecimen_ID %in% colnames(combined_tpm)) %>%
