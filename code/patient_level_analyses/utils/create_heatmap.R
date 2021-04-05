@@ -15,7 +15,7 @@ source(file.path(patient_level_analyses_utils, 'batch_correct.R'))
 
 # merge cnv pnoc008
 merge_cnv_pnoc <- function(cnvData, gene.list){
-  sample_name <- gsub(".*PNOC", "PNOC", cnvData)
+  sample_name <- gsub(".*results/", "", cnvData)
   sample_name <- gsub('/.*', '', sample_name)
   cnvData <- data.table::fread(cnvData, header = T, check.names = T)
   
@@ -147,7 +147,7 @@ create_heatmap <- function(fname, genelist, plot.layout = "h"){
                                    .fun = function(x) merge_cnv_pbta(cnvData = x, gene.list = genelist))
   
   # PNOC008
-  cnv.files <- list.files(path = getwd(), pattern = "*.CNVs.p.value.txt", recursive = TRUE, full.names = T)
+  cnv.files <- list.files(path = results_dir, pattern = "*.CNVs.p.value.txt", recursive = TRUE, full.names = T)
   pnoc.cnv.genelist <- lapply(cnv.files, FUN = function(x) merge_cnv_pnoc(cnvData = x, gene.list = genelist))
   pnoc.cnv.genelist <- data.table::rbindlist(pnoc.cnv.genelist)
   

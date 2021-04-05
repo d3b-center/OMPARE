@@ -12,8 +12,8 @@ pathways_down <- read.delim(file.path(topDir, "output", paste0(sampleInfo$subjec
 # call function
 fname <- file.path(topDir, "output", "diffreg_pathways_barplot_output.rds")
 diffreg_pathways_barplot_gtex <- diffreg_pathways_barplot(pathways_up, pathways_down, comparison_study = 'GTExBrain_1152')
-diffreg_pathways_barplot_pbta_hgg <- diffreg_pathways_barplot(pathways_up, pathways_down, comparison_study = 'PBTA_HGG_182')
-diffreg_pathways_barplot_pbta <- diffreg_pathways_barplot(pathways_up, pathways_down, comparison_study = 'PBTA_All_1028')
+diffreg_pathways_barplot_pbta_hgg <- diffreg_pathways_barplot(pathways_up, pathways_down, comparison_study = 'PBTA_HGG_189')
+diffreg_pathways_barplot_pbta <- diffreg_pathways_barplot(pathways_up, pathways_down, comparison_study = 'PBTA_ALL_1035')
 diffreg_pathways_barplot_output <- list(diffreg_pathways_barplot_gtex = diffreg_pathways_barplot_gtex,
      diffreg_pathways_barplot_pbta_hgg = diffreg_pathways_barplot_pbta_hgg,
      diffreg_pathways_barplot_pbta = diffreg_pathways_barplot_pbta)

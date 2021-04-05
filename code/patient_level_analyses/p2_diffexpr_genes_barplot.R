@@ -12,8 +12,8 @@ genes_down <- read.delim(file.path(topDir, "output", paste0(sampleInfo$subjectID
 # call function
 fname <- file.path(topDir, "output", "diffexpr_genes_barplot_output.rds")
 diffexpr_genes_barplot_gtex <- diffexpr_genes_barplot(genes_up, genes_down, comparison_study = 'GTExBrain_1152', cancer_genes = cancer_genes$Gene_Symbol)
-diffexpr_genes_barplot_pbta_hgg <- diffexpr_genes_barplot(genes_up, genes_down, comparison_study = 'PBTA_HGG_182', cancer_genes = cancer_genes$Gene_Symbol)
-diffexpr_genes_barplot_pbta <- diffexpr_genes_barplot(genes_up, genes_down, comparison_study = 'PBTA_All_1028', cancer_genes = cancer_genes$Gene_Symbol)
+diffexpr_genes_barplot_pbta_hgg <- diffexpr_genes_barplot(genes_up, genes_down, comparison_study = 'PBTA_HGG_189', cancer_genes = cancer_genes$Gene_Symbol)
+diffexpr_genes_barplot_pbta <- diffexpr_genes_barplot(genes_up, genes_down, comparison_study = 'PBTA_ALL_1035', cancer_genes = cancer_genes$Gene_Symbol)
 diffexpr_genes_barplot_output <- list(diffexpr_genes_barplot_gtex = diffexpr_genes_barplot_gtex,
                                       diffexpr_genes_barplot_pbta_hgg = diffexpr_genes_barplot_pbta_hgg,
                                       diffexpr_genes_barplot_pbta = diffexpr_genes_barplot_pbta)
