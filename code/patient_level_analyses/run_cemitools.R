@@ -57,14 +57,21 @@ clinical <- pnoc008_clinical %>%
   
 # hgg-dmg expected counts
 exp_counts <- readRDS(file.path(hgg_dmg_20201202, 'pbta-hgat-dx-prog-pm-gene-counts-rsem-expected_count-uncorrected.rds'))
-exp_counts <- exp_counts[rownames(pnoc008_counts),]
+rows_to_keep <- intersect(rownames(exp_counts), rownames(pnoc008_counts))
+exp_counts <- exp_counts[rows_to_keep,]
+pnoc008_counts <- pnoc008_counts[rows_to_keep,,drop = F]
 
-# merge both and subset to 122 ge based clustered samples + pnoc008 patient of interest
+# merge both and subset to 122 ge-based clustered samples + pnoc008 patient of interest
 counts_mat <- cbind(pnoc008_counts, exp_counts)
 counts_mat <- counts_mat[,rownames(clinical)]
 
 # batch correct using Combat_seq (used for counts)
-exp_counts_corrected <- ComBat_seq(counts = as.matrix(counts_mat), batch = clinical$batch)
+if(min(table(clinical$batch)) == 1){
+  exp_counts_corrected <- ComBat(dat = as.matrix(log2(counts_mat + 1)), batch = clinical$batch)
+  exp_counts_corrected <- 2^exp_counts_corrected
+} else {
+  exp_counts_corrected <- ComBat_seq(counts = as.matrix(counts_mat), batch = clinical$batch)
+}
 saveRDS(exp_counts_corrected, file = file.path(cemitools_dir, "expected_counts_corrected.rds"))
 
 # umap and get top 20 nearest neighbors
