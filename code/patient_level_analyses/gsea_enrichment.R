@@ -48,7 +48,7 @@ tcga_gbm_counts <- readRDS(file.path(ref_dir, 'tcga', 'tcga_gbm_counts_matrix.rd
 tcga_gbm_counts <- tcga_gbm_counts[grep("^HIST", rownames(tcga_gbm_counts), invert = T),]
 tcga_gbm_counts <- tcga_gbm_counts[rownames(tcga_gbm_counts) %in% gencode_v27_pc$gene_symbol,]
 
-# Dataset3: PBTA (polyA + corrected stranded n = 1028)
+# Dataset3: PBTA (polyA + corrected stranded n = 1035)
 # clinical
 pbta_clinical <- read.delim(file.path(ref_dir, 'pbta', 'pbta-histologies.tsv'), stringsAsFactors = F)
 

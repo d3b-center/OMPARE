@@ -6,17 +6,17 @@ library(patchwork)
 library(optparse)
 library(dplyr)
 
-# functions
-source(file.path(patient_level_analyses_utils, 'quiet.R'))
-source(file.path(patient_level_analyses_utils, 'batch_correct.R'))
-source(file.path(patient_level_analyses_utils, "pubTheme.R"))
-
 # directories
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
 source(file.path(root_dir, "code", "utils", "define_directories.R"))
 pnoc008_dir <- file.path(ref_dir, 'pnoc008')
 pbta_dir <- file.path(ref_dir, 'pbta')
 gtex_dir <- file.path(ref_dir, 'gtex')
+
+# functions
+source(file.path(patient_level_analyses_utils, 'quiet.R'))
+source(file.path(patient_level_analyses_utils, 'batch_correct.R'))
+source(file.path(patient_level_analyses_utils, "pubTheme.R"))
 
 # output
 dir <- file.path(topDir, 'output', 'drug_dge_density_plots')
@@ -29,7 +29,7 @@ dge_density_plots_helper <- function(combined_data, pnoc008_sample, dge_gene){
     mutate(tpm = log2(tpm + 1)) %>%
     .$tpm
   combined_data <- combined_data %>%
-    filter(study_id != "PNOC008")
+    filter(!study_id %in% c("PNOC008", "CBTN"))
   
   # compute stats
   d2 <- combined_data %>%
@@ -53,7 +53,7 @@ dge_density_plots_helper <- function(combined_data, pnoc008_sample, dge_gene){
   return(p)
 }
 
-dge_density_plots <- function(topDir){
+dge_density_plots <- function(topDir, sample_info, tpm_data){
   # query file
   dge_all <- readRDS(file.path(topDir, 'output', 'transcriptome_drug_rec.rds'))
   dge_all <- dge_all %>% 
@@ -68,20 +68,24 @@ dge_density_plots <- function(topDir){
   
   # pnoc008 clinical
   pnoc008_clinical <- readRDS(file.path(pnoc008_dir, 'pnoc008_clinical.rds'))
-  pnoc008_clinical_remove <- pnoc008_clinical$Kids_First_Biospecimen_ID[pnoc008_clinical$subjectID != "PNOC008-29"]
-  pnoc008_sample <- pnoc008_clinical$Kids_First_Biospecimen_ID[pnoc008_clinical$subjectID == "PNOC008-29"]
-  tgen_samples <- c("BC", "BR", "BS", "FB", "XX")
-  
+  subject_id <- pnoc008_clinical %>% 
+    filter(subjectID == sample_info$subjectID) %>%
+    .$subjectID
+  sample_of_interest <- pnoc008_clinical %>% 
+    filter(subjectID == sample_info$subjectID) %>%
+    mutate(RNA_library = library_name,
+           short_histology = "HGAT") %>%
+    dplyr::select(Kids_First_Biospecimen_ID, RNA_library, short_histology, study_id)
+
   # reference file
   combined_tpm <- readRDS(file.path(pbta_dir, 'pbta-tgen-gtex-gene-expression-rsem-tpm-collapsed.combined.rds'))
-  combined_tpm <- combined_tpm[,!colnames(combined_tpm) %in% c(tgen_samples, pnoc008_clinical_remove)]
-  
-  # histology file
+
+  # pbta histology file
   histology <- read_tsv(file.path(pbta_dir, 'pbta-histologies.tsv'))
   histology <- histology %>%
     filter(experimental_strategy == 'RNA-Seq',
            Kids_First_Biospecimen_ID %in% colnames(combined_tpm)) %>%
-    mutate(study_id = ifelse(Kids_First_Biospecimen_ID %in% pnoc008_sample, "PNOC008", "PBTA")) %>%
+    mutate(study_id = "PBTA") %>%
     dplyr::select(Kids_First_Biospecimen_ID, RNA_library, short_histology, study_id) %>%
     unique()
   
@@ -94,11 +98,19 @@ dge_density_plots <- function(topDir){
            study = 'GTEx') %>%
     dplyr::select(Kids_First_Biospecimen_ID, RNA_library, short_histology, study_id)
   
-  # combine both 
-  combined_histology <- rbind(histology, gtex_clinical)
+  # combine clinical files 
+  combined_histology <- rbind(histology, gtex_clinical, sample_of_interest)
   combined_histology <- combined_histology %>%
     remove_rownames() %>%
     column_to_rownames('Kids_First_Biospecimen_ID')
+  
+  # combine tpm data
+  tpm_data <- tpm_data %>%
+    column_to_rownames('gene_symbol')
+  colnames(tpm_data)[1] <- sample_of_interest$Kids_First_Biospecimen_ID
+  common_genes = intersect(rownames(combined_tpm), rownames(tpm_data))
+  combined_tpm <- cbind(combined_tpm[common_genes,], tpm_data[common_genes,sample_of_interest$Kids_First_Biospecimen_ID, drop = F])
+  combined_tpm <- combined_tpm[,colnames(combined_tpm) %in% rownames(combined_histology)]
   combined_histology <- combined_histology[colnames(combined_tpm),]
   
   # RNA_library and study_id constitute a batch
@@ -132,7 +144,7 @@ dge_density_plots <- function(topDir){
       filter(gene == dge_gene)
     
     #  call function
-    plist[[i]] <- dge_density_plots_helper(combined_data = mat, pnoc008_sample = pnoc008_sample, dge_gene = dge_gene)
+    plist[[i]] <- dge_density_plots_helper(combined_data = mat, pnoc008_sample = sample_of_interest$Kids_First_Biospecimen_ID, dge_gene = dge_gene)
     names(plist)[[i]] <- dge_gene
     
     # save output
