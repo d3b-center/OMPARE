@@ -29,7 +29,7 @@ dge_density_plots_helper <- function(combined_data, pnoc008_sample, dge_gene){
     mutate(tpm = log2(tpm + 1)) %>%
     .$tpm
   combined_data <- combined_data %>%
-    filter(!study_id %in% c("PNOC008", "CBTN"))
+    filter(!sample %in% c(pnoc008_sample))
   
   # compute stats
   d2 <- combined_data %>%
@@ -76,20 +76,25 @@ dge_density_plots <- function(topDir, sample_info, tpm_data){
     mutate(RNA_library = library_name,
            short_histology = "HGAT") %>%
     dplyr::select(Kids_First_Biospecimen_ID, RNA_library, short_histology, study_id)
-
-  # reference file
-  combined_tpm <- readRDS(file.path(pbta_dir, 'pbta-tgen-gtex-gene-expression-rsem-tpm-collapsed.combined.rds'))
-
+  
+  # pbta
+  # pbta expression matrix (n = 1035)
+  pbta_tpm <- readRDS(file.path(pbta_dir, "pbta-gene-expression-rsem-tpm-collapsed.polya.stranded.rds"))
+  
   # pbta histology file
   histology <- read_tsv(file.path(pbta_dir, 'pbta-histologies.tsv'))
   histology <- histology %>%
     filter(experimental_strategy == 'RNA-Seq',
-           Kids_First_Biospecimen_ID %in% colnames(combined_tpm)) %>%
+           Kids_First_Biospecimen_ID %in% colnames(pbta_tpm)) %>%
     mutate(study_id = "PBTA") %>%
     dplyr::select(Kids_First_Biospecimen_ID, RNA_library, short_histology, study_id) %>%
     unique()
   
-  # gtex 
+  # gtex brain
+  # gtex tpm matrix
+  gtex_tpm <- readRDS(file.path(gtex_dir, 'gtex_brain_tpm.rds'))
+  
+  # gtex clinical file
   gtex_clinical <- readRDS(file.path(gtex_dir, 'gtex_brain_clinical.rds'))
   gtex_clinical <- gtex_clinical %>%
     mutate(Kids_First_Biospecimen_ID = sample_id,
@@ -104,12 +109,12 @@ dge_density_plots <- function(topDir, sample_info, tpm_data){
     remove_rownames() %>%
     column_to_rownames('Kids_First_Biospecimen_ID')
   
-  # combine tpm data
+  # combine tpm matrices
   tpm_data <- tpm_data %>%
     column_to_rownames('gene_symbol')
   colnames(tpm_data)[1] <- sample_of_interest$Kids_First_Biospecimen_ID
-  common_genes = intersect(rownames(combined_tpm), rownames(tpm_data))
-  combined_tpm <- cbind(combined_tpm[common_genes,], tpm_data[common_genes,sample_of_interest$Kids_First_Biospecimen_ID, drop = F])
+  common_genes = intersect(rownames(pbta_tpm), intersect(rownames(gtex_tpm), rownames(tpm_data)))
+  combined_tpm <- cbind(pbta_tpm[common_genes,], gtex_tpm[common_genes,], tpm_data[common_genes,sample_of_interest$Kids_First_Biospecimen_ID, drop = F])
   combined_tpm <- combined_tpm[,colnames(combined_tpm) %in% rownames(combined_histology)]
   combined_histology <- combined_histology[colnames(combined_tpm),]
   
@@ -127,7 +132,7 @@ dge_density_plots <- function(topDir, sample_info, tpm_data){
     inner_join(combined_histology %>%
                  rownames_to_column("sample"), by = "sample")
   
-  # add pbta hgat 
+  # add pbta hgat (n = 189)
   pbta_hgat <- combined_tpm_corrected %>%
     filter(short_histology  == "HGAT",
            study_id == "PBTA") %>%
