@@ -31,6 +31,11 @@ dge_density_plots_helper <- function(combined_data, pnoc008_sample, dge_gene){
   combined_data <- combined_data %>%
     filter(!sample %in% c(pnoc008_sample))
   
+  # add labels
+  combined_data <- combined_data %>%
+    group_by(study_id) %>%
+    mutate(study_id = paste0(study_id, "\n(n = ",n(),")"))
+  
   # compute stats
   d2 <- combined_data %>%
     group_by(study_id) %>%
