@@ -79,6 +79,8 @@ exp_most_var <- get_most_variable_for_umap(expr_corrected = exp_counts_corrected
 umap_output <- get_umap_output(expr_most_var = exp_most_var)
 sampleInfo <- data.frame(subjectID = pnoc008_clinical$Kids_First_Biospecimen_ID)
 nn_table <- extract_umap_nearest_neighbor_table(umap_out = umap_output, expr_most_var = exp_most_var, sampleInfo = sampleInfo)
+saveRDS(umap_output, file = file.path(cemitools_dir, "umap_output.rds"))
+saveRDS(nn_table, file = file.path(cemitools_dir, "umap_top_20_neighbors_output.rds"))
 
 # get clusters corresponding to nearest neighbors and assign max occurence to pnoc008 patient of interest
 x <- clinical[nn_table$nearest_neighbor,'CC']
