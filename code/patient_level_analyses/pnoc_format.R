@@ -260,7 +260,7 @@ tmb_bed_file <- data.table::fread(file.path(ref_dir, "xgen-exome-research-panel-
 colnames(tmb_bed_file)  <- c("chr", "start", "end")
 
 # read mutect2 for TMB profile
-pnoc008_mutect2 <- list.files(path = results_dir, pattern = 'mutect2_somatic.vep.maf', recursive = TRUE, full.names = T)
+pnoc008_mutect2 <- list.files(path = results_dir, pattern = 'mutect2.*.maf', recursive = TRUE, full.names = T)
 pnoc008_mutect2 <- lapply(pnoc008_mutect2, FUN = function(x) merge_files(x))
 pnoc008_mutect2 <- data.table::rbindlist(pnoc008_mutect2, fill = T)
 
@@ -297,6 +297,7 @@ pnoc008_tmb <- pnoc008_tmb %>%
   mutate(tmb = num.mis.non/77.46) %>%
   dplyr::select(sample_name, tmb)
 saveRDS(pnoc008_tmb, file = file.path(pnoc008.dir, "pnoc008_tmb_scores.rds"))
+
 
 
 

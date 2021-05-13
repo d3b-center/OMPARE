@@ -10,7 +10,7 @@ tumor_signature_plot <- function() {
     mutFiles <- grep('consensus', mutFiles, invert = TRUE, value = TRUE)
     if(length(mutFiles) >= 1){
       mutFiles <- lapply(mutFiles, data.table::fread, skip = 1, stringsAsFactors = F)
-      mutData.all <- data.table::rbindlist(mutFiles)
+      mutData.all <- data.table::rbindlist(mutFiles, fill = TRUE)
       mutData.all <- as.data.frame(mutData.all)
       mutData.all <- unique(mutData.all)
     }
