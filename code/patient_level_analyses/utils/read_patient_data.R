@@ -34,7 +34,7 @@ readData <- function(topDir, fusion_method = c("star","arriba"), snv_caller = "a
   }
   if(length(mutFiles) >= 1){
     mutFiles <- lapply(mutFiles, data.table::fread, skip = 1, stringsAsFactors = F)
-    mutData <- data.table::rbindlist(mutFiles)
+    mutData <- data.table::rbindlist(mutFiles, fill = TRUE)
     mutData <- as.data.frame(mutData)
     mutData <- unique(mutData)
     assign("mutData", mutData, envir = globalenv())
