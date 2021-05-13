@@ -40,6 +40,7 @@ deg <- read.delim(file.path(oncogrid_path_input, 'all_cnv_tgen_genes'), header =
 fname <- file.path(pnoc008_dir, 'pnoc008_vs_gtex_brain_degs.rds')
 genes_df <- readRDS(fname)
 deg_genes <- genes_df %>%
+  filter(sample_name != "C3342894") %>%
   mutate(label = ifelse(diff_expr == "up", "OVE", "UNE"),
          Gene_name = genes) %>%
   filter(Gene_name %in% deg$V1) %>%

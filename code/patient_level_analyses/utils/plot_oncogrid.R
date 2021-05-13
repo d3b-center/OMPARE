@@ -66,6 +66,7 @@ col = c("GAI" = "#ff4d4d", "LOS" = "#0D47A1" , "MIS" = "#77b300", "FUS" = "#AB47
 # read annotation and TMB info
 annot_info <- read.table(file.path(oncogrid.path.output, "annotation.cohort3.pnoc008.txt"), header = TRUE, check.names = TRUE)
 annot_info <- annot_info %>%
+  remove_rownames() %>%
   column_to_rownames('Sample') %>%
   as.data.frame()
 tmb_info <- read.table(file.path(oncogrid.path.output, "tmb.cohort3.pnoc008.txt"), header = TRUE, check.names = TRUE)

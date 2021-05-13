@@ -200,4 +200,4 @@ for(i in 1:length(modules)){
 }
 ggsave(plot = wrap_plots(p, ncol = 2), 
        filename = file.path(patient_output_dir, 'ora_plots.png'), 
-       width = 20, height = 16, device = 'png')
+       width = 20, height = 25, device = 'png')
