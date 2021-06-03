@@ -593,41 +593,77 @@ if(file.exists(fname)){
 }
 ```
 
-Drug Pathways: GTEx Brain (P10) {data-navmenu="Drug Recommendations"}
+Drug Signatures: GTEx Brain (P10) {data-navmenu="Drug Recommendations"}
 ===
 Row {data-height=700}
 ---
 
 ### GTEx Brain
 
-```{r drug_pathways_gtex}
+```{r drug_signatures_gtex, fig.width = 15, fig.height = 20}
 if(exists('drug_pathways_barplot')){
-  ggplotly(drug_pathways_barplot$diffreg_pathways_barplot_gtex)
+  drug_pathways_barplot$GTExBrain_1152
 }
 ```
 
-Drug Pathways: PBTA HGG (P10) {data-navmenu="Drug Recommendations"}
+Drug Signatures: PBTA HGG (P10) {data-navmenu="Drug Recommendations"}
 ===
 Row {data-height=700}
 ---
 
 ### PBTA HGG
 
-```{r drug_pathways_pbta_hgg}
+```{r drug_signatures_pbta_hgg, fig.width = 15, fig.height = 20}
 if(exists('drug_pathways_barplot')){
-  ggplotly(drug_pathways_barplot$diffreg_pathways_barplot_pbta_hgg)
+  drug_pathways_barplot$PBTA_HGG_189
 }
 ```
 
-Drug Pathways: PBTA (P10) {data-navmenu="Drug Recommendations"}
+Drug Signatures: PBTA (P10) {data-navmenu="Drug Recommendations"}
 ===
 Row {data-height=700}
 ---
 
 ### PBTA
 
-```{r drug_pathways_pbta}
+```{r drug_signatures_pbta, fig.width = 15, fig.height = 20}
 if(exists('drug_pathways_barplot')){
-  ggplotly(drug_pathways_barplot$diffreg_pathways_barplot_pbta)
+  drug_pathways_barplot$PBTA_ALL_1035
 }
+```
+
+Drug-Gene Network: GTEx Brain (P10) {data-navmenu="Drug Recommendations"}
+===
+Row {data-height=700}
+---
+
+### GTEx Brain
+
+```{r drug_gene_network_gtex, echo=FALSE, out.width = '100%', out.height='100%'}
+fname <- file.path(topDir, "output", "GTExBrain_dsea_go_mf_output.pdf")
+knitr::include_graphics(fname)
+```
+
+Drug-Gene Network: PBTA HGG (P10) {data-navmenu="Drug Recommendations"}
+===
+Row {data-height=700}
+---
+
+### PBTA HGG
+
+```{r drug_gene_network_pbta_hgg, echo=FALSE, out.width = '100%', out.height='100%'}
+fname <- file.path(topDir, "output", "PBTA_HGG_dsea_go_mf_output.pdf")
+knitr::include_graphics(fname)
+```
+
+Drug-Gene Network: PBTA (P10) {data-navmenu="Drug Recommendations"}
+===
+Row {data-height=700}
+---
+
+### PBTA
+
+```{r drug_gene_network_pbta, echo=FALSE, out.width = '100%', out.height='100%'}
+fname <- file.path(topDir, "output", "PBTA_ALL_dsea_go_mf_output.pdf")
+knitr::include_graphics(fname)
 ```
