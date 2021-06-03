@@ -192,10 +192,6 @@ if(!file.exists(fname)){
   source(file.path(patient_level_analyses, 'p7_cnv_plot.R'))
 }
 
-# network plot - changes with snv caller
-# fname <- file.path(topDir, "output", "network_plot_output.rds")
-source(file.path(patient_level_analyses, 'p7_network_plot.R'))
-
 ## page 8 
 fname_cgs <- file.path(topDir, "output", "complexheatmap_cgs.png")
 fname_phgg <- file.path(topDir, "output", "complexheatmap_phgg.png")
@@ -225,6 +221,10 @@ if(file.exists(fname)){
 } else {
   source(file.path(patient_level_analyses, 'p10_transcriptome_drug_rec.R'))
 }
+
+# network plot - changes with snv caller (page 7)
+# this is dependent on the output of transcriptome based drug recommendations
+source(file.path(patient_level_analyses, 'p7_network_plot.R'))
 
 # run CEMiTool to annotate hub genes on above output
 test_file <- file.path(topDir, "output", "ora_plots.png")

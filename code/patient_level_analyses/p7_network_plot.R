@@ -5,9 +5,9 @@ source(file.path(root_dir, "code", "utils", "define_directories.R"))
 # source functions
 source(file.path(patient_level_analyses_utils, 'network_plot.R'))
 
-# network plot
-network_plot_output <- network_plot(numGenes = 1000, 
-                                    geneMania = gene_mania)
+# input transcriptomic drug recommendations output
+fname <- file.path(topDir, "output", "transcriptome_drug_rec.rds")
+transcriptome_drug_rec_output <- readRDS(fname)
 
-# save output
-# saveRDS(network_plot_output, file = file.path(topDir, "output", "network_plot_output.rds"))
+# network plot
+network_plot_output <- network_plot(transcriptome_drug_rec_output, geneMania = gene_mania)

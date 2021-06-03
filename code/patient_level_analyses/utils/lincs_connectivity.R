@@ -60,14 +60,14 @@ drug_barplots <- function(dat, xlab, ylab, top = 20, fill_var = NULL, title){
       xlab("") + 
       ylab("-log10 Adj. P-Value") + 
       scale_fill_manual(name = "Direction", values = c("down" = "forest green", "up" = "red")) +
-      theme(plot.margin = unit(c(1, 5, 1, 7), "cm")) + 
+      theme(plot.margin = unit(c(1, 1, 1, 1), "cm")) + 
       ggtitle(title)
   } else {
     p <- ggplot(dat, aes(get(xlab), y = (-1)*log10(get(ylab)))) + 
       geom_bar(stat="identity") + coord_flip() + theme_bw() +
       xlab("") + 
       ylab("-log10 Adj. P-Value") + 
-      theme(plot.margin = unit(c(1, 5, 1, 7), "cm")) + 
+      theme(plot.margin = unit(c(1, 1, 1, 1), "cm")) + 
       ggtitle(title) +
       scale_x_discrete(labels = function(x) str_wrap(x, width = 50))
   }
@@ -101,10 +101,9 @@ lincs_connectivity <- function(input, num_features = 2000, num_sets = 25, method
     qSig_output <- result(qSig_output)
     
     # filter drugs
-    drugs <- qSig_output %>%
-      filter(trend == trend_val & WTCS_FDR < wtcs_fdr_cutoff) %>%
-      .$pert %>%
-      unique()
+    qSig_output <- qSig_output %>%
+      filter(trend == trend_val & WTCS_FDR < wtcs_fdr_cutoff)
+    drugs <- unique(qSig_output$pert)
   } else if(method == "Cor"){
     # correlation-based similarity
     query_mat <- cluster_upset %>%
@@ -119,10 +118,9 @@ lincs_connectivity <- function(input, num_features = 2000, num_sets = 25, method
     qSig_output <- result(qSig_output)
     
     # filter drugs
-    drugs <- qSig_output %>%
-      filter(cor_score < cor_score_cutoff) %>%
-      .$pert %>%
-      unique()
+    qSig_output <- qSig_output %>%
+      filter(cor_score < cor_score_cutoff)
+    drugs <- unique(qSig_output$pert)
   }
   fname <- file.path(output_dir, paste0(comparison, "_qSig_output.txt"))
   write.table(qSig_output, file = fname, quote = F, sep = "\t", row.names = F) 
@@ -154,7 +152,7 @@ lincs_connectivity <- function(input, num_features = 2000, num_sets = 25, method
   # plots
   p1 <- drug_barplots(dat = qSig_output, 
                       xlab = "pert", ylab = "WTCS_FDR",
-                      top = 20, fill_var = "trend",
+                      top = 20, fill_var = NULL,
                       title = "Query Signature")
   p2 <- drug_barplots(dat = tsea_reactome_df, 
                       xlab = "Description", ylab = "p.adjust",
@@ -164,7 +162,7 @@ lincs_connectivity <- function(input, num_features = 2000, num_sets = 25, method
                       xlab = "Description", ylab = "p.adjust",
                       top = 20, fill_var = NULL,
                       title = "DSEA GO MF")
-  p <- plot_grid(p1, p2, p3, ncol = 1, nrow = 3, axis = "lr", align = "v")
+  p <- plot_grid(p1, p2, p3, ncol = 3, nrow = 1, axis = "lr", align = "h")
   return(p)
 }
 

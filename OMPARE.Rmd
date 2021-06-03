@@ -600,7 +600,7 @@ Row {data-height=700}
 
 ### GTEx Brain
 
-```{r drug_signatures_gtex, fig.width = 15, fig.height = 20}
+```{r drug_signatures_gtex, fig.width = 20, fig.height = 8}
 if(exists('drug_pathways_barplot')){
   drug_pathways_barplot$GTExBrain_1152
 }
@@ -613,7 +613,7 @@ Row {data-height=700}
 
 ### PBTA HGG
 
-```{r drug_signatures_pbta_hgg, fig.width = 15, fig.height = 20}
+```{r drug_signatures_pbta_hgg, fig.width = 20, fig.height = 8}
 if(exists('drug_pathways_barplot')){
   drug_pathways_barplot$PBTA_HGG_189
 }
@@ -626,7 +626,7 @@ Row {data-height=700}
 
 ### PBTA
 
-```{r drug_signatures_pbta, fig.width = 15, fig.height = 20}
+```{r drug_signatures_pbta, fig.width = 20, fig.height = 8}
 if(exists('drug_pathways_barplot')){
   drug_pathways_barplot$PBTA_ALL_1035
 }

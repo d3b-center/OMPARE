@@ -1,35 +1,54 @@
-network_plot <- function(numGenes = 1000, geneMania) {
+network_plot <- function(transcriptome_drug_rec_output, geneMania) {
   
-  # build network nodes
-  nodeGenesMut <- ''
+  # filter to GTEx only
+  transcriptome_drug_rec_output <- transcriptome_drug_rec_output %>%
+    filter(Comparison == "GTExBrain_1152")
   
   # filtered mutations
   if(exists('mutDataFilt')){
     nodeGenesMut <- unique(mutDataFilt$Hugo_Symbol) 
+  } else {
+    nodeGenesMut <- ""
   }
+  
   # filtered fusions
   if(exists('fusData')){
-    nodeGenesMut <- c(nodeGenesMut, c(fusData$HeadGene), c(fusData$TailGene)) 
+    fusion_head <- fusData %>%
+      mutate(HeadGene = strsplit(as.character(HeadGene), ",")) %>% 
+      unnest(HeadGene) %>%
+      mutate(HeadGene = gsub("[(].*", "", HeadGene)) %>%
+      .$HeadGene %>% unique()
+    fusion_tail <- fusData %>%
+      mutate(TailGene = strsplit(as.character(TailGene), ",")) %>% 
+      unnest(TailGene) %>%
+      mutate(TailGene = gsub("[(].*", "", TailGene)) %>%
+      .$TailGene %>% unique()
+    nodeGenesFus <- c(fusion_head, fusion_tail) 
+  } else {
+    nodeGenesFus <- ""
   }
+  
   # expression logfc
   if(exists('expData')){
     rnaGenes <- rnaseq_analysis_output$expr.genes.logfc
     rnaGenes <- data.frame(gene = names(rnaGenes), logfc = rnaGenes)
-    upGenes <- rnaGenes %>% arrange(desc(logfc)) %>% slice_head(n = numGenes) %>% .$gene
-    downGenes <- rnaGenes %>% arrange(logfc) %>% slice_head(n = numGenes)  %>% .$gene
-    nodeGenes <- c(nodeGenesMut, upGenes, downGenes)
+    rnaGenes <- rnaGenes %>%
+      filter(gene %in% transcriptome_drug_rec_output$Gene)
+    nodeGenesExp <- unique(rnaGenes$gene)
   } else {
-    nodeGenes <- c(nodeGenesMut)
+    nodeGenesExp <- ""
   }
   
   # subset network objects
-  nodeGenes <- unique(nodeGenes)
+  nodeGenes <- unique(c(nodeGenesMut, nodeGenesFus, nodeGenesExp))
   cifNetwork <- geneMania %>%
     filter(Gene_A_EntrezGeneName %in% nodeGenes,
-           Gene_B_EntrezGeneName %in% nodeGenes,
            Network_Group_Name %in% c("Co-localization", "Genetic Interactions", "Pathway", "Physical Interactions")) %>%
-    mutate(from = Gene_A_EntrezGeneName, to = Gene_B_EntrezGeneName,
-           logFC = ifelse(from %in% nodeGenesMut, 5, 1),
+    mutate(from = Gene_A_EntrezGeneName, 
+           to = Gene_B_EntrezGeneName) %>%
+    left_join(rnaGenes, by = c("from" = "gene")) %>%
+    mutate(logFC = ifelse(from %in% nodeGenesMut, 5, logfc),
+           logFC = ifelse(is.na(logFC), 1, logFC),
            miRNA = "No") %>%
     dplyr::select(from, to, logFC, miRNA)
   
