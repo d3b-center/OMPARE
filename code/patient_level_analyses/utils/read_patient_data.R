@@ -104,17 +104,17 @@ readData <- function(topDir, fusion_method = c("star","arriba"), snv_caller = "a
     # add copy number status
     if(ploidy == 2){
       cnvData <- cnvData %>%
-        mutate(status = case_when(copy.number == -2 ~ "Homozygous Loss",
-                                  copy.number == -1 ~ "Single Copy Loss",
+        mutate(status = case_when(copy.number == -2 ~ "Complete Loss",
+                                  copy.number == -1 ~ "Loss",
                                   copy.number == 0 ~ "Neutral",
-                                  copy.number == 1 ~ "Single Copy Gain",
+                                  copy.number == 1 ~ "Gain",
                                   copy.number == 2 ~ "Amplification"))
     } else {
       cnvData <- cnvData %>%
-        mutate(status = case_when(copy.number == 0 ~ "Homozygous Loss",
-                                  copy.number < ploidy & copy.number > 0 ~ "Single Copy Loss",
+        mutate(status = case_when(copy.number == 0 ~ "Complete Loss",
+                                  copy.number < ploidy & copy.number > 0 ~ "Loss",
                                   copy.number == ploidy ~ "Neutral",
-                                  copy.number > ploidy & copy.number < ploidy + 3 ~ "Single Copy Gain",
+                                  copy.number > ploidy & copy.number < ploidy + 3 ~ "Gain",
                                   copy.number >= ploidy + 3 ~ "Amplification"))
     }
     

@@ -10,7 +10,7 @@ genomic_summary <- function(snv_caller, key_clinical_findings_output, all_findin
     
     # total alterations
     numLesions <- all_findings_output %>%
-      filter(Type %in% c("Single Copy Gain", "Amplification", "Single Copy Loss", "Homozygous Loss", "Mutation", "Fusion")) %>%
+      filter(Type %in% c("Gain", "Amplification", "Loss", "Complete Loss", "Mutation", "Fusion")) %>%
       nrow()
     
     # high confidence alterations

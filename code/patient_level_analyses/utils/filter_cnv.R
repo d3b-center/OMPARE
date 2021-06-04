@@ -17,11 +17,11 @@ filter_cnv <- function(myCNVData, myCancerGenes = cancer_genes) {
   
   # gain in oncogenes
   cnvDataFiltUp <- myCNVData %>%
-    filter(status %in% c("Single Copy Gain", "Amplification") & hgnc_symbol %in% myOncogenes)
+    filter(status %in% c("Gain", "Amplification") & hgnc_symbol %in% myOncogenes)
   
   # loss in tsgs
   cnvDataFiltDown <- myCNVData %>%
-    filter(status %in% c("Single Copy Loss", "Homozygous Loss") & hgnc_symbol %in% myTSGenes)
+    filter(status %in% c("Loss", "Complete Loss") & hgnc_symbol %in% myTSGenes)
   
   # combine
   cnvDataFilt <- rbind(cnvDataFiltUp, cnvDataFiltDown)
