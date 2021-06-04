@@ -41,7 +41,7 @@ tsgs <- cancer_genes %>%
 
 # mutation
 mutation <- lapply(maf_file, data.table::fread, stringsAsFactors = F)
-mutation <- data.table::rbindlist(mutation)
+mutation <- data.table::rbindlist(mutation, fill = TRUE)
 mutation <- unique(as.data.frame(mutation))
 mutation <- mutation %>%
   mutate(GENE = Hugo_Symbol,
