@@ -6,4 +6,4 @@ source(file.path(root_dir, "code", "utils", "define_directories.R"))
 source(file.path(patient_level_analyses_utils, 'cnv_plot.R'))
 
 # cnv plot
-cnv_plot(myCnvData = cnvGenes, fname = file.path(topDir, "output", "cnv_plot.png"))
+cnv_plot(myCnvData = cnvData, fname = file.path(topDir, "output", "cnv_plot.png"))

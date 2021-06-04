@@ -1,5 +1,6 @@
-cnv_plot <- function(myCnvData = cnvGenes, fname) {
+cnv_plot <- function(myCnvData = cnvData, fname) {
   myCnvData <- myCnvData %>%
+    mutate(chr = gsub("^chr", "", chr)) %>%
     dplyr::select(chr, start, copy.number) %>%
     as.data.frame()
   myCnvData.seg <- copynumber::pcf(data = myCnvData, verbose = FALSE)

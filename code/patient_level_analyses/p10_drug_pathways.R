@@ -6,6 +6,9 @@ gsea_dir <- file.path(ref_dir, "gsea")
 # source functions
 source(file.path(patient_level_analyses_utils, 'lincs_connectivity.R'))
 
+# patient of interest
+pnoc008_patient <- gsub('.*/','',topDir)
+
 # read edgeR output
 # gtex brain
 pnoc008_vs_gtex_brain <- readRDS(file.path(gsea_dir, 'pnoc008_vs_gtex_brain.rds'))

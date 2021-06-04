@@ -1,6 +1,6 @@
 # filter cnvs by oncogenes/tsgs as well as copy number status cutoff
 
-filter_cnv <- function(myCNVData = cnvGenes, myCancerGenes = cancer_genes) {
+filter_cnv <- function(myCNVData, myCancerGenes = cancer_genes) {
 
   # tumor suppressor genes
   myTSGenes <- myCancerGenes %>%
@@ -17,11 +17,11 @@ filter_cnv <- function(myCNVData = cnvGenes, myCancerGenes = cancer_genes) {
   
   # gain in oncogenes
   cnvDataFiltUp <- myCNVData %>%
-    filter(status == "gain" & hgnc_symbol %in% myOncogenes)
+    filter(status %in% c("Single Copy Gain", "Amplification") & hgnc_symbol %in% myOncogenes)
   
   # loss in tsgs
   cnvDataFiltDown <- myCNVData %>%
-    filter(status == "loss" & hgnc_symbol %in% myTSGenes)
+    filter(status %in% c("Single Copy Loss", "Homozygous Loss") & hgnc_symbol %in% myTSGenes)
   
   # combine
   cnvDataFilt <- rbind(cnvDataFiltUp, cnvDataFiltDown)

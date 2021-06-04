@@ -27,7 +27,7 @@ key_clinical_findings <- function(snv_caller, all_findings_output) {
     # cnv filters
     # filter to deletions that have TPM < 10
     myTableDel <- myTable %>%
-      filter(Type == "Deletion") %>%
+      filter(Type %in% c("Single Copy Loss", "Homozygous Loss")) %>%
       left_join(rnaEvidence, by = c("Aberration" = "Gene")) %>%
       left_join(sigGeneSets, by = c("Aberration" = "values")) %>%
       mutate(SupportEv = paste0("TPM: ", !!as.name(sampleInfo$subjectID), ifelse(is.na(Pathway), "", paste0(", Pathway: ", Pathway)))) %>%
@@ -36,7 +36,7 @@ key_clinical_findings <- function(snv_caller, all_findings_output) {
     
     # filter to amplifications that have TPM > 100
     myTableAmp <- myTable %>%
-      filter(Type == "Amplification") %>%
+      filter(Type %in% c("Single Copy Gain", "Amplification")) %>%
       left_join(rnaEvidence, by = c("Aberration" = "Gene")) %>%
       left_join(sigGeneSets, by = c("Aberration" = "values")) %>%
       mutate(SupportEv = paste0("TPM: ", !!as.name(sampleInfo$subjectID), ifelse(is.na(Pathway), "", paste0(", Pathway: ", Pathway)))) %>%

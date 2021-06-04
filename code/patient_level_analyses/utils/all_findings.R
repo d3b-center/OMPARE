@@ -9,24 +9,29 @@ all_findings <- function(snv_caller) {
       filter(HGVSp_Short != "") %>%
       mutate(Details = paste0('Variant: ', Variant_Classification, " | HGVSp: ", HGVSp_Short)) 
     
-    # remove all PDB-ENSP from DOMAINS, collapse DOMAINS to string
+    # only keep Pfam and SMART domains, collapse DOMAINS to string
     tmpMut <- tmpMut %>%
       mutate(DOMAINS = ifelse(DOMAINS == "", NA, strsplit(as.character(DOMAINS), ","))) %>% 
       unnest(DOMAINS) %>%
-      mutate(match = str_detect(DOMAINS, 'PDB-ENSP')) %>%
-      mutate(DOMAINS = ifelse(match, NA, DOMAINS)) %>%
+      mutate(match = str_detect(DOMAINS, 'Pfam_domain|SMART_domains')) %>%
+      mutate(DOMAINS = ifelse(match, DOMAINS, NA)) %>%
       group_by(Aberration, Type, Details) %>%
       mutate(DOMAINS = toString(na.omit(DOMAINS))) %>%
       unique()
     
+    # add COSMIC
+    tmpMut <- tmpMut %>%
+      mutate(Existing_variation = str_detect(Existing_variation, 'COSM')) %>%
+      mutate(Existing_variation = ifelse(Existing_variation, "Cosmic_Variant", ""))
+    
     # now add Variant Properties depending on snv_caller
     if(snv_caller == "all"){
       tmpMut <- tmpMut %>%
-        dplyr::select(Aberration, Type, Details, SIFT, DOMAINS) %>%
+        dplyr::select(Aberration, Type, Details, SIFT, DOMAINS, Existing_variation) %>%
         unique()
     } else {
       tmpMut <- tmpMut %>%
-        dplyr::select(Aberration, Type, Details, t_alt_count, t_depth, SIFT, DOMAINS) %>%
+        dplyr::select(Aberration, Type, Details, t_alt_count, t_depth, SIFT, DOMAINS, Existing_variation) %>%
         unique()
     }
     
@@ -59,10 +64,10 @@ all_findings <- function(snv_caller) {
     tmpCnv <- cnvDataFilt %>%
       rowwise() %>%
       mutate(Aberration = hgnc_symbol,
-             Type = ifelse(status == "gain", "Amplification", "Deletion"),
+             Type = status,
              Details = paste0("Copy Number: ", copy.number, 
                               " | Pos: ", chr, ":", start, "-", end),
-             Variant_Properties = ifelse(genotype == "A", "LOH", NA)) %>%
+             Variant_Properties = NA) %>%
       dplyr::select(Aberration, Type, Details, Variant_Properties)
   } else {
     tmpCnv <- data.frame()
