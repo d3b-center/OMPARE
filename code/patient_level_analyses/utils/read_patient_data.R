@@ -85,10 +85,15 @@ readData <- function(topDir, fusion_method = c("star","arriba"), snv_caller = "a
     # calculate absolute copy number
     cnvData$copy.number <- 0
     if(ploidy == 2){
-      cnvData$copy.number[cnvData$log2 >= 0.7] <- 2
-      cnvData$copy.number[cnvData$log2 >= 0.2 & cnvData$log2 < 0.7] <- 1
-      cnvData$copy.number[cnvData$log2 > -1.1 & cnvData$log2 <= -0.25] <- -1
-      cnvData$copy.number[cnvData$log2 < -1.1] <- -2
+      # compute log2 ratio cutoffs
+      cutoff <- log2((1 - purity) + purity * (0:3 + .5) / ploidy)
+      cutoff <- min(cutoff)
+
+      # compute absolute copy number
+      cnvData$copy.number <- (((2^(cnvData$log2)-(1-purity)) * ploidy)/ purity) - 0.5
+      cnvData <- cnvData %>%
+        rowwise() %>%
+        mutate(copy.number = ifelse(log2 < cutoff, round(copy.number), ceiling(copy.number)))
     } else {
       # compute log2 ratio cutoffs
       cutoff <- log2((1 - purity) + purity * (0:6 + .5) / ploidy)
@@ -102,21 +107,12 @@ readData <- function(topDir, fusion_method = c("star","arriba"), snv_caller = "a
     }
     
     # add copy number status
-    if(ploidy == 2){
-      cnvData <- cnvData %>%
-        mutate(status = case_when(copy.number == -2 ~ "Complete Loss",
-                                  copy.number == -1 ~ "Loss",
-                                  copy.number == 0 ~ "Neutral",
-                                  copy.number == 1 ~ "Gain",
-                                  copy.number == 2 ~ "Amplification"))
-    } else {
-      cnvData <- cnvData %>%
-        mutate(status = case_when(copy.number == 0 ~ "Complete Loss",
-                                  copy.number < ploidy & copy.number > 0 ~ "Loss",
-                                  copy.number == ploidy ~ "Neutral",
-                                  copy.number > ploidy & copy.number < ploidy + 3 ~ "Gain",
-                                  copy.number >= ploidy + 3 ~ "Amplification"))
-    }
+    cnvData <- cnvData %>%
+      mutate(status = case_when(copy.number == 0 ~ "Complete Loss",
+                                copy.number < ploidy & copy.number > 0 ~ "Loss",
+                                copy.number == ploidy ~ "Neutral",
+                                copy.number > ploidy & copy.number < ploidy + 3 ~ "Gain",
+                                copy.number >= ploidy + 3 ~ "Amplification"))
     
     assign("cnvData", cnvData, envir = globalenv())
     
