@@ -52,6 +52,7 @@ colnames(pnoc008_counts) <- pnoc008_clinical$Kids_First_Biospecimen_ID
 clinical <- pnoc008_clinical %>%
   rbind(pbta_histology) %>%
   left_join(ge_based_clustering, by = c("cohort_participant_id" = "Sample.Names")) %>%
+  unique() %>%
   tibble::remove_rownames() %>%
   tibble::column_to_rownames("Kids_First_Biospecimen_ID")
   
@@ -77,8 +78,8 @@ saveRDS(exp_counts_corrected, file = file.path(cemitools_dir, "expected_counts_c
 # umap and get top 20 nearest neighbors
 exp_most_var <- get_most_variable_for_umap(expr_corrected = exp_counts_corrected)
 umap_output <- get_umap_output(expr_most_var = exp_most_var)
-sampleInfo <- data.frame(subjectID = pnoc008_clinical$Kids_First_Biospecimen_ID)
-nn_table <- extract_umap_nearest_neighbor_table(umap_out = umap_output, expr_most_var = exp_most_var, sampleInfo = sampleInfo)
+sample_info <- data.frame(subjectID = pnoc008_clinical$Kids_First_Biospecimen_ID)
+nn_table <- extract_umap_nearest_neighbor_table(umap_out = umap_output, expr_most_var = exp_most_var, sampleInfo = sample_info)
 saveRDS(umap_output, file = file.path(cemitools_dir, "umap_output.rds"))
 saveRDS(nn_table, file = file.path(cemitools_dir, "umap_top_20_neighbors_output.rds"))
 
