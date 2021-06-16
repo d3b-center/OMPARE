@@ -641,7 +641,9 @@ Row {data-height=700}
 
 ```{r drug_gene_network_gtex, echo=FALSE, out.width = '100%', out.height='100%'}
 fname <- file.path(topDir, "output", "GTExBrain_dsea_go_mf_output.pdf")
-knitr::include_graphics(fname)
+if(file.exists(fname)){
+  knitr::include_graphics(fname)
+}
 ```
 
 Drug-Gene Network: PBTA HGG (P10) {data-navmenu="Drug Recommendations"}
@@ -653,7 +655,9 @@ Row {data-height=700}
 
 ```{r drug_gene_network_pbta_hgg, echo=FALSE, out.width = '100%', out.height='100%'}
 fname <- file.path(topDir, "output", "PBTA_HGG_dsea_go_mf_output.pdf")
-knitr::include_graphics(fname)
+if(file.exists(fname)){
+ knitr::include_graphics(fname) 
+}
 ```
 
 Drug-Gene Network: PBTA (P10) {data-navmenu="Drug Recommendations"}
@@ -665,5 +669,7 @@ Row {data-height=700}
 
 ```{r drug_gene_network_pbta, echo=FALSE, out.width = '100%', out.height='100%'}
 fname <- file.path(topDir, "output", "PBTA_ALL_dsea_go_mf_output.pdf")
-knitr::include_graphics(fname)
+if(file.exists(fname)){
+  knitr::include_graphics(fname)
+}
 ```

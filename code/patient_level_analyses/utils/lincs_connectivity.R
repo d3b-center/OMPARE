@@ -125,44 +125,49 @@ lincs_connectivity <- function(input, num_features = 2000, num_sets = 25, method
   fname <- file.path(output_dir, paste0(comparison, "_qSig_output.txt"))
   write.table(qSig_output, file = fname, quote = F, sep = "\t", row.names = F) 
   
-  # hypergeometric TSEA using Reactome 
-  tsea_reactome <- tsea_dup_hyperG(drugs = drugs, 
-                                   type = "Reactome", 
-                                   pvalueCutoff = 0.5, 
-                                   dt_anno = 'DrugBank',
-                                   qvalueCutoff = 0.5, readable = TRUE)
-  tsea_reactome_df <- result(tsea_reactome)
-  fname <- file.path(output_dir, paste0(comparison, "_tsea_reactome_output.txt"))
-  write.table(tsea_reactome_df, file = fname, quote = F, sep = "\t", row.names = F) 
-  
-  # hypergeometric DSEA using GO MF
-  dsea_go_mf <- dsea_hyperG(drugs = drugs, type = "GO", ont = "MF")
-  dsea_go_mf_df <- result(dsea_go_mf)
-  fname <- file.path(output_dir, paste0(comparison, "_dsea_go_mf_output.txt"))
-  write.table(dsea_go_mf_df, file = fname, quote = F, sep = "\t", row.names = F) 
-  
-  # network plot
-  top_set <- dsea_go_mf_df %>% arrange(p.adjust) %>% slice_head(n = num_sets) %>% .$ID
-  dnet_object <- dtnetplot(drugs = drugs(dsea_go_mf), set = top_set, ont = "MF")
-  fname <- file.path(output_dir, paste0(comparison, "_dsea_go_mf_output.html"))
-  visSave(dnet_object, fname)
-  fname <- file.path(output_dir, paste0(comparison, "_dsea_go_mf_output.pdf"))
-  network_to_file(dnet_object = dnet_object, filename = fname)
-  
-  # plots
-  p1 <- drug_barplots(dat = qSig_output, 
-                      xlab = "pert", ylab = "WTCS_FDR",
-                      top = 20, fill_var = NULL,
-                      title = "Query Signature")
-  p2 <- drug_barplots(dat = tsea_reactome_df, 
-                      xlab = "Description", ylab = "p.adjust",
-                      top = 20, fill_var = NULL,
-                      title = "TSEA Reactome")
-  p3 <- drug_barplots(dat = dsea_go_mf_df, 
-                      xlab = "Description", ylab = "p.adjust",
-                      top = 20, fill_var = NULL,
-                      title = "DSEA GO MF")
-  p <- plot_grid(p1, p2, p3, ncol = 3, nrow = 1, axis = "lr", align = "h")
+  if(length(drugs) != 0){
+    # hypergeometric TSEA using Reactome 
+    tsea_reactome <- tsea_dup_hyperG(drugs = drugs, 
+                                     type = "Reactome", 
+                                     pvalueCutoff = 0.5, 
+                                     dt_anno = 'DrugBank',
+                                     qvalueCutoff = 0.5, readable = TRUE)
+    tsea_reactome_df <- result(tsea_reactome)
+    fname <- file.path(output_dir, paste0(comparison, "_tsea_reactome_output.txt"))
+    write.table(tsea_reactome_df, file = fname, quote = F, sep = "\t", row.names = F) 
+    
+    # hypergeometric DSEA using GO MF
+    dsea_go_mf <- dsea_hyperG(drugs = drugs, type = "GO", ont = "MF")
+    dsea_go_mf_df <- result(dsea_go_mf)
+    fname <- file.path(output_dir, paste0(comparison, "_dsea_go_mf_output.txt"))
+    write.table(dsea_go_mf_df, file = fname, quote = F, sep = "\t", row.names = F)
+    
+    # network plot
+    top_set <- dsea_go_mf_df %>% arrange(p.adjust) %>% slice_head(n = num_sets) %>% .$ID
+    dnet_object <- dtnetplot(drugs = drugs(dsea_go_mf), set = top_set, ont = "MF")
+    fname <- file.path(output_dir, paste0(comparison, "_dsea_go_mf_output.html"))
+    visSave(dnet_object, fname)
+    fname <- file.path(output_dir, paste0(comparison, "_dsea_go_mf_output.pdf"))
+    network_to_file(dnet_object = dnet_object, filename = fname)
+    
+    # plots
+    p1 <- drug_barplots(dat = qSig_output, 
+                        xlab = "pert", ylab = "WTCS_FDR",
+                        top = 20, fill_var = NULL,
+                        title = "Query Signature")
+    p2 <- drug_barplots(dat = tsea_reactome_df, 
+                        xlab = "Description", ylab = "p.adjust",
+                        top = 20, fill_var = NULL,
+                        title = "TSEA Reactome")
+    p3 <- drug_barplots(dat = dsea_go_mf_df, 
+                        xlab = "Description", ylab = "p.adjust",
+                        top = 20, fill_var = NULL,
+                        title = "DSEA GO MF")
+    p <- plot_grid(p1, p2, p3, ncol = 3, nrow = 1, axis = "lr", align = "h")
+  } else {
+    p <- ggplot()
+  }
+
   return(p)
 }
 
