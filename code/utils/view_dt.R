@@ -1,3 +1,4 @@
+library(DT)
 view_dt <- function(dat, pageLength = 10, escape = F, rownames = F){
   DT::datatable(dat,
                 escape = escape,

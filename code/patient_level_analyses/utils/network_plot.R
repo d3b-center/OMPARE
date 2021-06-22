@@ -1,3 +1,5 @@
+library(GeneNetworkBuilder)
+
 network_plot <- function(transcriptome_drug_rec_output, geneMania) {
   
   # filter to GTEx only
