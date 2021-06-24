@@ -123,7 +123,7 @@ cem <- plot_profile(cem)
 
 # read GMT file - reactome file
 gmt_fname <- system.file("extdata", "pathways.gmt", package = "CEMiTool")
-gmt_in <- read_gmt(gmt_fname)
+gmt_in <- CEMiTool::read_gmt(gmt_fname)
 
 # perform over representation analysis
 cem <- mod_ora(cem, gmt_in)
