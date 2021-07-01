@@ -4,7 +4,7 @@
 Omics Patient Report
 ********************
 
-:authors: Komal S Rathi, Pichai Raman
+:authors: Komal S Rathi
 :contact: rathik@email.chop.edu
 :organization: D3B, CHOP
 :status: This is "work in progress"
@@ -56,10 +56,11 @@ Master script
    
 1. **code/create_project_dir.R**: creating project directory and organize files.
 2. **code/create_clinfile.R**: creating clinical file for patint of interest.
-3. **code/patient_level_analyses/pnoc_format.R**: updating PNOC008 data matrices (cnv, mutations, fusions, expression) with each new patient.
-4. **code/patient_level_analyses/gsea_enrichment.R**: updating GSEA enrichment outputs with each new patient.
-5. **code/patient_level_analyses/enrichment_output.R**: generating genes and pathway enrichment output for each new patient.
-6. **OMPARE.Rmd**: running html reports
+3. **code/update_pbta.R**: pull pbta histologies data from datawarehouse
+4. **code/patient_level_analyses/pnoc_format.R**: updating PNOC008 data matrices (cnv, mutations, fusions, expression) with each new patient.
+5. **code/patient_level_analyses/gsea_enrichment.R**: updating GSEA enrichment outputs with each new patient.
+6. **code/patient_level_analyses/enrichment_output.R**: generating genes and pathway enrichment output for each new patient.
+7. **OMPARE.Rmd**: running html reports
 
 .. code-block:: bash
 	
