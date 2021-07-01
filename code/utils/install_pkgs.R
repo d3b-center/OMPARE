@@ -69,6 +69,7 @@ BiocManager::install("visNetwork")
 devtools::install_github('dviraran/xCell')
 BiocManager::install("xlsx")
 BiocManager::install("callr")
+BiocManager::install("dotenv")
 
 # double check if these are needed
 BiocManager::install("BSgenome.Hsapiens.UCSC.hg38")

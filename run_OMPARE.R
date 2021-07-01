@@ -4,6 +4,7 @@
 
 suppressPackageStartupMessages(library(optparse))
 suppressPackageStartupMessages(library(rmarkdown))
+suppressPackageStartupMessages(library(dotenv))
 
 option_list <- list(
   make_option(c("-p", "--patient"), type = "character",
@@ -25,6 +26,7 @@ sourceDir <- opt$sourcedir
 # directories
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
 source(file.path(root_dir, "code", "utils", "define_directories.R"))
+pbta_dir <- file.path(ref_dir, 'pbta')
 
 # set variables
 topDir <- file.path(root_dir, 'results', patient)
@@ -53,28 +55,45 @@ if(!is.null(clinical_sheet)){
   print("Clinical file present...")
 }
 
-# 3. Update PNOC008 matrices for each new patient
+# 3. update histologies file from adapt
+d3b_toolkit_repo <- file.path(root_dir, '../d3b-analysis-toolkit/scripts')
+load_dot_env(file.path(d3b_toolkit_repo, '.envrc'))
+host <- Sys.getenv('DWH_HOSTNAME')
+usr <- Sys.getenv('DWH_USERNAME')
+pwd <- Sys.getenv('DWH_PASSWORD')
+db <- Sys.getenv('DWH_DATABASE')
+schema <- Sys.getenv('DWH_SCHEMATABLE')
+py_script <- file.path(d3b_toolkit_repo, 'select-all-pbta-histologies.py')
+system(paste("python", py_script, 
+              "-o", file.path(pbta_dir, 'pbta-histologies-base-adapt.tsv'),
+              "-u", usr,
+              "-p", pwd,
+              "-n", host,
+              "-d", db,
+              "-s", schema, sep = " "))
+
+# 4. Update PNOC008 matrices for each new patient
 print("Update PNOC008 data matrices...")
 pnoc.format <- file.path(patient_level_analyses, 'pnoc_format.R')
 cmd3 <- paste('Rscript', pnoc.format, '--clin_file', clinical_sheet)
 print(cmd3)
 system(cmd3)
 
-# 4. Update GSEA enrichment for each new patient
+# 5. Update GSEA enrichment for each new patient
 print("Update PNOC008 GSEA summary...")
 gsea.enrichment <- file.path(patient_level_analyses, 'gsea_enrichment.R')
 cmd4 <- paste('Rscript', gsea.enrichment, '-p', patient)
 print(cmd4)
 system(cmd4)
 
-# 5. Generate genes and pathway enrichment output
+# 6. Generate genes and pathway enrichment output
 print("Generate output for RNA-seq enrichment...")
 rnaseq_enrichment <- file.path(patient_level_analyses, 'enrichment_output.R')
 cmd5 <- paste('Rscript', rnaseq_enrichment, '-i', topDir, '-o', paste0(patient, '_summary'), '-t text')
 print(cmd5)
 system(cmd5)
 
-# 6. Run html reports
+# 7. Run html reports
 # fusion_method can be either arriba, star, both or not specified
 print("Run reports...")
 if(dir.exists(topDir)){
