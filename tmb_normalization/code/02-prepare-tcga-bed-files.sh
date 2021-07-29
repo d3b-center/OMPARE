@@ -20,7 +20,7 @@
 # are  any overlaps in the BED regions)
 ####################################
 
-the following part deals with the bed files from TCGA specimens that are NOT part of PBTA
+# the following part deals with the bed files from TCGA specimens that are NOT part of PBTA
 tcga_tsv='../results/tcga_not_in_pbta_bam_manifest.tsv'
 sed 1d $tcga_tsv \
 | cut -f9 | tr "\|" "\n" | sort -u \
@@ -30,36 +30,34 @@ do
     curl $i | awk '{print "chr"$0}' > ../../scratch/tcga_not_in_pbta/$filename
 done
 
-# note that by using 'curl' - not all the bed files can be found - 
-# files with 0kb were deleted and I went into tcga_not_in_pbta_unique_bed_files.tsv file 
+# note that by using 'curl' - not all the bed files can be found -
+# files with 0kb were deleted and I went into tcga_not_in_pbta_unique_bed_files.tsv file
 # - try to see whether I can manually find the bed file
 # for some of the samples, multiple bed files/capture kits are listed since GDC does not know
 # exactly which one was used - for those, some of them does not have a bed file available
-# hence, manually choose the kit that actually has an associated bed file and the selected bed 
-# is recorded by adding another column called "bed_selected" in the tcga_not_in_pbta_bed_file.tsv 
+# hence, manually choose the kit that actually has an associated bed file and the selected bed
+# is recorded by adding another column called "bed_selected" in the tcga_not_in_pbta_bed_file.tsv
 # and save it as "tbga_not_in_pbta_bed_selected.tsv"
 # the bed file name that will be used in the subsequent events
 
-
 # the following part deals with the bed files from TCGA specimens that ARE part of PBTA
-# this utilizes the manifest file that is in the S3 bucket
-# PBTA_BUCKET = 'https://s3.amazonaws.com/kf-openaccess-us-east-1-prd-pbta/data/'
-# RELEASE = 'release-v19-20210423/'
-# name = 'pbta-tcga-manifest.tsv'
-# the file is stored in references 
-# and the following code is to download the bed files
+# the code to get the manifest is https://github.com/AlexsLemonade/OpenPBTA-analysis/blob/
+# master/analyses/tcga-capture-kit-investigation/scripts/get-tcga-capture_kit.py
+# the result was saved as '../results/tcga_in_pbta_bam_manifest.tsv'
+# Alternatively, the bed files can be downloaded from here: https://github.com/AlexsLemonade/
+# OpenPBTA-analysis/tree/master/analyses/tcga-capture-kit-investigation/results/bedfiles
 
-tcga_in_pbta_tsv='../references/pbta-tcga-manifest.tsv'
+tcga_in_pbta_tsv='../results/tcga_in_pbta_bam_manifest.tsv'
 sed 1d $tcga_in_pbta_tsv\
 | cut -f3 | tr "\|" "\n" | sort -u \
 | while read i
-do 
+do
     filename=`basename $i`
     curl -s $i | awk '{print "chr"$0}' > ../../scratch/tcga_in_pbta/$filename
 done
 
 # note that for some of the bed files, the url listed there are not downloadable (e.g., TCGA-ACC bed files)
-# hence print out all the results in here so that we can manually either check or download the files that 
+# hence print out all the results in here so that we can manually either check or download the files that
 # are problematic and modify the manifest files accordingly
 
 ## Downloading chain.gz file for CrossMap command
@@ -80,6 +78,34 @@ for i in `ls ../../scratch/tcga_in_pbta/*.Gh38.bed`; do
 done
 
 
+## This command takes every BED files downloaded and uses CrossMap tool to convert hg19 coordinates to Gh38
+for i in `ls ../../scratch/tcga_not_in_pbta/*.bed`; do
+  out=$(echo $i | sed 's/.bed/.Gh38.bed/g')
+  CrossMap.py bed ../../scratch/hg19ToHg38.over.chain.gz $i $out
+done
+
+## This command uses sort and merge from bedtools to merge any overalpping BED regions
+mkdir -p ../results/bed_files/tcga_not_in_pbta
+for i in `ls ../../scratch/tcga_not_in_pbta/*.Gh38.bed`; do
+  bedtools sort -i $i \
+  | bedtools merge \
+  > ../results/bed_files/tcga_not_in_pbta/$(basename $i)
+done
 
 
+# the following deals with bed files used for PNOC008 samples
+
+## This command takes every BED files downloaded and uses CrossMap tool to convert hg19 coordinates to Gh38
+for i in `ls ../../scratch/pnoc008/*.bed`; do
+  out=$(echo $i | sed 's/.bed/.Gh38.bed/g')
+  CrossMap.py bed ../../scratch/hg19ToHg38.over.chain.gz $i $out
+done
+
+## This command uses sort and merge from bedtools to merge any overalpping BED regions
+mkdir -p ../references
+for i in `ls ../../scratch/pnoc008/*.Gh38.bed`; do
+  bedtools sort -i $i \
+  | bedtools merge \
+  > ../references/$(basename $i)
+done
 

@@ -1,6 +1,8 @@
 # This script uese all the downloaded bed files, calculate the length the bed files
 # And map the bed length back to the bam_manifest file
 
+library(tidyverse)
+
 # Read in the bed files
 bed_file_path = '../results/bed_files/tcga_not_in_pbta'
 bed_file_list <- list.files(path = bed_file_path, pattern = '.bed', recursive = TRUE, full.names = T)
@@ -13,9 +15,13 @@ bam_manifest <- read.delim("../results/tcga_not_in_pbta_bam_manifest.tsv")
 
 # for some of the kits, multiple target kits are listed since GDC is not sure which one is used
 # some of those kits do not have associated bed files - so we just use the files that I generated 
-# before and select one fothe the target kits that actually have a bed file 
-bed_selection <- read.delim("../results/tcga_not_in_pbta_bed_selected.tsv", header = T, row.names=NULL, stringsAsFactors = F)
-bam_manifest <- bam_manifest %>% dplyr::left_join(bed_selection)
+# before and select one for the target kits that actually have a bed file 
+bed_selection <- read.delim("../results/tcga_not_in_pbta_bed_selected.tsv", header = T, row.names=NULL, stringsAsFactors = F) %>%
+  dplyr::rename(bed_selected_ori = bed_selected) %>% 
+  dplyr::mutate(bed_selected = gsub(".bed", ".Gh38.bed", bed_selected_ori))
+
+bam_manifest <- bam_manifest %>% dplyr::left_join(bed_selection) %>% dplyr::select(-bed_selected_old) %>% 
+  dplyr::select(-bed_selected_ori) 
 
 # Define a vector that will hold the total lengths for all the bed files in the bed file list
 total_length_list <- c()

@@ -18,7 +18,7 @@ pbta_mutect2_samples <- pbta_mutect2$Tumor_Sample_Barcode %>% unique()
 
 # Filter the histoogies file to contain only the specimens that have mutect2 results
 pbta_mutect2_samples_histology <- histologies %>% 
-  dplyr::filter(Kids_first_Biospecimen_ID %in% pbta_mutect2_samples)
+  dplyr::filter(Kids_First_Biospecimen_ID %in% pbta_mutect2_samples)
 # See what are the cohorts and experimental strategy
 pbta_mutect2_samples_histology$cohort %>% unique()
 pbta_mutect2_samples_histology$experimental_strategy %>% unique()
@@ -46,27 +46,25 @@ for (j in 1:length(bed_file_list)){
 }
 
 # Generate a dataframe containing the bed file name and the bed length
-bed_name_length_matched <- data.frame(bed_file_list, total_length_list)
+bed_name_length_matched <- data.frame(bed_file_list, total_length_list) %>%
+  dplyr::rename(bed_selected = bed_file_list, bed_length = total_length_list)
 
 # since the mutect file does not have PNOC008 patient, we assume PNOC is PNOC003 
 pbta_mutect2_samples_histology <- pbta_mutect2_samples_histology %>%
   dplyr::mutate(bed_selected = case_when(
     experimental_strategy == "WGS" ~ "CCDS.bed",
-    experimenta_strategy == "WXS" ~ "Strexome_targets_intersect_sorted_padded100.GRCh38.withCCDS.bed",
-    experimenta_strategy == "Targeted Sequencing" & cohort == "PNOC" ~ "StrexomeLite_hg38_liftover_100bp_padded.bed",
+    experimental_strategy == "WXS" ~ "Strexome_targets_intersect_sorted_padded100.GRCh38.withCCDS.bed",
+    experimental_strategy == "Targeted Sequencing" & cohort == "PNOC" ~ "StrexomeLite_hg38_liftover_100bp_padded.bed",
     TRUE ~ "xgen-exome-research-panel-targets_hg38_ucsc_liftover.100bp_padded.sort.merged.withCCDS.bed"
-  ))
+  )) 
 
-# annotate bed_lengths to histologies - since there are only 4 bed files - do the following
+# annotate bed_lengths to histologies 
 pbta_mutect2_samples_histology <- pbta_mutect2_samples_histology %>%
-  dplyr::mutate(bed_length = case_when(
-    bed_selected == bed_name_length_matched[1,1] ~ as.numeric(bed_name_length_matched[1,2]),
-    bed_selected == bed_name_length_matched[2,1] ~ as.numeric(bed_name_length_matched[2,2]),
-    bed_selected == bed_name_length_matched[3,1] ~ as.numeric(bed_name_length_matched[3,2]), 
-    bed_selected == bed_name_length_matched[4,1] ~ as.numeric(bed_name_length_matched[4,2])
-  ))
+  dplyr::left_join(bed_name_length_matched) %>% 
+  dplyr::mutate(Tumor_Sample_Barcode = Kids_First_Biospecimen_ID) %>%
+  dplyr::select(Tumor_Sample_Barcode, bed_selected, bed_length, short_histology, experimental_strategy, cohort)
 
-# filter pbta
+# filter pbta maf file 
 pbta_maf <- pbta_mutect2 %>%
   group_by(Tumor_Sample_Barcode) %>%
   mutate(vaf = t_alt_count/(t_alt_count+t_ref_count)) %>%
@@ -76,25 +74,27 @@ pbta_maf <- pbta_mutect2 %>%
          t_alt_count >= var_count) %>%
   dplyr::select(Hugo_Symbol, Variant_Classification, Chromosome, Start_Position, End_Position, Tumor_Sample_Barcode)
 
-pbta_tmb_combined <- data.frame()
-for (i in length(bed_file_list)){
-  bed_name = bed_file_list[i]
-  bed_length <- bed_name_length_matched %>% dplyr::filter(bed_file_list == bed_name) %>%
-    dplyr::pull(total_length_list) %>% as.numeric()
+# add bed file length and bed file selected to pbta_maf
+pbta_maf <- pbta_maf %>% left_join(pbta_mutect2_samples_histology)
+
+# calculate maf results based on matching bed files
+pbta_maf_list<-lapply(bed_file_list, function(x){
+  bed_length <- bed_name_length_matched %>% dplyr::filter(bed_selected == x) %>%
+    dplyr::pull(bed_length) %>% as.numeric()
   
-  sample_list <- pbta_mutect2_samples_histology %>% dplyr::filter(bed_selected == bed_name) %>%
-    pull(Kids_First_Biospecimen_ID) %>% unique()
-  
-  bed_file <- data.table::fread(file.path(paste0("../results/bed_files/tcga_not_in_pbta", bed_name)))
+  # read in the bed files for the next step overlaping
+  bed_file <- data.table::fread(file.path(paste0("../references/", bed_name)))
+  bed_file <- bed_file[,1:3]
   colnames(bed_file)  <- c('chr', 'start', 'end')
   
-  pbta_maf_matched <- pbta_maf %>% dplyr::filter(Tumor_Sample_Barcode %in% sample_list)
+  # filter to only the samples that use the same bed file
+  pbta_maf_matched <- pbta_maf %>% dplyr::filter(bed_selected == x)
   
   # intersect with bed file
   subject <- with(bed_file, GRanges(chr, IRanges(start = start, end = end)))
   query <- with(pbta_maf_matched, GRanges(Chromosome, IRanges(start = Start_Position, end = End_Position, names = Hugo_Symbol)))
   pbta_tmb_matched <- findOverlaps(query = query, subject = subject, type = "within")
-  pbta_tmb_matched <- data.frame(pbta_maf_matched[queryHits(pbta_tmb),], bed_file[subjectHits(pbta_tmb),])
+  pbta_tmb_matched <- data.frame(pbta_maf_matched[queryHits(pbta_tmb_matched),], bed_file[subjectHits(pbta_tmb_matched),])
   
   # mutations per sample
   pbta_tmb_matched <- pbta_tmb_matched %>%
@@ -102,23 +102,15 @@ for (i in length(bed_file_list)){
     group_by(sample_name) %>%
     mutate(num_var = n()) %>%
     mutate(tmb = num_var*1000000/bed_length) %>%
-    dplyr::select(sample_name, tmb) %>%
+    dplyr::select(sample_name, short_histology, cohort, experimental_strategy, tmb, bed_length) %>%
     unique()
-  
-  pbta_tmb_combined <- rbind(pbta_tmb_combined, pbta_tmb_matched)
-}
-    
-# add short histology, bed selected and bed length
-pbta_mutect2_samples_histology <- pbta_mutect2_samples_histology %>%
-  dplyr::select(Kids_First_Biospecimen_ID, short_histology, bed_length) %>%
-  unique()
-pbta_tmb_combined <- pbta_tmb_combined %>%
-  inner_join(pbta_mutect2_samples_histology, by = c('sample_name'= 'Kids_First_Biospecimen_ID')) %>%
-  dplyr::select(short_histology, sample_name, tmb, bed_length)
-colnames(pbta_tmb_combined) <- c("Diseasetype", "Samplename", "TMBscore", "BedLength")
+})
+
+pbta_tmb_combined <- do.call(rbind,pbta_maf_list)
+colnames(pbta_tmb_combined) <- c("Samplename", "Diseasetype", "Cohort", "ExpStrategy", "TMBscore", "BedLength")
 
 # update file with new filters
-write.table(pbta_tmb, file = file.path(ref_dir, 'PBTA-TMBscores_withdiseastype.txt'), quote = F, sep = "\t", row.names = F)
+write.table(pbta_tmb_combined, file = '../results/PBTA-TMBscores_withdiseastype.txt', quote = F, sep = "\t", row.names = F)
 
 ### plot for PNOC008-25
 # # plot code from OMPARE

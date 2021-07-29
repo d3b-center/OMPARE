@@ -20,7 +20,7 @@ merge_files <- function(nm){
 }
 
 # Read in the list of maf files and get the tumor type 
-tcga_mutect2 <- list.files(path = '../results/maf_files', pattern = '.maf.gz', recursive = TRUE, full.names = T)
+tcga_mutect2 <- list.files(path = '../../scratch/maf_files', pattern = '.maf.gz', recursive = TRUE, full.names = T)
 tcga_mutect2 <- lapply(tcga_mutect2, FUN = function(x) merge_files(x))
 tcga_mutect2 <- data.table::rbindlist(tcga_mutect2, fill = T)
 
@@ -79,11 +79,11 @@ tcga_tmb_list <- lapply(tcga_bed_list, function(x){
 tcga_tmb_combined <- do.call(rbind,tcga_tmb_list)
 
 # update file with new filters
-write.table(tcga_tmb_combined, file = file.path("../results/", 'TCGA_not_in_pbta_diseasetypes_and_samples_TMBscores.txt'), quote = F, sep = "\t", row.names = F)
+write.table(tcga_tmb_combined, file = file.path("../results/", 'TCGA_not_in_pbta_diseasetypes_and_samples_TMBscores.new.txt'), quote = F, sep = "\t", row.names = F)
 
 
 ##############################################################################
-# The following code generate the output for tcga samples that are inlucded
+# The following code generate the output for tcga samples that are included
 # in the pbta project
 ##############################################################################
 
@@ -141,4 +141,4 @@ tcga_tmb_list <- lapply(tcga_bed_list, function(x){
 tcga_tmb_combined <- do.call(rbind,tcga_tmb_list)
 
 # update file with new filters
-write.table(tcga_tmb_combined, file = file.path("../results/", 'TCGA_in_pbta_diseasetypes_and_samples_TMBscores.txt'), quote = F, sep = "\t", row.names = F)
+write.table(tcga_tmb_combined, file = file.path("../results/", 'TCGA_in_pbta_diseasetypes_and_samples_TMBscores.new.txt'), quote = F, sep = "\t", row.names = F)
