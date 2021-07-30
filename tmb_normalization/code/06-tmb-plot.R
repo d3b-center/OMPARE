@@ -86,7 +86,7 @@ TMB_list <- lapply(myMutData_list, function(x){
     geom_boxplot() + theme_bw() + scale_y_log10(breaks = c(.25, 1, 10, 100, 500)) + 
     scale_fill_manual(values = c("blue", "orange", "green")) + 
     xlab("Disease") + ylab("Mutations per MB") + 
-    theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5), aspect.ratio = 0.5) +
     geom_hline(yintercept = x, linetype = 2, color = 'gray30') +
     annotate("text", x = 35, y = max(tmbScores$TMBscore) - 50, 
              label = "- - - Patient TMB", size = 3, 

@@ -109,3 +109,19 @@ for i in `ls ../../scratch/pnoc008/*.Gh38.bed`; do
   > ../references/$(basename $i)
 done
 
+# the following deals with bed files used for PBTA samples
+
+## This command takes every BED files downloaded and uses CrossMap tool to convert hg19 coordinates to Gh38
+for i in `ls ../../scratch/pbta/*.bed`; do
+  out=$(echo $i | sed 's/.bed/.Gh38.bed/g')
+  CrossMap.py bed ../../scratch/hg19ToHg38.over.chain.gz $i $out
+done
+
+## This command uses sort and merge from bedtools to merge any overalpping BED regions
+mkdir -p ../references/pbta_bed_files
+for i in `ls ../../scratch/pbta/*.Gh38.bed`; do
+  bedtools sort -i $i \
+  | bedtools merge \
+  > ../references/pbta_bed_files/$(basename $i)
+done
+
