@@ -20,7 +20,7 @@ bed_selection <- read.delim("../results/tcga_not_in_pbta_bed_selected.tsv", head
   dplyr::rename(bed_selected_ori = bed_selected) %>% 
   dplyr::mutate(bed_selected = gsub(".bed", ".Gh38.bed", bed_selected_ori))
 
-bam_manifest <- bam_manifest %>% dplyr::left_join(bed_selection) %>% dplyr::select(-bed_selected_old) %>% 
+bam_manifest <- bam_manifest %>% dplyr::left_join(bed_selection) %>% 
   dplyr::select(-bed_selected_ori) 
 
 # Define a vector that will hold the total lengths for all the bed files in the bed file list

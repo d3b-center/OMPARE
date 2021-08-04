@@ -1,5 +1,6 @@
-# This script uses the id from the maf_manifest.tsv
-# And query the GDC API data endpoint for download
+# This script uses the id from the maf_manifest.tsv and query the GDC API data endpoint for download
+# the downlaoded the files will be in their respective folder - needed to move them out of their own
+# folder and put in `maf_files`
 
 import requests
 import json

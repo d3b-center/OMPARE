@@ -74,7 +74,7 @@ all(maf_manifest$associated_entities.entity_submitter_id %in% bam_manifest$assoc
 # check whether all bam files have maf files
 all(bam_manifest$associated_entities.entity_submitter_id %in% maf_manifest$associated_entities.entity_submitter_id)
 
-# Not all bam files have maf files and for our propuses we want to corret TMB so only interested 
+# Not all bam files have maf files and for our purposes we want to correct TMB so only interested 
 # in files with both bam (bed) and mutect2 (maf) files
 
 bam_manifest <- bam_manifest %>% 

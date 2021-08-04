@@ -37,7 +37,8 @@ done
 # exactly which one was used - for those, some of them does not have a bed file available
 # hence, manually choose the kit that actually has an associated bed file and the selected bed
 # is recorded by adding another column called "bed_selected" in the tcga_not_in_pbta_bed_file.tsv
-# and save it as "tbga_not_in_pbta_bed_selected.tsv"
+# and save it as "tbga_not_in_pbta_bed_selected.tsv". If among the multiple kits that are listed 
+# as available, the one with the highest coverage is chosen. 
 # the bed file name that will be used in the subsequent events
 
 # the following part deals with the bed files from TCGA specimens that ARE part of PBTA
@@ -56,10 +57,8 @@ do
     curl -s $i | awk '{print "chr"$0}' > ../../scratch/tcga_in_pbta/$filename
 done
 
-# note that for some of the bed files, the url listed there are not downloadable (e.g., TCGA-ACC bed files)
-# hence print out all the results in here so that we can manually either check or download the files that
-# are problematic and modify the manifest files accordingly
 
+########################################################################################
 ## Downloading chain.gz file for CrossMap command
 wget http://hgdownload.soe.ucsc.edu/goldenPath/hg19/liftOver/hg19ToHg38.over.chain.gz  -O ../../scratch/hg19ToHg38.over.chain.gz
 
@@ -94,7 +93,7 @@ done
 
 
 # the following deals with bed files used for PNOC008 samples
-
+# the bed files were provided and was put into the scratch file without having to download it anywhere
 ## This command takes every BED files downloaded and uses CrossMap tool to convert hg19 coordinates to Gh38
 for i in `ls ../../scratch/pnoc008/*.bed`; do
   out=$(echo $i | sed 's/.bed/.Gh38.bed/g')
@@ -110,7 +109,7 @@ for i in `ls ../../scratch/pnoc008/*.Gh38.bed`; do
 done
 
 # the following deals with bed files used for PBTA samples
-
+# the bed files were provided and was put into the scratch file without having to download it anywhere
 ## This command takes every BED files downloaded and uses CrossMap tool to convert hg19 coordinates to Gh38
 for i in `ls ../../scratch/pbta/*.bed`; do
   out=$(echo $i | sed 's/.bed/.Gh38.bed/g')
