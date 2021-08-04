@@ -71,3 +71,5 @@ ggplot(combined, aes(bed_selected, loss_ratio)) +
 ggplot(combined, aes(Diseasetype, loss_ratio)) + 
   geom_boxplot() + geom_hline(aes(yintercept = 1), color = "red")  + 
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+readr::write_tsv(combined, "../QC/combined_PBTA_TMBscore_comparison.tsv")

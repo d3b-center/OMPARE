@@ -93,6 +93,6 @@ TMB_list <- lapply(myMutData_list, function(x){
              fontface = 'italic', color = "gray30")
   })
 
-  ggsave("../plots/PNOC008-32-TMB-plot.png", ggplot_list[[1]])
-  ggsave("../plots/PNOC008-33-TMB-plot.png", ggplot_list[[2]])
-  ggsave("../plots/PNOC008-34-TMB-plot.png", ggplot_list[[3]])
+  ggsave("../plots/PNOC008-32-TMB-plot.png", ggplot_list[[1]], width = 10, height = 6)
+  ggsave("../plots/PNOC008-33-TMB-plot.png", ggplot_list[[2]], width = 10, height = 6)
+  ggsave("../plots/PNOC008-34-TMB-plot.png", ggplot_list[[3]], width = 10, height = 6)
