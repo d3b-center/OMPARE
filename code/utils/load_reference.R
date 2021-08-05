@@ -68,10 +68,15 @@ signatures <- readAlexandrovSignatures(file.path(ref_dir, 'signatures_probabilit
 germline_markers <- readRDS(file.path(ref_dir, 'germline_markers_list.rds'))
 
 # TMB from PBTA and TCGA
-ped_tmb <- data.table::fread(file.path(ref_dir, 'pbta-TMBscores_withdiseastype.txt'))
-adult_tmb <- data.table::fread(file.path(ref_dir, 'TCGA_diseasetypes_and_samples_TMBscores.txt'))
-tmb_bed_file <- data.table::fread(file.path(ref_dir, 'xgen-exome-research-panel-targets_hg38_ucsc_liftover.100bp_padded.sort.merged.bed'))
+pbta_tmb <- data.table::fread(file.path(ref_dir, 'tmb', 'PBTA-TMBscores_withdiseastype.txt')) %>% 
+  select(Diseasetype, Samplename, TMBscore)
+tcga_not_in_pbta_tmb <- data.table::fread(file.path(ref_dir, 'tmb', 'TCGA_not_in_pbta_diseasetypes_and_samples_TMBscores.txt')) %>%
+  select(Diseasetype, Samplename, TMBscore)
+tcga_in_pbta_tmb <- data.table::fread(file.path(ref_dir, 'tmb', 'TCGA_in_pbta_diseasetypes_and_samples_TMBscores.txt')) %>%
+  select(Diseasetype, Samplename, TMBscore)
+tmb_bed_file <- data.table::fread(file.path(ref_dir, 'tmb', 'ashion_confidential_exome_v2_2nt_pad.Gh38.bed'))
 colnames(tmb_bed_file)  <- c('chr', 'start', 'end')
+tmb_bed_file$chr <- paste0("chr", tmb_bed_file$chr)
 
 # genelist for heatmaps
 genelist_heatmap <- read.delim(file.path(ref_dir, '2020-03-30_Glioma_GeneList.txt'), stringsAsFactors = F)
