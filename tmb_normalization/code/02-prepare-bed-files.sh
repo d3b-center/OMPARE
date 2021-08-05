@@ -20,14 +20,28 @@
 # are  any overlaps in the BED regions)
 ####################################
 
+# root and results directories
+root_dir="$(git rev-parse --show-toplevel)"
+results_dir="$root_dir/tmb_normalization/results"
+ref_dir="$root_dir/tmb_normalization/references"
+mkdir -p $results_dir
+mkdir -p ref_dir
+
+# tmp directory and some sub-directories
+scratch_dir="/tmp"
+tcga_not_in_pbta_dir="$scratch_dir/tcga_not_in_pbta"
+mkdir -p $tcga_not_in_pbta_dir
+tcga_in_pbta_dir="$scratch_dir/tcga_in_pbta"
+mkdir -p $tcga_in_pbta_dir
+
 # the following part deals with the bed files from TCGA specimens that are NOT part of PBTA
-tcga_tsv='../results/tcga_not_in_pbta_bam_manifest.tsv'
+tcga_tsv="$results_dir/tcga_not_in_pbta_bam_manifest.tsv"
 sed 1d $tcga_tsv \
 | cut -f9 | tr "\|" "\n" | sort -u \
 | while read i
 do
     filename=`basename $i`
-    curl $i | awk '{print "chr"$0}' > ../../scratch/tcga_not_in_pbta/$filename
+    curl $i | awk '{print "chr"$0}' > "$tcga_not_in_pbta_dir/$filename"
 done
 
 # note that by using 'curl' - not all the bed files can be found -
@@ -48,79 +62,85 @@ done
 # Alternatively, the bed files can be downloaded from here: https://github.com/AlexsLemonade/
 # OpenPBTA-analysis/tree/master/analyses/tcga-capture-kit-investigation/results/bedfiles
 
-tcga_in_pbta_tsv='../results/tcga_in_pbta_bam_manifest.tsv'
+# TCGA in PBTA
+tcga_in_pbta_tsv="$results_dir/tcga_in_pbta_bam_manifest.tsv"
 sed 1d $tcga_in_pbta_tsv\
 | cut -f3 | tr "\|" "\n" | sort -u \
 | while read i
 do
     filename=`basename $i`
-    curl -s $i | awk '{print "chr"$0}' > ../../scratch/tcga_in_pbta/$filename
+    curl -s $i | awk '{print "chr"$0}' > "$tcga_in_pbta_dir/$filename"
 done
 
 
 ########################################################################################
 ## Downloading chain.gz file for CrossMap command
-wget http://hgdownload.soe.ucsc.edu/goldenPath/hg19/liftOver/hg19ToHg38.over.chain.gz  -O ../../scratch/hg19ToHg38.over.chain.gz
+wget http://hgdownload.soe.ucsc.edu/goldenPath/hg19/liftOver/hg19ToHg38.over.chain.gz  -O "$scratch_dir/hg19ToHg38.over.chain.gz"
 
 ## This command takes every BED files downloaded and uses CrossMap tool to convert hg19 coordinates to Gh38
-for i in `ls ../../scratch/tcga_in_pbta/*.bed`; do
+for i in `ls $tcga_in_pbta_dir/*.bed`; do
   out=$(echo $i | sed 's/.bed/.Gh38.bed/g')
-  CrossMap.py bed ../../scratch/hg19ToHg38.over.chain.gz $i $out
+  CrossMap.py bed "$scratch/hg19ToHg38.over.chain.gz" $i $out
 done
 
 ## This command uses sort and merge from bedtools to merge any overalpping BED regions
-mkdir -p ../results/bed_files/tcga_in_pbta
-for i in `ls ../../scratch/tcga_in_pbta/*.Gh38.bed`; do
+tcga_in_pbta_outputdir="$results_dir/bed_files/tcga_in_pbta"
+mkdir -p $tcga_in_pbta_outputdir
+for i in `ls $tcga_in_pbta_dir/*.Gh38.bed`; do
   bedtools sort -i $i \
   | bedtools merge \
-  > ../results/bed_files/tcga_in_pbta/$(basename $i)
+  > "$tcga_in_pbta_outputdir/$(basename $i)"
 done
 
 
 ## This command takes every BED files downloaded and uses CrossMap tool to convert hg19 coordinates to Gh38
-for i in `ls ../../scratch/tcga_not_in_pbta/*.bed`; do
+for i in `ls $tcga_not_in_pbta_dir/*.bed`; do
   out=$(echo $i | sed 's/.bed/.Gh38.bed/g')
-  CrossMap.py bed ../../scratch/hg19ToHg38.over.chain.gz $i $out
+  CrossMap.py bed "$scratch_dir/hg19ToHg38.over.chain.gz" $i $out
 done
 
 ## This command uses sort and merge from bedtools to merge any overalpping BED regions
-mkdir -p ../results/bed_files/tcga_not_in_pbta
-for i in `ls ../../scratch/tcga_not_in_pbta/*.Gh38.bed`; do
+tcga_not_in_pbta_outputdir="$results_dir/bed_files/tcga_not_in_pbta"
+mkdir -p $tcga_not_in_pbta_outputdir
+for i in `ls $tcga_not_in_pbta_dir/*.Gh38.bed`; do
   bedtools sort -i $i \
   | bedtools merge \
-  > ../results/bed_files/tcga_not_in_pbta/$(basename $i)
+  > "$tcga_not_in_pbta_outputdir/$(basename $i)"
 done
 
 
 # the following deals with bed files used for PNOC008 samples
 # the bed files were provided and was put into the scratch file without having to download it anywhere
 ## This command takes every BED files downloaded and uses CrossMap tool to convert hg19 coordinates to Gh38
-for i in `ls ../../scratch/pnoc008/*.bed`; do
+pnoc008_dir="$scratch_dir/pnoc008"
+mkdir -p $pnoc008_dir
+for i in `ls $pnoc008_dir/*.bed`; do
   out=$(echo $i | sed 's/.bed/.Gh38.bed/g')
-  CrossMap.py bed ../../scratch/hg19ToHg38.over.chain.gz $i $out
+  CrossMap.py bed "$scratch_dir/hg19ToHg38.over.chain.gz" $i $out
 done
 
 ## This command uses sort and merge from bedtools to merge any overalpping BED regions
-mkdir -p ../references
-for i in `ls ../../scratch/pnoc008/*.Gh38.bed`; do
+for i in `ls $pnoc008_dir/*.Gh38.bed`; do
   bedtools sort -i $i \
   | bedtools merge \
-  > ../references/$(basename $i)
+  > "$ref_dir/$(basename $i)"
 done
 
 # the following deals with bed files used for PBTA samples
 # the bed files were provided and was put into the scratch file without having to download it anywhere
 ## This command takes every BED files downloaded and uses CrossMap tool to convert hg19 coordinates to Gh38
-for i in `ls ../../scratch/pbta/*.bed`; do
+pbta_dir="$scratch_dir/pbta"
+mkdir -p $pbta_dir
+for i in `ls $pbta_dir/*.bed`; do
   out=$(echo $i | sed 's/.bed/.Gh38.bed/g')
-  CrossMap.py bed ../../scratch/hg19ToHg38.over.chain.gz $i $out
+  CrossMap.py bed "$scratch_dir/hg19ToHg38.over.chain.gz" $i $out
 done
 
 ## This command uses sort and merge from bedtools to merge any overalpping BED regions
-mkdir -p ../references/pbta_bed_files
-for i in `ls ../../scratch/pbta/*.Gh38.bed`; do
+mkdir -p "$ref_dir/pbta_bed_files"
+for i in `ls $pbta_dir/*.Gh38.bed`; do
   bedtools sort -i $i \
   | bedtools merge \
-  > ../references/pbta_bed_files/$(basename $i)
+  > "$ref_dir/pbta_bed_files/$(basename $i)"
 done
 
