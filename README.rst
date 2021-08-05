@@ -34,7 +34,7 @@ Prerequisites
 .. code-block:: bash
 
 	# get reference data from s3
-	aws s3 --profile saml s3://d3b-bix-dev-data-bucket/PNOC008/Reference /path-to/OMPARE/data/reference
+	aws s3 --profile saml sync s3://d3b-bix-dev-data-bucket/PNOC008/reference /path-to/OMPARE/data/reference
 
 4. Download patient-specific files from `data delivery project <https://cavatica.sbgenomics.com/u/cavatica/sd-8y99qzjj>`_:
 
@@ -457,33 +457,14 @@ Upload to data-delivery project
 	--wordir /path-to/Projects/OMPARE
 	--study 'PNOC008'
 
-Dependencies on HGG-DMG files
-=============================
-
-List of files to download and update for each patient:
-
-1. pbta-tgen-gtex-gene-expression-rsem-tpm-collapsed.combined.rds
-2. pbta-histologies-base-adapt.tsv
-3. pbta-histologies.tsv
-
-Source Location: ``s3://d3b-bix-dev-data-bucket/hgg-dmg-integration/current-data/``
-Destination: ``data/reference/pbta``
-
-
 Dependencies on specific hgg-dmg versions
 =========================================
 
-These hgg-dmg files are version dependent:
+These hgg-dmg files are ``20201202-data`` version dependent:
 
 .. code-block:: bash
 
-	data/reference/hgg-dmg-integration
-	├── 20201109-data
-	│   ├── CCDS.bed
-	│   ├── StrexomeLite_hg38_liftover_100bp_padded.bed
-	│   ├── Strexome_targets_intersect_sorted_padded100.GRCh38.withCCDS.bed
-	│   ├── target_cfg.targetcombos.txt
-	│   └── xgen-exome-research-panel-targets_hg38_ucsc_liftover.100bp_padded.sort.merged.withCCDS.bed
+	hgg-dmg-integration
 	└── 20201202-data
 	    ├── CC_based_heatmap_Distance_euclidean_finalLinkage_average_clusterAlg_KM_expct_counts_VST_cluster_and_annotation.tsv
 	    ├── pbta-hgat-dx-prog-pm-gene-counts-rsem-expected_count-uncorrected.rds
