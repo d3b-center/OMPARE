@@ -31,13 +31,6 @@ tmb_calculate <- function(tmb_bed_file = tmb_bed_file,
            t_alt_count >= var_count) %>%
     dplyr::select(Hugo_Symbol, Variant_Classification, Chromosome, Start_Position, End_Position)
   
-  
-  subject <- with(tmb_bed_file, GRanges(chr, IRanges(start = start, end = end)))
-  query <- with(myMutData, GRanges(Chromosome, IRanges(start = Start_Position, end = End_Position, names = Hugo_Symbol)))
-  res <- findOverlaps(query = query, subject = subject, type = "within")
-  res <- data.frame(myMutData[queryHits(res),], tmb_bed_file[subjectHits(res),])
-  TMB_each <- (nrow(res))*1000000/bed_length
-  
   # intersect with bed file
   subject <- with(tmb_bed_file, GRanges(chr, IRanges(start = start, end = end)))
   query <- with(myMutData, GRanges(Chromosome, IRanges(start = Start_Position, end = End_Position, names = Hugo_Symbol)))

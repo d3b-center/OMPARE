@@ -256,8 +256,9 @@ saveRDS(pnoc008_mutations, file = file.path(pnoc008.dir, "pnoc008_consensus_muta
 
 
 # cohort level tmb scores
-tmb_bed_file <- data.table::fread(file.path(ref_dir, "xgen-exome-research-panel-targets_hg38_ucsc_liftover.100bp_padded.sort.merged.bed"))
-colnames(tmb_bed_file)  <- c("chr", "start", "end")
+tmb_bed_file <- data.table::fread(file.path(ref_dir, 'tmb', 'ashion_confidential_exome_v2_2nt_pad.Gh38.bed'))
+colnames(tmb_bed_file)  <- c('chr', 'start', 'end')
+tmb_bed_file$chr <- paste0("chr", tmb_bed_file$chr)
 
 # read mutect2 for TMB profile
 pnoc008_mutect2 <- list.files(path = results_dir, pattern = 'mutect2.*.maf', recursive = TRUE, full.names = T)
@@ -267,6 +268,13 @@ pnoc008_mutect2 <- data.table::rbindlist(pnoc008_mutect2, fill = T)
 # only keep NANT sample for PNOC008-5
 pnoc008_mutect2 <- pnoc008_mutect2[grep('CHOP', pnoc008_mutect2$sample_name, invert = T),]
 pnoc008_mutect2$sample_name  <- gsub("-NANT", "", pnoc008_mutect2$sample_name)
+
+# calculate the length of the bed file
+bed_length <- 0
+for (i in 1:nrow(tmb_bed_file)) {
+  distance <- as.numeric(tmb_bed_file[i,3]) - as.numeric(tmb_bed_file[i,2])
+  bed_length <- bed_length + distance
+}
 
 # mutect2 nonsense and missense mutations
 var_class = c('Missense_Mutation', 'Nonsense_Mutation', 'Frame_Shift_Del', 'Frame_Shift_Ins',  'In_Frame_Del', 'In_Frame_Ins')
@@ -288,13 +296,13 @@ query <- with(pnoc008_mutect2, GRanges(Chromosome, IRanges(start = Start_Positio
 pnoc008_tmb <- findOverlaps(query = query, subject = subject, type = "within")
 pnoc008_tmb <- data.frame(pnoc008_mutect2[queryHits(pnoc008_tmb),], tmb_bed_file[subjectHits(pnoc008_tmb),])
   
-# return the number of filtered variants overlapping with the bed file/77.46
+# return the number of filtered variants overlapping with the bed file
 pnoc008_tmb <- pnoc008_tmb %>%
   group_by(sample_name) %>%
   mutate(num.mis.non = n()) %>%
   dplyr::select(sample_name, num.mis.non)  %>%
   unique() %>%
-  mutate(tmb = num.mis.non/77.46) %>%
+  mutate(tmb = num.mis.non*1000000/bed_length) %>%
   dplyr::select(sample_name, tmb)
 saveRDS(pnoc008_tmb, file = file.path(pnoc008.dir, "pnoc008_tmb_scores.rds"))
 
