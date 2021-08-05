@@ -74,12 +74,13 @@ Prerequisites
   
   * pbta-histologies-base-adapt.tsv
 
+Detailed instructions are given in `d3b-analysis-toolkit <https://github.com/d3b-center/d3b-analysis-toolkit>`_
+
 .. code-block:: bash
 
-	# detailed instructions in `d3b-analysis-toolkit <https://github.com/d3b-center/d3b-analysis-toolkit>`_
 	cd /path-to/d3b-analysis-toolkit/scripts
-    source .envrc
-    python select-all-pbta-histologies.py -o /path-to/OMPARE/data/reference/pbta/pbta-histologies-base-adapt.tsv 
+	source .envrc
+	python select-all-pbta-histologies.py -o /path-to/OMPARE/data/reference/pbta/pbta-histologies-base-adapt.tsv 
 
 Scripts
 =======
