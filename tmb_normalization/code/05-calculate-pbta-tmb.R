@@ -7,11 +7,16 @@ vaf_cutoff = 0.05
 var_count = 3
 tumor_depth = 25
 
+# set root directory and other directories
+root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
+results_dir <- file.path(root_dir, 'tmb_normalization', 'results')
+ref_dir <- file.path(root_dir, 'tmb_normalization', 'references')
+
 # read in the PBTA mutect2 file 
-pbta_mutect2 <- data.table::fread('../references/pbta-snv-mutect2.vep.maf.gz')
+pbta_mutect2 <- data.table::fread(file.path(ref_dir, 'pbta-snv-mutect2.vep.maf.gz'))
 
 # read in the histologies file
-histologies <- read.delim("../references/pbta-histologies.tsv", header = T, sep = "\t", stringsAsFactors = F)
+histologies <- read.delim(file.path(ref_dir, "pbta-histologies.tsv"), header = T, sep = "\t", stringsAsFactors = F)
 
 # Take a look at all the samples that are in there 
 pbta_mutect2_samples <- pbta_mutect2$Tumor_Sample_Barcode %>% unique()
@@ -19,6 +24,7 @@ pbta_mutect2_samples <- pbta_mutect2$Tumor_Sample_Barcode %>% unique()
 # Filter the histologies file to contain only the specimens that have mutect2 results
 pbta_mutect2_samples_histology <- histologies %>% 
   dplyr::filter(Kids_First_Biospecimen_ID %in% pbta_mutect2_samples)
+
 # See what are the cohorts and experimental strategy
 pbta_mutect2_samples_histology$cohort %>% unique()
 pbta_mutect2_samples_histology$experimental_strategy %>% unique()
@@ -72,7 +78,7 @@ pbta_mutect2_samples_histology$experimental_strategy %>% unique()
 ##########################################################################################
 
 # read in the default bed file for all PBTA samples
-pbta_bed <- read.delim("../references/pbta_bed_files/xgen-exome-research-panel-targets_hg38_ucsc_liftover.100bp_padded.sort.merged.bed")
+pbta_bed <- read.delim(file.path(ref_dir, "pbta_bed_files", "xgen-exome-research-panel-targets_hg38_ucsc_liftover.100bp_padded.sort.merged.bed"))
 pbta_bed <- pbta_bed[,1:3]
 colnames(pbta_bed)  <- c('chr', 'start', 'end')
 
@@ -121,5 +127,5 @@ pbta_tmb <- pbta_tmb %>%
 colnames(pbta_tmb) <- c("Samplename", "Diseasetype", "Cohort", "ExpStrategy", "TMBscore", "BedLength")
 
 # update file with new filters
-write.table(pbta_tmb, file = '../results/PBTA-TMBscores_withdiseastype.txt', quote = F, sep = "\t", row.names = F)
+write.table(pbta_tmb, file = file.path(results_dir, 'PBTA-TMBscores_withdiseastype.txt'), quote = F, sep = "\t", row.names = F)
 
