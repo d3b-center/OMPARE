@@ -4,8 +4,8 @@
 Omics Patient Report
 ********************
 
-:authors: Komal S Rathi
-:contact: rathik@email.chop.edu
+:authors: Komal S. Rathi, Adam Kraya, Run Jin
+:contact: RATHIK@chop.edu, KRAYAA@chop.edu
 :organization: D3B, CHOP
 :status: This is "work in progress"
 :date: |date|
@@ -17,34 +17,69 @@ Omics Patient Report
 Prerequisites
 =============
 
-1. Clone the repository.
+1. Clone the OMPARE repository.
 
-2. Install R Packages:
+2. Install R packages:
 
 .. code-block:: bash
 
 	# install packages
+	cd /path-to/OMPARE
 	Rscript code/utils/install_pkgs.R
 
 	# NOTE: ggnetwork v0.5.1 is required
 
-3. Download reference Data:
+3. Download reference data:
    
 .. code-block:: bash
 
 	# get reference data from s3
-	aws s3 --profile saml s3://d3b-bix-dev-data-bucket/PNOC008/Reference /path/to/OMPARE/data/reference
+	aws s3 --profile saml s3://d3b-bix-dev-data-bucket/PNOC008/Reference /path-to/OMPARE/data/reference
 
-4. Download input files from data delivery project:
+4. Download patient-specific files from `data delivery project <https://cavatica.sbgenomics.com/u/cavatica/sd-8y99qzjj>`_:
 
-* Copy Number: ``*.CNVs.p.value.txt``
-* Copy Number: ``*.controlfreec.ratio.txt``
-* Copy Numberr: ``*.gainloss.txt``
-* Expression: ``*.genes.results``
-* Fusions: ``*.arriba.fusions.tsv``
-* Fusions: ``*.STAR.fusion_predictions.abridged.coding_effect.tsv``
-* Somatic Variants: ``*_somatic.vep.maf``
-* Germline Variants: ``*.gatk.PASS.vcf.gz.hg38_multianno.txt.gz``
+* Copy Number: 
+
+  * ``{uuid}.CNVs.p.value.txt``
+  * ``{uuid}.controlfreec.info.txt``
+  * ``{uuid}.controlfreec.ratio.txt``
+  * ``{uuid}.gainloss.txt``
+
+* Expression:
+
+  * ``{uuid}.genes.results``
+
+* Fusions: 
+
+  * ``{uuid}.arriba.fusions.tsv``
+  * ``{uuid}.STAR.fusion_predictions.abridged.coding_effect.tsv``
+
+* Somatic Variants: 
+ 
+  * ``{uuid}.{lancet, mutect2, strelka2, vardict}_somatic.norm.annot.protected.maf``
+  * ``{uuid}.consensus_somatic.protected.maf``
+
+* Germline Variants: 
+
+  * ``{uuid}.gatk.PASS.vcf.gz.hg38_multianno.txt.gz``
+
+5. Download the following clinical and sample information files and add data manually to ``data/reference/manifest/manifest.xlsx`` 
+   
+* Files from `Kids First DRC <https://data-tracker.kidsfirstdrc.org/study/SD_8Y99QZJJ/documents>`_
+
+  * PNOC008 Clinical Manifest
+  * PNOC008 Sample Manifest
+
+* Files from ADAPT (this part has been automated using ``code/update_pbta.R``): 
+  
+  * pbta-histologies-base-adapt.tsv
+
+.. code-block:: bash
+
+	# detailed instructions in `d3b-analysis-toolkit <https://github.com/d3b-center/d3b-analysis-toolkit>`_
+	cd /path-to/d3b-analysis-toolkit/scripts
+    source .envrc
+    python select-all-pbta-histologies.py -o /path-to/OMPARE/data/reference/pbta/pbta-histologies-base-adapt.tsv 
 
 Scripts
 =======
@@ -76,11 +111,11 @@ Master script
 	-c CLIN_FILE, --clin_file=CLIN_FILE
 		PNOC008 Manifest file (.xlsx)
 
-	# Example run for PNOC008-21
+	# Example for patient PNOC008-21
 	Rscript run_OMPARE.R \
 	--patient 21 \
-	--clin_file data/reference/Manifest/PNOC008_Manifest.xlsx \
-	--sourcedir /path/to/downloaded_files_from_cavatica
+	--clin_file /path-to/OMPARE/data/reference/manifest/pnoc008_manifest.xlsx \
+	--sourcedir /path-to/downloaded_files_from_cavatica
 
 
 Create project directory
@@ -97,15 +132,15 @@ Create project directory
 			Source directory containing all files from data delivery project
 
 		-d DESTDIR, --destdir=DESTDIR
-			Destination directory. Should be /path/to/OMPARE/results/PNOC008-21/ for Patient 21
+			Destination directory. Should be /path-to/OMPARE/results/PNOC008-21/ for Patient 21
 
 		-h, --help
 			Show this help message and exit
 
-	# Example for Patient PNOC008-21
+	# Example for patient PNOC008-21
 	Rscript code/create_project.R \
-	--sourcedir /path/to/source/PNOC008-21-cavatica-files \
-	--destdir /path/to/OMPARE/results/PNOC008-21/
+	--sourcedir /path-to/source/PNOC008-21-cavatica-files \
+	--destdir /path-to/OMPARE/results/PNOC008-21/
 
 Create clinical file
 --------------------
@@ -126,11 +161,11 @@ Create clinical file
 		-p PATIENT, --patient=PATIENT
 			Patient identifier for PNOC008. e.g. PNOC008-1, PNOC008-10 etc
 
-	# Example for Patient PNOC008-21
+	# Example for patient PNOC008-21
 	Rscript code/create_clinfile.R \
-	--sheet data/reference/Manifest/PNOC008_Manifest.xlsx \
+	--sheet /path-to/OMPARE/data/reference/manifest/pnoc008_manifest.xlsx \
 	--patient PNOC008-21 \
-	--dir /path/to/OMPARE/results/PNOC008-21
+	--dir /path-to/OMPARE/results/PNOC008-21
 
 NOTE: The above steps will create a directory structure for the patient of interest: 
 
@@ -142,51 +177,24 @@ NOTE: The above steps will create a directory structure for the patient of inter
 	├── clinical
 	│   └── patient_report.txt
 	├── copy-number-variations
-	│   ├── uuid.controlfreec.CNVs.p.value.txt
-	│   └── uuid.controlfreec.ratio.txt
+	│   ├── {uuid}.controlfreec.CNVs.p.value.txt
+	│   ├── {uuid}.controlfreec.info.txt
+	│   ├── {uuid}.controlfreec.ratio.txt
+	│   └── {uuid}.gainloss.txt
 	├── gene-expressions
-	│   └── uuid.rsem.genes.results.gz
+	│   └── {uuid}.rsem.genes.results.gz
 	├── gene-fusions
-	│   ├── uuid.STAR.fusion_predictions.abridged.coding_effect.tsv
-	│   └── uuid.arriba.fusions.tsv
+	│   ├── {uuid}.STAR.fusion_predictions.abridged.coding_effect.tsv
+	│   └── {uuid}.arriba.fusions.tsv
 	├── output
 	├── reports
 	└── simple-variants
-	    ├── uuid.lancet_somatic.vep.maf
-	    ├── uuid.mutect2_somatic.vep.maf
-	    ├── uuid.strelka2_somatic.vep.maf
-	    ├── uuid.vardict_somatic.vep.maf
-	    ├── uuid.consensus_somatic.vep.maf
-	    └── uuid.gatk.PASS.vcf.gz.hg38_multianno.txt.gz
-
-Update GSEA enrichment:
------------------------
-
-**code/patient_level_analyses/gsea_enrichment.R**: this script will update GSEA enrichment output with each new patient data.
-   
-.. code-block:: bash
-
-	Rscript code/patient_level_analyses/gsea_enrichment.R
-
-	# Running the script will update the following files:
-
-	# reactome msigdb
-	data/reference/gsea
-	├── pbta_vs_gtex_brain.rds
-	├── pbta_vs_pbta.rds
-	├── pbta_vs_pbta_hgg.rds
-	├── pnoc008_vs_gtex_brain.rds
-	├── pnoc008_vs_pbta.rds
-	├── pnoc008_vs_pbta_hgg.rds
-	├── pnoc008_vs_tcga_gbm.rds
-	├── tcga_gbm_vs_gtex_brain.rds
-	└── tcga_gbm_vs_tcga_gbm.rds
-
-	# dsigdb
-	data/reference/dsigdb
-	├── pnoc008_vs_gtex_brain.rds
-	├── pnoc008_vs_pbta.rds
-	└── pnoc008_vs_pbta_hgg.rds
+	    ├── {uuid}.lancet_somatic.norm.annot.protected.maf
+	    ├── {uuid}.mutect2_somatic.norm.annot.protected.maf
+	    ├── {uuid}.strelka2_somatic.norm.annot.protected.maf
+	    ├── {uuid}.vardict_somatic.norm.annot.protected.maf
+	    ├── {uuid}.consensus_somatic.protected.maf
+	    └── {uuid}.gatk.PASS.vcf.gz.hg38_multianno.txt.gz
 
 
 Update PNOC008 data matrices:
@@ -210,6 +218,45 @@ Update PNOC008 data matrices:
 	├── pnoc008_tpm_matrix.rds
 	└── pnoc008_vs_gtex_brain_degs.rds
 
+
+Update GSEA enrichment:
+-----------------------
+
+**code/patient_level_analyses/gsea_enrichment.R**: this script will update GSEA enrichment output with each new patient data.
+   
+.. code-block:: bash
+
+	Rscript code/patient_level_analyses/gsea_enrichment.R --help
+
+	Options:
+	-p PATIENT, --patient=PATIENT
+		Patient identifier for e.g. PNOC008-1, PNOC008-10 etc
+
+	# Example for patient PNOC008-21
+	Rscript code/patient_level_analyses/gsea_enrichment.R \
+	--patient PNOC008-21 \
+
+	# Running the script will update the following files:
+
+	# reactome msigdb
+	data/reference/gsea
+	├── pbta_vs_gtex_brain.rds
+	├── pbta_vs_pbta.rds
+	├── pbta_vs_pbta_hgg.rds
+	├── pnoc008_vs_gtex_brain.rds
+	├── pnoc008_vs_pbta.rds
+	├── pnoc008_vs_pbta_hgg.rds
+	├── pnoc008_vs_tcga_gbm.rds
+	├── tcga_gbm_vs_gtex_brain.rds
+	└── tcga_gbm_vs_tcga_gbm.rds
+
+	# dsigdb
+	data/reference/dsigdb
+	├── pnoc008_vs_gtex_brain.rds
+	├── pnoc008_vs_pbta.rds
+	└── pnoc008_vs_pbta_hgg.rds
+
+
 Excel file with differential results:
 -------------------------------------
 
@@ -229,9 +276,9 @@ Excel file with differential results:
 		-t TYPE, --type=TYPE
 			text or excel
 
-	# Example for Patient PNOC008-21
+	# Example for patient PNOC008-21
 	Rscript code/enrichment_output.R \
-	--input /path/to/OMPARE/results/PNOC008-21 \
+	--input /path-to/OMPARE/results/PNOC008-21 \
 	--output PNOC008-21_summary \
 	--type text
 
@@ -246,7 +293,6 @@ HTML reports:
 	# fusion_method is the fusion method. Allowed values: star, arriba, both or not specified. (Optional) 
 	# set_title is the title for the report. (Optional)
 	# snv_pattern is one of the six values for simple variants: lancet, mutect2, strelka2, vardict, consensus, all (all four callers together)
-	# tmb (Tumor mutational burden) is set to 77.46.
 	for(i in 1:length(callers)) {
     	output_dir <- file.path(topDir, 'Reports')
     	output_file <- paste0(patient, '_', callers[i], '.html')
@@ -255,8 +301,7 @@ HTML reports:
     		params = list(topDir = topDir,
     			fusion_method = 'arriba',
         		set_title = set_title,
-        		snv_caller = callers[i],
-        		tmb = 77.46), 
+        		snv_caller = callers[i]), 
         	output_dir = output_dir, 
 			intermediates_dir = output_dir,
 			output_file = output_file)
@@ -402,10 +447,14 @@ Upload to data-delivery project
 	-w WORKDIR, --workdir=WORKDIR
 		OMPARE working directory
 
+	-s STUDY, --study=STUDY
+		PNOC008 or CBTN
+
 	# Example run for PNOC008-21
 	Rscript upload_reports.R \
 	--patient 21 \
-	--wordir /path/to/Projects/OMPARE
+	--wordir /path-to/Projects/OMPARE
+	--study 'PNOC008'
 
 Dependencies on HGG-DMG files
 =============================
@@ -427,7 +476,7 @@ These hgg-dmg files are version dependent:
 
 .. code-block:: bash
 
-	hgg-dmg-integration
+	data/reference/hgg-dmg-integration
 	├── 20201109-data
 	│   ├── CCDS.bed
 	│   ├── StrexomeLite_hg38_liftover_100bp_padded.bed
@@ -438,3 +487,4 @@ These hgg-dmg files are version dependent:
 	    ├── CC_based_heatmap_Distance_euclidean_finalLinkage_average_clusterAlg_KM_expct_counts_VST_cluster_and_annotation.tsv
 	    ├── pbta-hgat-dx-prog-pm-gene-counts-rsem-expected_count-uncorrected.rds
 	    └── pbta-histologies.tsv
+
