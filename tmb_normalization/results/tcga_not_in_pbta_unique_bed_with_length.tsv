@@ -1,0 +1,14 @@
+bed_selected	bed_length
+cancer_2000gene_shift170.targetIntervals.Gh38.bed	4427472
+SeqCap_EZ_Exome_v2.Gh38.bed	46987297
+SeqCap_EZ_Exome_v3_hg19_capture_targets.Gh38.bed	64030068
+SeqCap_EZ_Exome_v3_hg19_primary_targets.Gh38.bed	63377915
+SureSelect_Human_All_Exon_V2_Regions.Gh38.bed	46062437
+SureSelect_Human_All_Exon_V5_Regions.Gh38.bed	50352914
+tcga_6k_genes.targetIntervals.Gh38.bed	12160740
+VCRome_2_1_hg19_primary_targets.Gh38.bed	37206286
+whole_exome_agilent_1.1_refseq_plus_3_boosters.targetIntervals.Gh38.bed	32912291
+whole_exome_agilent_designed_120.targetIntervals.Gh38.bed	28609454
+whole_exome_agilent_plus_tcga_6k.targetIntervals.Gh38.bed	28839486
+whole_exome_refseq_coding.targetIntervals.Gh38.bed	32647172
+whole_exome_unique_gc_sorted.targetIntervals.Gh38.bed	32647172
