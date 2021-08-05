@@ -1,5 +1,3 @@
-BiocManager::install("GenomicDataCommons")
-
 suppressPackageStartupMessages({
   library(TCGAutils)
   library(jsonlite)
@@ -7,6 +5,7 @@ suppressPackageStartupMessages({
   library(downloader)
   library(GenomicDataCommons) # use GenomicDataCommons package to generate manifest file
   library(magrittr)
+  library(dplyr)
 })
 
 ## View available data through GenomicDataCommons
@@ -14,25 +13,33 @@ available_values('files','cases.project.project_id')
 available_values('files','experimental_strategy')
 available_values('files','data_format')
 
+# set root directory and other directories
+root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
+ref_dir <- file.path(root_dir, 'data', 'reference')
+results_dir <- file.path(root_dir, 'tmb_normalization', 'results')
+
 # read in the previous TCGA tumor score file to find out the TCGA projects used:
-tcga_previous <- read.delim("../references/TCGA_diseasetypes_and_samples_TMBscores.txt", header = T, sep = "\t") %>%
+tcga_previous <- read.delim(file.path(ref_dir, "TCGA_diseasetypes_and_samples_TMBscores.txt"), header = T, sep = "\t") %>%
   dplyr::mutate(tcga_project_id = paste0("TCGA-", Diseasetype))
-tcga_project_list <- tcga_previous %>% dplyr::pull(tcga_project_id) %>% unique()
+tcga_project_list <- tcga_previous %>% 
+  dplyr::pull(tcga_project_id) %>% 
+  unique()
 
 ## Define fQuery_maf for subsequent query from GDC portal 
-fQuery_maf = files()
+fQuery_maf <- files()
 default_fields(fQuery_maf)
 
 ## Query GDC for MAF files using experimental strategy, project id and data format
-fQuery.maf.files = GenomicDataCommons::filter(fQuery_maf,~ cases.project.project_id == tcga_project_list &
+fQuery.maf.files <- GenomicDataCommons::filter(fQuery_maf,~ cases.project.project_id == tcga_project_list &
                                               experimental_strategy %in% c("WXS", "WGS", "Targeted Sequencing") &
                                               data_format == "MAF") %>%
   GenomicDataCommons::manifest()
 
 ## Subset it to mutect file containing somatic maf files 
-fQuery_maf_list <- fQuery.maf.files %>% dplyr::filter(grepl("mutect", filename)) %>% 
+fQuery_maf_list <- fQuery.maf.files %>% 
+  dplyr::filter(grepl("mutect", filename)) %>% 
   dplyr::filter(grepl("somatic.maf.gz", filename)) %>%
-  pull(id)
+  dplyr::pull(id)
 
 # Find the UUID to barcode for all the specimens in the file 
 maf_manifest_list <- lapply(fQuery_maf_list, function(x){
@@ -44,6 +51,7 @@ maf_manifest <- do.call(rbind, maf_manifest_list)
 
 # Decipher the tumor sample barcode 
 maf_manifest <- cbind(maf_manifest, TCGAutils::TCGAbiospec(maf_manifest$associated_entities.entity_submitter_id))
+
 # Get the disease type from the name of the maf file
 maf_manifest <- maf_manifest %>% dplyr::mutate(disease_type = gsub(".*TCGA[.]", "", filename)) %>%
   dplyr::mutate(disease_type = gsub("[.].*", "",disease_type))
@@ -59,7 +67,8 @@ fQuery.bam.files = GenomicDataCommons::filter(fQuery_bam,~ cases.project.project
   GenomicDataCommons::manifest()
 
 # Find the list of files 
-fQuery_bam_list<-fQuery.bam.files %>% dplyr::pull(id)
+fQuery_bam_list<-fQuery.bam.files %>% 
+  dplyr::pull(id)
 
 # Find the UUID to barcode for all the specimens in the file 
 bam_manifest_list <- lapply(fQuery_bam_list, function(x){
@@ -79,7 +88,9 @@ all(bam_manifest$associated_entities.entity_submitter_id %in% maf_manifest$assoc
 
 bam_manifest <- bam_manifest %>% 
   dplyr::filter(bam_manifest$associated_entities.entity_submitter_id %in% maf_manifest$associated_entities.entity_submitter_id)
-bam_manifest_list<-bam_manifest %>% pull(id) %>% unique()
+bam_manifest_list<-bam_manifest %>% 
+  pull(id) %>% 
+  unique()
 
 ## curl information about target capture kits
 res <- lapply(bam_manifest_list, function(x) {
@@ -96,16 +107,19 @@ request_list <- do.call(rbind, request_list)
 bam_manifest <- cbind(bam_manifest, request_list)
 
 # there are also files that we do not know which bed files are used so we will just go ahead and delete those
-bam_manifest <- bam_manifest %>% dplyr::filter(!is.na(target_capture_kit_target_region))
+bam_manifest <- bam_manifest %>% 
+  dplyr::filter(!is.na(target_capture_kit_target_region))
 maf_manifest <- maf_manifest %>% 
   dplyr::filter(maf_manifest$associated_entities.entity_submitter_id %in% bam_manifest$associated_entities.entity_submitter_id)
 
 # read out the unique bed files that are used
-unique_bed_files <- bam_manifest %>% dplyr::select(target_capture_kit_name,target_capture_kit_target_region) %>% 
-  unique() %>% data.frame()
+unique_bed_files <- bam_manifest %>% 
+  dplyr::select(target_capture_kit_name,target_capture_kit_target_region) %>% 
+  unique() %>% 
+  data.frame()
 
 # write out all the tsv files for the next steps
-readr::write_tsv(bam_manifest, "../results/tcga_not_in_pbta_bam_manifest.tsv")
-readr::write_tsv(maf_manifest, "../results/tcga_not_in_pbta_maf_manifest.tsv")
-readr::write_tsv(unique_bed_files, "../results/tcga_not_in_pbta_unique_bed_file.tsv")
+readr::write_tsv(bam_manifest, file.path(results_dir, "tcga_not_in_pbta_bam_manifest.tsv"))
+readr::write_tsv(maf_manifest, file.path(results_dir, "tcga_not_in_pbta_maf_manifest.tsv"))
+readr::write_tsv(unique_bed_files, file.path(results_dir, "tcga_not_in_pbta_unique_bed_file.tsv"))
 
