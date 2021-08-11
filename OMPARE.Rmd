@@ -504,40 +504,40 @@ Row
 
 ### Genome CNA View
 
-```{r plot_cnv, fig.width = 20}
-fname <- file.path(topDir, "output", "cnv_plot.png")
+```{r plot_cnv, echo=FALSE, out.width = '100%', out.height='100%'}
+fname <- list.files(path = file.path(topDir, "copy-number-variations"), pattern = ".pdf", full.names = T)
 if(file.exists(fname)){
- knitr::include_graphics(fname)
+ knitr::include_graphics(fname) 
 }
 ```
 
-PHGG: Expression and CNV Heatmap  (P8) {data-navmenu="Heatmaps"}
-===
-Row {data-height=700}
----
+<!-- PHGG: Expression and CNV Heatmap  (P8) {data-navmenu="Heatmaps"} -->
+<!-- === -->
+<!-- Row {data-height=700} -->
+<!-- --- -->
 
-### Expression-CNV Heatmap (PHGG)
+<!-- ### Expression-CNV Heatmap (PHGG) -->
 
-```{r heatmap_phgg, echo=FALSE}
-fname <- file.path(topDir, "output", "complexheatmap_phgg.png")
-if(file.exists(fname)){
-  knitr::include_graphics(fname)  
-}
-```
+<!-- ```{r heatmap_phgg, echo=FALSE} -->
+<!-- fname <- file.path(topDir, "output", "complexheatmap_phgg.png") -->
+<!-- if(file.exists(fname)){ -->
+<!--   knitr::include_graphics(fname)   -->
+<!-- } -->
+<!-- ``` -->
 
-CGS: Expression and CNV Heatmap (P8) {data-navmenu="Heatmaps"}
-===
-Row
----
+<!-- CGS: Expression and CNV Heatmap (P8) {data-navmenu="Heatmaps"} -->
+<!-- === -->
+<!-- Row -->
+<!-- --- -->
 
-### Expression-CNV Heatmap (CGS)
+<!-- ### Expression-CNV Heatmap (CGS) -->
 
-```{r heatmap_cgs, echo=FALSE}
-fname <- file.path(topDir, "output", "complexheatmap_cgs.png")
-if(file.exists(fname)){
-  knitr::include_graphics(fname)
-}
-```
+<!-- ```{r heatmap_cgs, echo=FALSE} -->
+<!-- fname <- file.path(topDir, "output", "complexheatmap_cgs.png") -->
+<!-- if(file.exists(fname)){ -->
+<!--   knitr::include_graphics(fname) -->
+<!-- } -->
+<!-- ``` -->
 
 Oncogrid (HGG-DMG)  (P9)
 ===

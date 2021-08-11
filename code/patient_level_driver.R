@@ -193,11 +193,11 @@ if(!file.exists(fname)){
 }
 
 ## page 8 
-fname_cgs <- file.path(topDir, "output", "complexheatmap_cgs.png")
-fname_phgg <- file.path(topDir, "output", "complexheatmap_phgg.png")
-if(!file.exists(fname_cgs) | !file.exists(fname_phgg)){
-  source(file.path(patient_level_analyses, 'p8_cnv_exp_heatmap.R'))
-}
+# fname_cgs <- file.path(topDir, "output", "complexheatmap_cgs.png")
+# fname_phgg <- file.path(topDir, "output", "complexheatmap_phgg.png")
+# if(!file.exists(fname_cgs) | !file.exists(fname_phgg)){
+#   source(file.path(patient_level_analyses, 'p8_cnv_exp_heatmap.R'))
+# }
 
 ## page 9
 fname <- file.path(topDir, "output", "complexheatmap_oncogrid.png")
