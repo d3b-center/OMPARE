@@ -151,7 +151,7 @@ pnoc008_clinical <- pnoc008_clinical %>%
          sex = Gender,
          library_name = RNA_library,
          cohort_participant_id = Research.ID) %>%
-  dplyr::select(subjectID, tumorType, tumorLocation, ethnicity, sex, age_diagnosis_days, age_collection_days, study_id, library_name, cohort_participant_id) %>%
+  dplyr::select(subjectID, tumorType, short_histology, broad_histology, tumorLocation, ethnicity, sex, age_diagnosis_days, age_collection_days, study_id, library_name, cohort_participant_id) %>%
   as.data.frame()
 
 # add other identifiers from PBTA base histology

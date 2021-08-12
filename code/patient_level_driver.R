@@ -182,8 +182,6 @@ if(file.exists(fname)){
 }
 
 ## page 7
-# circos plot - changes with snv caller
-# fname <- file.path(topDir, "output", "circos_plot.png")
 source(file.path(patient_level_analyses, 'p7_circos_plot.R'))
 
 # cnv plot
@@ -200,7 +198,7 @@ if(!file.exists(fname)){
 # }
 
 ## page 9
-fname <- file.path(topDir, "output", "complexheatmap_oncogrid.png")
+fname <- file.path(topDir, "output", "complexheatmap_oncogrid.pdf")
 if(!file.exists(fname)){
   source(file.path(patient_level_analyses, 'p9_oncogrid.R'))
 }
@@ -236,16 +234,14 @@ if(file.exists(test_file)){
 }
 
 # dge density plots
-fname <- file.path(topDir, 'output', 'drug_dge_density_plots', 'top_drug_dge_density_plots.png')
+fname <- file.path(topDir, 'output', 'drug_dge_density_plots', 'top_drug_dge_density_plots.pdf')
 if(!file.exists(fname)){
   source(file.path(patient_level_analyses, 'p10_drug_dge_density_plots.R'))
 }
 
 # drug pathways
-fname <- file.path(topDir, "output", "drug_pathways_barplot.rds")
-if(file.exists(fname)){
-  drug_pathways_barplot <- readRDS(fname)
-} else {
+fname <- file.path(topDir, "output", "drug_pathways_barplot.pdf")
+if(!file.exists(fname)){
   source(file.path(patient_level_analyses, 'p10_drug_pathways.R'))
 }
 

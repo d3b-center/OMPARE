@@ -55,7 +55,9 @@ drug_barplots <- function(dat, xlab, ylab, top = 20, fill_var = NULL, title){
   
   dat[,xlab] <- factor(dat[,xlab], levels = unique(dat[,xlab]))
   if(!is.null(fill_var)){
-    p <- ggplot(dat, aes(reorder(get(xlab), -get(ylab)), y = (-1)*log10(get(ylab)), fill = get(fill_var))) + 
+    p <- ggplot(dat, aes(x = reorder(get(xlab), -get(ylab)), 
+                         y = (-1)*log10(get(ylab)), 
+                         fill = get(fill_var))) + 
       geom_bar(stat="identity") + coord_flip() + theme_bw() +
       xlab("") + 
       ylab("-log10 Adj. P-Value") + 
@@ -63,13 +65,16 @@ drug_barplots <- function(dat, xlab, ylab, top = 20, fill_var = NULL, title){
       theme(plot.margin = unit(c(1, 1, 1, 1), "cm")) + 
       ggtitle(title)
   } else {
-    p <- ggplot(dat, aes(get(xlab), y = (-1)*log10(get(ylab)))) + 
+    p <- ggplot(dat, aes(x = get(xlab), 
+                         y = (-1)*log10(get(ylab)),
+                         fill = (-1)*log10(get(ylab)))) + 
       geom_bar(stat="identity") + coord_flip() + theme_bw() +
       xlab("") + 
       ylab("-log10 Adj. P-Value") + 
       theme(plot.margin = unit(c(1, 1, 1, 1), "cm")) + 
       ggtitle(title) +
-      scale_x_discrete(labels = function(x) str_wrap(x, width = 50))
+      scale_x_discrete(labels = function(x) str_wrap(x, width = 50)) +
+      guides(fill = "none")
   }
   
   return(p)
@@ -163,7 +168,10 @@ lincs_connectivity <- function(input, num_features = 2000, num_sets = 25, method
                         xlab = "Description", ylab = "p.adjust",
                         top = 20, fill_var = NULL,
                         title = "DSEA GO MF")
-    p <- plot_grid(p1, p2, p3, ncol = 3, nrow = 1, axis = "lr", align = "h")
+    title <- cowplot::ggdraw() + draw_label(comparison, fontface = 'bold')
+    p <- cowplot::plot_grid(title, 
+              plot_grid(p1, p2, p3, ncol = 3, axis = "lr", align = "h"), 
+              ncol = 1, rel_heights = c(0.05, 1))
   } else {
     p <- ggplot()
   }

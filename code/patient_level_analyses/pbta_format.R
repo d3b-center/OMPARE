@@ -55,7 +55,8 @@ pbta_pnoc008_nn_table <- pbta_pnoc008_nn_table[grep(sampleInfo$subjectID, pbta_p
 # kaplan meier survival curves
 # subset to top 20 HGAT only 
 pbta_hgat_pnoc008_clinical <- pbta_pnoc008_clinical %>% 
-  filter(short_histology == "HGAT")
+  filter(short_histology == "HGAT",
+         study_id == "PBTA")
 
 # subset expression
 pbta_hgat_pnoc008_expr_corrected <- pbta_pnoc008_expr_corrected %>%

@@ -191,7 +191,9 @@ for(i in 1:length(modules)){
   tmp <- ora_dat %>%
     filter(Module %in% modules[i])
   title <- paste("Module: ", unique(tmp$Module), "| Direction: ", unique(tmp$direction))
-  p[[i]] <- ggplot(tmp, aes(x = reorder(ID, -p.adjust), y = -log10(p.adjust), fill = -log10(p.adjust))) +
+  p[[i]] <- ggplot(tmp, aes(x = reorder(ID, -p.adjust), 
+                            y = -log10(p.adjust), 
+                            fill = -log10(p.adjust))) +
     geom_bar(stat = "identity") +
     coord_flip() +
     xlab('') + ylab('−log10(adjusted p−value)') + ggtitle(title) +

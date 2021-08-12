@@ -166,8 +166,8 @@ dge_density_plots <- function(topDir, sample_info, tpm_data){
     .$Gene %>%
     unique
   top_genes <- plist[top_genes]
-  ggsave(wrap_plots(top_genes, ncol = 3), 
-         filename = file.path(dir, 'top_drug_dge_density_plots.png'), 
-         width = 28, height = 14, device = 'png')
+  ggsave(plot = wrap_plots(top_genes, ncol = 1), 
+         filename = file.path(dir, 'top_drug_dge_density_plots.pdf'), 
+         width = 10, height = 20, device = 'pdf')
 }
 

@@ -83,7 +83,7 @@ Row {data-height=500}
     
 ```{r key_findings}
 if(nrow(key_clinical_findings_output) >= 1){
-  view_dt(key_clinical_findings_output)
+  view_dt_minimal(key_clinical_findings_output)
 }
 ```
 
@@ -94,10 +94,13 @@ Row {data-height=300}
     
 ```{r disease_specific_info}
 if(nrow(disease_specific_information_output) >= 1){
-  x2 = kable(disease_specific_information_output, format="html") %>% 
-    kable_styling(bootstrap_options = c("bordered", "condensed", "responsive")) %>% 
-    column_spec(c(1), bold=T, border_left = "2px solid gray", border_right = "2px solid gray")
-  gsub("<thead>.*</thead>", "", x2)
+  DT::datatable(disease_specific_information_output, 
+                extensions = 'FixedColumns',
+                class = 'cell-border stripe',
+                options = list(dom = 't',
+                               scrollX = TRUE,
+                               fixedColumns = TRUE), 
+                rownames = F, colnames = c("Type", "Value"))
 }
 ```
 
@@ -105,9 +108,13 @@ if(nrow(disease_specific_information_output) >= 1){
 
 ```{r filtered_germline_vars}
 if(nrow(filtered_germ_vars) >= 1){
-  kable(filtered_germ_vars, format="html") %>%
-    kable_styling(bootstrap_options = c("bordered", "condensed", "responsive")) %>%
-    column_spec(c(1), bold=T, border_left = "2px solid gray", border_right = "2px solid gray")
+  DT::datatable(filtered_germ_vars, 
+                extensions = 'FixedColumns',
+                class = 'cell-border stripe',
+                options = list(dom = 't',
+                               scrollX = TRUE,
+                               fixedColumns = TRUE), 
+                rownames = F)
 }
 ```
 
@@ -115,10 +122,13 @@ if(nrow(filtered_germ_vars) >= 1){
     
 ```{r genomic_summary}
 if(nrow(genomic_summary_output) >= 1){
-  x2 = kable(genomic_summary_output, format="html") %>%
-    kable_styling(bootstrap_options = c("bordered", "condensed", "responsive")) %>% 
-    column_spec(c(1), bold=T, border_left = "2px solid gray", border_right = "2px solid gray")
-  gsub("<thead>.*</thead>", "", x2)
+  DT::datatable(genomic_summary_output, 
+                extensions = 'FixedColumns',
+                class = 'cell-border stripe',
+                options = list(dom = 't',
+                               scrollX = TRUE,
+                               fixedColumns = TRUE), 
+                rownames = F, colnames = c("Type", "Value"))
 }
 ```
 
@@ -131,13 +141,13 @@ Row {data-height=700}
     
 ```{r all_findings}
 if(nrow(all_findings_output) >= 1){
-  view_dt(all_findings_output)
+  view_dt_minimal(all_findings_output)
 }
 ```
 
-Gene Alterations: GTEx Brain (P2) {data-navmenu="Transcriptomic Alterations"}
+Gene Alterations (P2) {data-navmenu="Transcriptomic Alterations"}
 ===
-Row {data-height=700}
+Row {data-height700}
 ---
 
 ### Gene Alterations (GTEx Brain)
@@ -148,23 +158,13 @@ if(exists('diffexpr_genes_barplot_output')){
 }
 ```
 
-Gene Alterations: PBTA HGG (P2) {data-navmenu="Transcriptomic Alterations"}
-===
-Row {data-height=700}
----
-
-### Gene Alterations (PBTA HGG)
+### Gene Alterations (PBTA HGAT)
     
 ```{r plot_genes_pbta_hgg}
 if(exists('diffexpr_genes_barplot_output')){
   ggplotly(diffexpr_genes_barplot_output$diffexpr_genes_barplot_pbta_hgg) 
 }
 ```
-
-Gene Alterations: PBTA (P2) {data-navmenu="Transcriptomic Alterations"}
-===
-Row {data-height=700}
----
 
 ### Gene Alterations (PBTA)
     
@@ -173,6 +173,9 @@ if(exists('diffexpr_genes_barplot_output')){
   ggplotly(diffexpr_genes_barplot_output$diffexpr_genes_barplot_pbta) 
 }
 ```
+
+Row {data-height=100}
+---
 
 Pathway Alterations: GTEx Brain (P2) {data-navmenu="Transcriptomic Alterations"}
 ===
@@ -188,12 +191,12 @@ if(exists('diffreg_pathways_barplot_output')){
 }
 ```
 
-Pathway Alterations: PBTA HGG (P2) {data-navmenu="Transcriptomic Alterations"}
+Pathway Alterations: PBTA HGAT (P2) {data-navmenu="Transcriptomic Alterations"}
 ===
 Row {data-height=700}
 ---
 
-### Pathway Alterations (PBTA HGG)
+### Pathway Alterations (PBTA HGAT)
 
 ```{r plot_pathway_pbta_hgg}
 #Bar chart of genes
@@ -216,20 +219,19 @@ if(exists('diffreg_pathways_barplot_output')){
 }
 ```
 
-Network Alterations: PBTA HGG (P2) {data-navmenu="Transcriptomic Alterations"}
+Network Alterations: PBTA HGAT (P2) {data-navmenu="Transcriptomic Alterations"}
 ===
 Row {data-height=700}
 ---
 
 ### Pathway Alterations (PBTA)
 
-```{r network_alt_pbta_hgg, fig.width = 28, fig.height = 14}
-fname <- file.path(topDir, 'output', 'ora_plots.png')
+```{r network_alt_pbta_hgg, echo=FALSE, out.width = '100%', out.height='100%'}
+fname <- file.path(topDir, 'output', 'ora_plots.pdf')
 if(file.exists(fname)){
- knitr::include_graphics(fname)
+ knitr::include_graphics(fname) 
 }
 ```
-
 
 Tumor Burden/Signatures (P3)
 ===
@@ -259,9 +261,10 @@ Row {data-height=700}
 
 ### Immune Profile (with PBTA)
 
-```{r immune_profile_pbta, fig.width = 28, fig.height = 14}
-if(exists('pediatric_immune_profile')){
-  ggplotly(pediatric_immune_profile)
+```{r immune_profile_pbta, echo=FALSE, out.width = '100%', out.height='100%'}
+fname <- file.path(topDir, 'output', 'immune_scores_pediatric.pdf')
+if(file.exists(fname)){
+  knitr::include_graphics(fname) 
 }
 ```
 
@@ -272,9 +275,10 @@ Row {data-height=700}
 
 ### Immune Profile (with TCGA GBM)
 
-```{r immune_profile_tcga, fig.width = 28, fig.height = 14}
-if(exists('adult_immune_profile')){
-  ggplotly(adult_immune_profile)
+```{r immune_profile_tcga, echo=FALSE, out.width = '100%', out.height='100%'}
+fname <- file.path(topDir, 'output', 'immune_scores_adult.pdf')
+if(file.exists(fname)){
+  knitr::include_graphics(fname) 
 }
 ```
 
@@ -293,33 +297,35 @@ if(exists('tis_profile_output')){
 
 Transcriptomically Similar Samples (PBTA) (P5) {data-navmenu="Pediatric Tumors Analysis"}
 ===
-Row
+Row {data-height=700}
 ---
 
 ### Nearest-Neighbor Analysis
 
-```{r dimred_plot_pbta}
+```{r dimred_plot_pbta, fig.width = 14, fig.height = 10}
 if(exists('dim_reduction_plot_pediatric')){
   ggplotly(dim_reduction_plot_pediatric, tooltip = "text")
 }
 ```
 
-Row
----
-
-### Survival
-
-```{r km_plot_pbta, fig.width = 6}
-if(exists('kaplan_meier_pediatric')){
-  kaplan_meier_pediatric
-}
-```
-
-### Treatment/Outcomes - Transcriptomically Similar Patients
+### Transcriptomically Similar Patients
 
 ```{r similar_patients_pbta}
 if(exists('transciptomically_similar_pediatric')){
-  view_dt(transciptomically_similar_pediatric)
+  view_dt_minimal(transciptomically_similar_pediatric)
+}
+```
+
+Survival (PBTA HGAT) (P5) {data-navmenu="Pediatric Tumors Analysis"}
+===
+Row {data-height=700}
+---
+
+### Survival (PBTA HGAT)
+
+```{r km_plot_pbta, fig.width = 8, fig.height = 6}
+if(exists('kaplan_meier_pediatric')){
+  kaplan_meier_pediatric
 }
 ```
 
@@ -330,9 +336,10 @@ Row {data-height=700}
 
 ### Immune Profile (Transcriptomically Similar Patients)
 
-```{r immune_profile_gs, fig.width = 28, fig.height = 14}
-if(exists('pediatric_topcor_immune_profile')){
-  ggplotly(pediatric_topcor_immune_profile)
+```{r immune_profile_gs, echo=FALSE, out.width = '100%', out.height='100%'}
+fname <- file.path(topDir, 'output', 'immune_scores_topcor_pediatric.pdf')
+if(file.exists(fname)){
+  knitr::include_graphics(fname)
 }
 ```
 
@@ -345,7 +352,7 @@ Row {data-height=500}
 
 ```{r tabulate_pathways_pediatric}
 if(exists('pathway_analysis_pediatric')){
-  view_dt(pathway_analysis_pediatric$shared_pathways)
+  view_dt_minimal(pathway_analysis_pediatric$shared_pathways)
 }
 ```
 
@@ -356,20 +363,21 @@ Row {data-height=500}
 
 ```{r cnv_mapping_pediatric}
 if(exists('pathway_analysis_pediatric')){
-  view_dt(pathway_analysis_pediatric$cnv_mapping)
+  view_dt_minimal(pathway_analysis_pediatric$cnv_mapping)
 }
 ```
 
-ssGSEA (P5) {data-navmenu="Pediatric Tumors Analysis"}
+ssGSEA (PBTA HGAT) (P5) {data-navmenu="Pediatric Tumors Analysis"}
 ===
 Row {data-height=700}
 ---
 
 ### ssGSEA (PBTA HGAT samples)
 
-```{r ssgsea_hgg, fig.width = 28, fig.height = 14}
-if(exists('ssgsea_pediatric')){
-  ssgsea_pediatric
+```{r ssgsea_hgg, echo=FALSE, out.width = '100%', out.height='100%'}
+fname <- file.path(topDir, 'output', 'ssgsea_scores_pediatric.pdf')
+if(file.exists(fname)){
+  knitr::include_graphics(fname) 
 }
 ```
 
@@ -382,7 +390,7 @@ Row {data-height=500}
 
 ```{r rec_alt_genes_pediatric}
 if(exists('mutational_analysis_pediatric')){
-  view_dt(mutational_analysis_pediatric$recurrent_alterations)
+  view_dt_minimal(mutational_analysis_pediatric$recurrent_alterations)
 }
 ```
 
@@ -393,39 +401,41 @@ Row {data-height=500}
 
 ```{r shared_genes_pediatric}
 if(exists('mutational_analysis_pediatric')){
-  view_dt(mutational_analysis_pediatric$shared_genes)
+  view_dt_minimal(mutational_analysis_pediatric$shared_genes)
 }
 ```
 
 Transcriptomically Similar Samples (TCGA) (P6) {data-navmenu="Adult Tumors Analysis"}
 ===
-Row
+Row {data-height=700}
 ---
 
 ### Nearest-Neighbor Analysis
 
-```{r dimred_plot_tcga}
+```{r dimred_plot_tcga, fig.width = 14, fig.height = 10}
 if(exists('dim_reduction_plot_adult')){
   ggplotly(dim_reduction_plot_adult, tooltip = "text")
 }
 ```
 
-Row
----
-
-### Survival
-
-```{r km_plot_tcga, fig.width = 6}
-if(exists('kaplan_meier_adult')){
-  kaplan_meier_adult
-}
-```
-
-### Treatment/Outcomes - Transcriptomically Similar Patients
+### Transcriptomically Similar Patients
 
 ```{r similar_patients_tcga}
 if(exists('transciptomically_similar_adult')){
-  view_dt(transciptomically_similar_adult)
+  view_dt_minimal(transciptomically_similar_adult)
+}
+```
+
+Survival (TCGA) (6) {data-navmenu="Adult Tumors Analysis"}
+===
+Row {data-height=700}
+---
+
+### Survival (TCGA)
+
+```{r km_plot_tcga, fig.width = 8, fig.height = 6}
+if(exists('kaplan_meier_adult')){
+  kaplan_meier_adult
 }
 ```
 
@@ -438,7 +448,7 @@ Row {data-height=500}
 
 ```{r tabulate_pathways_adult}
 if(exists('pathway_analysis_adult')){
-  view_dt(pathway_analysis_adult$shared_pathways)
+  view_dt_minimal(pathway_analysis_adult$shared_pathways)
 }
 ```
 
@@ -449,7 +459,7 @@ Row {data-height=500}
 
 ```{r cnv_mapping_adult}
 if(exists('pathway_analysis_adult')){
-  view_dt(pathway_analysis_adult$cnv_mapping)
+  view_dt_minimal(pathway_analysis_adult$cnv_mapping)
 }
 ```
 
@@ -462,7 +472,7 @@ Row {data-height=500}
 
 ```{r rec_alt_genes_adult}
 if(exists('mutational_analysis_adult')){
-  view_dt(mutational_analysis_adult$recurrent_alterations)
+  view_dt_minimal(mutational_analysis_adult$recurrent_alterations)
 }
 ```
 
@@ -473,13 +483,13 @@ Row {data-height=500}
 
 ```{r shared_genes_adult}
 if(exists('mutational_analysis_adult')){
-  view_dt(mutational_analysis_adult$shared_genes)
+  view_dt_minimal(mutational_analysis_adult$shared_genes)
 }
 ```
 
-Genomic Landscape (P7)
+Circos Plot (P7) {data-navmenu="Genomic Landscape"}
 ===
-Row
+Row {data-height=700}
 ---
 
 ### Circos
@@ -491,6 +501,11 @@ if(file.exists(fname)){
 }
 ```
 
+Network View (P7) {data-navmenu="Genomic Landscape"}
+===
+Row {data-height=700}
+---
+
 ### Network View
 
 ```{r plot_network, fig.width = 8, fig.height = 6}
@@ -499,10 +514,12 @@ if(exists('network_plot_output')){
 }
 ```
 
-Row
+CNA View (P7) {data-navmenu="Genomic Landscape"}
+===
+Row {data-height=700}
 ---
 
-### Genome CNA View
+### CNA View
 
 ```{r plot_cnv, echo=FALSE, out.width = '100%', out.height='100%'}
 fname <- list.files(path = file.path(topDir, "copy-number-variations"), pattern = ".pdf", full.names = T)
@@ -546,8 +563,8 @@ Row {data-height=700}
 
 ### Oncogrid (HGG-DMG)
 
-```{r oncogrid_hgg_dmg, echo=FALSE}
-fname <- file.path(topDir, "output", "complexheatmap_oncogrid.png")
+```{r oncogrid_hgg_dmg, echo=FALSE, out.width = '100%', out.height='100%'}
+fname <- file.path(topDir, "output", "complexheatmap_oncogrid.pdf")
 if(file.exists(fname)){
   knitr::include_graphics(fname)
 }
@@ -562,7 +579,7 @@ Row {data-height=700}
 
 ```{r targeted_findings}
 if(exists('oncokb_output')){
-  view_dt(oncokb_output)
+  view_dt_minimal(oncokb_output)
 }
 ```
 
@@ -575,7 +592,7 @@ Row {data-height=700}
 
 ```{r transcriptome_drug_rec}
 if(exists('transcriptome_drug_rec_output')){
-  view_dt(transcriptome_drug_rec_output)
+  view_dt_minimal(transcriptome_drug_rec_output)
 }
 ```
 
@@ -586,49 +603,24 @@ Row {data-height=700}
 
 ### DGE Plots
 
-```{r dge_plots, fig.width = 28, fig.height = 14}
-fname <- file.path(topDir, 'output', 'drug_dge_density_plots', 'top_drug_dge_density_plots.png')
+```{r dge_plots, echo=FALSE, out.width = '100%', out.height='100%'}
+fname <- file.path(topDir, 'output', 'drug_dge_density_plots', 'top_drug_dge_density_plots.pdf')
 if(file.exists(fname)){
  knitr::include_graphics(fname)
 }
 ```
 
-Drug Signatures: GTEx Brain (P10) {data-navmenu="Drug Recommendations"}
+Drug Signatures (P10) {data-navmenu="Drug Recommendations"}
 ===
 Row {data-height=700}
 ---
 
-### GTEx Brain
+### Drug Signatures 
 
-```{r drug_signatures_gtex, fig.width = 20, fig.height = 8}
-if(exists('drug_pathways_barplot')){
-  drug_pathways_barplot$GTExBrain_1152
-}
-```
-
-Drug Signatures: PBTA HGG (P10) {data-navmenu="Drug Recommendations"}
-===
-Row {data-height=700}
----
-
-### PBTA HGG
-
-```{r drug_signatures_pbta_hgg, fig.width = 20, fig.height = 8}
-if(exists('drug_pathways_barplot')){
-  drug_pathways_barplot$PBTA_HGG_189
-}
-```
-
-Drug Signatures: PBTA (P10) {data-navmenu="Drug Recommendations"}
-===
-Row {data-height=700}
----
-
-### PBTA
-
-```{r drug_signatures_pbta, fig.width = 20, fig.height = 8}
-if(exists('drug_pathways_barplot')){
-  drug_pathways_barplot$PBTA_ALL_1035
+```{r drug_signatures, echo=FALSE, out.width = '100%', out.height='100%'}
+fname <- file.path(topDir, "output", "drug_pathways_barplot.pdf")
+if(file.exists(fname)){
+  knitr::include_graphics(fname)
 }
 ```
 
@@ -646,12 +638,12 @@ if(file.exists(fname)){
 }
 ```
 
-Drug-Gene Network: PBTA HGG (P10) {data-navmenu="Drug Recommendations"}
+Drug-Gene Network: PBTA HGAT (P10) {data-navmenu="Drug Recommendations"}
 ===
 Row {data-height=700}
 ---
 
-### PBTA HGG
+### PBTA HGAT
 
 ```{r drug_gene_network_pbta_hgg, echo=FALSE, out.width = '100%', out.height='100%'}
 fname <- file.path(topDir, "output", "PBTA_HGG_dsea_go_mf_output.pdf")

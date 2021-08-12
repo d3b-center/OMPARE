@@ -10,16 +10,14 @@ plot_ssgsea <- function(ssgsea_input) {
     unique() %>%
     .$geneset_name
   ssgsea_input$geneset_name <- factor(ssgsea_input$geneset_name, levels = tmp)
+  raw.scoresSample <- ssgsea_input[ssgsea_input$IsSample == T,]
   
   # plot as boxplot
   p <- ggplot(ssgsea_input, aes(geneset_name, gsea_score)) + 
-    geom_boxplot(outlier.shape = NA) +  
-    theme_bw()
-  raw.scoresSample <- ssgsea_input[ssgsea_input$IsSample == T,]
-  p <- p + 
-    geom_point(data = raw.scoresSample, aes(geneset_name, gsea_score), colour = "red", size = 3, shape = "triangle") +
-    theme(axis.text = element_text(size = 8, face = "bold"), 
-          axis.title = element_blank()) + coord_flip() +
-    theme(plot.margin = unit(c(1, 5, 1, 2), "cm"))
+    geom_boxplot() +  
+    theme_bw(base_size = 10) +
+    geom_point(data = raw.scoresSample, aes(geneset_name, gsea_score), colour = "red") +
+    theme(axis.title = element_blank()) + coord_flip()
+
   return(p)  
 }

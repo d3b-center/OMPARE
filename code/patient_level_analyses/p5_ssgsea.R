@@ -16,4 +16,9 @@ if(!file.exists(fname)){
 }
 
 # plot ssgea
-ssgsea_pediatric <- plot_ssgsea(ssgsea_pediatric)
+fname <- file.path(topDir, 'output', 'ssgsea_scores_pediatric.pdf')
+if(!file.exists(fname)){
+  ssgsea_pediatric <- plot_ssgsea(ssgsea_pediatric)
+  ggsave(filename = fname, plot = ssgsea_pediatric, 
+         device = "pdf", width = 15, height = 14)
+}
