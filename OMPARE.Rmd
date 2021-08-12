@@ -12,8 +12,6 @@ params:
     value: 'Patient Report'
   snv_caller:
     value: NULL
-  tmb:
-    value: NULL
 editor_options: 
   chunk_output_type: console
 ---
@@ -47,7 +45,6 @@ source(file.path(utils_dir, 'load_libraries.R'))
 topDir <- params$topDir
 fusion_method <- params$fusion_method
 snv_caller <- params$snv_caller
-tmb <- params$tmb
 ```
 
 ```{r call_driver, echo=FALSE, message=FALSE, results='hide'}

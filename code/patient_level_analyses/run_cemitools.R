@@ -198,9 +198,8 @@ for(i in 1:length(modules)){
     coord_flip() +
     xlab('') + ylab('−log10(adjusted p−value)') + ggtitle(title) +
     theme_bw() +
-    theme_Publication(base_size = 12) +
-    scale_x_discrete(labels = function(x) str_wrap(x, width = 50))
+    theme_Publication(base_size = 12) 
 }
 ggsave(plot = wrap_plots(p, ncol = 1), 
        filename = file.path(patient_output_dir, 'ora_plots.pdf'), 
-       width = 10, height = 20, device = 'pdf')
+       width = 10, height = 10, device = 'pdf')
