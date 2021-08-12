@@ -72,7 +72,7 @@ tmb_profile <- function(pbta_tmb, tcga_in_pbta_tmb, tcga_not_in_pbta_tmb, TMB, t
   p <- ggplot(tmbScores, aes(Diseasetype, TMBscore, fill = Type)) + 
     geom_boxplot() + theme_bw() + scale_y_log10(breaks = c(.25, 1, 10, 100, 500)) + 
     scale_fill_manual(values = c("PBTA" = "blue", "TCGA in PBTA" = "orange", "TCGA not in PBTA" = "red")) + 
-    xlab("Disease") + ylab("Mutations per MB") + 
+    xlab("") + ylab("Mutations per MB") + 
     theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
     geom_hline(yintercept = TMB, linetype = 2, color = 'gray30') +
     annotate("text", x = 35, y = max(tmbScores$TMBscore) - 50, 

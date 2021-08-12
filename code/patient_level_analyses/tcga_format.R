@@ -1,3 +1,5 @@
+# script to format tcga data
+
 # directories
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
 source(file.path(root_dir, "code", "utils", "define_directories.R"))

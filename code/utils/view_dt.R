@@ -1,4 +1,6 @@
 library(DT)
+
+# more functionality
 view_dt <- function(dat, pageLength = 10, escape = F, rownames = F){
   DT::datatable(dat,
                 escape = escape,
@@ -20,5 +22,20 @@ view_dt <- function(dat, pageLength = 10, escape = F, rownames = F){
                                         text = 'Download'
                                       )))
   )
+  
+}
+
+# minimal
+view_dt_minimal <- function(dat){
+  DT::datatable(dat,
+                escape = F,
+                rownames = F,
+                extensions = c('Buttons', 'FixedColumns'), 
+                class = 'cell-border stripe',
+                options = list(pageLength = nrow(dat),
+                               dom = '<"top" Bift>',
+                               searchHighlight = TRUE,
+                               buttons = c('copy', 'csv', 'excel')
+                               ))
   
 }

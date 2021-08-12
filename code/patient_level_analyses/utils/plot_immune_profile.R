@@ -24,7 +24,7 @@ plot_immune_profile  <- function(xcell_scores){
     geom_boxplot(outlier.shape = NA) +  
     theme_bw() + 
     theme(axis.text.x = element_text(angle = 75, hjust = 1)) +
-    geom_point(data = xcell_scores.sample, aes(CellType, Score), colour = "red", size = 3, shape = "triangle") +
+    geom_point(data = xcell_scores.sample, aes(CellType, Score), colour = "red", size = 2, shape = "triangle") +
     theme(axis.text = element_text(size = 8, face = "bold"), 
           axis.title = element_blank())
   return(p)

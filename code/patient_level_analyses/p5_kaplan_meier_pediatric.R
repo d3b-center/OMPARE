@@ -6,7 +6,7 @@ source(file.path(root_dir, "code", "utils", "define_directories.R"))
 source(file.path(patient_level_analyses_utils, 'kaplan_meier.R'))
 
 # recurrent alterations
-kaplan_meier_pediatric <- kaplan_meier(all_cor = pbta_pnoc008_nn_table, 
+kaplan_meier_pediatric <- kaplan_meier(all_cor = pbta_hgat_pnoc008_nn_table, 
                                        surv_data = pbta_survival)
 
 # save output

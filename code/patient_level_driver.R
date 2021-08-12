@@ -227,7 +227,7 @@ if(file.exists(fname)){
 source(file.path(patient_level_analyses, 'p7_network_plot.R'))
 
 # run CEMiTool to annotate hub genes on above output
-test_file <- file.path(topDir, "output", "ora_plots.png")
+test_file <- file.path(topDir, "output", "ora_plots.pdf")
 if(file.exists(test_file)){
   fname <- file.path(topDir, "output", "transcriptome_drug_rec.rds")
   transcriptome_drug_rec_output <- readRDS(fname)

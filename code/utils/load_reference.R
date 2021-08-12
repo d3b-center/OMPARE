@@ -23,8 +23,11 @@ pnoc008_clinical <- readRDS(file.path(ref_dir, 'pnoc008', 'pnoc008_clinical.rds'
 pbta_full_tpm <- readRDS(file.path(ref_dir, 'pbta', 'pbta-gene-expression-rsem-tpm-collapsed.polya.stranded.rds'))
 pbta_tpm <- pbta_full_tpm
 pbta_clinical <- read.delim(file.path(ref_dir, 'pbta', 'pbta-histologies.tsv'), stringsAsFactors = F)
+
+# survival needs to be restricted to HGAT samples only
 pbta_survival <- pbta_clinical %>%
   filter(experimental_strategy == 'RNA-Seq',
+         short_histology == "HGAT",
          !is.na(OS_status)) %>%
   mutate(subject_id = Kids_First_Biospecimen_ID,
          OS_status = ifelse(OS_status == 'DECEASED', 1, 0)) %>%

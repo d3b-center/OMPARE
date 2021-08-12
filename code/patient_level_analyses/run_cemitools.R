@@ -176,7 +176,7 @@ dge_genes <- dge_genes %>%
 # rewrite transcriptiomic based drug recommendations
 saveRDS(dge_genes, file = fname)
 
-# get ora data for pos/neg correlated moduless
+# get ora data for pos/neg correlated modules
 ora_dat <- ora_data(cem = cem)
 ora_dat <- ora_dat %>%
   inner_join(corr_modules %>% dplyr::select(pathway, direction), by = c("Module" = "pathway"))
@@ -199,6 +199,6 @@ for(i in 1:length(modules)){
     theme_Publication(base_size = 12) +
     scale_x_discrete(labels = function(x) str_wrap(x, width = 50))
 }
-ggsave(plot = wrap_plots(p, ncol = 2), 
-       filename = file.path(patient_output_dir, 'ora_plots.png'), 
-       width = 20, height = 25, device = 'png')
+ggsave(plot = wrap_plots(p, ncol = 1), 
+       filename = file.path(patient_output_dir, 'ora_plots.pdf'), 
+       width = 10, height = 20, device = 'pdf')
