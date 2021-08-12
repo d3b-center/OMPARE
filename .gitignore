@@ -19,3 +19,5 @@ results/
 
 # testing script
 test.R
+test.Rmd
+test.html
