@@ -13,7 +13,10 @@ option_list <- list(
               help = "Source directory with all files"),
   make_option(c("-c", "--clin_file"), type = "character",
               default = NULL,
-              help = "Manifest file (.xlsx)")
+              help = "Manifest file (.xlsx)"),
+  make_option(c("-u", "--update_pbta"), type = "logical",
+              default = NULL,
+              help = "Update PBTA adapt file (TRUE or FALSE)")
 )
 
 # parameters to pass
@@ -21,6 +24,7 @@ opt <- parse_args(OptionParser(option_list = option_list))
 patient <- opt$patient
 clinical_sheet <- opt$clin_file
 sourceDir <- opt$sourcedir
+update_pbta <- opt$update_pbta
 
 # directories
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
@@ -54,11 +58,13 @@ if(!is.null(clinical_sheet)){
 }
 
 # 3. update histologies file from adapt
-print("Update PBTA histologies file...")
-update_pbta <- file.path(code_dir, 'update_pbta.R')
-cmd3 <- paste('Rscript', update_pbta)
-print(cmd3)
-system(cmd3)
+if(update_pbta){
+  print("Update PBTA histologies file...")
+  update_pbta <- file.path(code_dir, 'update_pbta.R')
+  cmd3 <- paste('Rscript', update_pbta)
+  print(cmd3)
+  system(cmd3)
+}
 
 # 4. Update PNOC008 matrices for each new patient
 print("Update PNOC008 data matrices...")

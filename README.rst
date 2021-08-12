@@ -112,12 +112,15 @@ Master script
 	-c CLIN_FILE, --clin_file=CLIN_FILE
 		PNOC008 Manifest file (.xlsx)
 
+	-u UPDATE_PBTA, --update_pbta=UPDATE_PBTA
+		Update PBTA adapt file (TRUE or FALSE)
+
 	# Example for patient PNOC008-21
 	Rscript run_OMPARE.R \
 	--patient 21 \
 	--clin_file /path-to/OMPARE/data/reference/manifest/pnoc008_manifest.xlsx \
-	--sourcedir /path-to/downloaded_files_from_cavatica
-
+	--sourcedir /path-to/downloaded_files_from_cavatica \
+	--update_pbta TRUE
 
 Create project directory
 ------------------------
