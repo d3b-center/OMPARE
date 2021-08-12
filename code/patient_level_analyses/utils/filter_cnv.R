@@ -4,13 +4,13 @@ filter_cnv <- function(myCNVData, myCancerGenes = cancer_genes) {
 
   # tumor suppressor genes
   myTSGenes <- myCancerGenes %>%
-    filter(type %in% c("TumorSuppressorGene", "Is.Tumor.Suppressor.Gene")) %>%
+    filter(grepl(pattern = "TumorSuppressorGene|Is.Tumor.Suppressor.Gene", type)) %>%
     .$Gene_Symbol %>%
     unique()
   
   # oncogenes
   myOncogenes <- myCancerGenes %>%
-    filter(type %in% c("Oncogene", "OncoKB.Annotated", "Is.Oncogene")) %>%
+    filter(grepl(pattern = "Oncogene|OncoKB.Annotated|Is.Oncogene", type)) %>%
     .$Gene_Symbol %>%
     unique()
   myOncogenes <- setdiff(myOncogenes, myTSGenes)
