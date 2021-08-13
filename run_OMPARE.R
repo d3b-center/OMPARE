@@ -99,8 +99,7 @@ if(dir.exists(topDir)){
                       params = list(topDir = topDir,
                                     fusion_method = 'arriba',
                                     set_title = set_title,
-                                    snv_caller = callers[i],
-                                    tmb = 77.46), 
+                                    snv_caller = callers[i]), 
                       output_dir = output_dir, 
                       intermediates_dir = output_dir,
                       output_file = output_file)
