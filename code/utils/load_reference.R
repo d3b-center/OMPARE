@@ -33,9 +33,6 @@ pbta_survival <- pbta_clinical %>%
          OS_status = ifelse(OS_status == 'DECEASED', 1, 0)) %>%
   dplyr::select(subject_id, OS_days, OS_status) 
 
-# PBTA specific CNV data
-pbta_cnv <- data.table::fread(file.path(ref_dir, 'pbta', 'pbta-cnv-controlfreec.tsv.gz'))
-
 # TCGA GBM specific data (TPM)
 tcga_gbm_tpm <- readRDS(file.path(ref_dir, 'tcga', 'tcga_gbm_tpm_matrix.rds'))
 tcga_gbm_clinical <- readRDS(file.path(ref_dir, 'tcga', 'tcga_gbm_clinical.rds'))

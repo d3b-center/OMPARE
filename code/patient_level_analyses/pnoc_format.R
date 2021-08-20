@@ -27,7 +27,6 @@ opt <- parse_args(OptionParser(option_list = option_list))
 clin_file <- opt$clin_file
 
 # source functions
-source(file.path(patient_level_analyses_utils, 'create_copy_number.R'))
 source(file.path(patient_level_analyses_utils, 'filter_mutations.R'))
 source(file.path(patient_level_analyses_utils, 'filter_cnv.R'))
 
