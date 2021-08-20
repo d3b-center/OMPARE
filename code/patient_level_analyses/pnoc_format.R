@@ -29,6 +29,7 @@ clin_file <- opt$clin_file
 # source functions
 source(file.path(patient_level_analyses_utils, 'create_copy_number.R'))
 source(file.path(patient_level_analyses_utils, 'filter_mutations.R'))
+source(file.path(patient_level_analyses_utils, 'filter_cnv.R'))
 
 # create output directory
 pnoc008.dir <- file.path(ref_dir, 'pnoc008')
@@ -61,26 +62,63 @@ merge_files <- function(nm){
 
 # function to read cnv, filter by cancer genes and merge
 # only gain/loss
-merge_cnv <- function(cnvData, genelist){
+merge_cnv <- function(cnvData, cancer_genes){
   sample_name <- gsub(".*results[/]|[/]copy-number.*", "", cnvData)
   cnvData <- data.table::fread(cnvData, header = T, check.names = T)
-  ploidy <- NULL
+  cnvData <- cnvData %>%
+    dplyr::rename("hgnc_symbol" = "gene",
+                  "chr" = "chromosome") %>%
+    dplyr::select(-c(depth, weight, n_bins))
   
-  # wilcoxon pvalue < 0.05
-  cnvData <- cnvData %>% 
-    filter(WilcoxonRankSumTestPvalue < 0.05) %>%
-    mutate(chr = as.character(chr)) %>%
-    as.data.frame()
+  # get topDir which is sample-specific directory
+  topDir <- file.path(results_dir, sample_name)
   
-  # map coordinates to gene symbol
-  cnvOut <- create_copy_number(cnvData = cnvData, ploidy = ploidy)
+  # pull ploidy and purity from controlfreec
+  controlfreec_info <- list.files(file.path(topDir, 'copy-number-variations'), pattern = "info.txt", full.names = T)
+  if(length(controlfreec_info) == 0){
+    return(NULL)
+  }
+  controlfreec_info <- read.delim(controlfreec_info, header = F)
+  ploidy <- controlfreec_info %>% filter(V1 == "Output_Ploidy") %>% .$V2 %>% as.numeric()
+  purity <- controlfreec_info %>% filter(V1 == "Sample_Purity") %>% .$V2 %>% as.numeric()
   
-  # filter to cancer genes with gain/loss
-  cnvOut <- cnvOut %>%
-    filter(hgnc_symbol %in% genelist,
-           status != "neutral") %>% 
-    mutate(sample_name = sample_name) 
-  return(cnvOut)
+  # calculate absolute copy number
+  cnvData$copy.number <- 0
+  if(ploidy == 2){
+    # compute log2 ratio cutoffs
+    cutoff <- log2((1 - purity) + purity * (0:3 + .5) / ploidy)
+    cutoff <- min(cutoff)
+    
+    # compute absolute copy number
+    cnvData$copy.number <- (((2^(cnvData$log2)-(1-purity)) * ploidy)/ purity) - 0.5
+    cnvData <- cnvData %>%
+      rowwise() %>%
+      mutate(copy.number = ifelse(log2 < cutoff, round(copy.number), ceiling(copy.number)))
+  } else {
+    # compute log2 ratio cutoffs
+    cutoff <- log2((1 - purity) + purity * (0:6 + .5) / ploidy)
+    cutoff <- min(cutoff)
+    
+    # compute absolute copy number
+    cnvData$copy.number <- (((2^(cnvData$log2)-(1-purity)) * ploidy)/ purity) - 0.5
+    cnvData <- cnvData %>%
+      rowwise() %>%
+      mutate(copy.number = ifelse(log2 < cutoff, round(copy.number), ceiling(copy.number)))
+  }
+  
+  # add copy number status
+  cnvData <- cnvData %>%
+    mutate(status = case_when(copy.number == 0 ~ "Complete Loss",
+                              copy.number < ploidy & copy.number > 0 ~ "Loss",
+                              copy.number == ploidy ~ "Neutral",
+                              copy.number > ploidy & copy.number < ploidy + 3 ~ "Gain",
+                              copy.number >= ploidy + 3 ~ "Amplification"))
+  
+  cnvDataFilt <- filter_cnv(myCNVData = cnvData, myCancerGenes = cancer_genes)
+  
+  # add sample name
+  cnvDataFilt$sample_name <- sample_name
+  return(cnvDataFilt)
 }
 
 # list of all PNOC patients
@@ -186,13 +224,14 @@ pnoc008_clinical <- pnoc008_clinical %>%
   dplyr::select(subjectID, Kids_First_Biospecimen_ID, cohort_participant_id, sample_id, study_id)
 
 # copy number
-pnoc008_cnv <- list.files(path = results_dir, pattern = "*.CNVs.p.value.txt", recursive = TRUE, full.names = T)
-pnoc008_cnv <- lapply(pnoc008_cnv, FUN = function(x) merge_cnv(cnvData = x, genelist = gene_list))
+pnoc008_cnv <- list.files(path = results_dir, pattern = "*.gainloss.txt", recursive = TRUE, full.names = T)
+pnoc008_cnv <- lapply(pnoc008_cnv, FUN = function(x) merge_cnv(cnvData = x, cancer_genes = cancer_genes))
 pnoc008_cnv <- data.table::rbindlist(pnoc008_cnv)
 # only keep NANT sample for PNOC008-5
 pnoc008_cnv <- pnoc008_cnv[grep('CHOP', pnoc008_cnv$sample_name, invert = T),]
 pnoc008_cnv$sample_name  <- gsub("-NANT", "", pnoc008_cnv$sample_name)
 
+# merge with clinical file
 pnoc008_cnv <- pnoc008_cnv %>%
   inner_join(pnoc008_clinical, by = c("sample_name" = "subjectID")) %>%
   mutate(Gene = hgnc_symbol,
