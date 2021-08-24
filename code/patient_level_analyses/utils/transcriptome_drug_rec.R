@@ -45,7 +45,6 @@ transcriptome_drug_rec <- function(diffexpr_genes){
            "Drug" = "Drug_Name") %>%
     mutate(Source = "FDA") %>%
     filter(logFC > 0) %>%
-    dplyr::select(Drug, Gene, Source, Comparison, logFC, Action_Type) %>%
     unique()
   return(qresult2)
 }
