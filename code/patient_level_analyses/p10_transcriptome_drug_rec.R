@@ -1,6 +1,7 @@
 # directories
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
 source(file.path(root_dir, "code", "utils", "define_directories.R"))
+dsigdb_dir <- file.path(ref_dir, 'dsigdb')
 
 # source functions
 source(file.path(patient_level_analyses_utils, 'transcriptome_drug_rec.R'))
