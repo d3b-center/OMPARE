@@ -26,31 +26,6 @@ pbta_hist <- pbta_hist %>%
   unique() %>%
   left_join(pbta_hist_adapt, by = 'Kids_First_Biospecimen_ID')
 
-# # only RNA-seq
-# pbta_rnaseq <- pbta_hist %>%
-#   filter(experimental_strategy == "RNA-Seq") %>%
-#   mutate(SampleID = sample_id) 
-# 
-# # only WGS/WXS
-# pbta_wgs_wxs <- pbta_hist %>%
-#   filter(experimental_strategy %in% c("WGS", "WXS")) %>%
-#   mutate(SampleID = sample_id) 
-
-# only use ids where both RNA-seq and WGS are present
-# pbta_hist <- pbta_hist %>%
-#   filter(experimental_strategy %in% c("WGS", "WXS") & !is.na(tumor_fraction) |
-#            experimental_strategy == "RNA-Seq")
-# sids <- pbta_hist %>%
-#   group_by(sample_id, experimental_strategy) %>%
-#   summarise(count = n()) %>%
-#   group_by(sample_id) %>%
-#   mutate(sum = sum(count)) %>%
-#   filter(sum == 2  & count  == 1)
-# pbta_hist_cnv_mut <- pbta_hist %>%
-#   filter(sample_id %in% sids$sample_id) %>%
-#   mutate(SampleID = sample_id) %>%
-#   dplyr::select(SampleID, Kids_First_Biospecimen_ID, experimental_strategy, tumor_fraction)
-
 # subset to cancer genes 
 cancer_genes <- readRDS(file.path(ref_dir, "cancer_gene_list.rds"))
 gene.list <- unique(cancer_genes$Gene_Symbol)
@@ -89,32 +64,7 @@ merge_cnv <- function(cnvData, cancer_genes){
   sample_name <- unique(cnvData$Kids_First_Biospecimen_ID)
   print(sample_name)
   ploidy <- cnvData %>% .$tumor_ploidy %>% unique() %>% as.numeric()
-  # purity <- cnvData %>% .$tumor_fraction %>% unique() %>% as.numeric()
-  
-  # # calculate absolute copy number
-  # cnvData$copy.number <- 0
-  # if(ploidy == 2){
-  #   # compute log2 ratio cutoffs
-  #   cutoff <- log2((1 - purity) + purity * (0:3 + .5) / ploidy)
-  #   cutoff <- min(cutoff)
-  #   
-  #   # compute absolute copy number
-  #   cnvData$copy.number <- (((2^(cnvData$log2)-(1-purity)) * ploidy)/ purity) - 0.5
-  #   cnvData <- cnvData %>%
-  #     rowwise() %>%
-  #     mutate(copy.number = ifelse(log2 < cutoff, round(copy.number), ceiling(copy.number)))
-  # } else {
-  #   # compute log2 ratio cutoffs
-  #   cutoff <- log2((1 - purity) + purity * (0:6 + .5) / ploidy)
-  #   cutoff <- min(cutoff)
-  #   
-  #   # compute absolute copy number
-  #   cnvData$copy.number <- (((2^(cnvData$log2)-(1-purity)) * ploidy)/ purity) - 0.5
-  #   cnvData <- cnvData %>%
-  #     rowwise() %>%
-  #     mutate(copy.number = ifelse(log2 < cutoff, round(copy.number), ceiling(copy.number)))
-  # }
-  
+
   # add copy number status
   cnvData <- cnvData %>%
     mutate(status = case_when(copy.num == 0 ~ "Complete Loss",
@@ -147,7 +97,6 @@ pbta.cnv <- pbta.cnv %>%
 saveRDS(pbta.cnv, file = file.path(pbta.dir, 'pbta-cnv-cnvkit-filtered.rds'))
 
 # read fusions (oncogenic arriba fusions)
-# no need to filter fusions by pbta.clin as all are RNA-seq
 pbta.fusions <- read.delim(file.path(pbta.dir, 'pbta-fusion-putative-oncogenic.tsv'))
 pbta.fusions <- pbta.fusions[grep('ARRIBA', pbta.fusions$CalledBy),]
 pbta.fusions <- pbta.fusions  %>%
