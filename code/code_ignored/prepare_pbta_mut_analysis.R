@@ -1,88 +1,102 @@
 # Prepare PBTA data for Mutational analysis
 # This needs to be run with every updated version of OpenPBTA (current v18)
 
-suppressPackageStartupMessages(library(tidyverse))
-suppressPackageStartupMessages(library(data.table))
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(data.table)
+  library(GenomicRanges)
+})
 
 # directories
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
 source(file.path(root_dir, "code", "utils", "define_directories.R"))
+source(file.path(patient_level_analyses_utils, "filter_cnv.R"))
 pbta.dir <- file.path(ref_dir, 'pbta')
 
 # PBTA adapt histology file
 # remove unwanted samples
-pbta_hist <- read.delim(file.path(pbta.dir, 'pbta-histologies-base-adapt.tsv'))
-pbta_hist <- pbta_hist %>%
-  filter(kf_visibility == "True")
+pbta_hist_adapt <- read.delim(file.path(pbta.dir, 'pbta-histologies-base-adapt.tsv'))
+pbta_hist_adapt <- pbta_hist_adapt %>%
+  filter(kf_visibility == "True") %>%
+  dplyr::select(-c(tumor_fraction, tumor_ploidy))
 
-# only use ids where both RNA-seq and WGS are present
-sids <- pbta_hist %>%
-  group_by(sample_id, experimental_strategy) %>%
-  summarise(count = n()) %>%
-  group_by(sample_id) %>%
-  mutate(sum = sum(count)) %>%
-  filter(sum == 2  & count  == 1)
-pbta_hist_cnv_mut <- pbta_hist %>%
-  filter(sample_id %in% sids$sample_id)
-pbta_hist_cnv_mut <- pbta_hist_cnv_mut %>%
-  mutate(SampleID = sample_id) %>%
-  dplyr::select(SampleID, Kids_First_Biospecimen_ID)
+pbta_hist <- read.delim(file.path(pbta.dir, 'pbta-histologies.tsv'))
+pbta_hist <- pbta_hist %>%
+  dplyr::select(Kids_First_Biospecimen_ID, tumor_fraction) %>%
+  unique() %>%
+  left_join(pbta_hist_adapt, by = 'Kids_First_Biospecimen_ID')
 
 # subset to cancer genes 
-cancerGenes <- readRDS(file.path(ref_dir, "cancer_gene_list.rds"))
-gene.list <- unique(cancerGenes$Gene_Symbol)
+cancer_genes <- readRDS(file.path(ref_dir, "cancer_gene_list.rds"))
+gene.list <- unique(cancer_genes$Gene_Symbol)
 
-# function to map coordinates to gene symbol
-source(file.path(patient_level_analyses_utils, 'create_copy_number.R'))
+# read controlfreec (add tumor purity from histology file and get tumor ploidy from controlfreec)
+pbta.controlfreec <- data.table::fread(file.path(pbta.dir, 'pbta-cnv-controlfreec.tsv.gz'))
+pbta.controlfreec <- pbta.controlfreec %>%
+  dplyr::select(Kids_First_Biospecimen_ID, tumor_ploidy) %>%
+  unique() %>%
+  inner_join(pbta_hist, by = "Kids_First_Biospecimen_ID")
+
+# read cnv kit and combine with above
+pbta.cnvkit <- data.table::fread(file.path(pbta.dir, 'pbta-cnv-cnvkit.seg.gz'))
+pbta.cnvkit <- pbta.cnvkit %>%
+  dplyr::rename("Kids_First_Biospecimen_ID" = "ID") %>%
+  inner_join(pbta.controlfreec, by = "Kids_First_Biospecimen_ID") %>%
+  dplyr::rename("SampleID" = "sample_id")
 
 # chr coordinates to gene symbol map
-chrMap <- read.delim(file.path(ref_dir, "mart_export_genechr_mapping.txt"), stringsAsFactors =F)
-
-# read cnvs
-pbta.cnv <- data.table::fread(file.path(pbta.dir, 'pbta-cnv-controlfreec.tsv.gz'))
-pbta.cnv <- pbta.cnv %>%
-   filter(Kids_First_Biospecimen_ID %in% pbta_hist_cnv_mut$Kids_First_Biospecimen_ID)
-
-# CNV analysis (chr coordinates to gene symbol map)
 chr_map <- read.delim(file.path(ref_dir, 'mart_export_genechr_mapping.txt'), stringsAsFactors = F, check.names = F)
 colnames(chr_map) <- c("hgnc_symbol", "gene_start", "gene_end", "chromosome")
+chr_map <- chr_map %>%
+  filter(hgnc_symbol != "") %>%
+  mutate(chromosome = paste0("chr", chromosome))
 
-# function to read pbta cnv, map to gene symbol and merge
-merge.cnv <- function(cnvData, genelist){
+# overlap
+subject <- with(chr_map, GRanges(chromosome, IRanges(start = gene_start, end = gene_end, names = hgnc_symbol)))
+query <- with(pbta.cnvkit, GRanges(chrom, IRanges(start = loc.start, end = loc.end)))
+
+# find overlaps and subset maf 
+res <- findOverlaps(query = query, subject = subject, type = "within")
+pbta.cnvkit <- data.frame(pbta.cnvkit[queryHits(res),], chr_map[subjectHits(res),])
+
+# cnvData <- pbta.cnvkit %>% filter(Kids_First_Biospecimen_ID == "BS_01Y5F4PN")
+merge_cnv <- function(cnvData, cancer_genes){
   sample_name <- unique(cnvData$Kids_First_Biospecimen_ID)
-  cnvData$Kids_First_Biospecimen_ID <- NULL
-  ploidy <- unique(cnvData$tumor_ploidy)
-  cnvData <- cnvData %>% 
-    dplyr::select(chr, start, end, copy.number, status, WilcoxonRankSumTestPvalue) %>%
-    filter(WilcoxonRankSumTestPvalue < 0.05) %>%
-    as.data.frame()
-  cnvOut <- create_copy_number(cnvData = cnvData, ploidy = ploidy) # map coordinates to gene symbol
-  print(head(cnvOut))
-  cnvOut <- cnvOut %>%
-    filter(hgnc_symbol %in% genelist,
-           status != "neutral") %>%
-    mutate(sample_name = sample_name) 
-  if(nrow(cnvOut) > 0){
-    return(cnvOut)
+  print(sample_name)
+  ploidy <- cnvData %>% .$tumor_ploidy %>% unique() %>% as.numeric()
+
+  # add copy number status
+  cnvData <- cnvData %>%
+    mutate(status = case_when(copy.num == 0 ~ "Complete Loss",
+                              copy.num < ploidy & copy.num > 0 ~ "Loss",
+                              copy.num == ploidy ~ "Neutral",
+                              copy.num > ploidy & copy.num < ploidy + 3 ~ "Gain",
+                              copy.num >= ploidy + 3 ~ "Amplification"))
+  
+  cnvDataFilt <- filter_cnv(myCNVData = cnvData, myCancerGenes = cancer_genes)
+  
+  # add sample name
+  if(nrow(cnvDataFilt) > 0) {
+    cnvDataFilt$sample_name <- sample_name
   }
+  
+  return(cnvDataFilt)
 }
 
-pbta.cnv <- plyr::ddply(.data = pbta.cnv, 
+pbta.cnv <- plyr::ddply(.data = pbta.cnvkit, 
                         .variables = 'Kids_First_Biospecimen_ID', 
-                        .fun = function(x) merge.cnv(cnvData = x, genelist = gene.list))
+                        .fun = function(x) merge_cnv(cnvData = x, cancer_genes = cancer_genes))
 pbta.cnv <- pbta.cnv %>%
   mutate(Alteration_Datatype = "CNV",
          Alteration_Type = stringr::str_to_title(status),
-         Alteration = paste0('Copy Number Value:', copy.number),
+         Alteration = paste0('Copy Number Value:', copy.num),
          Study = "PBTA",
          Gene = hgnc_symbol) %>%
-  inner_join(pbta_hist_cnv_mut, by = "Kids_First_Biospecimen_ID") %>%
   dplyr::select(Gene, Alteration_Datatype, Alteration_Type, Alteration, Kids_First_Biospecimen_ID, SampleID, Study) %>%
   unique()
-saveRDS(pbta.cnv, file = file.path(pbta.dir, 'pbta-cnv-controlfreec-filtered.rds'))
+saveRDS(pbta.cnv, file = file.path(pbta.dir, 'pbta-cnv-cnvkit-filtered.rds'))
 
 # read fusions (oncogenic arriba fusions)
-# no need to filter fusions by pbta.clin as all are RNA-seq
 pbta.fusions <- read.delim(file.path(pbta.dir, 'pbta-fusion-putative-oncogenic.tsv'))
 pbta.fusions <- pbta.fusions[grep('ARRIBA', pbta.fusions$CalledBy),]
 pbta.fusions <- pbta.fusions  %>%
@@ -92,7 +106,8 @@ pbta.fusions <- pbta.fusions  %>%
          Alteration = FusionName,
          Kids_First_Biospecimen_ID = Sample,
          Study = "PBTA") %>%
-  inner_join(pbta.clin, by = "Kids_First_Biospecimen_ID") %>%
+  inner_join(pbta_hist, by = "Kids_First_Biospecimen_ID") %>%
+  mutate(SampleID = sample_id) %>%
   dplyr::select(Gene, Alteration_Datatype, Alteration_Type, Alteration, Kids_First_Biospecimen_ID, SampleID, Study) %>%
   separate_rows(Gene, convert = TRUE) %>%
   filter(Gene %in% gene.list) %>%
@@ -118,7 +133,8 @@ pbta.mutations <- pbta.mutations %>%
          Alteration = HGVSp_Short,
          Kids_First_Biospecimen_ID = Tumor_Sample_Barcode,
          Study = "PBTA") %>%
-  inner_join(pbta.clin, by = "Kids_First_Biospecimen_ID") %>%
+  inner_join(pbta_hist, by = "Kids_First_Biospecimen_ID") %>%
+  mutate(SampleID = sample_id) %>%
   dplyr::select(Gene, Alteration_Datatype, Alteration_Type, Alteration, Kids_First_Biospecimen_ID, SampleID, Study) %>%
   unique()
 saveRDS(pbta.mutations, file = file.path(pbta.dir, 'pbta-snv-consensus-mutation-filtered.rds'))

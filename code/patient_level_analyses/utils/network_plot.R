@@ -1,4 +1,6 @@
 library(GeneNetworkBuilder)
+library(igraph)
+library(ggnetwork)
 
 network_plot <- function(transcriptome_drug_rec_output, geneMania) {
   

@@ -19,7 +19,7 @@ cancerGenes <- cancerGenes %>%
 
 # from annofuse
 geneListRef <- read.delim(file.path(ref_input_file_dir, "genelistreference.txt"), stringsAsFactors = F)
-geneListRef <- subset(geneListRef, type == "TumorSuppressorGene" | type == "CosmicCensus" | type == "Oncogene")
+geneListRef <- geneListRef[grep("TumorSuppressorGene|CosmicCensus|Oncogene", geneListRef$type),]
 cancerGenes <- rbind(cancerGenes, geneListRef)
 
 # save output

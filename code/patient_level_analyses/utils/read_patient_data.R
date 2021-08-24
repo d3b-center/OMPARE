@@ -44,7 +44,7 @@ readData <- function(topDir, fusion_method = c("star","arriba"), snv_caller = "a
     assign("mutDataFilt", mutDataFilt, envir = globalenv())
     
     # annotate mutations
-    mutDataAnnot <- annotate_mutations(myMutData = mutData, myCancerGenes = cancer_genes)
+    mutDataAnnot <- annotate_mutations(myMutData = mutData, myCancerGenes = cancer_genes, cancer_hotspots = cancer_hotspots_v2)
     assign("mutDataAnnot", mutDataAnnot, envir = globalenv())
   } 
   

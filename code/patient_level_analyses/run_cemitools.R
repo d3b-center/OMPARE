@@ -176,7 +176,7 @@ dge_genes <- dge_genes %>%
 # rewrite transcriptiomic based drug recommendations
 saveRDS(dge_genes, file = fname)
 
-# get ora data for pos/neg correlated moduless
+# get ora data for pos/neg correlated modules
 ora_dat <- ora_data(cem = cem)
 ora_dat <- ora_dat %>%
   inner_join(corr_modules %>% dplyr::select(pathway, direction), by = c("Module" = "pathway"))
@@ -191,14 +191,15 @@ for(i in 1:length(modules)){
   tmp <- ora_dat %>%
     filter(Module %in% modules[i])
   title <- paste("Module: ", unique(tmp$Module), "| Direction: ", unique(tmp$direction))
-  p[[i]] <- ggplot(tmp, aes(x = reorder(ID, -p.adjust), y = -log10(p.adjust), fill = -log10(p.adjust))) +
+  p[[i]] <- ggplot(tmp, aes(x = reorder(ID, -p.adjust), 
+                            y = -log10(p.adjust), 
+                            fill = -log10(p.adjust))) +
     geom_bar(stat = "identity") +
     coord_flip() +
     xlab('') + ylab('−log10(adjusted p−value)') + ggtitle(title) +
     theme_bw() +
-    theme_Publication(base_size = 12) +
-    scale_x_discrete(labels = function(x) str_wrap(x, width = 50))
+    theme_Publication(base_size = 12) 
 }
-ggsave(plot = wrap_plots(p, ncol = 2), 
-       filename = file.path(patient_output_dir, 'ora_plots.png'), 
-       width = 20, height = 25, device = 'png')
+ggsave(plot = wrap_plots(p, ncol = 1), 
+       filename = file.path(patient_output_dir, 'ora_plots.pdf'), 
+       width = 10, height = 10, device = 'pdf')

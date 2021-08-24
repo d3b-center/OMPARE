@@ -10,7 +10,6 @@ code/code_ignored/*
 !code/code_ignored/prepare_tcga_mut_analysis_tcgabiolinks.R
 !code/code_ignored/create_pbta_combined_matrices.R
 !code/code_ignored/prepare_pbta_mut_analysis.R
-!code/code_ignored/calculate_tcga_pbta_tmb.R
 
 # data (pushed to s3 instead of github)
 data/
@@ -20,3 +19,5 @@ results/
 
 # testing script
 test.R
+test.Rmd
+test.html

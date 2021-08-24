@@ -32,5 +32,7 @@ drug_pathways_barplot <- plyr::dlply(.data = genes_df,
                                                                            method = "LINCS",
                                                                            trend_val = "down",
                                                                            output_dir = file.path(topDir, "output")))
-fname <- file.path(topDir, "output", "drug_pathways_barplot.rds")
-saveRDS(drug_pathways_barplot, file = fname)
+fname <- file.path(topDir, "output", "drug_pathways_barplot.pdf")
+ggsave(plot = wrap_plots(drug_pathways_barplot, ncol = 1), 
+       filename = fname, 
+       width = 23, height = 25, device = 'pdf')

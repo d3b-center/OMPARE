@@ -12,9 +12,15 @@ source(file.path(patient_level_analyses_utils, 'plot_immune_profile.R'))
 fname <- file.path(topDir, 'output', 'immune_scores_topcor_pediatric.rds')
 if(!file.exists(fname)){
   pediatric_topcor_immune_profile <- immune_profile(fullmat = pbta_pnoc008_nn_tpm)
+  saveRDS(pediatric_topcor_immune_profile, file = fname)
 } else {
   pediatric_topcor_immune_profile <- readRDS(fname)
 }
 
 # plot immune scores
-pediatric_topcor_immune_profile <- plot_immune_profile(xcell_scores = pediatric_topcor_immune_profile)
+fname <- file.path(topDir, 'output', 'immune_scores_topcor_pediatric.pdf')
+if(!file.exists(fname)){
+  pediatric_topcor_immune_profile <- plot_immune_profile(xcell_scores = pediatric_topcor_immune_profile)
+  ggsave(filename = fname, plot = pediatric_topcor_immune_profile, 
+         device = "pdf", width = 8, height = 10)
+}

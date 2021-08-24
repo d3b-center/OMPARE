@@ -182,8 +182,6 @@ if(file.exists(fname)){
 }
 
 ## page 7
-# circos plot - changes with snv caller
-# fname <- file.path(topDir, "output", "circos_plot.png")
 source(file.path(patient_level_analyses, 'p7_circos_plot.R'))
 
 # cnv plot
@@ -193,14 +191,14 @@ if(!file.exists(fname)){
 }
 
 ## page 8 
-fname_cgs <- file.path(topDir, "output", "complexheatmap_cgs.png")
-fname_phgg <- file.path(topDir, "output", "complexheatmap_phgg.png")
-if(!file.exists(fname_cgs) | !file.exists(fname_phgg)){
-  source(file.path(patient_level_analyses, 'p8_cnv_exp_heatmap.R'))
-}
+# fname_cgs <- file.path(topDir, "output", "complexheatmap_cgs.png")
+# fname_phgg <- file.path(topDir, "output", "complexheatmap_phgg.png")
+# if(!file.exists(fname_cgs) | !file.exists(fname_phgg)){
+#   source(file.path(patient_level_analyses, 'p8_cnv_exp_heatmap.R'))
+# }
 
 ## page 9
-fname <- file.path(topDir, "output", "complexheatmap_oncogrid.png")
+fname <- file.path(topDir, "output", "complexheatmap_oncogrid.pdf")
 if(!file.exists(fname)){
   source(file.path(patient_level_analyses, 'p9_oncogrid.R'))
 }
@@ -227,7 +225,7 @@ if(file.exists(fname)){
 source(file.path(patient_level_analyses, 'p7_network_plot.R'))
 
 # run CEMiTool to annotate hub genes on above output
-test_file <- file.path(topDir, "output", "ora_plots.png")
+test_file <- file.path(topDir, "output", "ora_plots.pdf")
 if(file.exists(test_file)){
   fname <- file.path(topDir, "output", "transcriptome_drug_rec.rds")
   transcriptome_drug_rec_output <- readRDS(fname)
@@ -236,16 +234,14 @@ if(file.exists(test_file)){
 }
 
 # dge density plots
-fname <- file.path(topDir, 'output', 'drug_dge_density_plots', 'top_drug_dge_density_plots.png')
+fname <- file.path(topDir, 'output', 'drug_dge_density_plots', 'top_drug_dge_density_plots.pdf')
 if(!file.exists(fname)){
   source(file.path(patient_level_analyses, 'p10_drug_dge_density_plots.R'))
 }
 
 # drug pathways
-fname <- file.path(topDir, "output", "drug_pathways_barplot.rds")
-if(file.exists(fname)){
-  drug_pathways_barplot <- readRDS(fname)
-} else {
+fname <- file.path(topDir, "output", "drug_pathways_barplot.pdf")
+if(!file.exists(fname)){
   source(file.path(patient_level_analyses, 'p10_drug_pathways.R'))
 }
 

@@ -27,7 +27,7 @@ dim_reduction_plot <- function(dat, clindata, study, patient, title) {
   
   # plot
   p <- ggplot(dat, aes(Dim1, Dim2,
-                       color = pathology_diagnosis,
+                       color = short_histology,
                        size = study_id,
                        shape = label,
                        text = paste0("Sample:", subject_id,

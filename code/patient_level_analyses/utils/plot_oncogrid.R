@@ -135,6 +135,6 @@ ht = oncoPrint(mat, get_type = function(x)strsplit(x, ";")[[1]],
                ))
 
 
-png(filename = file.path(topDir, "output", "complexheatmap_oncogrid.png"), units = "in", width = 25, height = 14, res = 200) 
+pdf(file = file.path(topDir, "output", "complexheatmap_oncogrid.pdf"), width = 30, height = 14) 
 draw(ht,merge_legend = TRUE, heatmap_legend_side = "right", annotation_legend_side = "right")
 dev.off()

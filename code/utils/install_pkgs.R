@@ -70,9 +70,10 @@ devtools::install_github('dviraran/xCell')
 BiocManager::install("xlsx")
 BiocManager::install("callr")
 BiocManager::install("dotenv")
+BiocManager::install("drugTargetInteractions")
+BiocManager::install("BSgenome.Hsapiens.UCSC.hg38")
 
 # double check if these are needed
-BiocManager::install("BSgenome.Hsapiens.UCSC.hg38")
 BiocManager::install("R.utils")
 BiocManager::install("TxDb.Hsapiens.UCSC.hg38.knownGene")
 BiocManager::install("intergraph")

@@ -33,8 +33,8 @@ combine_and_batch_correct <- function(expr1, expr2 = pnoc008_tpm, clinical1, cli
            subject_id = subjectID,
            gender = sex,
            age_at_diagnosis_in_days = age_diagnosis_days,
-           short_histology = tumorType,
-           broad_histology = tumorType,
+           short_histology = 'HGAT',
+           broad_histology = 'Diffuse astrocytic and oligodendroglial tumor',
            pathology_diagnosis = tumorType, 
            integrated_diagnosis = tumorType) %>%
     dplyr::select(cols)

@@ -7,16 +7,16 @@ source(file.path(patient_level_analyses_utils, 'transcriptome_drug_rec.R'))
 
 # input files
 genes_up <- read.delim(file.path(topDir, "output", paste0(sampleInfo$subjectID, '_summary_DE_Genes_Up.txt')))
-genes_down <- read.delim(file.path(topDir, "output", paste0(sampleInfo$subjectID, '_summary_DE_Genes_Down.txt')))
-diffexpr_genes <- rbind(genes_up, genes_down)
-
-# read dsigdb data
-dsigdb_dat <- data.table::fread(file.path(dsigdb_dir, 'DSigDB_All_detailed.txt'), fill = T)
-dsigdb_dat <- dsigdb_dat %>%
-  as.data.frame() %>%
-  filter(Source == "FDA")
 
 # call function
+# full output as tsv
+fname <- file.path(topDir, "output", paste0(sampleInfo$subjectID, "_CHEMBL_drug-gene.tsv"))
+transcriptome_drug_rec_output <- transcriptome_drug_rec(diffexpr_genes = genes_up)
+write.table(x = transcriptome_drug_rec_output, file = fname, quote = F, sep = "\t", row.names = F)
+
+# subset columns for report
 fname <- file.path(topDir, "output", "transcriptome_drug_rec.rds")
-transcriptome_drug_rec_output <- transcriptome_drug_rec(diffexpr_genes = diffexpr_genes, dsigdb_dat = dsigdb_dat)
+transcriptome_drug_rec_output <- transcriptome_drug_rec_output %>%
+  dplyr::select(Drug, Gene, Source, Comparison, logFC, MOA) %>%
+  unique()
 saveRDS(transcriptome_drug_rec_output, file = fname)

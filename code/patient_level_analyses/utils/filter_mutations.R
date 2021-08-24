@@ -1,6 +1,6 @@
 # filter mutations
 
-filter_mutations <- function(myMutData = mutData, myCancerGenes = cancerGenes) {
+filter_mutations <- function(myMutData = mutData, myCancerGenes = cancer_genes) {
 
   # variant classification filters
   keepVC <- c("Nonsense_Mutation", "Missense_Mutation", 

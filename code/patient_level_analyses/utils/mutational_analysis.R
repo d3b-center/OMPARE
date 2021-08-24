@@ -22,7 +22,7 @@ mutational_analysis <- function(top_cor, key_clinical_findings_output, clinical,
   if(comparison == "pediatric"){
     # mutations, cnv, fusions
     tumor_mutations <- readRDS(file.path(pbta_dir, 'pbta-snv-consensus-mutation-filtered.rds'))
-    tumor_cnv <- readRDS(file.path(pbta_dir, 'pbta-cnv-controlfreec-filtered.rds'))
+    tumor_cnv <- readRDS(file.path(pbta_dir, 'pbta-cnv-cnvkit-filtered.rds'))
     tumor_fusions <- readRDS(file.path(pbta_dir, 'pbta-fusion-putative-oncogenic-filtered.rds'))
   } else {
     # mutations and cnv

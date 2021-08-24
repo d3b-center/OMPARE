@@ -30,7 +30,10 @@ diffexpr_genes_barplot <- function(genes_up, genes_down, comparison_study, cance
   p <- ggplot(geneData, aes(Gene, y = logFC, fill = Direction)) + 
     geom_bar(stat="identity") + coord_flip() + theme_bw() + 
     xlab("") + scale_fill_manual(values = c("up" = "red", "down" = "forest green")) +
-    theme(plot.margin = unit(c(1, 5, 1, 5), "cm")) +
-    ggtitle(paste0("Comparison against ", comparison_study))
+    theme(plot.margin = unit(c(0, 0, 0, 0), "cm"),
+          legend.direction = "none",
+          legend.position = "none")  +
+    ggtitle(paste0("Comparison: ", comparison_study)) +
+    guides(fill = "none")
   return(p)
 }

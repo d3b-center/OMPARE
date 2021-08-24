@@ -1,3 +1,5 @@
+# script to format pbta data
+
 # directories
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
 source(file.path(root_dir, "code", "utils", "define_directories.R"))
@@ -47,5 +49,35 @@ pbta_pnoc008_nn_table <- extract_umap_nearest_neighbor_table(umap_out = pbta_pno
 # immune_profile_topcor, ssgsea, mutational_analysis
 pbta_pnoc008_nn_tpm <- pbta_pnoc008_expr_corrected[,colnames(pbta_pnoc008_expr_corrected) %in% pbta_pnoc008_nn_table$nearest_neighbor]
 
-# required for pathway_analysis, kaplan meier, transcriptomically_similar analyses
+# required for pathway_analysis, transcriptomically_similar analyses
 pbta_pnoc008_nn_table <- pbta_pnoc008_nn_table[grep(sampleInfo$subjectID, pbta_pnoc008_nn_table$nearest_neighbor, invert = TRUE),]
+
+# kaplan meier survival curves
+# subset to top 20 HGAT only 
+pbta_hgat_pnoc008_clinical <- pbta_pnoc008_clinical %>% 
+  filter(short_histology == "HGAT",
+         study_id == "PBTA")
+
+# subset expression
+pbta_hgat_pnoc008_expr_corrected <- pbta_pnoc008_expr_corrected %>%
+  as.data.frame() %>%
+  dplyr::select(sampleInfo$subjectID, pbta_hgat_pnoc008_clinical$kids_first_biospecimen_id)
+
+# get 10000 most variable genes for umap plotting & nearest neighbor analysis
+pbta_hgat_pnoc008_most_var <- get_most_variable_for_umap(expr_corrected = pbta_hgat_pnoc008_expr_corrected)
+
+# nearest neighbor info using umap correlation
+fname <- file.path(topDir, "output", "pbta_hgat_pnoc008_umap_output.rds")
+if(file.exists(fname)){
+  pbta_hgat_pnoc008_umap_output <- readRDS(fname)
+} else {
+  pbta_hgat_pnoc008_umap_output <- get_umap_output(expr_most_var = pbta_hgat_pnoc008_most_var)  
+  saveRDS(pbta_pnoc008_umap_output, file = fname)
+}
+
+# extract nearest neighbor info (top 20 nearest HGAT samples)
+pbta_hgat_pnoc008_nn_table <- extract_umap_nearest_neighbor_table(umap_out = pbta_hgat_pnoc008_umap_output, 
+                                                                  expr_most_var = pbta_hgat_pnoc008_most_var, 
+                                                                  sampleInfo = sampleInfo)
+pbta_hgat_pnoc008_nn_table <- pbta_hgat_pnoc008_nn_table[grep(sampleInfo$subjectID, pbta_hgat_pnoc008_nn_table$nearest_neighbor, invert = TRUE),]
+
