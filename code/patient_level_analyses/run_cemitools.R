@@ -4,6 +4,7 @@ library(CEMiTool)
 library(tidyverse)
 library(patchwork)
 library(dplyr)
+library(callr)
 
 # directories
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
