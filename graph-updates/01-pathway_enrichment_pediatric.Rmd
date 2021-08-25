@@ -29,7 +29,7 @@ if (!dir.exists(plot_dir )) {
 ## P5 pathway enrichment
 ### Read in the files and arrange for plotting
 ```{r read in for pathway enrichment}
-pathway_analysis_pediatric <- readRDS("../data/pathway_analysis_pediatric.rds")
+pathway_analysis_pediatric <- readRDS(file.path(data_dir,"pathway_analysis_pediatric.rds"))
 shared_pathway_pediatric <- pathway_analysis_pediatric$shared_pathways %>%
   filter(sample_name == "PNOC008-36")
 

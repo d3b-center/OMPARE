@@ -16,7 +16,7 @@ data/
 
 # results directory with all patient data (pushed to cavatica)
 results/
-
+tmb_normalization/references
 # testing script
 test.R
 test.Rmd
