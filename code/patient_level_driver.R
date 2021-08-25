@@ -245,3 +245,5 @@ if(!file.exists(fname)){
   source(file.path(patient_level_analyses, 'p10_drug_pathways.R'))
 }
 
+# convert table outputs to visualizations
+source(file.path(patient_level_analyses, 'run_tables_to_plots.R'))
