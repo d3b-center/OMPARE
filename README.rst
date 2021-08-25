@@ -5,7 +5,7 @@ Omics Patient Report
 ********************
 
 :authors: Komal S. Rathi, Adam Kraya, Run Jin
-:contact: RATHIK@chop.edu, KRAYAA@chop.edu
+:contact: RATHIK@chop.edu, KRAYAA@chop.edu, JINR@chop.edu
 :organization: D3B, CHOP
 :status: This is "work in progress"
 :date: |date|
