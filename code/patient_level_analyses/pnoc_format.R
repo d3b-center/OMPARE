@@ -59,6 +59,29 @@ merge_files <- function(nm){
   } 
 }
 
+# function to merge mutations
+colnames_protected <- list.files(path = results_dir, pattern = "*.consensus_somatic.protected.maf", recursive = T,full.names = T) %>% 
+  head(1) %>% 
+  data.table::fread() %>%
+  colnames()
+colnames_vep <- list.files(path = results_dir, pattern = "*consensus_somatic.vep.maf", recursive = T,full.names = T) %>% 
+  head(1) %>% 
+  data.table::fread() %>%
+  colnames()
+common_columns <- intersect(colnames_protected, colnames_vep)
+merge_mutations <- function(nm, common_columns){
+  sample_name <- gsub(".*results/", "", nm)
+  sample_name <- gsub("/.*", "", sample_name)
+  x <- data.table::fread(nm)
+  x <- x %>% 
+    dplyr::select(common_columns)
+  if(nrow(x) > 1){
+    x <- as.data.frame(x)
+    x$sample_name <- sample_name
+    return(x)
+  } 
+}
+
 # function to read cnv, filter by cancer genes and merge
 # only gain/loss
 merge_cnv <- function(cnvData, cancer_genes){
@@ -271,15 +294,20 @@ pnoc008_fusions <- pnoc008_fusions %>%
 saveRDS(pnoc008_fusions, file = file.path(pnoc008.dir, "pnoc008_fusions_filtered.rds"))
 
 # mutations
-pnoc008_mutations <- list.files(path = results_dir, pattern = "*consensus_somatic.vep.maf", recursive = TRUE, full.names = T)
-pnoc008_mutations <- lapply(pnoc008_mutations, FUN = function(x) merge_files(x))
+pnoc008_mutations <- list.files(path = results_dir, pattern = "*consensus_somatic.vep.maf|*consensus_somatic.protected.maf", recursive = TRUE, full.names = T)
+pnoc008_mutations <- lapply(pnoc008_mutations, FUN = function(x) merge_mutations(x, common_columns = common_columns))
 pnoc008_mutations <- data.table::rbindlist(pnoc008_mutations)
 # only keep NANT sample for PNOC008-5
 pnoc008_mutations <- pnoc008_mutations[grep('CHOP', pnoc008_mutations$sample_name, invert = T),]
 pnoc008_mutations$sample_name  <- gsub("-NANT", "", pnoc008_mutations$sample_name)
 
+# save full file for plot generation
+saveRDS(pnoc008_mutations, file = file.path(pnoc008.dir, "pnoc008_consensus_mutation.rds"))
+
 # filter mutations
 pnoc008_mutations <- filter_mutations(myMutData = pnoc008_mutations, myCancerGenes = cancer_genes)
+
+# subset to columns of interest
 pnoc008_mutations <- pnoc008_mutations %>%
   inner_join(pnoc008_clinical, by = c("sample_name" = "subjectID")) %>%
   mutate(Gene = Hugo_Symbol,
