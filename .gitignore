@@ -11,12 +11,19 @@ code/code_ignored/*
 !code/code_ignored/create_pbta_combined_matrices.R
 !code/code_ignored/prepare_pbta_mut_analysis.R
 
+# tmb normalization folders to be ignored
+code/tmb_normalization/plots
+code/tmb_normalization/references
+code/tmb_normalization/results
+
+# graph-updates folders to be ignored
+code/graph-updates/GDCdata
+
 # data (pushed to s3 instead of github)
 data/
 
 # results directory with all patient data (pushed to cavatica)
 results/
-tmb_normalization/references
 # testing script
 test.R
 test.Rmd
