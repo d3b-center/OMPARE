@@ -18,6 +18,7 @@ code/tmb_normalization/results
 
 # graph-updates folders to be ignored
 code/graph-updates/GDCdata
+GDCdata/
 
 # data (pushed to s3 instead of github)
 data/
