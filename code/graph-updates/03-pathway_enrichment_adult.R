@@ -19,24 +19,29 @@ output_dir <- file.path(root_dir, "results", pnoc008_sample_of_interest, "output
 
 ## P6 pathway enrichment
 ### Read in the files and arrange for plotting
-pathway_analysis_pediatric <- readRDS(file.path(output_dir, "pathway_analysis_adult.rds"))
-shared_pathway_pediatric <- pathway_analysis_pediatric$shared_pathways %>%
-  filter(sample_name == pnoc008_sample_of_interest) %>%
-  mutate(padj = as.numeric(padj),
-         direction = factor(direction, levels = c("up", "down")),
-         pathway = factor(pathway, levels = unique(pathway))) %>%
-  arrange(padj) %>% 
-  arrange(direction)
+pathway_analysis_adult <- readRDS(file.path(output_dir, "pathway_analysis_adult.rds"))
+
+shared_pathway_adult <- pathway_analysis_adult$shared_pathways %>%
+  # arrange by counts
+  arrange(desc(Sample.count.per.pathway))  %>% 
+  select(pathway, Sample.count.per.pathway, direction) %>% 
+  distinct() %>%
+  # take the top 10 for each group
+  group_by(direction) %>% 
+  slice(1:10) %>% 
+  arrange(Sample.count.per.pathway) %>% 
+  mutate(direction = factor(direction, levels = c("up", "down")),
+         pathway = factor(pathway, levels = unique(pathway)))
 
 ### Plot for pathway enrichment
-p <- ggplot(shared_pathway_pediatric, aes(pathway, y = (-1)*log10(padj), fill = direction)) + 
+p <- ggplot(shared_pathway_adult, aes(pathway, y = Sample.count.per.pathway, fill = direction)) + 
     geom_bar(stat="identity") + coord_flip() + theme_bw() +
     xlab("") + 
-    ylab("-log10 Adj. P-Value") + 
+    ylab("Count of Enriched Pathways in 20 Transcriptomically Similar Patients") + 
     theme(plot.margin = unit(c(1, 5, 1, 7), "cm")) + 
     scale_fill_manual(name = "Direction", 
-                      values = c("down" = "forest green", "up" = "red")) + 
-    ggtitle(paste0("Comparison against pediatric")) 
+                      values = c("up" = "red", "down" = "forest green")) + 
+    ggtitle(paste0("Comparison against adult")) 
 
 # save in patient of interest's output folder
 ggsave(plot = p, 
