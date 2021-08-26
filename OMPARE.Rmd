@@ -340,30 +340,6 @@ if(file.exists(fname)){
 }
 ```
 
-Pathway Enrichment (P5) {data-navmenu="Pediatric Tumors Analysis"}
-===
-Row {data-height=500}
----
-
-### Shared Pathways (60% of Transcriptomically Similar Patients)
-
-```{r tabulate_pathways_pediatric}
-if(exists('pathway_analysis_pediatric')){
-  view_dt_minimal(pathway_analysis_pediatric$shared_pathways)
-}
-```
-
-Row {data-height=500}
----
-
-### CNV Mapping
-
-```{r cnv_mapping_pediatric}
-if(exists('pathway_analysis_pediatric')){
-  view_dt_minimal(pathway_analysis_pediatric$cnv_mapping)
-}
-```
-
 ssGSEA (PBTA HGAT) (P5) {data-navmenu="Pediatric Tumors Analysis"}
 ===
 Row {data-height=700}
@@ -378,29 +354,104 @@ if(file.exists(fname)){
 }
 ```
 
-Mutational Analysis (P5) {data-navmenu="Pediatric Tumors Analysis"}
+Shared pathways (P5) {data-navmenu="Pediatric Tumors Analysis"}
 ===
 Row {data-height=500}
 ---
 
-### Recurrently Altered Genes (Transcriptomically Similar Patients)
+### Shared pathways 
 
-```{r rec_alt_genes_pediatric}
-if(exists('mutational_analysis_pediatric')){
-  view_dt_minimal(mutational_analysis_pediatric$recurrent_alterations)
+```{r shared_pathways_pediatric, echo=FALSE, out.width = '100%', out.height='100%'}
+fname <- file.path(topDir, 'output', 'pathway_analysis_pediatric.pdf')
+if(file.exists(fname)){
+  knitr::include_graphics(fname) 
 }
 ```
 
+Shared Mutations (P5) {data-navmenu="Pediatric Tumors Analysis"}
+===
 Row {data-height=500}
 ---
 
-### Shared Genes
+### Shared Mutations (Transcriptomically Similar Patients)
 
-```{r shared_genes_pediatric}
-if(exists('mutational_analysis_pediatric')){
-  view_dt_minimal(mutational_analysis_pediatric$shared_genes)
+```{r shared_mutations_pediatric, echo=FALSE, out.width = '100%', out.height='100%'}
+fname <- file.path(topDir, 'output', 'mutational_shared_pediatric.pdf')
+if(file.exists(fname)){
+  knitr::include_graphics(fname) 
 }
 ```
+
+Shared Mutations AA changes (P5) {data-navmenu="Pediatric Tumors Analysis"}
+===
+Row {data-height=500}
+---
+
+### Shared Mutations AA changes (Transcriptomically Similar Patients)
+
+```{r lollipop_shared_pediatric, echo=FALSE, out.width = '100%', out.height='100%'}
+fname <- file.path(topDir, 'output', 'lollipop_shared_pediatric.pdf')
+if(file.exists(fname)){
+  knitr::include_graphics(fname) 
+}
+```
+
+Recurrent Mutations (P5) {data-navmenu="Pediatric Tumors Analysis"}
+===
+Row {data-height=500}
+---
+
+### Recurrent Mutations (Transcriptomically Similar Patients)
+
+```{r recurrent_mutations_pediatric, echo=FALSE, out.width = '100%', out.height='100%'}
+fname <- file.path(topDir, 'output', 'mutational_recurrent_pediatric.pdf')
+if(file.exists(fname)){
+  knitr::include_graphics(fname) 
+}
+```
+
+Recurrent Mutations AA changes (P5) {data-navmenu="Pediatric Tumors Analysis"}
+===
+Row {data-height=500}
+---
+
+### Recurrent Mutations AA changes (Transcriptomically Similar Patients)
+
+```{r lollipop_recurrent_pediatric, echo=FALSE, out.width = '100%', out.height='100%'}
+fname <- file.path(topDir, 'output', 'lollipop_recurrent_pediatric.pdf')
+if(file.exists(fname)){
+  knitr::include_graphics(fname) 
+}
+```
+
+Shared CNV (P5) {data-navmenu="Pediatric Tumors Analysis"}
+===
+Row {data-height=500}
+---
+
+### Shared CNV (Transcriptomically Similar Patients)
+
+```{r shared_cnv_pediatric, echo=FALSE, out.width = '100%', out.height='100%'}
+fname <- file.path(topDir, 'output', 'mutational_cnv_shared_pediatric.pdf')
+if(file.exists(fname)){
+  knitr::include_graphics(fname) 
+}
+```
+
+Recurrent CNV (P5) {data-navmenu="Pediatric Tumors Analysis"}
+===
+Row {data-height=500}
+---
+
+### Recurrent CNV (Transcriptomically Similar Patients)
+
+```{r recurrent_cnv_pediatric, echo=FALSE, out.width = '100%', out.height='100%'}
+fname <- file.path(topDir, 'output', 'mutational_cnv_recurrent_pediatric.pdf')
+if(file.exists(fname)){
+  knitr::include_graphics(fname) 
+}
+```
+
 
 Transcriptomically Similar Samples (TCGA) (P6) {data-navmenu="Adult Tumors Analysis"}
 ===
@@ -436,51 +487,101 @@ if(exists('kaplan_meier_adult')){
 }
 ```
 
-Pathway Enrichment (P6) {data-navmenu="Adult Tumors Analysis"}
+Shared pathways (P6) {data-navmenu="Adult Tumors Analysis"}
 ===
 Row {data-height=500}
 ---
 
-### Shared Pathways (60% of Transcriptomically Similar Patients)
+### Shared pathways 
 
-```{r tabulate_pathways_adult}
-if(exists('pathway_analysis_adult')){
-  view_dt_minimal(pathway_analysis_adult$shared_pathways)
+```{r shared_pathways_adult, echo=FALSE, out.width = '100%', out.height='100%'}
+fname <- file.path(topDir, 'output', 'pathway_analysis_adult.pdf')
+if(file.exists(fname)){
+  knitr::include_graphics(fname) 
 }
 ```
 
-Row {data-height=500}
----
-
-### CNV Mapping
-
-```{r cnv_mapping_adult}
-if(exists('pathway_analysis_adult')){
-  view_dt_minimal(pathway_analysis_adult$cnv_mapping)
-}
-```
-
-Mutational Analysis (P6) {data-navmenu="Adult Tumors Analysis"}
+Shared Mutations (P6) {data-navmenu="Adult Tumors Analysis"}
 ===
 Row {data-height=500}
 ---
 
-### Recurrently Altered Genes (Transcriptomically Similar Patients)
+### Shared Mutations (Transcriptomically Similar Patients)
 
-```{r rec_alt_genes_adult}
-if(exists('mutational_analysis_adult')){
-  view_dt_minimal(mutational_analysis_adult$recurrent_alterations)
+```{r shared_mutations_adult, echo=FALSE, out.width = '100%', out.height='100%'}
+fname <- file.path(topDir, 'output', 'mutational_shared_adult.pdf')
+if(file.exists(fname)){
+  knitr::include_graphics(fname) 
 }
 ```
 
+Shared Mutations AA changes (P6) {data-navmenu="Adult Tumors Analysis"}
+===
 Row {data-height=500}
 ---
 
-### Shared Genes
+### Shared Mutations AA changes (Transcriptomically Similar Patients)
 
-```{r shared_genes_adult}
-if(exists('mutational_analysis_adult')){
-  view_dt_minimal(mutational_analysis_adult$shared_genes)
+```{r lollipop_shared_adult, echo=FALSE, out.width = '100%', out.height='100%'}
+fname <- file.path(topDir, 'output', 'lollipop_shared_adult.pdf')
+if(file.exists(fname)){
+  knitr::include_graphics(fname) 
+}
+```
+
+Recurrent Mutations (P6) {data-navmenu="Adult Tumors Analysis"}
+===
+Row {data-height=500}
+---
+
+### Recurrent Mutations (Transcriptomically Similar Patients)
+
+```{r recurrent_mutations_adult, echo=FALSE, out.width = '100%', out.height='100%'}
+fname <- file.path(topDir, 'output', 'mutational_recurrent_adult.pdf')
+if(file.exists(fname)){
+  knitr::include_graphics(fname) 
+}
+```
+
+Recurrent Mutations AA changes (P6) {data-navmenu="Adult Tumors Analysis"}
+===
+Row {data-height=500}
+---
+
+### Recurrent Mutations AA changes (Transcriptomically Similar Patients)
+
+```{r lollipop_recurrent_adult, echo=FALSE, out.width = '100%', out.height='100%'}
+fname <- file.path(topDir, 'output', 'lollipop_recurrent_adult.pdf')
+if(file.exists(fname)){
+  knitr::include_graphics(fname) 
+}
+```
+
+Shared CNV (P6) {data-navmenu="Adult Tumors Analysis"}
+===
+Row {data-height=500}
+---
+
+### Shared CNV (Transcriptomically Similar Patients)
+
+```{r shared_cnv_adult, echo=FALSE, out.width = '100%', out.height='100%'}
+fname <- file.path(topDir, 'output', 'mutational_cnv_shared_adult.pdf')
+if(file.exists(fname)){
+  knitr::include_graphics(fname) 
+}
+```
+
+Recurrent CNV (P6) {data-navmenu="Adult Tumors Analysis"}
+===
+Row {data-height=500}
+---
+
+### Recurrent CNV (Transcriptomically Similar Patients)
+
+```{r recurrent_cnv_adult, echo=FALSE, out.width = '100%', out.height='100%'}
+fname <- file.path(topDir, 'output', 'mutational_cnv_recurrent_adult.pdf')
+if(file.exists(fname)){
+  knitr::include_graphics(fname) 
 }
 ```
 
