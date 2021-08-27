@@ -52,11 +52,12 @@ Additionally, drugs identified by the *qSig output of signatureSearch were subse
 Input:
   - `../../data/interactions.tsv`
   - `../../data/enrichment_nes.tsv`
-  - `../../data/CC_based_heatmap_Distance_euclidean_finalLinkage_average_clusterAlg_KM_expct_counts_VST_cluster_and_annotation.tsv`
+  - `../../data/clustered_samples.rds`
   - `../../data/GTExBrain_qSig_output.txtv`
   - `../../data/PBTA_ALL_qSig_output.txt`
   - `../../data/PBTA_HGG_qSig_output.txt`
-  - `references/chembl_29_sqlite/chembl_29.db`
+  - `../../references/chembl_29_sqlite/chembl_29.db`
+  - `../../references/pnoc008_clinical.rds`
 
 Output:
   - `results/subnetwork_genes.tsv`
