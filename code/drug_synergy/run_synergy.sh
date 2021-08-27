@@ -24,7 +24,8 @@ ref_dir="../../references"
 # Files for generating subnetworks
 interaction_file="${data_dir}/interactions.tsv"
 enrichment_nes_file="${data_dir}/enrichment_nes.tsv"
-cluster_file="${data_dir}/CC_based_heatmap_Distance_euclidean_finalLinkage_average_clusterAlg_KM_expct_counts_VST_cluster_and_annotation.tsv"
+cluster_file="${data_dir}/clustered_samples.rds"
+clinical_file="${ref_dir}/pnoc008_clinical.rds"
 
 # qSig files from CEMiTools output
 gtex_qSig="${data_dir}/GTExBrain_qSig_output.txt"
@@ -47,8 +48,9 @@ Rscript --vanilla ${analysis_dir}/01-subnetwork_qSig_gene_drug_map.R \
 --interaction $interaction_file \
 --enrichment_nes $enrichment_nes_file \
 --cluster $cluster_file \
+--clinical $clinical_file \
 --chemblDb_path $chembldb_path \
---sample_interest "P-38" \
+--sample_interest "PNOC008-38" \
 --gtex_qSig $gtex_qSig \
 --pbta_qSig $pbta_qSig \
 --pbta_hgg_qSig $pbta_hgg_qSig \

@@ -29,7 +29,9 @@ option_list <- list(
   make_option(c("-r","--enrichment_nes"),type="character",
               help="cluster vs. modules enrichment score file (.tsv) "),
   make_option(c("-c","--cluster"),type="character",
-              help="File with cluster assignments for samples (.tsv)"),
+              help="File with cluster assignments for samples (.rds)"),
+  make_option(c("-n","--clinical"),type="character",
+              help="clinical files of PNOC008 samples (.rds)"),
   make_option(c("-s","--sample_interest"),type="character",
               help="sample of interest to run this analysis "),
   make_option(c("-l","--chemblDb_path"),type="character",
@@ -63,7 +65,8 @@ enrichment_nes_df <- readr::read_tsv(opt$enrichment_nes) %>%
                 cluster_2 = `2`,
                 cluster_3 = `3`)
 
-cluster_df <- readr::read_tsv(opt$cluster)
+cluster_df <- readRDS(opt$cluster)
+clinical_df <- readRDS(opt$clinical)
 
 gtex_qSig <- readr::read_tsv(opt$gtex_qSig)
 pbta_qSig <- readr::read_tsv(opt$pbta_qSig)
@@ -71,9 +74,13 @@ pbta_hgg_qSig <- readr::read_tsv(opt$pbta_hgg_qSig)
 
 #### Run drug annnotation for subnetwork -------------------------------------
 
+# Find the bs_id of our sample of interest
+bs_id <- clinical_df %>% filter(subjectID == sample_interest) %>%
+  pull(Kids_First_Biospecimen_ID)
+
 # Find the cluster assignment of samples of interest 
 cluster_assignment <- cluster_df %>% 
-  dplyr::filter(Sample.Names == sample_interest ) %>%
+  dplyr::filter(Kids_First_Biospecimen_ID == bs_id ) %>%
   pull(CC)
 
 cluster_assignment <- paste0("cluster_", cluster_assignment)

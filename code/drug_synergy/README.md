@@ -3,10 +3,10 @@
 Run Jin
 
 ## Calculate synergy scores for combination of drug recommendations
-This module is written to implement the synergy from gene expression and network mining (SynGeNet) method described in [this paper](https://www.nature.com/articles/s41540-019-0085-4) with custom modifications.
+This module is written to implement the synergy from gene expression and network mining (SynGeNet) method described in this paper(https://www.nature.com/articles/s41540-019-0085-4) with custom modifications.
 
 Briefly, we leveraged the outputs from CEMiTools and signatureSearch (which are already incorporated in our OMPARE workflow) and calculate synergy score as followed:
-1. From `CC_based_heatmap_Distance_euclidean_finalLinkage_average_clusterAlg_KM_expct_counts_VST_cluster_and_annotation.tsv`, extract the cluster number that is assigned to our sample of interest 
+1. From `clustered_samples.rds` and `pnoc008_clinical.rds`, extract the cluster number that is assigned to our sample of interest 
 2. From `enrichment_nes.tsv`, find the module number that is most positively correlated with the cluster of our sample of interest.
 3. Generate subnetwork associated with the module found above by subsetting `interactions.tsv` to contain only interactions in that particular module - result saved as `reults/subnetwork_genes.tsv`
 4. Use bioconductor package `drugTargetInteractions` and `biomaRt` to find all FDA approved drugs that target genes in our subnetwork, annotate with drug actions, MOA etc. - results saved as  `results/drug_gene_map/subnetwork_gene_drug_map.tsv`.
@@ -30,12 +30,13 @@ All data files required are:
     - `GTExBrain_qSig_output.txt`
     - `PBTA_ALL_qSig_output.txt`
     - `PBTA_HGG_qSig_output.txt`
-  - For all patients in relevent cohorts (download from GitHub https://github.com/d3b-center/d3b-pnoc003-HGG-DMG-omics/blob/master/analyses/ge-only-based-clustering_coding/expected_counts/output/CC_based_heatmap_Distance_euclidean_finalLinkage_average_clusterAlg_KM_expct_counts_VST_cluster_and_annotation.tsv)
-    - `CC_based_heatmap_Distance_euclidean_finalLinkage_average_clusterAlg_KM_expct_counts_VST_cluster_and_annotation.tsv`
-
+    - `clustered_samples.rds`
+  
 All reference files required are:
   - References CHEMBL database (download from https://chembl.gitbook.io/chembl-interface-documentation/downloads):
     - `chembl_29.db`
+  - Clinical files for all PNOC008 samples (download from S3 bucket s3://d3b-bix-dev-data-bucket/PNOC008/reference/pnoc008/)
+    - `pnoc008_clinical.rds`
     
 After all the relevant files are downloaded and stored in either `data` or `references` folder of the main repository, the module can be run with:
   
