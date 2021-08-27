@@ -105,3 +105,10 @@ if(dir.exists(topDir)){
                       output_file = output_file)
   }
 }
+
+# 8. Sync to s3
+print("Sync data back to s3...")
+cmd8 <- paste('aws s3 --profile saml sync', ref_dir, 's3://d3b-bix-dev-data-bucket/PNOC008/reference')
+print(cmd8)
+system(cmd8)
+
