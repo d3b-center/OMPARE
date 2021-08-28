@@ -44,7 +44,7 @@ pbta_hgg_subnet_qSig_mapped="${results_dir_map}/pbta_hgg_qSig_subnetwork_drug_ge
 chembldb_path="${ref_dir}/chembl_29_sqlite/chembl_29.db"
 
 # Obtain drugs that are associated with all the genes in the subnetwork
-Rscript --vanilla ${analysis_dir}/01-subnetwork_qSig_gene_drug_map.R \
+Rscript --vanilla ${analysis_dir}/utils/subnetwork_qSig_gene_drug_map.R \
 --interaction $interaction_file \
 --enrichment_nes $enrichment_nes_file \
 --cluster $cluster_file \
@@ -61,7 +61,7 @@ Rscript --vanilla ${analysis_dir}/01-subnetwork_qSig_gene_drug_map.R \
 --pbta_hgg_mapped $pbta_hgg_subnet_qSig_mapped
 
 # Obtain drugs that are both in qSig and subnetwork
-Rscript --vanilla ${analysis_dir}/02-drug_synergy_score_calc.R \
+Rscript --vanilla ${analysis_dir}/utils/drug_synergy_score_calc.R \
 --gtex_mapped $gtex_subnet_qSig_mapped \
 --pbta_mapped $pbta_subnet_qSig_mapped \
 --pbta_hgg_mapped $pbta_hgg_subnet_qSig_mapped \
