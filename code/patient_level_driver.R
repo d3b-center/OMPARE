@@ -210,6 +210,7 @@ if(file.exists(fname)){
   oncokb_output <- read.delim(fname, stringsAsFactors = F)
 } else {
   source(file.path(patient_level_analyses, 'p10_run_oncokb.R'))
+  oncokb_output <- read.delim(fname, stringsAsFactors = F)
 }
 
 # transcriptome based drug recommendations

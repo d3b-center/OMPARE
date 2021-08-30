@@ -187,20 +187,19 @@ ora_dat <- ora_dat %>%
   arrange(p.adjust) %>%
   slice_head(n = 10) 
 modules <- unique(ora_dat$Module)
-p <- list()
+pdf(file.path(patient_output_dir, "ora_plots.pdf"), width = 12, height = 8)
 for(i in 1:length(modules)){
   tmp <- ora_dat %>%
     filter(Module %in% modules[i])
   title <- paste("Module: ", unique(tmp$Module), "| Direction: ", unique(tmp$direction))
-  p[[i]] <- ggplot(tmp, aes(x = reorder(ID, -p.adjust), 
-                            y = -log10(p.adjust), 
-                            fill = -log10(p.adjust))) +
+  p <- ggplot(tmp, aes(x = reorder(ID, -p.adjust), 
+                  y = -log10(p.adjust), 
+                  fill = -log10(p.adjust))) +
     geom_bar(stat = "identity") +
     coord_flip() +
     xlab('') + ylab('−log10(adjusted p−value)') + ggtitle(title) +
     theme_bw() +
     theme_Publication(base_size = 12) 
+  print(p)
 }
-ggsave(plot = wrap_plots(p, ncol = 1), 
-       filename = file.path(patient_output_dir, 'ora_plots.pdf'), 
-       width = 10, height = 10, device = 'pdf')
+dev.off()
