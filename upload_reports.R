@@ -4,11 +4,11 @@
 suppressPackageStartupMessages(library(optparse))
 
 option_list <- list(
-  make_option(c("-p", "--patient"), type = "character",
+  make_option(c("--patient"), type = "character",
               help = "Patient Identifier (PNOC008-22, etc...)"),
-  make_option(c("-w", "--workdir"), type = "character",
+  make_option(c("--workdir"), type = "character",
               help = "OMPARE working directory"),
-  make_option(c("-s", "--study"), type = "character", 
+  make_option(c("--study"), type = "character", 
               default = "PNOC008",
               help = "PNOC008 or CBTN")
 )

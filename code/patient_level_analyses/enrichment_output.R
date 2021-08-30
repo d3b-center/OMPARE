@@ -9,11 +9,11 @@ suppressPackageStartupMessages(library(optparse))
 
 # parse params
 option_list <- list(
-  make_option(c("-i", "--input"), type = "character",
+  make_option(c("--input"), type = "character",
               help = "Directory e.g. data/PNOC008-04"),
-  make_option(c("-o", "--output"), type = "character",
+  make_option(c("--output"), type = "character",
               help = "output excel filename i.e. PNOC008-04_summary"),
-  make_option(c("-t", "--type"), type = "character",
+  make_option(c("--type"), type = "character",
               help = "text or excel")
 )
 opt <- parse_args(OptionParser(option_list = option_list))

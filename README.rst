@@ -90,37 +90,49 @@ Master script
 
 **run_OMPARE.R**: Master script that runs the following scripts:
    
-1. **code/create_project_dir.R**: creating project directory and organize files.
-2. **code/create_clinfile.R**: creating clinical file for patint of interest.
+1. **code/create_project_dir.R**: create project directory and organize files.
+2. **code/create_clinfile.R**: create clinical file for patient of interest.
 3. **code/update_pbta.R**: pull pbta histologies data from datawarehouse
-4. **code/patient_level_analyses/pnoc_format.R**: updating PNOC008 data matrices (cnv, mutations, fusions, expression) with each new patient.
-5. **code/patient_level_analyses/gsea_enrichment.R**: updating GSEA enrichment outputs with each new patient.
-6. **code/patient_level_analyses/enrichment_output.R**: generating genes and pathway enrichment output for each new patient.
-7. **OMPARE.Rmd**: running html reports
+4. **code/patient_level_analyses/pnoc_format.R**: update PNOC008 data matrices (cnv, mutations, fusions, expression) with each new patient.
+5. **code/patient_level_analyses/gsea_enrichment.R**: update GSEA enrichment outputs with each new patient.
+6. **code/patient_level_analyses/enrichment_output.R**: generate genes and pathway enrichment output for each new patient.
+7. **OMPARE.Rmd**: run html reports
+8. Using ``aws s3 sync``, sync back updated reference folder to ``s3://d3b-bix-dev-data-bucket/PNOC008/reference``
+9. **upload_reports.R**: upload reports and output folders to PNOC008 data delivery project on cavatica.
 
 .. code-block:: bash
 	
-	Rscript run_OMPARE.R --help
-
 	Options:
-	-p PATIENT, --patient=PATIENT
-		Patient Number (1, 2...)
+	--patient=PATIENT
+		Patient identifier (PNOC008-22, C3342894...)
 
-	-s SOURCEDIR, --sourcedir=SOURCEDIR
-		Source directory with all files
+	--sourcedir=SOURCEDIR
+		Source directory with all files (usually downloads folder on local machine)
 
-	-c CLIN_FILE, --clin_file=CLIN_FILE
-		PNOC008 Manifest file (.xlsx)
+	--clin_file=CLIN_FILE
+		Manifest file (.xlsx)
 
-	-u UPDATE_PBTA, --update_pbta=UPDATE_PBTA
+	--update_pbta=UPDATE_PBTA
 		Update PBTA adapt file (TRUE or FALSE)
 
-	# Example for patient PNOC008-21
+	--sync_data=SYNC_DATA
+		Sync reference data to s3 (TRUE or FALSE)
+
+	--upload_reports=UPLOAD_REPORTS
+		Upload reports to cavatica (TRUE or FALSE)
+
+	--study=STUDY
+		Study ID (PNOC008 or CBTN)
+
+	# Example for patient PNOC008-40
 	Rscript run_OMPARE.R \
-	--patient 21 \
-	--clin_file /path-to/OMPARE/data/reference/manifest/pnoc008_manifest.xlsx \
-	--sourcedir /path-to/downloaded_files_from_cavatica \
-	--update_pbta TRUE
+	--patient PNOC008-40 \
+	--sourcedir ~/Downloads/p40 \
+	--clin_file data/reference/manifest/pnoc008_manifest.xlsx \
+	--update_pbta FALSE \
+	--sync_data TRUE \
+	--upload_reports FALSE \
+	--study PNOC008
 
 Create project directory
 ------------------------
@@ -132,19 +144,16 @@ Create project directory
 	Rscript code/create_project_dir.R --help
 
 	Options:
-		-s SOURCEDIR, --sourcedir=SOURCEDIR
-			Source directory containing all files from data delivery project
+	--sourcedir=SOURCEDIR
+		Source directory with all files
 
-		-d DESTDIR, --destdir=DESTDIR
-			Destination directory. Should be /path-to/OMPARE/results/PNOC008-21/ for Patient 21
+	--destdir=DESTDIR
+		Destination directory.
 
-		-h, --help
-			Show this help message and exit
-
-	# Example for patient PNOC008-21
+	# Example for patient PNOC008-40
 	Rscript code/create_project.R \
-	--sourcedir /path-to/source/PNOC008-21-cavatica-files \
-	--destdir /path-to/OMPARE/results/PNOC008-21/
+	--sourcedir ~/Downloads/p40 \
+	--destdir /path-to/OMPARE/results/PNOC008-40
 
 Create clinical file
 --------------------
@@ -156,28 +165,28 @@ Create clinical file
 	Rscript code/create_clinfile.R --help
 
 	Options:
-		-s SHEET, --sheet=SHEET
-			PNOC008 Manifest file (.xlsx)
+	--sheet=SHEET
+		PNOC008 Manifest file (.xlsx)
 
-		-d DIR, --dir=DIR
-			Path to PNOC008 patient folder.
+	--dir=DIR
+		Path to PNOC008 patient folder.
 
-		-p PATIENT, --patient=PATIENT
-			Patient identifier for PNOC008. e.g. PNOC008-1, PNOC008-10 etc
+	--patient=PATIENT
+		Patient identifier for PNOC008. e.g. PNOC008-1, PNOC008-10 etc
 
-	# Example for patient PNOC008-21
+	# Example for patient PNOC008-40
 	Rscript code/create_clinfile.R \
 	--sheet /path-to/OMPARE/data/reference/manifest/pnoc008_manifest.xlsx \
-	--patient PNOC008-21 \
-	--dir /path-to/OMPARE/results/PNOC008-21
+	--patient PNOC008-40 \
+	--dir /path-to/OMPARE/results/PNOC008-40
 
 NOTE: The above steps will create a directory structure for the patient of interest: 
 
 .. code-block:: bash
 
-	# Example for PNOC008-21
+	# Example for PNOC008-40
 	.
-	results/PNOC008-21
+	results/PNOC008-40
 	├── clinical
 	│   └── patient_report.txt
 	├── copy-number-variations
@@ -233,12 +242,12 @@ Update GSEA enrichment:
 	Rscript code/patient_level_analyses/gsea_enrichment.R --help
 
 	Options:
-	-p PATIENT, --patient=PATIENT
+	--patient=PATIENT
 		Patient identifier for e.g. PNOC008-1, PNOC008-10 etc
 
-	# Example for patient PNOC008-21
+	# Example for patient PNOC008-40
 	Rscript code/patient_level_analyses/gsea_enrichment.R \
-	--patient PNOC008-21 \
+	--patient PNOC008-40
 
 	# Running the script will update the following files:
 
@@ -271,25 +280,25 @@ Excel file with differential results:
 	Rscript code/patient_level_analyses/enrichment_output.R --help
 
 	Options:
-		-i INPUT, --input=INPUT
-			Directory e.g. data/PNOC008-04
+	--input=INPUT
+		Directory e.g. data/PNOC008-04
 
-		-o OUTPUT, --output=OUTPUT
-			output excel filename i.e. PNOC008-04_summary
+	--output=OUTPUT
+		output excel filename i.e. PNOC008-04_summary
 
-		-t TYPE, --type=TYPE
-			text or excel
+	--type=TYPE
+		text or excel
 
-	# Example for patient PNOC008-21
+	# Example for patient PNOC008-40
 	Rscript code/enrichment_output.R \
-	--input /path-to/OMPARE/results/PNOC008-21 \
-	--output PNOC008-21_summary \
+	--input /path-to/OMPARE/results/PNOC008-40 \
+	--output PNOC008-40_summary \
 	--type text
 
 HTML reports:
 -------------
 
-8. Generate markdown report:
+Generate markdown report:
 
 .. code-block:: bash
 
@@ -316,7 +325,7 @@ After running the reports, the project folder will have all output files with pl
 
 .. code-block:: bash
 
-	results/PNOC008-29
+	results/PNOC008-40
 	├── CEMITools
 	│   ├── beta_r2.pdf
 	│   ├── clustered_samples.rds
@@ -358,10 +367,10 @@ After running the reports, the project folder will have all output files with pl
 	│   ├── 806668be-e3a2-4ea3-90fb-f67eba78c7b3.STAR.fusion_predictions.abridged.coding_effect.tsv
 	│   └── 806668be-e3a2-4ea3-90fb-f67eba78c7b3.arriba.fusions.tsv
 	├── output
-	│   ├── PNOC008-29_summary_DE_Genes_Down.txt
-	│   ├── PNOC008-29_summary_DE_Genes_Up.txt
-	│   ├── PNOC008-29_summary_Pathways_Down.txt
-	│   ├── PNOC008-29_summary_Pathways_Up.txt
+	│   ├── PNOC008-40_summary_DE_Genes_Down.txt
+	│   ├── PNOC008-40_summary_DE_Genes_Up.txt
+	│   ├── PNOC008-40_summary_Pathways_Down.txt
+	│   ├── PNOC008-40_summary_Pathways_Up.txt
 	│   ├── circos_plot.png
 	│   ├── cnv_plot.png
 	│   ├── complexheatmap_cgs.png
@@ -418,12 +427,12 @@ After running the reports, the project folder will have all output files with pl
 	│   ├── transcriptome_drug_rec.rds
 	│   └── tumor_signature_output.rds
 	├── reports
-	│   ├── PNOC008-29_all.html
-	│   ├── PNOC008-29_consensus.html
-	│   ├── PNOC008-29_lancet.html
-	│   ├── PNOC008-29_mutect2.html
-	│   ├── PNOC008-29_strelka2.html
-	│   └── PNOC008-29_vardict.html
+	│   ├── PNOC008-40_all.html
+	│   ├── PNOC008-40_consensus.html
+	│   ├── PNOC008-40_lancet.html
+	│   ├── PNOC008-40_mutect2.html
+	│   ├── PNOC008-40_strelka2.html
+	│   └── PNOC008-40_vardict.html
 	└── simple-variants
 	    ├── 106762e7-e100-405b-9ae9-bb80a186cdf9.lancet_somatic.vep.maf
 	    ├── 106762e7-e100-405b-9ae9-bb80a186cdf9.mutect2_somatic.vep.maf
@@ -445,18 +454,18 @@ Upload to data-delivery project
 	Rscript upload_reports.R --help
 
     Options:
-	-p PATIENT, --patient=PATIENT
-		Patient Number (1, 2...)
+	--patient=PATIENT
+		Patient Identifier (PNOC008-22, etc...)
 
-	-w WORKDIR, --workdir=WORKDIR
+	--workdir=WORKDIR
 		OMPARE working directory
 
-	-s STUDY, --study=STUDY
+	--study=STUDY
 		PNOC008 or CBTN
 
-	# Example run for PNOC008-21
+	# Example run for PNOC008-40
 	Rscript upload_reports.R \
-	--patient 21 \
+	--patient PNOC008-40 \
 	--wordir /path-to/Projects/OMPARE
 	--study 'PNOC008'
 

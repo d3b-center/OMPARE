@@ -7,9 +7,9 @@
 suppressPackageStartupMessages(library(optparse))
 
 option_list <- list(
-  make_option(c("-s", "--sourcedir"), type = "character",
+  make_option(c("--sourcedir"), type = "character",
               help = "Source directory with all files"),
-  make_option(c("-d", "--destdir"), type = "character",
+  make_option(c("--destdir"), type = "character",
               help = "Destination directory. Should be /path/to/OMPARE/results/PNOC008-22/ for Patient 22")
 )
 

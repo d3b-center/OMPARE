@@ -8,11 +8,11 @@ suppressPackageStartupMessages(library(optparse))
 suppressPackageStartupMessages(library(dplyr))
 
 option_list <- list(
-  make_option(c("-s", "--sheet"), type = "character",
+  make_option(c("--sheet"), type = "character",
               help = "Manifest file (.xlsx)"),
-  make_option(c("-d", "--dir"), type = "character",
+  make_option(c("--dir"), type = "character",
               help = "Path to patient folder (top directory)"),
-  make_option(c("-p", "--patient"), type = "character",
+  make_option(c("--patient"), type = "character",
               help = "Patient identifier for e.g. PNOC008-1, PNOC008-10 etc")
 )
 
