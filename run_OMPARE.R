@@ -16,7 +16,13 @@ option_list <- list(
               help = "Manifest file (.xlsx)"),
   make_option(c("-u", "--update_pbta"), type = "logical",
               default = NULL,
-              help = "Update PBTA adapt file (TRUE or FALSE)")
+              help = "Update PBTA adapt file (TRUE or FALSE)"),
+  make_option(c("-u", "--sync_data"), type = "logical",
+              default = NULL,
+              help = "Sync reference data to s3 (TRUE or FALSE)"),
+  make_option(c("-u", "--upload_reports"), type = "logical",
+              default = NULL,
+              help = "Upload reports to cavatica (TRUE or FALSE)")
 )
 
 # parameters to pass
@@ -25,6 +31,8 @@ patient <- opt$patient
 clinical_sheet <- opt$clin_file
 sourceDir <- opt$sourcedir
 update_pbta <- opt$update_pbta
+sync_data <- opt$sync_data
+upload_reports <- opt$upload_reports
 
 # directories
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
@@ -57,7 +65,7 @@ if(!is.null(clinical_sheet)){
   print("Clinical file present...")
 }
 
-# 3. update histologies file from adapt
+# 3. update histologies file from adapt (needs VPN)
 if(update_pbta){
   print("Update PBTA histologies file...")
   update_pbta <- file.path(code_dir, 'update_pbta.R')
@@ -106,10 +114,19 @@ if(dir.exists(topDir)){
   }
 }
 
-# 8. Sync to s3
+# 8. Sync to s3 (needs VPN)
 # exclude chembl folder as it is huge ~20GB and connection breaks before it is uploaded.
-print("Sync data back to s3...")
-cmd8 <- paste("aws s3 --profile saml sync", ref_dir, "s3://d3b-bix-dev-data-bucket/PNOC008/reference --exclude 'chembl/*'")
-print(cmd8)
-system(cmd8)
+if(sync_data){
+  print("Sync data back to s3...")
+  cmd8 <- paste("aws s3 --profile saml sync", ref_dir, "s3://d3b-bix-dev-data-bucket/PNOC008/reference --exclude 'chembl/*'")
+  print(cmd8)
+  system(cmd8)
+}
 
+# 9. Upload reports to cavatica
+if(upload_reports){
+  print("Upload reports to cavatica...")
+  cmd9 <- paste("Rscript upload_reports.R --patient", patient,  "--workdir" , root_dir)
+  print(cmd9)
+  system(cmd9)
+}
