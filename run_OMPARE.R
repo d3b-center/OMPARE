@@ -107,8 +107,9 @@ if(dir.exists(topDir)){
 }
 
 # 8. Sync to s3
+# exclude chembl folder as it is huge ~20GB and connection breaks before it is uploaded.
 print("Sync data back to s3...")
-cmd8 <- paste('aws s3 --profile saml sync', ref_dir, 's3://d3b-bix-dev-data-bucket/PNOC008/reference')
+cmd8 <- paste("aws s3 --profile saml sync", ref_dir, "s3://d3b-bix-dev-data-bucket/PNOC008/reference --exclude 'chembl/*'")
 print(cmd8)
 system(cmd8)
 
