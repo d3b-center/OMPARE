@@ -130,7 +130,7 @@ if(sync_data){
 # 9. Upload reports to cavatica
 if(upload_reports){
   print("Upload reports to cavatica...")
-  cmd9 <- paste("Rscript upload_reports.R --patient", patient,  "--workdir" , root_dir, "--study", study)
+  cmd9 <- paste("Rscript upload_reports.R --patient", patient, "--study", study)
   print(cmd9)
   system(cmd9)
 }

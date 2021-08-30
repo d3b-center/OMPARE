@@ -457,16 +457,12 @@ Upload to data-delivery project
 	--patient=PATIENT
 		Patient Identifier (PNOC008-22, etc...)
 
-	--workdir=WORKDIR
-		OMPARE working directory
-
 	--study=STUDY
 		PNOC008 or CBTN
 
 	# Example run for PNOC008-40
 	Rscript upload_reports.R \
 	--patient PNOC008-40 \
-	--wordir /path-to/Projects/OMPARE
 	--study 'PNOC008'
 
 Dependencies on specific hgg-dmg versions

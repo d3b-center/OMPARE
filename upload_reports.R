@@ -6,8 +6,6 @@ suppressPackageStartupMessages(library(optparse))
 option_list <- list(
   make_option(c("--patient"), type = "character",
               help = "Patient Identifier (PNOC008-22, etc...)"),
-  make_option(c("--workdir"), type = "character",
-              help = "OMPARE working directory"),
   make_option(c("--study"), type = "character", 
               default = "PNOC008",
               help = "PNOC008 or CBTN")
@@ -16,13 +14,11 @@ option_list <- list(
 # parameters to pass
 opt <- parse_args(OptionParser(option_list = option_list))
 patient <- opt$patient
-workdir <- opt$workdir
 study <- opt$study
 
-# set variables
-setwd(workdir) # This should be the OMPARE directory
-print(paste0("Working directory:", getwd()))
-topDir <- file.path(getwd(), 'results', patient)
+# directories
+root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
+topDir <- file.path(root_dir, 'results', patient)
 
 # set variables for upload commands
 readRenviron("~/.Renviron")
@@ -35,7 +31,7 @@ if(study == "PNOC008"){
 }
 
 # destination folder
-dest.folder <- file.path(patient) 
+dest_folder <- file.path(patient) 
 
 # source folders
 output <- file.path(topDir, "output") # all output
@@ -43,17 +39,17 @@ reports <- file.path(topDir, "reports") # all reports
 cemitools_reports <- file.path(topDir, "CEMITools") # cemitools output
 
 # upload output
-cmd1 <- paste(cav, '-t', auth, '-p', project, '-f', dest.folder, '-pf', output, sep = " ")
+cmd1 <- paste(cav, '-t', auth, '-p', project, '-f', dest_folder, '-pf', output, sep = " ")
 print(cmd1)
 system(cmd1)
 
 # upload reports
-cmd2 <- paste(cav, '-t', auth, '-p', project, '-f', dest.folder, '-pf', reports, sep = " ")
+cmd2 <- paste(cav, '-t', auth, '-p', project, '-f', dest_folder, '-pf', reports, sep = " ")
 print(cmd2)
 system(cmd2)
 
 # upload cemitools reports and output
-cmd3 <- paste(cav, '-t', auth, '-p', project, '-f', dest.folder, '-pf', cemitools_reports, sep = " ")
+cmd3 <- paste(cav, '-t', auth, '-p', project, '-f', dest_folder, '-pf', cemitools_reports, sep = " ")
 print(cmd3)
 system(cmd3)
 
