@@ -28,7 +28,7 @@ shared_pathway_adult <- pathway_analysis_adult$shared_pathways %>%
   distinct() %>%
   # take the top 10 for each group
   group_by(direction) %>% 
-  slice(1:10) %>% 
+  dplyr::slice(1:10) %>% 
   arrange(Sample.count.per.pathway) %>% 
   mutate(direction = factor(direction, levels = c("up", "down")),
          pathway = factor(pathway, levels = unique(pathway)))

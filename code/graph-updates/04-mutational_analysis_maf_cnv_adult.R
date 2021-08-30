@@ -52,8 +52,9 @@ mutational_analysis <- readRDS(file.path(output_dir, "mutational_analysis_adult.
 #### Prepare combined MAF for recurrent mutations
 recurrent_subjects <- mutational_analysis$recurrent_alterations %>% 
   filter(Alteration_Datatype == "Mutation") %>% 
-  pull(subject_id) %>% unique() %>%
-  append(pnoc008_sample_of_interest)
+  pull(subject_id) %>% 
+  append(pnoc008_sample_of_interest) %>%
+  unique()
 
 recurrent_alterations_pnoc008 <- recurrent_subjects[recurrent_subjects %in% consensus_maf_pnoc008$sample_name] 
 recurrent_alterations_tcga <- recurrent_subjects[!recurrent_subjects %in% consensus_maf_pnoc008$sample_name]
@@ -135,6 +136,11 @@ top10_gene_list <- summary_genes %>%
   pull(Hugo_Symbol) %>% 
   unique()
 
+# check genes in db
+domain_data_src <- system.file('extdata', 'prot_len.txt.gz', package = 'maftools')
+domain_data_src <- data.table::fread(domain_data_src)
+top10_gene_list <- top10_gene_list[top10_gene_list %in% domain_data_src$Hugo_Symbol]
+
 top10_gene_list_position <- lapply(top10_gene_list, function(x) {
   protein_changes <- combined_maf_recurrent %>% 
     filter(Hugo_Symbol == x) %>% 
@@ -161,8 +167,8 @@ dev.off()
 shared_subjects <- mutational_analysis$shared_genes %>% 
   filter(Alteration_Datatype == "Mutation") %>% 
   pull(subject_id) %>% 
-  unique() %>%
-  append(pnoc008_sample_of_interest)
+  append(pnoc008_sample_of_interest) %>%
+  unique()
 
 shared_subjects_pnoc008 <- shared_subjects[shared_subjects %in% consensus_maf_pnoc008$sample_name]
 shared_subjects_tcga <- shared_subjects[!shared_subjects %in% consensus_maf_pnoc008$sample_name]
@@ -228,6 +234,11 @@ top10_gene_list <- summary_genes %>%
   pull(Hugo_Symbol) %>% 
   unique()
 
+# check genes in db
+domain_data_src <- system.file('extdata', 'prot_len.txt.gz', package = 'maftools')
+domain_data_src <- data.table::fread(domain_data_src)
+top10_gene_list <- top10_gene_list[top10_gene_list %in% domain_data_src$Hugo_Symbol]
+
 top10_gene_list_position <- lapply(top10_gene_list, function(x) {
   protein_changes <- combined_maf_shared %>% filter(Hugo_Symbol == x) %>% 
     filter(AAChange != ".") %>% 
@@ -257,8 +268,9 @@ tcga_cnv <- readRDS(file.path(adult_dir, "tcga_gbm_cnv_filtered.rds"))
 #### Prepare combined MAF for recurrent CNV
 recurrent_subjects <- mutational_analysis$recurrent_alterations %>% 
   filter(Alteration_Datatype == "CNV") %>% 
-  pull(subject_id) %>% unique() %>%
-  append(pnoc008_sample_of_interest)
+  pull(subject_id) %>% 
+  append(pnoc008_sample_of_interest) %>%
+  unique()
 
 recurrent_subjects_pnoc008 <- recurrent_subjects[recurrent_subjects %in% consensus_maf_pnoc008$subjectID]
 recurrent_subjects_tcga <- recurrent_subjects[!recurrent_subjects %in% consensus_maf_pnoc008$subjectID]
@@ -313,8 +325,9 @@ dev.off()
 #### Prepare combined MAF for shared CNV
 shared_subjects <- mutational_analysis$shared_genes %>% 
   filter(Alteration_Datatype == "CNV") %>% 
-  pull(subject_id) %>% unique() %>%
-  append(pnoc008_sample_of_interest)
+  pull(subject_id) %>% 
+  append(pnoc008_sample_of_interest) %>%
+  unique() 
 
 shared_subjects_pnoc008 <- shared_subjects[shared_subjects %in% consensus_maf_pnoc008$sample_name]
 shared_subjects_tcga <- shared_subjects[!shared_subjects %in% consensus_maf_pnoc008$subjectID]

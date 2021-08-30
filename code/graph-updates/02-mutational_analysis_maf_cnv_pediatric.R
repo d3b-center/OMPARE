@@ -65,8 +65,8 @@ recurrent_alterations_pnoc008 <- recurrent_alterations_all[!recurrent_alteration
 pnoc008_subject <- histology_pnoc008 %>% 
   filter(Kids_First_Biospecimen_ID %in% recurrent_alterations_pnoc008) %>%
   pull(Participant_ID) %>% 
-  unique() %>%
-  append(pnoc008_sample_of_interest)
+  append(pnoc008_sample_of_interest) %>%
+  unique()
 
 # Check to see whether all the non-pbta subject are in consensus maf 
 stopifnot(all(pnoc008_subject %in% consensus_maf_pnoc008$sample_name))
@@ -132,6 +132,11 @@ top10_gene_list <- summary_genes %>%
   pull(Hugo_Symbol) %>% 
   unique()
 
+# check genes in db
+domain_data_src <- system.file('extdata', 'prot_len.txt.gz', package = 'maftools')
+domain_data_src <- data.table::fread(domain_data_src)
+top10_gene_list <- top10_gene_list[top10_gene_list %in% domain_data_src$Hugo_Symbol]
+
 top10_gene_list_position <- lapply(top10_gene_list, function(x) {
   protein_changes <- combined_maf %>% 
     filter(Hugo_Symbol == x) %>% 
@@ -171,8 +176,9 @@ matched_maf_pbta_shared <- consensus_maf_pbta %>%
 # Use subject ID to filter pnoc008 combined consensus SNV
 pnoc008_subject <- histology_pnoc008 %>% 
   filter(Kids_First_Biospecimen_ID %in% shared_genes_pnoc008) %>%
-  pull(Participant_ID) %>% unique() %>%
-  append(pnoc008_sample_of_interest)
+  pull(Participant_ID) %>% 
+  append(pnoc008_sample_of_interest) %>%
+  unique()
 
 # Check to see whether all the non-pbta subject are in consensus maf 
 stopifnot(all(pnoc008_subject %in% consensus_maf_pnoc008$sample_name))
@@ -219,6 +225,11 @@ top10_gene_list <- summary_genes %>%
   head(10) %>% 
   pull(Hugo_Symbol) %>% unique()
 
+# check genes in db
+domain_data_src <- system.file('extdata', 'prot_len.txt.gz', package = 'maftools')
+domain_data_src <- data.table::fread(domain_data_src)
+top10_gene_list <- top10_gene_list[top10_gene_list %in% domain_data_src$Hugo_Symbol]
+
 top10_gene_list_position <- lapply(top10_gene_list, function(x) {
   protein_changes <- combined_maf_shared %>% 
     filter(Hugo_Symbol == x) %>% 
@@ -263,8 +274,9 @@ matched_maf_pbta_recurrent_cnv <- consensus_maf_pbta %>%
 # Use subject ID to filter pnoc008 combined consensus SNV
 pnoc008_subject <- histology_pnoc008 %>% 
   filter(Kids_First_Biospecimen_ID %in% recurrent_cnv_pnoc008) %>%
-  pull(Participant_ID) %>% unique() %>%
-  append(pnoc008_sample_of_interest)
+  pull(Participant_ID) %>% 
+  append(pnoc008_sample_of_interest) %>%
+  unique()
 
 # filter based on sample_name
 matched_maf_pnoc008_recurrent_cnv <- consensus_maf_pnoc008 %>% 
@@ -323,8 +335,9 @@ matched_maf_pbta_shared_cnv <- consensus_maf_pbta %>%
 # Use subject ID to filter pnoc008 combined consensus SNV
 pnoc008_subject <- histology_pnoc008 %>% 
   filter(Kids_First_Biospecimen_ID %in% shared_cnv_pnoc008 ) %>%
-  pull(Participant_ID) %>% unique() %>%
-  append(pnoc008_sample_of_interest)
+  pull(Participant_ID) %>%
+  append(pnoc008_sample_of_interest) %>%
+  unique()
 
 # filter based on sample_name
 matched_maf_pnoc008_shared_cnv <- consensus_maf_pnoc008 %>% 
