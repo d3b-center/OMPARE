@@ -13,6 +13,24 @@ results_dir <- file.path(analysis_dir, "results", "synergy_score")
 if(!dir.exists(results_dir)){
   dir.create(results_dir, recursive = TRUE)
 }
+
+#### Functions Used ----------------------------------------------------------
+
+#' Title Drug synergy score calculation function (for calculating synergy score of drug 1 and drug 2)
+#'
+#' @param tar1 Gene targets of drug 1 that are in the subnetwork
+#' @param tar2 Gene targets of drug 2 that are in the subnetwork
+#' @param sigNet1 This is the network induced using subnetwork of the module (the module that is positively correlated with the cluster of our sample of interest)
+#'                Subnetwork is induced using `graph.edgelist` function from igraph package.
+#'
+#' @return sctar1 is the sum of centrality scores of all gene targets of drug 1 in subnetwork
+#'         sctar1 is the sum of centrality scores of all gene targets of drug 2 in subnetwork
+#'         sScore is the sum of sctar1 and sctar2
+#' @export 
+#'
+#' @examples getSynScore2(targets_in_sub1, targets_in_sub2, subnetwork_graphed) 
+#'
+
 getSynScore2 <- function(tar1, tar2, sigNet1){
   
   n0 <- length(tar1);
