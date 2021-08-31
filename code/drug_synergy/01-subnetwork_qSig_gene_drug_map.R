@@ -91,82 +91,105 @@ enrichment_nes_df <- enrichment_nes_df %>%
 colnames(enrichment_nes_df) = c("modules", "cluster_of_interest")
 
 module_selected <- enrichment_nes_df %>% 
-  arrange(desc(cluster_of_interest)) %>%
-  slice(1) %>%
-  pull(modules)
+  filter(cluster_of_interest >0) %>%
+  pull(modules) %>% unique()
 
 # Use the module selected to subset the gene interaction file for all modules and generate sub-network
 sub_network <- interaction_df %>%
-  dplyr::filter(Module == module_selected)
+  dplyr::filter(Module %in% module_selected)
 
-write_tsv(sub_network, opt$subnetwork)
+readr::write_tsv(sub_network, opt$subnetwork)
 
-# Get the union of all genes in the subnetwork
-gene1_list <- sub_network %>% pull(Gene1) %>% unique()
-gene2_list <- sub_network %>% pull(Gene2) %>% unique()
+# Define dataframes to store the results
+qresult2_combined <- data.frame()
+subnetwork_gtex_qSig_combined <- data.frame()
+subnetwork_pbta_qSig_combined <- data.frame()
+subnetwork_pbta_hgg_qSig_combined <- data.frame()
 
-all_genes_in_subnetwork <- union(gene1_list, gene2_list) %>% unique()
-
-# use the vector of all genes in the subnetwork as input to getSymEnsUp function.
-chemblDbPath <- opt$chemblDb_path
-resultsPath <- system.file("extdata", "results", package = "drugTargetInteractions")
-config <- genConfig(chemblDbPath = chemblDbPath, resultsPath = resultsPath)
-
-# generate a mapping of uniprot ids and gene symbols only once save as rds
-map_file <- file.path(ref_dir, "uniprot_genesymbol_map.rds")
-if(!file.exists(map_file)){
-  hsmart <- useMart(dataset = "hsapiens_gene_ensembl", biomart = "ensembl")
-  annotation.uni <- getBM(attributes=c("uniprotswissprot", "hgnc_symbol"), mart=hsmart)
-  saveRDS(annotation.uni, file = map_file)
-} else {
-  annotation.uni <- readRDS(map_file)
+for(i in 1:length(module_selected )){
+  module_each <- module_selected[i]
+  sub_network_each <- interaction_df %>%
+    dplyr::filter(Module == module_each)
+  
+  
+  # Get the union of all genes in the subnetwork
+  gene1_list <- sub_network_each %>% pull(Gene1) %>% unique()
+  gene2_list <- sub_network_each %>% pull(Gene2) %>% unique()
+  
+  all_genes_in_subnetwork <- union(gene1_list, gene2_list) %>% unique()
+  
+  # use the vector of all genes in the subnetwork as input to getSymEnsUp function.
+  chemblDbPath <- opt$chemblDb_path
+  resultsPath <- system.file("extdata", "results", package = "drugTargetInteractions")
+  config <- genConfig(chemblDbPath = chemblDbPath, resultsPath = resultsPath)
+  
+  # generate a mapping of uniprot ids and gene symbols only once save as rds
+  map_file <- file.path(ref_dir, "uniprot_genesymbol_map.rds")
+  if(!file.exists(map_file)){
+    hsmart <- useMart(dataset = "hsapiens_gene_ensembl", biomart = "ensembl")
+    annotation.uni <- getBM(attributes=c("uniprotswissprot", "hgnc_symbol"), mart=hsmart)
+    saveRDS(annotation.uni, file = map_file)
+  } else {
+    annotation.uni <- readRDS(map_file)
+  }
+  
+  # filter to genes of interest
+  annotation.uni <- annotation.uni %>%
+    filter(hgnc_symbol %in% all_genes_in_subnetwork )
+  queryBy <- list(molType = "protein", idType = "UniProt_ID", ids = annotation.uni$uniprotswissprot)
+  qresult2 <- drugTargetAnnot(queryBy, config=config)
+  qresult2 <- qresult2 %>%
+    filter(!is.na(First_Approval))
+  
+  # add gene name back to table
+  qresult2 <- qresult2 %>%
+    inner_join(annotation.uni, by = c("UniProt_ID" = "uniprotswissprot")) %>%
+    mutate(module = module_each)
+  
+  qresult2_combined <- rbind(qresult2_combined, qresult2)
+  #### Intersect subnetwork and qSig output-------------------------------------
+  
+  # First select drugs that are negatively correlated (WTCS<0) and keep the WTCS scores
+  gtex_qSig_df <- gtex_qSig %>% 
+    dplyr::filter(WTCS<0) %>% mutate(Drug_Name = toupper(pert)) %>% 
+    dplyr::select(Drug_Name, WTCS)
+  gtex_qSig_drugs <- gtex_qSig_df %>% pull(Drug_Name) %>% unique()
+  
+  pbta_qSig_df <- pbta_qSig %>% 
+    dplyr::filter(WTCS<0) %>% mutate(Drug_Name = toupper(pert)) %>% 
+    dplyr::select(Drug_Name, WTCS)
+  pbta_qSig_drugs <- pbta_qSig_df %>% pull(Drug_Name) %>% unique()
+  
+  pbta_hgg_qSig_df <- pbta_hgg_qSig %>% 
+    dplyr::filter(WTCS<0) %>% mutate(Drug_Name = toupper(pert)) %>% 
+    dplyr::select(Drug_Name, WTCS)
+  pbta_hgg_qSig_drugs <- pbta_hgg_qSig_df %>% pull(Drug_Name) %>% unique()
+  
+  # Combine the results with WTCS scores and save the results
+  subnetwork_gtex_qSig <- qresult2 %>% 
+    dplyr::filter(Drug_Name %in% gtex_qSig_drugs) %>%
+    dplyr::left_join(gtex_qSig_df) %>% distinct() %>% 
+    dplyr::mutate(module = module_each)
+  subnetwork_gtex_qSig_combined <- rbind(subnetwork_gtex_qSig_combined, subnetwork_gtex_qSig)
+  
+  subnetwork_pbta_qSig <- qresult2 %>% 
+    dplyr::filter(Drug_Name %in% pbta_qSig_drugs) %>%
+    dplyr::left_join(pbta_qSig_df) %>% distinct() %>% 
+    dplyr::mutate(module = module_each)
+  subnetwork_pbta_qSig_combined <- rbind(subnetwork_pbta_qSig_combined, subnetwork_pbta_qSig)
+  
+  subnetwork_pbta_hgg_qSig <- qresult2 %>% 
+    dplyr::filter(Drug_Name %in% pbta_hgg_qSig_drugs) %>%
+    dplyr::left_join(pbta_hgg_qSig_df) %>% distinct() %>% 
+    dplyr::mutate(module = module_each)
+  subnetwork_pbta_hgg_qSig_combined <- rbind(subnetwork_pbta_hgg_qSig_combined, subnetwork_pbta_hgg_qSig)
 }
 
-# filter to genes of interest
-annotation.uni <- annotation.uni %>%
-  filter(hgnc_symbol %in% all_genes_in_subnetwork )
-queryBy <- list(molType = "protein", idType = "UniProt_ID", ids = annotation.uni$uniprotswissprot)
-qresult2 <- drugTargetAnnot(queryBy, config=config)
-qresult2 <- qresult2 %>%
-  filter(!is.na(First_Approval))
+# write out results
+readr::write_tsv(qresult2_combined, opt$subnetwork_mapped)
 
-# add gene name back to table
-qresult2 <- qresult2 %>%
-  inner_join(annotation.uni, by = c("UniProt_ID" = "uniprotswissprot"))
+readr::write_tsv(subnetwork_gtex_qSig_combined, opt$gtex_mapped)
+readr::write_tsv(subnetwork_pbta_qSig_combined, opt$pbta_mapped)
+readr::write_tsv(subnetwork_pbta_hgg_qSig_combined, opt$pbta_hgg_mapped)
 
-write_tsv(qresult2, opt$subnetwork_mapped)
-
-#### Intersect subnetwork and qSig output-------------------------------------
-
-# First select drugs that are negatively correlated (WTCS<0) and keep the WTCS scores
-gtex_qSig_df <- gtex_qSig %>% 
-  dplyr::filter(WTCS<0) %>% mutate(Drug_Name = toupper(pert)) %>% 
-  dplyr::select(Drug_Name, WTCS)
-gtex_qSig_drugs <- gtex_qSig_df %>% pull(Drug_Name) %>% unique()
-
-pbta_qSig_df <- pbta_qSig %>% 
-  dplyr::filter(WTCS<0) %>% mutate(Drug_Name = toupper(pert)) %>% 
-  dplyr::select(Drug_Name, WTCS)
-pbta_qSig_drugs <- pbta_qSig_df %>% pull(Drug_Name) %>% unique()
-
-pbta_hgg_qSig_df <- pbta_hgg_qSig %>% 
-  dplyr::filter(WTCS<0) %>% mutate(Drug_Name = toupper(pert)) %>% 
-  dplyr::select(Drug_Name, WTCS)
-pbta_hgg_qSig_drugs <- pbta_hgg_qSig_df %>% pull(Drug_Name) %>% unique()
-
-# Combine the results with WTCS scores and save the results
-subnetwork_gtex_qSig <- qresult2 %>% 
-  dplyr::filter(Drug_Name %in% gtex_qSig_drugs) %>%
-  dplyr::left_join(gtex_qSig_df) %>% distinct() %>% 
-  readr::write_tsv(opt$gtex_mapped)
-
-subnetwork_pbta_qSig <- qresult2 %>% 
-  dplyr::filter(Drug_Name %in% pbta_qSig_drugs) %>%
-  dplyr::left_join(pbta_qSig_df) %>% distinct() %>% 
-  readr::write_tsv(opt$pbta_mapped)
-
-subnetwork_pbta_hgg_qSig <- qresult2 %>% 
-  dplyr::filter(Drug_Name %in% pbta_hgg_qSig_drugs) %>%
-  dplyr::left_join(pbta_hgg_qSig_df) %>% distinct() %>% 
-  readr::write_tsv(opt$pbta_hgg_mapped)
 

@@ -29,8 +29,14 @@ option_list <- list(
               help="Output file for drug-mapped pbta hgg subsetted subnetworks (.tsv) "),
   make_option(c("-f","--subnetwork"),type="character",
                help="File for subnetworks of module of interest (.tsv) "),
-  make_option(c("-b","--output_path"),type="character",
-              help="Path for results output ")
+  make_option(c("-b","--output_gtex"),type="character",
+              help="Path and file name for gtex synergy score (.tsv) "), 
+  make_option(c("-c","--output_pbta"),type="character",
+              help="Path and file name for pbta synergy score (.tsv) "), 
+  make_option(c("-d","--output_pbta_hgg"),type="character",
+              help="Path and file name for pbta hgg synergy score (.tsv) "),
+  make_option(c("-e","--output_combined"),type="character",
+              help="Path and file name for all combined synergy score (.tsv) ")
 )
 opt <- parse_args(OptionParser(option_list=option_list,add_help_option = FALSE))
 output_path <- opt$output_path 
@@ -46,90 +52,133 @@ subnetwork <- readr::read_tsv(opt$subnetwork)
 # following steps adapted from SynGeNet Publication [@doi:10.1038/s41540-019-0085-4]
 # Supplementary information downloadable as `SynGeNet.R`
 
-#### SubNetwork Generation ---------------------------------------------------------------
-subnetwork_graphed <- subnetwork %>% select(Gene1, Gene2) %>% as.matrix() 
+# Calculate SynergyScore for all subnetworks
+module_list <- subnetwork %>% pull(Module) %>% unique()
 
-  # Induce background network
-subnetwork_graphed <- graph.edgelist(subnetwork_graphed)
-
-# Find the nodes of subnetwork (gene symbols in the subnetworks)
-gene1_names <- subnetwork %>% pull(Gene1) %>% unique()
-gene2_names <- subnetwork %>% pull(Gene2) %>% unique()
-all_nodes <- union(gene1_names, gene2_names)
-
-#### Synergy Score Calculation ---------------------------------------------------------------
-list_of_qSigs <- list(gtex_qSig_subnet_mapped, pbta_qSig_subnet_mapped, pbta_hgg_qSig_subnet_mapped)
-
-# Generate an ordered list of unique drugs (ordered by their WTCS scores)
-lapply(list_of_qSigs, function(x){
-  drug_list <- x %>% 
-    arrange(WTCS) %>%
-    pull(Drug_Name) %>% unique() 
-  nDrug <- length(drug_list)
+with_module_list <- lapply(module_list, function(y){
   
-  # Give all the drugs weighted score from 1-2 based on their ranking 
-  weight_score <- (1 + (1.0 - (c(1:nDrug)/nDrug)))
-  drug_score_list <- data.frame(drug_list, weight_score)
+  # iterate through each module
+  module_of_interest <- y
   
-  # Initiate dataframe that would be used to store scores
-  sScore <- data.frame(matrix('test', nDrug*(nDrug-1)/2, 3))
+  #### SubNetwork Generation ---------------------------------------------------------------
   
-  k <- 0
-  targets <- x$hgnc_symbol
-  drugs <- x$Drug_Name
+  # subset to module of interest
+  subnetwork_each <- subnetwork %>% 
+    filter(Module == module_of_interest) 
+  # Induce subnetwork
+  subnetwork_graphed <-subnetwork_each %>%
+    select(Gene1, Gene2) %>% as.matrix() %>%
+    graph.edgelist()
   
-  for (i in 1:(nDrug-1)){
-    print(i)
+  # Find the nodes of subnetwork (gene symbols in the subnetworks)
+  gene1_names <- subnetwork_each %>% pull(Gene1) %>% unique()
+  gene2_names <- subnetwork_each %>% pull(Gene2) %>% unique()
+  all_nodes <- union(gene1_names, gene2_names)
+  
+  # filter all three qSig files to module of interest as well
+  gtex_qSig_subnet_mapped_each <- gtex_qSig_subnet_mapped %>% 
+    filter(module == module_of_interest)
+  pbta_qSig_subnet_mapped_each <- pbta_qSig_subnet_mapped %>% 
+    filter(module == module_of_interest)
+  pbta_hgg_qSig_subnet_mapped_each <- pbta_hgg_qSig_subnet_mapped %>% 
+    filter(module == module_of_interest)
+  
+  #### Synergy Score Calculation ---------------------------------------------------------------
+  list_of_qSigs <- list(gtex_qSig_subnet_mapped_each, pbta_qSig_subnet_mapped_each, pbta_hgg_qSig_subnet_mapped_each)
+  
+  # Generate an ordered list of unique drugs (ordered by their WTCS scores)
+  lapply(list_of_qSigs, function(x){
+    drug_list <- x %>% 
+      arrange(WTCS) %>%
+      pull(Drug_Name) %>% unique() 
+    nDrug <- length(drug_list)
+    # Give all the drugs weighted score from 1-2 based on their ranking 
+    weight_score <- (1 + (1.0 - (c(1:nDrug)/nDrug)))
+    drug_score_list <- data.frame(drug_list, weight_score)
     
-    # drug of interest
-    drug_of_interest1 <- drug_list[i]
+    # Initiate data frame that would be used to store scores
+    sScore <- data.frame(matrix(module_of_interest, nDrug*(nDrug-1)/2, 4))
     
-    # gene targets of the drug
-    drug_targets1 <- x %>% 
-      dplyr::filter(Drug_Name == drug_of_interest1) %>%
-      pull(hgnc_symbol) %>% unique() 
+    k <- 0
+    targets <- x$hgnc_symbol
+    drugs <- x$Drug_Name
     
-    # only keep targets that are in the subnetwork
-    targets_in_sub1 <- intersect(drug_targets1, all_nodes)
-    
-    # subtract the weight of scores as well
-    weight_of_drug1 <- drug_score_list %>% 
-      dplyr::filter(drug_list == drug_of_interest1) %>%
-      pull(weight_score) %>% as.numeric()
-    
-    for (j in (i+1):nDrug){
-      k <- k+1
+    for (i in 1:(nDrug-1)){
+      print(i)
       # drug of interest
-      drug_of_interest2 <- drug_list[j]
+      drug_of_interest1 <- drug_list[i]
       
       # gene targets of the drug
-      drug_targets2 <- x %>% 
-        dplyr::filter(Drug_Name == drug_of_interest2) %>%
+      drug_targets1 <- x %>% 
+        dplyr::filter(Drug_Name == drug_of_interest1) %>%
         pull(hgnc_symbol) %>% unique() 
       
       # only keep targets that are in the subnetwork
-      targets_in_sub2 <- intersect(drug_targets2, all_nodes)
+      targets_in_sub1 <- intersect(drug_targets1, all_nodes)
       
       # subtract the weight of scores as well
-      weight_of_drug2 <- drug_score_list %>% 
-        dplyr::filter(drug_list == drug_of_interest2) %>%
+      weight_of_drug1 <- drug_score_list %>% 
+        dplyr::filter(drug_list == drug_of_interest1) %>%
         pull(weight_score) %>% as.numeric()
       
-      sScore[k,1] <- drug_of_interest1
-      sScore[k,2] <- drug_of_interest2
-      
-      vt0 <- getSynScore2(targets_in_sub1, targets_in_sub2, subnetwork_graphed) * weight_of_drug1 * weight_of_drug2
-      sScore[k,3] <- vt0
-    
+      for(j in (i+1):nDrug){
+        print(j)
+        k <- k+1
+        # drug of interest
+        drug_of_interest2 <- drug_list[j]
+        
+        # gene targets of the drug
+        drug_targets2 <- x %>% 
+          dplyr::filter(Drug_Name == drug_of_interest2) %>%
+          pull(hgnc_symbol) %>% unique() 
+        
+        # only keep targets that are in the subnetwork
+        targets_in_sub2 <- intersect(drug_targets2, all_nodes)
+        
+        # subtract the weight of scores as well
+        weight_of_drug2 <- drug_score_list %>% 
+          dplyr::filter(drug_list == drug_of_interest2) %>%
+          pull(weight_score) %>% as.numeric()
+        
+        sScore[k,1] <- drug_of_interest1
+        sScore[k,2] <- drug_of_interest2
+        
+        vt0 <- getSynScore2(targets_in_sub1, targets_in_sub2, subnetwork_graphed) * weight_of_drug1 * weight_of_drug2
+        sScore[k,3] <- vt0
+      }
     }
-  }
-  
-  # write out the results 
-  comparison_name <- x %>% select(comparison) %>% pull() %>% unique()
-  colnames(sScore) <-c("drug1", "drug2", "synergy_score")
-  sScore %>% arrange(desc(synergy_score)) %>%
-    readr::write_tsv(file.path(output_path,paste0(comparison_name, "_synergy_score.tsv")))
-  })
     
+    # write out the results 
+    comparison_name <- x %>% select(comparison) %>% pull() %>% unique()
+    colnames(sScore) <-c("drug1", "drug2", "synergy_score", "module")
+    sScore <- sScore %>% arrange(desc(synergy_score)) %>%
+      mutate(comparison = comparison_name)
+    return(sScore)
+    })
+  }
+)  
+
+each_module_combined <- lapply (with_module_list, function(x){
+  do.call(rbind, x)
+}) 
+
+all_combined <- do.call(rbind, each_module_combined)
+
+# writing out results 
+all_combined %>% filter(comparison == "gtex_qSig") %>% 
+  arrange(desc(synergy_score)) %>%
+  readr::write_tsv(opt$output_gtex)
+
+all_combined %>% filter(comparison == "pbta_qSig") %>%
+  arrange(desc(synergy_score)) %>%
+  readr::write_tsv(opt$output_pbta)
+
+all_combined %>% filter(comparison == "pbta_hgg_qSig")%>%
+  arrange(desc(synergy_score)) %>%
+  readr::write_tsv(opt$output_pbta_hgg)
+
+all_combined %>% arrange(desc(synergy_score)) %>%
+  readr::write_tsv(opt$output_combined)
+
 
 

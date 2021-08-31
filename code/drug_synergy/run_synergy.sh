@@ -40,11 +40,18 @@ gtex_subnet_qSig_mapped="${results_dir_map}/gtex_qSig_subnetwork_drug_gene_map.t
 pbta_subnet_qSig_mapped="${results_dir_map}/pbta_qSig_subnetwork_drug_gene_map.tsv"
 pbta_hgg_subnet_qSig_mapped="${results_dir_map}/pbta_hgg_qSig_subnetwork_drug_gene_map.tsv"
 
+# synergy score for all comparisons
+output_gtex="${results_dir_synergy}/gtex_qSig_synergy_score.tsv"
+output_pbta="${results_dir_synergy}/pbta_qSig_synergy_score.tsv"
+output_pbta_hgg="${results_dir_synergy}/pbta_hgg_qSig_synergy_score.tsv"
+output_combined="${results_dir_synergy}/combined_qSig_synergy_score.tsv"
+
+
 # References database database path
 chembldb_path="${ref_dir}/chembl_29_sqlite/chembl_29.db"
 
 # Obtain drugs that are associated with all the genes in the subnetwork
-Rscript --vanilla ${analysis_dir}/utils/subnetwork_qSig_gene_drug_map.R \
+Rscript --vanilla ${analysis_dir}/01-subnetwork_qSig_gene_drug_map.R \
 --interaction $interaction_file \
 --enrichment_nes $enrichment_nes_file \
 --cluster $cluster_file \
@@ -61,12 +68,15 @@ Rscript --vanilla ${analysis_dir}/utils/subnetwork_qSig_gene_drug_map.R \
 --pbta_hgg_mapped $pbta_hgg_subnet_qSig_mapped
 
 # Obtain drugs that are both in qSig and subnetwork
-Rscript --vanilla ${analysis_dir}/utils/drug_synergy_score_calc.R \
+Rscript --vanilla ${analysis_dir}/02-drug_synergy_score_calc.R \
 --gtex_mapped $gtex_subnet_qSig_mapped \
 --pbta_mapped $pbta_subnet_qSig_mapped \
 --pbta_hgg_mapped $pbta_hgg_subnet_qSig_mapped \
 --subnetwork $subnetwork \
---output_path $results_dir_synergy
+--output_gtex $output_gtex \
+--output_pbta $output_pbta \
+--output_pbta_hgg $output_pbta_hgg \
+--output_combined $output_combined
 
 
 
