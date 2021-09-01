@@ -15,11 +15,6 @@ suppressPackageStartupMessages({
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
 source(file.path(root_dir, "code", "utils", "define_directories.R"))
 
-# results_dir <- file.path(root_dir, "code", "drug_synergy", "results", "drug_gene_map")
-# if(!dir.exists(results_dir)){
-#   dir.create(results_dir, recursive = TRUE)
-# }
-
 # Parse command line options
 option_list <- list(
   make_option(c("-i", "--interaction"),type="character",

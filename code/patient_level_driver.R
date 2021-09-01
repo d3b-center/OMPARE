@@ -250,4 +250,8 @@ if(!file.exists(fname)){
 source(file.path(patient_level_analyses, 'run_tables_to_plots.R'))
 
 # run drug synergy module
-source(file.path(patient_level_analyses, 'run_synergy.R'))
+fname <- file.path(topDir, "output", "drug_synergy", "combined_qSig_synergy_score_top10.pdf")
+if(!file.exists(fname)){
+  source(file.path(patient_level_analyses, 'run_synergy.R'))
+}
+

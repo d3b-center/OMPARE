@@ -763,3 +763,17 @@ if(file.exists(fname)){
   knitr::include_graphics(fname)
 }
 ```
+
+Synergistic Drug Pairs (P10) {data-navmenu="Drug Recommendations"}
+===
+Row {data-height=700}
+---
+
+### Synergistic Drug Pairs
+
+```{r synergistic_drug_pairs, echo=FALSE, out.width = '100%', out.height='100%'}
+fname <- file.path(topDir, "output", "drug_synergy", "combined_qSig_synergy_score_top10.pdf")
+if(file.exists(fname)){
+  knitr::include_graphics(fname)
+}
+```

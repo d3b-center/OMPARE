@@ -23,19 +23,22 @@ gtex_qSig <- file.path(patient_dir, "output", "GTExBrain_qSig_output.txt")
 pbta_qSig <- file.path(patient_dir, "output", "PBTA_ALL_qSig_output.txt")
 pbta_hgg_qSig <- file.path(patient_dir, "output", "PBTA_HGG_qSig_output.txt")
 
-# output files that will be saved under OMPARE/results/PNOC008-XX/output
+# output files that will be saved under OMPARE/results/PNOC008-XX/output/drug_synergy
 # subnetwork file and drug mapped subnetwork qSig file
-subnetwork <- file.path(patient_dir, "output", "subnetwork_genes.tsv")
-subnetwork_mapped <- file.path(patient_dir, "output", "subnetwork_gene_drug_map.tsv")
-gtex_subnet_qSig_mapped <- file.path(patient_dir, "output", "gtex_qSig_subnetwork_drug_gene_map.tsv")
-pbta_subnet_qSig_mapped <- file.path(patient_dir, "output", "pbta_qSig_subnetwork_drug_gene_map.tsv")
-pbta_hgg_subnet_qSig_mapped <- file.path(patient_dir, "output", "pbta_hgg_qSig_subnetwork_drug_gene_map.tsv")
+module_output_dir <- file.path(patient_dir, "output", "drug_synergy")
+dir.create(module_output_dir, showWarnings = F, recursive = T)
+subnetwork <- file.path(module_output_dir, "subnetwork_genes.tsv")
+subnetwork_mapped <- file.path(module_output_dir, "subnetwork_gene_drug_map.tsv")
+gtex_subnet_qSig_mapped <- file.path(module_output_dir, "gtex_qSig_subnetwork_drug_gene_map.tsv")
+pbta_subnet_qSig_mapped <- file.path(module_output_dir, "pbta_qSig_subnetwork_drug_gene_map.tsv")
+pbta_hgg_subnet_qSig_mapped <- file.path(module_output_dir, "pbta_hgg_qSig_subnetwork_drug_gene_map.tsv")
 
 # synergy score for all comparisons
-output_gtex <- file.path(patient_dir, "output", "gtex_qSig_synergy_score.tsv")
-output_pbta <- file.path(patient_dir, "output", "pbta_qSig_synergy_score.tsv")
-output_pbta_hgg <- file.path(patient_dir, "output", "pbta_hgg_qSig_synergy_score.tsv")
-output_combined <- file.path(patient_dir, "output", "combined_qSig_synergy_score.tsv")
+output_gtex <- file.path(module_output_dir, "gtex_qSig_synergy_score.tsv")
+output_pbta <- file.path(module_output_dir, "pbta_qSig_synergy_score.tsv")
+output_pbta_hgg <- file.path(module_output_dir, "pbta_hgg_qSig_synergy_score.tsv")
+output_combined <- file.path(module_output_dir, "combined_qSig_synergy_score.tsv")
+combined_plot_file <- file.path(module_output_dir, "combined_qSig_synergy_score_top10.pdf")
 
 # module path
 drug_synergy_module <- file.path(root_dir, "code", "drug_synergy")
@@ -71,4 +74,11 @@ cmd <- paste('Rscript', drug_synergy_score_calc,
               '--output_pbta', output_pbta,
               '--output_pbta_hgg', output_pbta_hgg,
               '--output_combined', output_combined)
+system(cmd)
+
+# run script to create bubble plots from output of 02-drug_synergy_score_calc.R
+create_bubble_plot <- file.path(drug_synergy_module, "03-create_bubble_plot.R")
+cmd <- paste('Rscript', create_bubble_plot,
+      '--combined_synergy', output_combined,
+      '--output_file', combined_plot_file)
 system(cmd)
