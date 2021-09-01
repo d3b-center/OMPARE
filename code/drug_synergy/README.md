@@ -7,19 +7,21 @@ This module is written to implement the synergy from gene expression and network
 
 Briefly, we leveraged the outputs from CEMiTools and signatureSearch (which are already incorporated in our OMPARE workflow) and calculate synergy score as followed:
 1. From `clustered_samples.rds` and `pnoc008_clinical.rds`, extract the cluster number that is assigned to our sample of interest 
-2. From `enrichment_nes.tsv`, find the module number that is most positively correlated with the cluster of our sample of interest.
-3. Generate subnetwork associated with the module found above by subsetting `interactions.tsv` to contain only interactions in that particular module - result saved as `reults/subnetwork_genes.tsv`
+2. From `enrichment_nes.tsv`, find **all** the module numbers that are positively correlated with the cluster of our sample of interest.
+3. Generate subnetwork associated with the modules found above by subsetting `interactions.tsv` to contain only interactions in that particular module - result saved as `reults/subnetwork_genes.tsv`
 4. Use bioconductor package `drugTargetInteractions` and `biomaRt` to find all FDA approved drugs that target genes in our subnetwork, annotate with drug actions, MOA etc. - results saved as  `results/drug_gene_map/subnetwork_gene_drug_map.tsv`.
-5. Additionally, drugs listed in *.qSig.txt from signatureSearch (which are drugs whose gene expression signatures are _reversely_ correlated with gene expression signature of our patients of interest). 
+5. Additionally, drugs listed in *.qSig.txt from signatureSearch (which are drugs whose gene expression signatures are _reversely_ correlated with gene expression signature of our patients of interest) were intersected with each module listed the `results/drug_gene_map/subnetwork_gene_drug_map.tsv`
 Results save as `results/drug_gene_map/*_qSig_subnetwork_drug_gene_map.tsv`.
 **NOTE**: for each patient of interest, 3 gene expression signature are available: DGE compared to GTEx brain normal, DGE compared to all PBTA samples and DGE compared to PBTA HGG samples. 
 
 After drug gene mapped results were saved, these results were used to calculate drug synergy score as followed:
-1. Subnetwork was graphed using `graph.edgelist` function from `igraph` to generate a graph object, which will be used as input for calculating synergy score.
-2. All the drugs listed in each `*_qSig_subnetwork_drug_gene_map.tsv` file will be given a weighted score between 1-2 based on their WTCS score - the lower the socre (more negative), the higher the rank.
-3. For each drug, we first subset their targets to only targets that are in the subnetwork, and then we calculate the centrality score of that drug based on the `closeness` and `betweenness` of its targets in the subnetwork.
-4. Synergy score of a drug combination drugA and drugB is calculated as: weighted score of drugA (from step 2) * weighted score of drugB (from step 2) * centrality score of all targets from both drugs in the subnetwork. 
-5. Drug combinations along with calculated synergy score are output and saved as: `results/synergy_score/*_qSig_synergy_score.tsv`.
+1. Firstly, the subnetwork and mapped qSig files were filtered to one particular module 
+2. Module-subsetted subnetwork was graphed using `graph.edgelist` function from `igraph` to generate a graph object, which will be used as input for calculating synergy score.
+3. All the drugs listed in module-subsetted `*_qSig_subnetwork_drug_gene_map.tsv` file will be given a weighted score between 1-2 based on their WTCS score - the lower the score (more negative), the higher the rank.
+4. For each drug, we then subset their targets to only targets that are in the module-subsetted subnetwork, and then we calculate the centrality score of that drug based on the `closeness` and `betweenness` of its targets in the module-subsetted subnetwork.
+5. Synergy score of a drug combination drugA and drugB is calculated as: weighted score of drugA (from step 2) * weighted score of drugB (from step 2) * centrality score of all targets from both drugs in the subnetwork. 
+6. Same calculation (step 1-5) was done for all other modules in the subnetwork. 
+7. Drug combinations along with calculated synergy score are output and saved as: `results/synergy_score/*_qSig_synergy_score.tsv`.
 
 ### Usage
 
@@ -78,5 +80,6 @@ Output:
   - `results/synergy_score/gtex_qSig_synergy_score.tsv`
   - `results/synergy_score/pbta_qSig_synergy_score.tsv`
   - `results/synergy_score/pbta_hgg_qSig_synergy_score.tsv`
+  - `results/synergy_score/combined_qSig_synergy_score.tsv`
 
 
