@@ -1,25 +1,21 @@
 # Author: Run Jin
-#
 # Obtain Drug Target of Interest for each qSig output (comparing to GTEx, PBTA all or PBTA HGG)
 
-suppressPackageStartupMessages(library("optparse"))
-suppressPackageStartupMessages(library("tidyverse"))
-suppressPackageStartupMessages(library("readr"))
-suppressPackageStartupMessages(library("igraph"))
+suppressPackageStartupMessages({
+  library(optparse)
+  library(tidyverse)
+  library(readr)
+  library(igraph)
+})
 
-#### Define Directories ----------------------------------------------------------
+# root directory
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
 
-analysis_dir <- file.path(root_dir, "code", "drug_synergy")
-results_dir <- file.path(analysis_dir, "results", "synergy_score")
-if(!dir.exists(results_dir)){
-  dir.create(results_dir, recursive = TRUE)
-}
+# module path
+drug_synergy_module <- file.path(root_dir, "code", "drug_synergy")
+source(file.path(drug_synergy_module, "utils", "get_synergy_score.R"))
 
-source(file.path(analysis_dir, "utils/get_synergy_score.R"))
-
-#### Parse command line options ------------------------------------------------
-
+# Parse command line options
 option_list <- list(
   make_option(c("-g","--gtex_mapped"),type="character",
               help="Output file for drug-mapped gtex qSig subsetted subnetworks (.tsv) "),

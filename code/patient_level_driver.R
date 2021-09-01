@@ -248,3 +248,6 @@ if(!file.exists(fname)){
 
 # convert table outputs to visualizations
 source(file.path(patient_level_analyses, 'run_tables_to_plots.R'))
+
+# run drug synergy module
+source(file.path(patient_level_analyses, 'run_synergy.R'))
