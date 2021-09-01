@@ -1,89 +1,377 @@
-drug1	drug2	synergy_score	module	comparison
-LEVONORGESTREL	CHLORPROMAZINE	0.160927716261359	M1	pbta_hgg_qSig
-SIROLIMUS	CHLORPROMAZINE	0.1404559395569	M1	pbta_hgg_qSig
-CHLORPROMAZINE	DIAZOXIDE	0.128113687395877	M1	pbta_hgg_qSig
-CHLORPROMAZINE	OXAPROZIN	0.119324738148956	M1	pbta_hgg_qSig
-CHLORPROMAZINE	AXITINIB	0.116470321473699	M1	pbta_hgg_qSig
-CHLORPROMAZINE	TETRABENAZINE	0.112457785020235	M1	pbta_hgg_qSig
-CHLORPROMAZINE	PHENTERMINE	0.094677873209602	M1	pbta_hgg_qSig
-CHLORPROMAZINE	DANAZOL	0.0934471762126444	M1	pbta_hgg_qSig
-LEVONORGESTREL	DANAZOL	0.0855839368551303	M9	pbta_hgg_qSig
-CHLORPROMAZINE	TOLAZAMIDE	0.0801811789409912	M1	pbta_hgg_qSig
-LEVONORGESTREL	CHLORPROMAZINE	0.068722456639072	M9	pbta_hgg_qSig
-LEVONORGESTREL	DIAZOXIDE	0.0625475945956405	M9	pbta_hgg_qSig
-LEVONORGESTREL	AXITINIB	0.051541842479304	M9	pbta_hgg_qSig
-CHLORPROMAZINE	DANAZOL	0.0381791425772622	M9	pbta_hgg_qSig
-DIAZOXIDE	DANAZOL	0.0347486636642447	M9	pbta_hgg_qSig
-LEVONORGESTREL	AXITINIB	0.028692603675983	M1	pbta_hgg_qSig
-AXITINIB	DANAZOL	0.0286343569329467	M9	pbta_hgg_qSig
-CHLORPROMAZINE	OXAPROZIN	0.0199684157314158	M4	pbta_hgg_qSig
-LEVONORGESTREL	DANAZOL	0.0185731774838411	M1	pbta_hgg_qSig
-DIAZOXIDE	AXITINIB	0.0185000123971707	M1	pbta_hgg_qSig
-LEVONORGESTREL	DIAZOXIDE	0.0182872907630967	M1	pbta_hgg_qSig
-SIROLIMUS	AXITINIB	0.018004545480641	M1	pbta_hgg_qSig
-AXITINIB	DANAZOL	0.0168244767385685	M1	pbta_hgg_qSig
-OXAPROZIN	AXITINIB	0.016745881081123	M1	pbta_hgg_qSig
-LEVONORGESTREL	SIROLIMUS	0.0164692481963802	M1	pbta_hgg_qSig
-TETRABENAZINE	AXITINIB	0.0164615115025218	M1	pbta_hgg_qSig
-LEVONORGESTREL	TETRABENAZINE	0.0164018419134751	M1	pbta_hgg_qSig
-LEVONORGESTREL	OXAPROZIN	0.0162705096839981	M1	pbta_hgg_qSig
-OXAPROZIN	TETRABENAZINE	0.0154727337114636	M4	pbta_hgg_qSig
-OXAPROZIN	AXITINIB	0.0137267896055376	M4	pbta_hgg_qSig
-AXITINIB	PHENTERMINE	0.0127987680987622	M1	pbta_hgg_qSig
-LEVONORGESTREL	PHENTERMINE	0.0121425001659224	M1	pbta_hgg_qSig
-AXITINIB	TOLAZAMIDE	0.0116467204624311	M1	pbta_hgg_qSig
-LEVONORGESTREL	TOLAZAMIDE	0.0115526368476884	M1	pbta_hgg_qSig
-CHLORPROMAZINE	AXITINIB	0.0111444037072393	M5	pbta_hgg_qSig
-DIAZOXIDE	DANAZOL	0.0108494949824884	M1	pbta_hgg_qSig
-DIAZOXIDE	AXITINIB	0.010072003928792	M5	pbta_hgg_qSig
-TETRABENAZINE	AXITINIB	0.00988858178672024	M5	pbta_hgg_qSig
-SIROLIMUS	DANAZOL	0.00982970853776579	M1	pbta_hgg_qSig
-TETRABENAZINE	DANAZOL	0.00972515481775208	M1	pbta_hgg_qSig
-OXAPROZIN	DANAZOL	0.00966550262658517	M1	pbta_hgg_qSig
-DIAZOXIDE	TETRABENAZINE	0.00771434490781391	M1	pbta_hgg_qSig
-AXITINIB	ZAFIRLUKAST	0.00765604183033292	M5	pbta_hgg_qSig
-PHENTERMINE	DANAZOL	0.00722645560684515	M1	pbta_hgg_qSig
-DIAZOXIDE	OXAPROZIN	0.00716819702521995	M1	pbta_hgg_qSig
-DANAZOL	TOLAZAMIDE	0.0068521912760701	M1	pbta_hgg_qSig
-AXITINIB	DANAZOL	0.00666938615690044	M5	pbta_hgg_qSig
-OXAPROZIN	TETRABENAZINE	0.00658832699898759	M1	pbta_hgg_qSig
-SIROLIMUS	DIAZOXIDE	0.00602889880970189	M1	pbta_hgg_qSig
-AXITINIB	TOLAZAMIDE	0.00587533562512864	M5	pbta_hgg_qSig
-SIROLIMUS	TETRABENAZINE	0.0056546719807933	M1	pbta_hgg_qSig
-DIAZOXIDE	TOLAZAMIDE	0.00537301308349935	M1	pbta_hgg_qSig
-CHLORPROMAZINE	AXITINIB	0.00509893823684722	M6	pbta_hgg_qSig
-DIAZOXIDE	PHENTERMINE	0.00499863544646981	M1	pbta_hgg_qSig
-TETRABENAZINE	TOLAZAMIDE	0.00491215618267535	M1	pbta_hgg_qSig
-SIROLIMUS	OXAPROZIN	0.00482425803855387	M1	pbta_hgg_qSig
-TETRABENAZINE	PHENTERMINE	0.00462672969719719	M1	pbta_hgg_qSig
-OXAPROZIN	TOLAZAMIDE	0.00457729165714639	M1	pbta_hgg_qSig
-OXAPROZIN	PHENTERMINE	0.00413433100070435	M1	pbta_hgg_qSig
-SIROLIMUS	TOLAZAMIDE	0.00388466397572438	M1	pbta_hgg_qSig
-DIAZOXIDE	AXITINIB	0.0037868524452613	M6	pbta_hgg_qSig
-CHLORPROMAZINE	AXITINIB	0.00365188687500232	M4	pbta_hgg_qSig
-TETRABENAZINE	AXITINIB	0.00341487703673173	M4	pbta_hgg_qSig
-PHENTERMINE	TOLAZAMIDE	0.00320188196715077	M1	pbta_hgg_qSig
-SIROLIMUS	PHENTERMINE	0.00303149398542368	M1	pbta_hgg_qSig
-CHLORPROMAZINE	TETRABENAZINE	0.00259814641571802	M4	pbta_hgg_qSig
-CHLORPROMAZINE	DIAZOXIDE	0.0025442067179076	M9	pbta_hgg_qSig
-AXITINIB	PHENTERMINE	0.0024665515427274	M6	pbta_hgg_qSig
-DIAZOXIDE	AXITINIB	0.0019081550384307	M9	pbta_hgg_qSig
-CHLORPROMAZINE	TETRABENAZINE	0.00178845310743374	M5	pbta_hgg_qSig
-DIAZOXIDE	TETRABENAZINE	0.00141422804118236	M5	pbta_hgg_qSig
-CHLORPROMAZINE	DIAZOXIDE	0.00131948463708994	M6	pbta_hgg_qSig
-TETRABENAZINE	ZAFIRLUKAST	0.00117291380299962	M5	pbta_hgg_qSig
-CHLORPROMAZINE	DIAZOXIDE	0.0010208379634631	M5	pbta_hgg_qSig
-CHLORPROMAZINE	ZAFIRLUKAST	0.000898279021457963	M5	pbta_hgg_qSig
-TETRABENAZINE	DANAZOL	0.000893007252264619	M5	pbta_hgg_qSig
-TETRABENAZINE	TOLAZAMIDE	0.000824966357356377	M5	pbta_hgg_qSig
-CHLORPROMAZINE	PHENTERMINE	0.00079843296896777	M6	pbta_hgg_qSig
-DIAZOXIDE	ZAFIRLUKAST	0.000635556475859746	M5	pbta_hgg_qSig
-CHLORPROMAZINE	DANAZOL	0.000621690574659606	M5	pbta_hgg_qSig
-CHLORPROMAZINE	TOLAZAMIDE	0.000595488812020143	M5	pbta_hgg_qSig
-DIAZOXIDE	DANAZOL	0.000401757858911852	M5	pbta_hgg_qSig
-DIAZOXIDE	TOLAZAMIDE	0.000399085411956782	M5	pbta_hgg_qSig
-ZAFIRLUKAST	DANAZOL	0.000382949501175049	M5	pbta_hgg_qSig
-ZAFIRLUKAST	TOLAZAMIDE	0.000370741277584852	M5	pbta_hgg_qSig
-CHLORPROMAZINE	AXITINIB	0.000340409539956984	M9	pbta_hgg_qSig
-DANAZOL	TOLAZAMIDE	0.000234358751031914	M5	pbta_hgg_qSig
-DIAZOXIDE	PHENTERMINE	0.000217438281486182	M6	pbta_hgg_qSig
+drug1	drug2	synergy_score	module	comparison	drug1_MOA	drug1_target_hgnc_symbol	drug2_MOA	drug2_target_hgnc_symbol
+LEVONORGESTREL	CHLORPROMAZINE	0.160927716261359	M1	pbta_hgg_qSig	Progesterone receptor agonist	PGR	D2-like dopamine receptor antagonist	DRD2
+LEVONORGESTREL	CHLORPROMAZINE	0.160927716261359	M1	pbta_hgg_qSig	Progesterone receptor agonist	PGR	D2-like dopamine receptor antagonist	DRD4
+LEVONORGESTREL	CHLORPROMAZINE	0.160927716261359	M1	pbta_hgg_qSig	Progesterone receptor agonist	PGR	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+LEVONORGESTREL	CHLORPROMAZINE	0.160927716261359	M1	pbta_hgg_qSig	Progesterone receptor agonist	PGR	D2-like dopamine receptor antagonist	DRD3
+SIROLIMUS	CHLORPROMAZINE	0.1404559395569	M1	pbta_hgg_qSig	FK506-binding protein 1A inhibitor	FKBP1A	D2-like dopamine receptor antagonist	DRD2
+SIROLIMUS	CHLORPROMAZINE	0.1404559395569	M1	pbta_hgg_qSig	FK506-binding protein 1A inhibitor	FKBP1A	D2-like dopamine receptor antagonist	DRD4
+SIROLIMUS	CHLORPROMAZINE	0.1404559395569	M1	pbta_hgg_qSig	FK506-binding protein 1A inhibitor	FKBP1A	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+SIROLIMUS	CHLORPROMAZINE	0.1404559395569	M1	pbta_hgg_qSig	FK506-binding protein 1A inhibitor	FKBP1A	D2-like dopamine receptor antagonist	DRD3
+CHLORPROMAZINE	DIAZOXIDE	0.128113687395877	M1	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD2	Potassium channel, inwardly rectifying, subfamily J, member 11 opener	KCNJ11
+CHLORPROMAZINE	DIAZOXIDE	0.128113687395877	M1	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD2	Potassium channel, inwardly rectifying, subfamily J, member 8 opener	KCNJ8
+CHLORPROMAZINE	DIAZOXIDE	0.128113687395877	M1	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD4	Potassium channel, inwardly rectifying, subfamily J, member 11 opener	KCNJ11
+CHLORPROMAZINE	DIAZOXIDE	0.128113687395877	M1	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD4	Potassium channel, inwardly rectifying, subfamily J, member 8 opener	KCNJ8
+CHLORPROMAZINE	DIAZOXIDE	0.128113687395877	M1	pbta_hgg_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Potassium channel, inwardly rectifying, subfamily J, member 11 opener	KCNJ11
+CHLORPROMAZINE	DIAZOXIDE	0.128113687395877	M1	pbta_hgg_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Potassium channel, inwardly rectifying, subfamily J, member 8 opener	KCNJ8
+CHLORPROMAZINE	DIAZOXIDE	0.128113687395877	M1	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD3	Potassium channel, inwardly rectifying, subfamily J, member 11 opener	KCNJ11
+CHLORPROMAZINE	DIAZOXIDE	0.128113687395877	M1	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD3	Potassium channel, inwardly rectifying, subfamily J, member 8 opener	KCNJ8
+CHLORPROMAZINE	OXAPROZIN	0.119324738148956	M1	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD2	Cyclooxygenase inhibitor	PTGS1
+CHLORPROMAZINE	OXAPROZIN	0.119324738148956	M1	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD2	Cyclooxygenase inhibitor	PTGS2
+CHLORPROMAZINE	OXAPROZIN	0.119324738148956	M1	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD4	Cyclooxygenase inhibitor	PTGS1
+CHLORPROMAZINE	OXAPROZIN	0.119324738148956	M1	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD4	Cyclooxygenase inhibitor	PTGS2
+CHLORPROMAZINE	OXAPROZIN	0.119324738148956	M1	pbta_hgg_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Cyclooxygenase inhibitor	PTGS1
+CHLORPROMAZINE	OXAPROZIN	0.119324738148956	M1	pbta_hgg_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Cyclooxygenase inhibitor	PTGS2
+CHLORPROMAZINE	OXAPROZIN	0.119324738148956	M1	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD3	Cyclooxygenase inhibitor	PTGS1
+CHLORPROMAZINE	OXAPROZIN	0.119324738148956	M1	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD3	Cyclooxygenase inhibitor	PTGS2
+CHLORPROMAZINE	AXITINIB	0.116470321473699	M1	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD2	Vascular endothelial growth factor receptor inhibitor	FLT1
+CHLORPROMAZINE	AXITINIB	0.116470321473699	M1	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD2	Vascular endothelial growth factor receptor inhibitor	FLT4
+CHLORPROMAZINE	AXITINIB	0.116470321473699	M1	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD2	Vascular endothelial growth factor receptor inhibitor	KDR
+CHLORPROMAZINE	AXITINIB	0.116470321473699	M1	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD4	Vascular endothelial growth factor receptor inhibitor	FLT1
+CHLORPROMAZINE	AXITINIB	0.116470321473699	M1	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD4	Vascular endothelial growth factor receptor inhibitor	FLT4
+CHLORPROMAZINE	AXITINIB	0.116470321473699	M1	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD4	Vascular endothelial growth factor receptor inhibitor	KDR
+CHLORPROMAZINE	AXITINIB	0.116470321473699	M1	pbta_hgg_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Vascular endothelial growth factor receptor inhibitor	FLT1
+CHLORPROMAZINE	AXITINIB	0.116470321473699	M1	pbta_hgg_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Vascular endothelial growth factor receptor inhibitor	FLT4
+CHLORPROMAZINE	AXITINIB	0.116470321473699	M1	pbta_hgg_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Vascular endothelial growth factor receptor inhibitor	KDR
+CHLORPROMAZINE	AXITINIB	0.116470321473699	M1	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD3	Vascular endothelial growth factor receptor inhibitor	FLT1
+CHLORPROMAZINE	AXITINIB	0.116470321473699	M1	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD3	Vascular endothelial growth factor receptor inhibitor	FLT4
+CHLORPROMAZINE	AXITINIB	0.116470321473699	M1	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD3	Vascular endothelial growth factor receptor inhibitor	KDR
+CHLORPROMAZINE	TETRABENAZINE	0.112457785020235	M1	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD2	Synaptic vesicular amine transporter inhibitor	SLC18A2
+CHLORPROMAZINE	TETRABENAZINE	0.112457785020235	M1	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD4	Synaptic vesicular amine transporter inhibitor	SLC18A2
+CHLORPROMAZINE	TETRABENAZINE	0.112457785020235	M1	pbta_hgg_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Synaptic vesicular amine transporter inhibitor	SLC18A2
+CHLORPROMAZINE	TETRABENAZINE	0.112457785020235	M1	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD3	Synaptic vesicular amine transporter inhibitor	SLC18A2
+CHLORPROMAZINE	PHENTERMINE	0.094677873209602	M1	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD2	Norepinephrine transporter releasing agent	SLC6A2
+CHLORPROMAZINE	PHENTERMINE	0.094677873209602	M1	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD4	Norepinephrine transporter releasing agent	SLC6A2
+CHLORPROMAZINE	PHENTERMINE	0.094677873209602	M1	pbta_hgg_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Norepinephrine transporter releasing agent	SLC6A2
+CHLORPROMAZINE	PHENTERMINE	0.094677873209602	M1	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD3	Norepinephrine transporter releasing agent	SLC6A2
+CHLORPROMAZINE	DANAZOL	0.0934471762126444	M1	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD2	Androgen Receptor agonist	AR
+CHLORPROMAZINE	DANAZOL	0.0934471762126444	M1	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD2	Progesterone receptor agonist	PGR
+CHLORPROMAZINE	DANAZOL	0.0934471762126444	M1	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD4	Androgen Receptor agonist	AR
+CHLORPROMAZINE	DANAZOL	0.0934471762126444	M1	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD4	Progesterone receptor agonist	PGR
+CHLORPROMAZINE	DANAZOL	0.0934471762126444	M1	pbta_hgg_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Androgen Receptor agonist	AR
+CHLORPROMAZINE	DANAZOL	0.0934471762126444	M1	pbta_hgg_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Progesterone receptor agonist	PGR
+CHLORPROMAZINE	DANAZOL	0.0934471762126444	M1	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD3	Androgen Receptor agonist	AR
+CHLORPROMAZINE	DANAZOL	0.0934471762126444	M1	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD3	Progesterone receptor agonist	PGR
+LEVONORGESTREL	DANAZOL	0.0855839368551303	M9	pbta_hgg_qSig	Progesterone receptor agonist	PGR	Androgen Receptor agonist	AR
+LEVONORGESTREL	DANAZOL	0.0855839368551303	M9	pbta_hgg_qSig	Progesterone receptor agonist	PGR	Progesterone receptor agonist	PGR
+CHLORPROMAZINE	TOLAZAMIDE	0.0801811789409912	M1	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD2	Sulfonylurea receptor 1, Kir6.2 blocker	KCNJ11
+CHLORPROMAZINE	TOLAZAMIDE	0.0801811789409912	M1	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD2	Sulfonylurea receptor 1, Kir6.2 blocker	ABCC8
+CHLORPROMAZINE	TOLAZAMIDE	0.0801811789409912	M1	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD4	Sulfonylurea receptor 1, Kir6.2 blocker	KCNJ11
+CHLORPROMAZINE	TOLAZAMIDE	0.0801811789409912	M1	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD4	Sulfonylurea receptor 1, Kir6.2 blocker	ABCC8
+CHLORPROMAZINE	TOLAZAMIDE	0.0801811789409912	M1	pbta_hgg_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Sulfonylurea receptor 1, Kir6.2 blocker	KCNJ11
+CHLORPROMAZINE	TOLAZAMIDE	0.0801811789409912	M1	pbta_hgg_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Sulfonylurea receptor 1, Kir6.2 blocker	ABCC8
+CHLORPROMAZINE	TOLAZAMIDE	0.0801811789409912	M1	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD3	Sulfonylurea receptor 1, Kir6.2 blocker	KCNJ11
+CHLORPROMAZINE	TOLAZAMIDE	0.0801811789409912	M1	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD3	Sulfonylurea receptor 1, Kir6.2 blocker	ABCC8
+LEVONORGESTREL	CHLORPROMAZINE	0.068722456639072	M9	pbta_hgg_qSig	Progesterone receptor agonist	PGR	D2-like dopamine receptor antagonist	DRD2
+LEVONORGESTREL	CHLORPROMAZINE	0.068722456639072	M9	pbta_hgg_qSig	Progesterone receptor agonist	PGR	D2-like dopamine receptor antagonist	DRD4
+LEVONORGESTREL	CHLORPROMAZINE	0.068722456639072	M9	pbta_hgg_qSig	Progesterone receptor agonist	PGR	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+LEVONORGESTREL	CHLORPROMAZINE	0.068722456639072	M9	pbta_hgg_qSig	Progesterone receptor agonist	PGR	D2-like dopamine receptor antagonist	DRD3
+LEVONORGESTREL	DIAZOXIDE	0.0625475945956405	M9	pbta_hgg_qSig	Progesterone receptor agonist	PGR	Potassium channel, inwardly rectifying, subfamily J, member 11 opener	KCNJ11
+LEVONORGESTREL	DIAZOXIDE	0.0625475945956405	M9	pbta_hgg_qSig	Progesterone receptor agonist	PGR	Potassium channel, inwardly rectifying, subfamily J, member 8 opener	KCNJ8
+LEVONORGESTREL	AXITINIB	0.051541842479304	M9	pbta_hgg_qSig	Progesterone receptor agonist	PGR	Vascular endothelial growth factor receptor inhibitor	FLT1
+LEVONORGESTREL	AXITINIB	0.051541842479304	M9	pbta_hgg_qSig	Progesterone receptor agonist	PGR	Vascular endothelial growth factor receptor inhibitor	FLT4
+LEVONORGESTREL	AXITINIB	0.051541842479304	M9	pbta_hgg_qSig	Progesterone receptor agonist	PGR	Vascular endothelial growth factor receptor inhibitor	KDR
+CHLORPROMAZINE	DANAZOL	0.0381791425772622	M9	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD2	Androgen Receptor agonist	AR
+CHLORPROMAZINE	DANAZOL	0.0381791425772622	M9	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD2	Progesterone receptor agonist	PGR
+CHLORPROMAZINE	DANAZOL	0.0381791425772622	M9	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD4	Androgen Receptor agonist	AR
+CHLORPROMAZINE	DANAZOL	0.0381791425772622	M9	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD4	Progesterone receptor agonist	PGR
+CHLORPROMAZINE	DANAZOL	0.0381791425772622	M9	pbta_hgg_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Androgen Receptor agonist	AR
+CHLORPROMAZINE	DANAZOL	0.0381791425772622	M9	pbta_hgg_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Progesterone receptor agonist	PGR
+CHLORPROMAZINE	DANAZOL	0.0381791425772622	M9	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD3	Androgen Receptor agonist	AR
+CHLORPROMAZINE	DANAZOL	0.0381791425772622	M9	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD3	Progesterone receptor agonist	PGR
+DIAZOXIDE	DANAZOL	0.0347486636642447	M9	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 11 opener	KCNJ11	Androgen Receptor agonist	AR
+DIAZOXIDE	DANAZOL	0.0347486636642447	M9	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 11 opener	KCNJ11	Progesterone receptor agonist	PGR
+DIAZOXIDE	DANAZOL	0.0347486636642447	M9	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 8 opener	KCNJ8	Androgen Receptor agonist	AR
+DIAZOXIDE	DANAZOL	0.0347486636642447	M9	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 8 opener	KCNJ8	Progesterone receptor agonist	PGR
+LEVONORGESTREL	AXITINIB	0.028692603675983	M1	pbta_hgg_qSig	Progesterone receptor agonist	PGR	Vascular endothelial growth factor receptor inhibitor	FLT1
+LEVONORGESTREL	AXITINIB	0.028692603675983	M1	pbta_hgg_qSig	Progesterone receptor agonist	PGR	Vascular endothelial growth factor receptor inhibitor	FLT4
+LEVONORGESTREL	AXITINIB	0.028692603675983	M1	pbta_hgg_qSig	Progesterone receptor agonist	PGR	Vascular endothelial growth factor receptor inhibitor	KDR
+AXITINIB	DANAZOL	0.0286343569329467	M9	pbta_hgg_qSig	Vascular endothelial growth factor receptor inhibitor	FLT1	Androgen Receptor agonist	AR
+AXITINIB	DANAZOL	0.0286343569329467	M9	pbta_hgg_qSig	Vascular endothelial growth factor receptor inhibitor	FLT1	Progesterone receptor agonist	PGR
+AXITINIB	DANAZOL	0.0286343569329467	M9	pbta_hgg_qSig	Vascular endothelial growth factor receptor inhibitor	FLT4	Androgen Receptor agonist	AR
+AXITINIB	DANAZOL	0.0286343569329467	M9	pbta_hgg_qSig	Vascular endothelial growth factor receptor inhibitor	FLT4	Progesterone receptor agonist	PGR
+AXITINIB	DANAZOL	0.0286343569329467	M9	pbta_hgg_qSig	Vascular endothelial growth factor receptor inhibitor	KDR	Androgen Receptor agonist	AR
+AXITINIB	DANAZOL	0.0286343569329467	M9	pbta_hgg_qSig	Vascular endothelial growth factor receptor inhibitor	KDR	Progesterone receptor agonist	PGR
+CHLORPROMAZINE	OXAPROZIN	0.0199684157314158	M4	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD2	Cyclooxygenase inhibitor	PTGS1
+CHLORPROMAZINE	OXAPROZIN	0.0199684157314158	M4	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD2	Cyclooxygenase inhibitor	PTGS2
+CHLORPROMAZINE	OXAPROZIN	0.0199684157314158	M4	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD4	Cyclooxygenase inhibitor	PTGS1
+CHLORPROMAZINE	OXAPROZIN	0.0199684157314158	M4	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD4	Cyclooxygenase inhibitor	PTGS2
+CHLORPROMAZINE	OXAPROZIN	0.0199684157314158	M4	pbta_hgg_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Cyclooxygenase inhibitor	PTGS1
+CHLORPROMAZINE	OXAPROZIN	0.0199684157314158	M4	pbta_hgg_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Cyclooxygenase inhibitor	PTGS2
+CHLORPROMAZINE	OXAPROZIN	0.0199684157314158	M4	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD3	Cyclooxygenase inhibitor	PTGS1
+CHLORPROMAZINE	OXAPROZIN	0.0199684157314158	M4	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD3	Cyclooxygenase inhibitor	PTGS2
+LEVONORGESTREL	DANAZOL	0.0185731774838411	M1	pbta_hgg_qSig	Progesterone receptor agonist	PGR	Androgen Receptor agonist	AR
+LEVONORGESTREL	DANAZOL	0.0185731774838411	M1	pbta_hgg_qSig	Progesterone receptor agonist	PGR	Progesterone receptor agonist	PGR
+DIAZOXIDE	AXITINIB	0.0185000123971707	M1	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 11 opener	KCNJ11	Vascular endothelial growth factor receptor inhibitor	FLT1
+DIAZOXIDE	AXITINIB	0.0185000123971707	M1	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 11 opener	KCNJ11	Vascular endothelial growth factor receptor inhibitor	FLT4
+DIAZOXIDE	AXITINIB	0.0185000123971707	M1	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 11 opener	KCNJ11	Vascular endothelial growth factor receptor inhibitor	KDR
+DIAZOXIDE	AXITINIB	0.0185000123971707	M1	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 8 opener	KCNJ8	Vascular endothelial growth factor receptor inhibitor	FLT1
+DIAZOXIDE	AXITINIB	0.0185000123971707	M1	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 8 opener	KCNJ8	Vascular endothelial growth factor receptor inhibitor	FLT4
+DIAZOXIDE	AXITINIB	0.0185000123971707	M1	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 8 opener	KCNJ8	Vascular endothelial growth factor receptor inhibitor	KDR
+LEVONORGESTREL	DIAZOXIDE	0.0182872907630967	M1	pbta_hgg_qSig	Progesterone receptor agonist	PGR	Potassium channel, inwardly rectifying, subfamily J, member 11 opener	KCNJ11
+LEVONORGESTREL	DIAZOXIDE	0.0182872907630967	M1	pbta_hgg_qSig	Progesterone receptor agonist	PGR	Potassium channel, inwardly rectifying, subfamily J, member 8 opener	KCNJ8
+SIROLIMUS	AXITINIB	0.018004545480641	M1	pbta_hgg_qSig	FK506-binding protein 1A inhibitor	FKBP1A	Vascular endothelial growth factor receptor inhibitor	FLT1
+SIROLIMUS	AXITINIB	0.018004545480641	M1	pbta_hgg_qSig	FK506-binding protein 1A inhibitor	FKBP1A	Vascular endothelial growth factor receptor inhibitor	FLT4
+SIROLIMUS	AXITINIB	0.018004545480641	M1	pbta_hgg_qSig	FK506-binding protein 1A inhibitor	FKBP1A	Vascular endothelial growth factor receptor inhibitor	KDR
+AXITINIB	DANAZOL	0.0168244767385685	M1	pbta_hgg_qSig	Vascular endothelial growth factor receptor inhibitor	FLT1	Androgen Receptor agonist	AR
+AXITINIB	DANAZOL	0.0168244767385685	M1	pbta_hgg_qSig	Vascular endothelial growth factor receptor inhibitor	FLT1	Progesterone receptor agonist	PGR
+AXITINIB	DANAZOL	0.0168244767385685	M1	pbta_hgg_qSig	Vascular endothelial growth factor receptor inhibitor	FLT4	Androgen Receptor agonist	AR
+AXITINIB	DANAZOL	0.0168244767385685	M1	pbta_hgg_qSig	Vascular endothelial growth factor receptor inhibitor	FLT4	Progesterone receptor agonist	PGR
+AXITINIB	DANAZOL	0.0168244767385685	M1	pbta_hgg_qSig	Vascular endothelial growth factor receptor inhibitor	KDR	Androgen Receptor agonist	AR
+AXITINIB	DANAZOL	0.0168244767385685	M1	pbta_hgg_qSig	Vascular endothelial growth factor receptor inhibitor	KDR	Progesterone receptor agonist	PGR
+OXAPROZIN	AXITINIB	0.016745881081123	M1	pbta_hgg_qSig	Cyclooxygenase inhibitor	PTGS1	Vascular endothelial growth factor receptor inhibitor	FLT1
+OXAPROZIN	AXITINIB	0.016745881081123	M1	pbta_hgg_qSig	Cyclooxygenase inhibitor	PTGS1	Vascular endothelial growth factor receptor inhibitor	FLT4
+OXAPROZIN	AXITINIB	0.016745881081123	M1	pbta_hgg_qSig	Cyclooxygenase inhibitor	PTGS1	Vascular endothelial growth factor receptor inhibitor	KDR
+OXAPROZIN	AXITINIB	0.016745881081123	M1	pbta_hgg_qSig	Cyclooxygenase inhibitor	PTGS2	Vascular endothelial growth factor receptor inhibitor	FLT1
+OXAPROZIN	AXITINIB	0.016745881081123	M1	pbta_hgg_qSig	Cyclooxygenase inhibitor	PTGS2	Vascular endothelial growth factor receptor inhibitor	FLT4
+OXAPROZIN	AXITINIB	0.016745881081123	M1	pbta_hgg_qSig	Cyclooxygenase inhibitor	PTGS2	Vascular endothelial growth factor receptor inhibitor	KDR
+LEVONORGESTREL	SIROLIMUS	0.0164692481963802	M1	pbta_hgg_qSig	Progesterone receptor agonist	PGR	FK506-binding protein 1A inhibitor	FKBP1A
+TETRABENAZINE	AXITINIB	0.0164615115025218	M1	pbta_hgg_qSig	Synaptic vesicular amine transporter inhibitor	SLC18A2	Vascular endothelial growth factor receptor inhibitor	FLT1
+TETRABENAZINE	AXITINIB	0.0164615115025218	M1	pbta_hgg_qSig	Synaptic vesicular amine transporter inhibitor	SLC18A2	Vascular endothelial growth factor receptor inhibitor	FLT4
+TETRABENAZINE	AXITINIB	0.0164615115025218	M1	pbta_hgg_qSig	Synaptic vesicular amine transporter inhibitor	SLC18A2	Vascular endothelial growth factor receptor inhibitor	KDR
+LEVONORGESTREL	TETRABENAZINE	0.0164018419134751	M1	pbta_hgg_qSig	Progesterone receptor agonist	PGR	Synaptic vesicular amine transporter inhibitor	SLC18A2
+LEVONORGESTREL	OXAPROZIN	0.0162705096839981	M1	pbta_hgg_qSig	Progesterone receptor agonist	PGR	Cyclooxygenase inhibitor	PTGS1
+LEVONORGESTREL	OXAPROZIN	0.0162705096839981	M1	pbta_hgg_qSig	Progesterone receptor agonist	PGR	Cyclooxygenase inhibitor	PTGS2
+OXAPROZIN	TETRABENAZINE	0.0154727337114636	M4	pbta_hgg_qSig	Cyclooxygenase inhibitor	PTGS1	Synaptic vesicular amine transporter inhibitor	SLC18A2
+OXAPROZIN	TETRABENAZINE	0.0154727337114636	M4	pbta_hgg_qSig	Cyclooxygenase inhibitor	PTGS2	Synaptic vesicular amine transporter inhibitor	SLC18A2
+OXAPROZIN	AXITINIB	0.0137267896055376	M4	pbta_hgg_qSig	Cyclooxygenase inhibitor	PTGS1	Vascular endothelial growth factor receptor inhibitor	FLT1
+OXAPROZIN	AXITINIB	0.0137267896055376	M4	pbta_hgg_qSig	Cyclooxygenase inhibitor	PTGS1	Vascular endothelial growth factor receptor inhibitor	FLT4
+OXAPROZIN	AXITINIB	0.0137267896055376	M4	pbta_hgg_qSig	Cyclooxygenase inhibitor	PTGS1	Vascular endothelial growth factor receptor inhibitor	KDR
+OXAPROZIN	AXITINIB	0.0137267896055376	M4	pbta_hgg_qSig	Cyclooxygenase inhibitor	PTGS2	Vascular endothelial growth factor receptor inhibitor	FLT1
+OXAPROZIN	AXITINIB	0.0137267896055376	M4	pbta_hgg_qSig	Cyclooxygenase inhibitor	PTGS2	Vascular endothelial growth factor receptor inhibitor	FLT4
+OXAPROZIN	AXITINIB	0.0137267896055376	M4	pbta_hgg_qSig	Cyclooxygenase inhibitor	PTGS2	Vascular endothelial growth factor receptor inhibitor	KDR
+AXITINIB	PHENTERMINE	0.0127987680987622	M1	pbta_hgg_qSig	Vascular endothelial growth factor receptor inhibitor	FLT1	Norepinephrine transporter releasing agent	SLC6A2
+AXITINIB	PHENTERMINE	0.0127987680987622	M1	pbta_hgg_qSig	Vascular endothelial growth factor receptor inhibitor	FLT4	Norepinephrine transporter releasing agent	SLC6A2
+AXITINIB	PHENTERMINE	0.0127987680987622	M1	pbta_hgg_qSig	Vascular endothelial growth factor receptor inhibitor	KDR	Norepinephrine transporter releasing agent	SLC6A2
+LEVONORGESTREL	PHENTERMINE	0.0121425001659224	M1	pbta_hgg_qSig	Progesterone receptor agonist	PGR	Norepinephrine transporter releasing agent	SLC6A2
+AXITINIB	TOLAZAMIDE	0.0116467204624311	M1	pbta_hgg_qSig	Vascular endothelial growth factor receptor inhibitor	FLT1	Sulfonylurea receptor 1, Kir6.2 blocker	KCNJ11
+AXITINIB	TOLAZAMIDE	0.0116467204624311	M1	pbta_hgg_qSig	Vascular endothelial growth factor receptor inhibitor	FLT1	Sulfonylurea receptor 1, Kir6.2 blocker	ABCC8
+AXITINIB	TOLAZAMIDE	0.0116467204624311	M1	pbta_hgg_qSig	Vascular endothelial growth factor receptor inhibitor	FLT4	Sulfonylurea receptor 1, Kir6.2 blocker	KCNJ11
+AXITINIB	TOLAZAMIDE	0.0116467204624311	M1	pbta_hgg_qSig	Vascular endothelial growth factor receptor inhibitor	FLT4	Sulfonylurea receptor 1, Kir6.2 blocker	ABCC8
+AXITINIB	TOLAZAMIDE	0.0116467204624311	M1	pbta_hgg_qSig	Vascular endothelial growth factor receptor inhibitor	KDR	Sulfonylurea receptor 1, Kir6.2 blocker	KCNJ11
+AXITINIB	TOLAZAMIDE	0.0116467204624311	M1	pbta_hgg_qSig	Vascular endothelial growth factor receptor inhibitor	KDR	Sulfonylurea receptor 1, Kir6.2 blocker	ABCC8
+LEVONORGESTREL	TOLAZAMIDE	0.0115526368476884	M1	pbta_hgg_qSig	Progesterone receptor agonist	PGR	Sulfonylurea receptor 1, Kir6.2 blocker	KCNJ11
+LEVONORGESTREL	TOLAZAMIDE	0.0115526368476884	M1	pbta_hgg_qSig	Progesterone receptor agonist	PGR	Sulfonylurea receptor 1, Kir6.2 blocker	ABCC8
+CHLORPROMAZINE	AXITINIB	0.0111444037072393	M5	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD2	Vascular endothelial growth factor receptor inhibitor	FLT1
+CHLORPROMAZINE	AXITINIB	0.0111444037072393	M5	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD2	Vascular endothelial growth factor receptor inhibitor	FLT4
+CHLORPROMAZINE	AXITINIB	0.0111444037072393	M5	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD2	Vascular endothelial growth factor receptor inhibitor	KDR
+CHLORPROMAZINE	AXITINIB	0.0111444037072393	M5	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD4	Vascular endothelial growth factor receptor inhibitor	FLT1
+CHLORPROMAZINE	AXITINIB	0.0111444037072393	M5	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD4	Vascular endothelial growth factor receptor inhibitor	FLT4
+CHLORPROMAZINE	AXITINIB	0.0111444037072393	M5	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD4	Vascular endothelial growth factor receptor inhibitor	KDR
+CHLORPROMAZINE	AXITINIB	0.0111444037072393	M5	pbta_hgg_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Vascular endothelial growth factor receptor inhibitor	FLT1
+CHLORPROMAZINE	AXITINIB	0.0111444037072393	M5	pbta_hgg_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Vascular endothelial growth factor receptor inhibitor	FLT4
+CHLORPROMAZINE	AXITINIB	0.0111444037072393	M5	pbta_hgg_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Vascular endothelial growth factor receptor inhibitor	KDR
+CHLORPROMAZINE	AXITINIB	0.0111444037072393	M5	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD3	Vascular endothelial growth factor receptor inhibitor	FLT1
+CHLORPROMAZINE	AXITINIB	0.0111444037072393	M5	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD3	Vascular endothelial growth factor receptor inhibitor	FLT4
+CHLORPROMAZINE	AXITINIB	0.0111444037072393	M5	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD3	Vascular endothelial growth factor receptor inhibitor	KDR
+DIAZOXIDE	DANAZOL	0.0108494949824884	M1	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 11 opener	KCNJ11	Androgen Receptor agonist	AR
+DIAZOXIDE	DANAZOL	0.0108494949824884	M1	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 11 opener	KCNJ11	Progesterone receptor agonist	PGR
+DIAZOXIDE	DANAZOL	0.0108494949824884	M1	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 8 opener	KCNJ8	Androgen Receptor agonist	AR
+DIAZOXIDE	DANAZOL	0.0108494949824884	M1	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 8 opener	KCNJ8	Progesterone receptor agonist	PGR
+DIAZOXIDE	AXITINIB	0.010072003928792	M5	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 11 opener	KCNJ11	Vascular endothelial growth factor receptor inhibitor	FLT1
+DIAZOXIDE	AXITINIB	0.010072003928792	M5	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 11 opener	KCNJ11	Vascular endothelial growth factor receptor inhibitor	FLT4
+DIAZOXIDE	AXITINIB	0.010072003928792	M5	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 11 opener	KCNJ11	Vascular endothelial growth factor receptor inhibitor	KDR
+DIAZOXIDE	AXITINIB	0.010072003928792	M5	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 8 opener	KCNJ8	Vascular endothelial growth factor receptor inhibitor	FLT1
+DIAZOXIDE	AXITINIB	0.010072003928792	M5	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 8 opener	KCNJ8	Vascular endothelial growth factor receptor inhibitor	FLT4
+DIAZOXIDE	AXITINIB	0.010072003928792	M5	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 8 opener	KCNJ8	Vascular endothelial growth factor receptor inhibitor	KDR
+TETRABENAZINE	AXITINIB	0.00988858178672024	M5	pbta_hgg_qSig	Synaptic vesicular amine transporter inhibitor	SLC18A2	Vascular endothelial growth factor receptor inhibitor	FLT1
+TETRABENAZINE	AXITINIB	0.00988858178672024	M5	pbta_hgg_qSig	Synaptic vesicular amine transporter inhibitor	SLC18A2	Vascular endothelial growth factor receptor inhibitor	FLT4
+TETRABENAZINE	AXITINIB	0.00988858178672024	M5	pbta_hgg_qSig	Synaptic vesicular amine transporter inhibitor	SLC18A2	Vascular endothelial growth factor receptor inhibitor	KDR
+SIROLIMUS	DANAZOL	0.00982970853776579	M1	pbta_hgg_qSig	FK506-binding protein 1A inhibitor	FKBP1A	Androgen Receptor agonist	AR
+SIROLIMUS	DANAZOL	0.00982970853776579	M1	pbta_hgg_qSig	FK506-binding protein 1A inhibitor	FKBP1A	Progesterone receptor agonist	PGR
+TETRABENAZINE	DANAZOL	0.00972515481775208	M1	pbta_hgg_qSig	Synaptic vesicular amine transporter inhibitor	SLC18A2	Androgen Receptor agonist	AR
+TETRABENAZINE	DANAZOL	0.00972515481775208	M1	pbta_hgg_qSig	Synaptic vesicular amine transporter inhibitor	SLC18A2	Progesterone receptor agonist	PGR
+OXAPROZIN	DANAZOL	0.00966550262658517	M1	pbta_hgg_qSig	Cyclooxygenase inhibitor	PTGS1	Androgen Receptor agonist	AR
+OXAPROZIN	DANAZOL	0.00966550262658517	M1	pbta_hgg_qSig	Cyclooxygenase inhibitor	PTGS1	Progesterone receptor agonist	PGR
+OXAPROZIN	DANAZOL	0.00966550262658517	M1	pbta_hgg_qSig	Cyclooxygenase inhibitor	PTGS2	Androgen Receptor agonist	AR
+OXAPROZIN	DANAZOL	0.00966550262658517	M1	pbta_hgg_qSig	Cyclooxygenase inhibitor	PTGS2	Progesterone receptor agonist	PGR
+DIAZOXIDE	TETRABENAZINE	0.00771434490781391	M1	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 11 opener	KCNJ11	Synaptic vesicular amine transporter inhibitor	SLC18A2
+DIAZOXIDE	TETRABENAZINE	0.00771434490781391	M1	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 8 opener	KCNJ8	Synaptic vesicular amine transporter inhibitor	SLC18A2
+AXITINIB	ZAFIRLUKAST	0.00765604183033292	M5	pbta_hgg_qSig	Vascular endothelial growth factor receptor inhibitor	FLT1	Cysteinyl leukotriene receptor 1 antagonist	CYSLTR1
+AXITINIB	ZAFIRLUKAST	0.00765604183033292	M5	pbta_hgg_qSig	Vascular endothelial growth factor receptor inhibitor	FLT4	Cysteinyl leukotriene receptor 1 antagonist	CYSLTR1
+AXITINIB	ZAFIRLUKAST	0.00765604183033292	M5	pbta_hgg_qSig	Vascular endothelial growth factor receptor inhibitor	KDR	Cysteinyl leukotriene receptor 1 antagonist	CYSLTR1
+PHENTERMINE	DANAZOL	0.00722645560684515	M1	pbta_hgg_qSig	Norepinephrine transporter releasing agent	SLC6A2	Androgen Receptor agonist	AR
+PHENTERMINE	DANAZOL	0.00722645560684515	M1	pbta_hgg_qSig	Norepinephrine transporter releasing agent	SLC6A2	Progesterone receptor agonist	PGR
+DIAZOXIDE	OXAPROZIN	0.00716819702521995	M1	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 11 opener	KCNJ11	Cyclooxygenase inhibitor	PTGS1
+DIAZOXIDE	OXAPROZIN	0.00716819702521995	M1	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 11 opener	KCNJ11	Cyclooxygenase inhibitor	PTGS2
+DIAZOXIDE	OXAPROZIN	0.00716819702521995	M1	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 8 opener	KCNJ8	Cyclooxygenase inhibitor	PTGS1
+DIAZOXIDE	OXAPROZIN	0.00716819702521995	M1	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 8 opener	KCNJ8	Cyclooxygenase inhibitor	PTGS2
+DANAZOL	TOLAZAMIDE	0.0068521912760701	M1	pbta_hgg_qSig	Androgen Receptor agonist	AR	Sulfonylurea receptor 1, Kir6.2 blocker	KCNJ11
+DANAZOL	TOLAZAMIDE	0.0068521912760701	M1	pbta_hgg_qSig	Androgen Receptor agonist	AR	Sulfonylurea receptor 1, Kir6.2 blocker	ABCC8
+DANAZOL	TOLAZAMIDE	0.0068521912760701	M1	pbta_hgg_qSig	Progesterone receptor agonist	PGR	Sulfonylurea receptor 1, Kir6.2 blocker	KCNJ11
+DANAZOL	TOLAZAMIDE	0.0068521912760701	M1	pbta_hgg_qSig	Progesterone receptor agonist	PGR	Sulfonylurea receptor 1, Kir6.2 blocker	ABCC8
+AXITINIB	DANAZOL	0.00666938615690044	M5	pbta_hgg_qSig	Vascular endothelial growth factor receptor inhibitor	FLT1	Androgen Receptor agonist	AR
+AXITINIB	DANAZOL	0.00666938615690044	M5	pbta_hgg_qSig	Vascular endothelial growth factor receptor inhibitor	FLT1	Progesterone receptor agonist	PGR
+AXITINIB	DANAZOL	0.00666938615690044	M5	pbta_hgg_qSig	Vascular endothelial growth factor receptor inhibitor	FLT4	Androgen Receptor agonist	AR
+AXITINIB	DANAZOL	0.00666938615690044	M5	pbta_hgg_qSig	Vascular endothelial growth factor receptor inhibitor	FLT4	Progesterone receptor agonist	PGR
+AXITINIB	DANAZOL	0.00666938615690044	M5	pbta_hgg_qSig	Vascular endothelial growth factor receptor inhibitor	KDR	Androgen Receptor agonist	AR
+AXITINIB	DANAZOL	0.00666938615690044	M5	pbta_hgg_qSig	Vascular endothelial growth factor receptor inhibitor	KDR	Progesterone receptor agonist	PGR
+OXAPROZIN	TETRABENAZINE	0.00658832699898759	M1	pbta_hgg_qSig	Cyclooxygenase inhibitor	PTGS1	Synaptic vesicular amine transporter inhibitor	SLC18A2
+OXAPROZIN	TETRABENAZINE	0.00658832699898759	M1	pbta_hgg_qSig	Cyclooxygenase inhibitor	PTGS2	Synaptic vesicular amine transporter inhibitor	SLC18A2
+SIROLIMUS	DIAZOXIDE	0.00602889880970189	M1	pbta_hgg_qSig	FK506-binding protein 1A inhibitor	FKBP1A	Potassium channel, inwardly rectifying, subfamily J, member 11 opener	KCNJ11
+SIROLIMUS	DIAZOXIDE	0.00602889880970189	M1	pbta_hgg_qSig	FK506-binding protein 1A inhibitor	FKBP1A	Potassium channel, inwardly rectifying, subfamily J, member 8 opener	KCNJ8
+AXITINIB	TOLAZAMIDE	0.00587533562512864	M5	pbta_hgg_qSig	Vascular endothelial growth factor receptor inhibitor	FLT1	Sulfonylurea receptor 1, Kir6.2 blocker	KCNJ11
+AXITINIB	TOLAZAMIDE	0.00587533562512864	M5	pbta_hgg_qSig	Vascular endothelial growth factor receptor inhibitor	FLT1	Sulfonylurea receptor 1, Kir6.2 blocker	ABCC8
+AXITINIB	TOLAZAMIDE	0.00587533562512864	M5	pbta_hgg_qSig	Vascular endothelial growth factor receptor inhibitor	FLT4	Sulfonylurea receptor 1, Kir6.2 blocker	KCNJ11
+AXITINIB	TOLAZAMIDE	0.00587533562512864	M5	pbta_hgg_qSig	Vascular endothelial growth factor receptor inhibitor	FLT4	Sulfonylurea receptor 1, Kir6.2 blocker	ABCC8
+AXITINIB	TOLAZAMIDE	0.00587533562512864	M5	pbta_hgg_qSig	Vascular endothelial growth factor receptor inhibitor	KDR	Sulfonylurea receptor 1, Kir6.2 blocker	KCNJ11
+AXITINIB	TOLAZAMIDE	0.00587533562512864	M5	pbta_hgg_qSig	Vascular endothelial growth factor receptor inhibitor	KDR	Sulfonylurea receptor 1, Kir6.2 blocker	ABCC8
+SIROLIMUS	TETRABENAZINE	0.0056546719807933	M1	pbta_hgg_qSig	FK506-binding protein 1A inhibitor	FKBP1A	Synaptic vesicular amine transporter inhibitor	SLC18A2
+DIAZOXIDE	TOLAZAMIDE	0.00537301308349935	M1	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 11 opener	KCNJ11	Sulfonylurea receptor 1, Kir6.2 blocker	KCNJ11
+DIAZOXIDE	TOLAZAMIDE	0.00537301308349935	M1	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 11 opener	KCNJ11	Sulfonylurea receptor 1, Kir6.2 blocker	ABCC8
+DIAZOXIDE	TOLAZAMIDE	0.00537301308349935	M1	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 8 opener	KCNJ8	Sulfonylurea receptor 1, Kir6.2 blocker	KCNJ11
+DIAZOXIDE	TOLAZAMIDE	0.00537301308349935	M1	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 8 opener	KCNJ8	Sulfonylurea receptor 1, Kir6.2 blocker	ABCC8
+CHLORPROMAZINE	AXITINIB	0.00509893823684722	M6	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD2	Vascular endothelial growth factor receptor inhibitor	FLT1
+CHLORPROMAZINE	AXITINIB	0.00509893823684722	M6	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD2	Vascular endothelial growth factor receptor inhibitor	FLT4
+CHLORPROMAZINE	AXITINIB	0.00509893823684722	M6	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD2	Vascular endothelial growth factor receptor inhibitor	KDR
+CHLORPROMAZINE	AXITINIB	0.00509893823684722	M6	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD4	Vascular endothelial growth factor receptor inhibitor	FLT1
+CHLORPROMAZINE	AXITINIB	0.00509893823684722	M6	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD4	Vascular endothelial growth factor receptor inhibitor	FLT4
+CHLORPROMAZINE	AXITINIB	0.00509893823684722	M6	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD4	Vascular endothelial growth factor receptor inhibitor	KDR
+CHLORPROMAZINE	AXITINIB	0.00509893823684722	M6	pbta_hgg_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Vascular endothelial growth factor receptor inhibitor	FLT1
+CHLORPROMAZINE	AXITINIB	0.00509893823684722	M6	pbta_hgg_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Vascular endothelial growth factor receptor inhibitor	FLT4
+CHLORPROMAZINE	AXITINIB	0.00509893823684722	M6	pbta_hgg_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Vascular endothelial growth factor receptor inhibitor	KDR
+CHLORPROMAZINE	AXITINIB	0.00509893823684722	M6	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD3	Vascular endothelial growth factor receptor inhibitor	FLT1
+CHLORPROMAZINE	AXITINIB	0.00509893823684722	M6	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD3	Vascular endothelial growth factor receptor inhibitor	FLT4
+CHLORPROMAZINE	AXITINIB	0.00509893823684722	M6	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD3	Vascular endothelial growth factor receptor inhibitor	KDR
+DIAZOXIDE	PHENTERMINE	0.00499863544646981	M1	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 11 opener	KCNJ11	Norepinephrine transporter releasing agent	SLC6A2
+DIAZOXIDE	PHENTERMINE	0.00499863544646981	M1	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 8 opener	KCNJ8	Norepinephrine transporter releasing agent	SLC6A2
+TETRABENAZINE	TOLAZAMIDE	0.00491215618267535	M1	pbta_hgg_qSig	Synaptic vesicular amine transporter inhibitor	SLC18A2	Sulfonylurea receptor 1, Kir6.2 blocker	KCNJ11
+TETRABENAZINE	TOLAZAMIDE	0.00491215618267535	M1	pbta_hgg_qSig	Synaptic vesicular amine transporter inhibitor	SLC18A2	Sulfonylurea receptor 1, Kir6.2 blocker	ABCC8
+SIROLIMUS	OXAPROZIN	0.00482425803855387	M1	pbta_hgg_qSig	FK506-binding protein 1A inhibitor	FKBP1A	Cyclooxygenase inhibitor	PTGS1
+SIROLIMUS	OXAPROZIN	0.00482425803855387	M1	pbta_hgg_qSig	FK506-binding protein 1A inhibitor	FKBP1A	Cyclooxygenase inhibitor	PTGS2
+TETRABENAZINE	PHENTERMINE	0.00462672969719719	M1	pbta_hgg_qSig	Synaptic vesicular amine transporter inhibitor	SLC18A2	Norepinephrine transporter releasing agent	SLC6A2
+OXAPROZIN	TOLAZAMIDE	0.00457729165714639	M1	pbta_hgg_qSig	Cyclooxygenase inhibitor	PTGS1	Sulfonylurea receptor 1, Kir6.2 blocker	KCNJ11
+OXAPROZIN	TOLAZAMIDE	0.00457729165714639	M1	pbta_hgg_qSig	Cyclooxygenase inhibitor	PTGS1	Sulfonylurea receptor 1, Kir6.2 blocker	ABCC8
+OXAPROZIN	TOLAZAMIDE	0.00457729165714639	M1	pbta_hgg_qSig	Cyclooxygenase inhibitor	PTGS2	Sulfonylurea receptor 1, Kir6.2 blocker	KCNJ11
+OXAPROZIN	TOLAZAMIDE	0.00457729165714639	M1	pbta_hgg_qSig	Cyclooxygenase inhibitor	PTGS2	Sulfonylurea receptor 1, Kir6.2 blocker	ABCC8
+OXAPROZIN	PHENTERMINE	0.00413433100070435	M1	pbta_hgg_qSig	Cyclooxygenase inhibitor	PTGS1	Norepinephrine transporter releasing agent	SLC6A2
+OXAPROZIN	PHENTERMINE	0.00413433100070435	M1	pbta_hgg_qSig	Cyclooxygenase inhibitor	PTGS2	Norepinephrine transporter releasing agent	SLC6A2
+SIROLIMUS	TOLAZAMIDE	0.00388466397572438	M1	pbta_hgg_qSig	FK506-binding protein 1A inhibitor	FKBP1A	Sulfonylurea receptor 1, Kir6.2 blocker	KCNJ11
+SIROLIMUS	TOLAZAMIDE	0.00388466397572438	M1	pbta_hgg_qSig	FK506-binding protein 1A inhibitor	FKBP1A	Sulfonylurea receptor 1, Kir6.2 blocker	ABCC8
+DIAZOXIDE	AXITINIB	0.0037868524452613	M6	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 11 opener	KCNJ11	Vascular endothelial growth factor receptor inhibitor	FLT1
+DIAZOXIDE	AXITINIB	0.0037868524452613	M6	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 11 opener	KCNJ11	Vascular endothelial growth factor receptor inhibitor	FLT4
+DIAZOXIDE	AXITINIB	0.0037868524452613	M6	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 11 opener	KCNJ11	Vascular endothelial growth factor receptor inhibitor	KDR
+DIAZOXIDE	AXITINIB	0.0037868524452613	M6	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 8 opener	KCNJ8	Vascular endothelial growth factor receptor inhibitor	FLT1
+DIAZOXIDE	AXITINIB	0.0037868524452613	M6	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 8 opener	KCNJ8	Vascular endothelial growth factor receptor inhibitor	FLT4
+DIAZOXIDE	AXITINIB	0.0037868524452613	M6	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 8 opener	KCNJ8	Vascular endothelial growth factor receptor inhibitor	KDR
+CHLORPROMAZINE	AXITINIB	0.00365188687500232	M4	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD2	Vascular endothelial growth factor receptor inhibitor	FLT1
+CHLORPROMAZINE	AXITINIB	0.00365188687500232	M4	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD2	Vascular endothelial growth factor receptor inhibitor	FLT4
+CHLORPROMAZINE	AXITINIB	0.00365188687500232	M4	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD2	Vascular endothelial growth factor receptor inhibitor	KDR
+CHLORPROMAZINE	AXITINIB	0.00365188687500232	M4	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD4	Vascular endothelial growth factor receptor inhibitor	FLT1
+CHLORPROMAZINE	AXITINIB	0.00365188687500232	M4	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD4	Vascular endothelial growth factor receptor inhibitor	FLT4
+CHLORPROMAZINE	AXITINIB	0.00365188687500232	M4	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD4	Vascular endothelial growth factor receptor inhibitor	KDR
+CHLORPROMAZINE	AXITINIB	0.00365188687500232	M4	pbta_hgg_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Vascular endothelial growth factor receptor inhibitor	FLT1
+CHLORPROMAZINE	AXITINIB	0.00365188687500232	M4	pbta_hgg_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Vascular endothelial growth factor receptor inhibitor	FLT4
+CHLORPROMAZINE	AXITINIB	0.00365188687500232	M4	pbta_hgg_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Vascular endothelial growth factor receptor inhibitor	KDR
+CHLORPROMAZINE	AXITINIB	0.00365188687500232	M4	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD3	Vascular endothelial growth factor receptor inhibitor	FLT1
+CHLORPROMAZINE	AXITINIB	0.00365188687500232	M4	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD3	Vascular endothelial growth factor receptor inhibitor	FLT4
+CHLORPROMAZINE	AXITINIB	0.00365188687500232	M4	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD3	Vascular endothelial growth factor receptor inhibitor	KDR
+TETRABENAZINE	AXITINIB	0.00341487703673173	M4	pbta_hgg_qSig	Synaptic vesicular amine transporter inhibitor	SLC18A2	Vascular endothelial growth factor receptor inhibitor	FLT1
+TETRABENAZINE	AXITINIB	0.00341487703673173	M4	pbta_hgg_qSig	Synaptic vesicular amine transporter inhibitor	SLC18A2	Vascular endothelial growth factor receptor inhibitor	FLT4
+TETRABENAZINE	AXITINIB	0.00341487703673173	M4	pbta_hgg_qSig	Synaptic vesicular amine transporter inhibitor	SLC18A2	Vascular endothelial growth factor receptor inhibitor	KDR
+PHENTERMINE	TOLAZAMIDE	0.00320188196715077	M1	pbta_hgg_qSig	Norepinephrine transporter releasing agent	SLC6A2	Sulfonylurea receptor 1, Kir6.2 blocker	KCNJ11
+PHENTERMINE	TOLAZAMIDE	0.00320188196715077	M1	pbta_hgg_qSig	Norepinephrine transporter releasing agent	SLC6A2	Sulfonylurea receptor 1, Kir6.2 blocker	ABCC8
+SIROLIMUS	PHENTERMINE	0.00303149398542368	M1	pbta_hgg_qSig	FK506-binding protein 1A inhibitor	FKBP1A	Norepinephrine transporter releasing agent	SLC6A2
+CHLORPROMAZINE	TETRABENAZINE	0.00259814641571802	M4	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD2	Synaptic vesicular amine transporter inhibitor	SLC18A2
+CHLORPROMAZINE	TETRABENAZINE	0.00259814641571802	M4	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD4	Synaptic vesicular amine transporter inhibitor	SLC18A2
+CHLORPROMAZINE	TETRABENAZINE	0.00259814641571802	M4	pbta_hgg_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Synaptic vesicular amine transporter inhibitor	SLC18A2
+CHLORPROMAZINE	TETRABENAZINE	0.00259814641571802	M4	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD3	Synaptic vesicular amine transporter inhibitor	SLC18A2
+CHLORPROMAZINE	DIAZOXIDE	0.0025442067179076	M9	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD2	Potassium channel, inwardly rectifying, subfamily J, member 11 opener	KCNJ11
+CHLORPROMAZINE	DIAZOXIDE	0.0025442067179076	M9	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD2	Potassium channel, inwardly rectifying, subfamily J, member 8 opener	KCNJ8
+CHLORPROMAZINE	DIAZOXIDE	0.0025442067179076	M9	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD4	Potassium channel, inwardly rectifying, subfamily J, member 11 opener	KCNJ11
+CHLORPROMAZINE	DIAZOXIDE	0.0025442067179076	M9	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD4	Potassium channel, inwardly rectifying, subfamily J, member 8 opener	KCNJ8
+CHLORPROMAZINE	DIAZOXIDE	0.0025442067179076	M9	pbta_hgg_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Potassium channel, inwardly rectifying, subfamily J, member 11 opener	KCNJ11
+CHLORPROMAZINE	DIAZOXIDE	0.0025442067179076	M9	pbta_hgg_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Potassium channel, inwardly rectifying, subfamily J, member 8 opener	KCNJ8
+CHLORPROMAZINE	DIAZOXIDE	0.0025442067179076	M9	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD3	Potassium channel, inwardly rectifying, subfamily J, member 11 opener	KCNJ11
+CHLORPROMAZINE	DIAZOXIDE	0.0025442067179076	M9	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD3	Potassium channel, inwardly rectifying, subfamily J, member 8 opener	KCNJ8
+AXITINIB	PHENTERMINE	0.0024665515427274	M6	pbta_hgg_qSig	Vascular endothelial growth factor receptor inhibitor	FLT1	Norepinephrine transporter releasing agent	SLC6A2
+AXITINIB	PHENTERMINE	0.0024665515427274	M6	pbta_hgg_qSig	Vascular endothelial growth factor receptor inhibitor	FLT4	Norepinephrine transporter releasing agent	SLC6A2
+AXITINIB	PHENTERMINE	0.0024665515427274	M6	pbta_hgg_qSig	Vascular endothelial growth factor receptor inhibitor	KDR	Norepinephrine transporter releasing agent	SLC6A2
+DIAZOXIDE	AXITINIB	0.0019081550384307	M9	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 11 opener	KCNJ11	Vascular endothelial growth factor receptor inhibitor	FLT1
+DIAZOXIDE	AXITINIB	0.0019081550384307	M9	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 11 opener	KCNJ11	Vascular endothelial growth factor receptor inhibitor	FLT4
+DIAZOXIDE	AXITINIB	0.0019081550384307	M9	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 11 opener	KCNJ11	Vascular endothelial growth factor receptor inhibitor	KDR
+DIAZOXIDE	AXITINIB	0.0019081550384307	M9	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 8 opener	KCNJ8	Vascular endothelial growth factor receptor inhibitor	FLT1
+DIAZOXIDE	AXITINIB	0.0019081550384307	M9	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 8 opener	KCNJ8	Vascular endothelial growth factor receptor inhibitor	FLT4
+DIAZOXIDE	AXITINIB	0.0019081550384307	M9	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 8 opener	KCNJ8	Vascular endothelial growth factor receptor inhibitor	KDR
+CHLORPROMAZINE	TETRABENAZINE	0.00178845310743374	M5	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD2	Synaptic vesicular amine transporter inhibitor	SLC18A2
+CHLORPROMAZINE	TETRABENAZINE	0.00178845310743374	M5	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD4	Synaptic vesicular amine transporter inhibitor	SLC18A2
+CHLORPROMAZINE	TETRABENAZINE	0.00178845310743374	M5	pbta_hgg_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Synaptic vesicular amine transporter inhibitor	SLC18A2
+CHLORPROMAZINE	TETRABENAZINE	0.00178845310743374	M5	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD3	Synaptic vesicular amine transporter inhibitor	SLC18A2
+DIAZOXIDE	TETRABENAZINE	0.00141422804118236	M5	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 11 opener	KCNJ11	Synaptic vesicular amine transporter inhibitor	SLC18A2
+DIAZOXIDE	TETRABENAZINE	0.00141422804118236	M5	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 8 opener	KCNJ8	Synaptic vesicular amine transporter inhibitor	SLC18A2
+CHLORPROMAZINE	DIAZOXIDE	0.00131948463708994	M6	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD2	Potassium channel, inwardly rectifying, subfamily J, member 11 opener	KCNJ11
+CHLORPROMAZINE	DIAZOXIDE	0.00131948463708994	M6	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD2	Potassium channel, inwardly rectifying, subfamily J, member 8 opener	KCNJ8
+CHLORPROMAZINE	DIAZOXIDE	0.00131948463708994	M6	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD4	Potassium channel, inwardly rectifying, subfamily J, member 11 opener	KCNJ11
+CHLORPROMAZINE	DIAZOXIDE	0.00131948463708994	M6	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD4	Potassium channel, inwardly rectifying, subfamily J, member 8 opener	KCNJ8
+CHLORPROMAZINE	DIAZOXIDE	0.00131948463708994	M6	pbta_hgg_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Potassium channel, inwardly rectifying, subfamily J, member 11 opener	KCNJ11
+CHLORPROMAZINE	DIAZOXIDE	0.00131948463708994	M6	pbta_hgg_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Potassium channel, inwardly rectifying, subfamily J, member 8 opener	KCNJ8
+CHLORPROMAZINE	DIAZOXIDE	0.00131948463708994	M6	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD3	Potassium channel, inwardly rectifying, subfamily J, member 11 opener	KCNJ11
+CHLORPROMAZINE	DIAZOXIDE	0.00131948463708994	M6	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD3	Potassium channel, inwardly rectifying, subfamily J, member 8 opener	KCNJ8
+TETRABENAZINE	ZAFIRLUKAST	0.00117291380299962	M5	pbta_hgg_qSig	Synaptic vesicular amine transporter inhibitor	SLC18A2	Cysteinyl leukotriene receptor 1 antagonist	CYSLTR1
+CHLORPROMAZINE	DIAZOXIDE	0.0010208379634631	M5	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD2	Potassium channel, inwardly rectifying, subfamily J, member 11 opener	KCNJ11
+CHLORPROMAZINE	DIAZOXIDE	0.0010208379634631	M5	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD2	Potassium channel, inwardly rectifying, subfamily J, member 8 opener	KCNJ8
+CHLORPROMAZINE	DIAZOXIDE	0.0010208379634631	M5	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD4	Potassium channel, inwardly rectifying, subfamily J, member 11 opener	KCNJ11
+CHLORPROMAZINE	DIAZOXIDE	0.0010208379634631	M5	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD4	Potassium channel, inwardly rectifying, subfamily J, member 8 opener	KCNJ8
+CHLORPROMAZINE	DIAZOXIDE	0.0010208379634631	M5	pbta_hgg_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Potassium channel, inwardly rectifying, subfamily J, member 11 opener	KCNJ11
+CHLORPROMAZINE	DIAZOXIDE	0.0010208379634631	M5	pbta_hgg_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Potassium channel, inwardly rectifying, subfamily J, member 8 opener	KCNJ8
+CHLORPROMAZINE	DIAZOXIDE	0.0010208379634631	M5	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD3	Potassium channel, inwardly rectifying, subfamily J, member 11 opener	KCNJ11
+CHLORPROMAZINE	DIAZOXIDE	0.0010208379634631	M5	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD3	Potassium channel, inwardly rectifying, subfamily J, member 8 opener	KCNJ8
+CHLORPROMAZINE	ZAFIRLUKAST	0.000898279021457963	M5	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD2	Cysteinyl leukotriene receptor 1 antagonist	CYSLTR1
+CHLORPROMAZINE	ZAFIRLUKAST	0.000898279021457963	M5	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD4	Cysteinyl leukotriene receptor 1 antagonist	CYSLTR1
+CHLORPROMAZINE	ZAFIRLUKAST	0.000898279021457963	M5	pbta_hgg_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Cysteinyl leukotriene receptor 1 antagonist	CYSLTR1
+CHLORPROMAZINE	ZAFIRLUKAST	0.000898279021457963	M5	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD3	Cysteinyl leukotriene receptor 1 antagonist	CYSLTR1
+TETRABENAZINE	DANAZOL	0.000893007252264619	M5	pbta_hgg_qSig	Synaptic vesicular amine transporter inhibitor	SLC18A2	Androgen Receptor agonist	AR
+TETRABENAZINE	DANAZOL	0.000893007252264619	M5	pbta_hgg_qSig	Synaptic vesicular amine transporter inhibitor	SLC18A2	Progesterone receptor agonist	PGR
+TETRABENAZINE	TOLAZAMIDE	0.000824966357356377	M5	pbta_hgg_qSig	Synaptic vesicular amine transporter inhibitor	SLC18A2	Sulfonylurea receptor 1, Kir6.2 blocker	KCNJ11
+TETRABENAZINE	TOLAZAMIDE	0.000824966357356377	M5	pbta_hgg_qSig	Synaptic vesicular amine transporter inhibitor	SLC18A2	Sulfonylurea receptor 1, Kir6.2 blocker	ABCC8
+CHLORPROMAZINE	PHENTERMINE	0.00079843296896777	M6	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD2	Norepinephrine transporter releasing agent	SLC6A2
+CHLORPROMAZINE	PHENTERMINE	0.00079843296896777	M6	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD4	Norepinephrine transporter releasing agent	SLC6A2
+CHLORPROMAZINE	PHENTERMINE	0.00079843296896777	M6	pbta_hgg_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Norepinephrine transporter releasing agent	SLC6A2
+CHLORPROMAZINE	PHENTERMINE	0.00079843296896777	M6	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD3	Norepinephrine transporter releasing agent	SLC6A2
+DIAZOXIDE	ZAFIRLUKAST	0.000635556475859746	M5	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 11 opener	KCNJ11	Cysteinyl leukotriene receptor 1 antagonist	CYSLTR1
+DIAZOXIDE	ZAFIRLUKAST	0.000635556475859746	M5	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 8 opener	KCNJ8	Cysteinyl leukotriene receptor 1 antagonist	CYSLTR1
+CHLORPROMAZINE	DANAZOL	0.000621690574659606	M5	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD2	Androgen Receptor agonist	AR
+CHLORPROMAZINE	DANAZOL	0.000621690574659606	M5	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD2	Progesterone receptor agonist	PGR
+CHLORPROMAZINE	DANAZOL	0.000621690574659606	M5	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD4	Androgen Receptor agonist	AR
+CHLORPROMAZINE	DANAZOL	0.000621690574659606	M5	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD4	Progesterone receptor agonist	PGR
+CHLORPROMAZINE	DANAZOL	0.000621690574659606	M5	pbta_hgg_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Androgen Receptor agonist	AR
+CHLORPROMAZINE	DANAZOL	0.000621690574659606	M5	pbta_hgg_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Progesterone receptor agonist	PGR
+CHLORPROMAZINE	DANAZOL	0.000621690574659606	M5	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD3	Androgen Receptor agonist	AR
+CHLORPROMAZINE	DANAZOL	0.000621690574659606	M5	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD3	Progesterone receptor agonist	PGR
+CHLORPROMAZINE	TOLAZAMIDE	0.000595488812020143	M5	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD2	Sulfonylurea receptor 1, Kir6.2 blocker	KCNJ11
+CHLORPROMAZINE	TOLAZAMIDE	0.000595488812020143	M5	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD2	Sulfonylurea receptor 1, Kir6.2 blocker	ABCC8
+CHLORPROMAZINE	TOLAZAMIDE	0.000595488812020143	M5	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD4	Sulfonylurea receptor 1, Kir6.2 blocker	KCNJ11
+CHLORPROMAZINE	TOLAZAMIDE	0.000595488812020143	M5	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD4	Sulfonylurea receptor 1, Kir6.2 blocker	ABCC8
+CHLORPROMAZINE	TOLAZAMIDE	0.000595488812020143	M5	pbta_hgg_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Sulfonylurea receptor 1, Kir6.2 blocker	KCNJ11
+CHLORPROMAZINE	TOLAZAMIDE	0.000595488812020143	M5	pbta_hgg_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Sulfonylurea receptor 1, Kir6.2 blocker	ABCC8
+CHLORPROMAZINE	TOLAZAMIDE	0.000595488812020143	M5	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD3	Sulfonylurea receptor 1, Kir6.2 blocker	KCNJ11
+CHLORPROMAZINE	TOLAZAMIDE	0.000595488812020143	M5	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD3	Sulfonylurea receptor 1, Kir6.2 blocker	ABCC8
+DIAZOXIDE	DANAZOL	0.000401757858911852	M5	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 11 opener	KCNJ11	Androgen Receptor agonist	AR
+DIAZOXIDE	DANAZOL	0.000401757858911852	M5	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 11 opener	KCNJ11	Progesterone receptor agonist	PGR
+DIAZOXIDE	DANAZOL	0.000401757858911852	M5	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 8 opener	KCNJ8	Androgen Receptor agonist	AR
+DIAZOXIDE	DANAZOL	0.000401757858911852	M5	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 8 opener	KCNJ8	Progesterone receptor agonist	PGR
+DIAZOXIDE	TOLAZAMIDE	0.000399085411956782	M5	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 11 opener	KCNJ11	Sulfonylurea receptor 1, Kir6.2 blocker	KCNJ11
+DIAZOXIDE	TOLAZAMIDE	0.000399085411956782	M5	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 11 opener	KCNJ11	Sulfonylurea receptor 1, Kir6.2 blocker	ABCC8
+DIAZOXIDE	TOLAZAMIDE	0.000399085411956782	M5	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 8 opener	KCNJ8	Sulfonylurea receptor 1, Kir6.2 blocker	KCNJ11
+DIAZOXIDE	TOLAZAMIDE	0.000399085411956782	M5	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 8 opener	KCNJ8	Sulfonylurea receptor 1, Kir6.2 blocker	ABCC8
+ZAFIRLUKAST	DANAZOL	0.000382949501175049	M5	pbta_hgg_qSig	Cysteinyl leukotriene receptor 1 antagonist	CYSLTR1	Androgen Receptor agonist	AR
+ZAFIRLUKAST	DANAZOL	0.000382949501175049	M5	pbta_hgg_qSig	Cysteinyl leukotriene receptor 1 antagonist	CYSLTR1	Progesterone receptor agonist	PGR
+ZAFIRLUKAST	TOLAZAMIDE	0.000370741277584852	M5	pbta_hgg_qSig	Cysteinyl leukotriene receptor 1 antagonist	CYSLTR1	Sulfonylurea receptor 1, Kir6.2 blocker	KCNJ11
+ZAFIRLUKAST	TOLAZAMIDE	0.000370741277584852	M5	pbta_hgg_qSig	Cysteinyl leukotriene receptor 1 antagonist	CYSLTR1	Sulfonylurea receptor 1, Kir6.2 blocker	ABCC8
+CHLORPROMAZINE	AXITINIB	0.000340409539956984	M9	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD2	Vascular endothelial growth factor receptor inhibitor	FLT1
+CHLORPROMAZINE	AXITINIB	0.000340409539956984	M9	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD2	Vascular endothelial growth factor receptor inhibitor	FLT4
+CHLORPROMAZINE	AXITINIB	0.000340409539956984	M9	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD2	Vascular endothelial growth factor receptor inhibitor	KDR
+CHLORPROMAZINE	AXITINIB	0.000340409539956984	M9	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD4	Vascular endothelial growth factor receptor inhibitor	FLT1
+CHLORPROMAZINE	AXITINIB	0.000340409539956984	M9	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD4	Vascular endothelial growth factor receptor inhibitor	FLT4
+CHLORPROMAZINE	AXITINIB	0.000340409539956984	M9	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD4	Vascular endothelial growth factor receptor inhibitor	KDR
+CHLORPROMAZINE	AXITINIB	0.000340409539956984	M9	pbta_hgg_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Vascular endothelial growth factor receptor inhibitor	FLT1
+CHLORPROMAZINE	AXITINIB	0.000340409539956984	M9	pbta_hgg_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Vascular endothelial growth factor receptor inhibitor	FLT4
+CHLORPROMAZINE	AXITINIB	0.000340409539956984	M9	pbta_hgg_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Vascular endothelial growth factor receptor inhibitor	KDR
+CHLORPROMAZINE	AXITINIB	0.000340409539956984	M9	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD3	Vascular endothelial growth factor receptor inhibitor	FLT1
+CHLORPROMAZINE	AXITINIB	0.000340409539956984	M9	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD3	Vascular endothelial growth factor receptor inhibitor	FLT4
+CHLORPROMAZINE	AXITINIB	0.000340409539956984	M9	pbta_hgg_qSig	D2-like dopamine receptor antagonist	DRD3	Vascular endothelial growth factor receptor inhibitor	KDR
+DANAZOL	TOLAZAMIDE	0.000234358751031914	M5	pbta_hgg_qSig	Androgen Receptor agonist	AR	Sulfonylurea receptor 1, Kir6.2 blocker	KCNJ11
+DANAZOL	TOLAZAMIDE	0.000234358751031914	M5	pbta_hgg_qSig	Androgen Receptor agonist	AR	Sulfonylurea receptor 1, Kir6.2 blocker	ABCC8
+DANAZOL	TOLAZAMIDE	0.000234358751031914	M5	pbta_hgg_qSig	Progesterone receptor agonist	PGR	Sulfonylurea receptor 1, Kir6.2 blocker	KCNJ11
+DANAZOL	TOLAZAMIDE	0.000234358751031914	M5	pbta_hgg_qSig	Progesterone receptor agonist	PGR	Sulfonylurea receptor 1, Kir6.2 blocker	ABCC8
+DIAZOXIDE	PHENTERMINE	0.000217438281486182	M6	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 11 opener	KCNJ11	Norepinephrine transporter releasing agent	SLC6A2
+DIAZOXIDE	PHENTERMINE	0.000217438281486182	M6	pbta_hgg_qSig	Potassium channel, inwardly rectifying, subfamily J, member 8 opener	KCNJ8	Norepinephrine transporter releasing agent	SLC6A2

@@ -73,6 +73,7 @@ Rscript --vanilla ${analysis_dir}/02-drug_synergy_score_calc.R \
 --pbta_mapped $pbta_subnet_qSig_mapped \
 --pbta_hgg_mapped $pbta_hgg_subnet_qSig_mapped \
 --subnetwork $subnetwork \
+--subnetwork_mapped $subnetwork_mapped \
 --output_gtex $output_gtex \
 --output_pbta $output_pbta \
 --output_pbta_hgg $output_pbta_hgg \

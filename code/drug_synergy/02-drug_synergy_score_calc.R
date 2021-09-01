@@ -29,6 +29,8 @@ option_list <- list(
               help="Output file for drug-mapped pbta hgg subsetted subnetworks (.tsv) "),
   make_option(c("-f","--subnetwork"),type="character",
                help="File for subnetworks of module of interest (.tsv) "),
+  make_option(c("-m","--subnetwork_mapped"),type="character",
+              help="File for subnetworks with mapped drug information of module of interest (.tsv) "),
   make_option(c("-b","--output_gtex"),type="character",
               help="Path and file name for gtex synergy score (.tsv) "), 
   make_option(c("-c","--output_pbta"),type="character",
@@ -164,20 +166,38 @@ each_module_combined <- lapply (with_module_list, function(x){
 
 all_combined <- do.call(rbind, each_module_combined)
 
+# annotate MOA to all the drugs
+subnetwork_mapped <- readr::read_tsv(opt$subnetwork_mapped)
+
+drug1_moa <- subnetwork_mapped %>% select(Drug_Name, MOA, hgnc_symbol) %>% distinct() %>% 
+  rename(drug1 = Drug_Name, drug1_MOA=MOA, drug1_target_hgnc_symbol = hgnc_symbol)
+
+drug2_moa <- subnetwork_mapped %>% select(Drug_Name, MOA, hgnc_symbol) %>% distinct() %>% 
+  rename(drug2 = Drug_Name, drug2_MOA=MOA, drug2_target_hgnc_symbol = hgnc_symbol)
+
+
 # writing out results 
 all_combined %>% filter(comparison == "gtex_qSig") %>% 
-  arrange(desc(synergy_score)) %>%
+  dplyr::left_join(drug1_moa) %>% 
+  dplyr::left_join(drug2_moa) %>%
+  arrange(desc(synergy_score)) %>% 
   readr::write_tsv(opt$output_gtex)
 
 all_combined %>% filter(comparison == "pbta_qSig") %>%
+  dplyr::left_join(drug1_moa) %>% 
+  dplyr::left_join(drug2_moa) %>%
   arrange(desc(synergy_score)) %>%
   readr::write_tsv(opt$output_pbta)
 
 all_combined %>% filter(comparison == "pbta_hgg_qSig")%>%
+  dplyr::left_join(drug1_moa) %>% 
+  dplyr::left_join(drug2_moa) %>%
   arrange(desc(synergy_score)) %>%
   readr::write_tsv(opt$output_pbta_hgg)
 
 all_combined %>% arrange(desc(synergy_score)) %>%
+  dplyr::left_join(drug1_moa) %>% 
+  dplyr::left_join(drug2_moa) %>%
   readr::write_tsv(opt$output_combined)
 
 

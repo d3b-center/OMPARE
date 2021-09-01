@@ -1,139 +1,741 @@
-drug1	drug2	synergy_score	module	comparison
-CLOFIBRATE	CAFFEINE	0.245784857870771	M5	gtex_qSig
-BELINOSTAT	CAFFEINE	0.231860708888528	M5	gtex_qSig
-FLUTAMIDE	CAFFEINE	0.21187107929919	M5	gtex_qSig
-CLOZAPINE	THIORIDAZINE	0.202017525702217	M1	gtex_qSig
-VORINOSTAT	CAFFEINE	0.195776315605621	M5	gtex_qSig
-CAFFEINE	THIORIDAZINE	0.163176413160467	M5	gtex_qSig
-CAFFEINE	TENIPOSIDE	0.156744430907277	M5	gtex_qSig
-CLOZAPINE	CABERGOLINE	0.151513144276663	M1	gtex_qSig
-BELINOSTAT	CLOZAPINE	0.147402409514354	M1	gtex_qSig
-CLOFIBRATE	CLOZAPINE	0.145407029550027	M1	gtex_qSig
-SIROLIMUS	CLOZAPINE	0.140251936739824	M1	gtex_qSig
-CAFFEINE	ETOPOSIDE	0.139328383028691	M5	gtex_qSig
-THIORIDAZINE	CABERGOLINE	0.12121051542133	M1	gtex_qSig
-CLOZAPINE	FLUTAMIDE	0.120340914587807	M1	gtex_qSig
-BELINOSTAT	THIORIDAZINE	0.117921927611483	M1	gtex_qSig
-CLOFIBRATE	THIORIDAZINE	0.116325623640021	M1	gtex_qSig
-CLOZAPINE	VORINOSTAT	0.115526613326351	M1	gtex_qSig
-CLOZAPINE	TENIPOSIDE	0.11474512680382	M1	gtex_qSig
-SIROLIMUS	THIORIDAZINE	0.112201549391859	M1	gtex_qSig
-CLOZAPINE	CAFFEINE	0.107907747219514	M1	gtex_qSig
-CLOZAPINE	ETOPOSIDE	0.107095451683565	M1	gtex_qSig
-FLUTAMIDE	THIORIDAZINE	0.096272731670246	M1	gtex_qSig
-VORINOSTAT	THIORIDAZINE	0.0924212906610807	M1	gtex_qSig
-THIORIDAZINE	TENIPOSIDE	0.0917961014430561	M1	gtex_qSig
-BELINOSTAT	CABERGOLINE	0.0884414457086122	M1	gtex_qSig
-CLOFIBRATE	CABERGOLINE	0.0872442177300161	M1	gtex_qSig
-CAFFEINE	THIORIDAZINE	0.0863261977756108	M1	gtex_qSig
-THIORIDAZINE	ETOPOSIDE	0.0856763613468524	M1	gtex_qSig
-SIROLIMUS	CABERGOLINE	0.0841511620438943	M1	gtex_qSig
-CLOZAPINE	NICOTINE	0.0823157414816428	M1	gtex_qSig
-FLUTAMIDE	CABERGOLINE	0.0722045487526845	M1	gtex_qSig
-VORINOSTAT	CABERGOLINE	0.0693159679958105	M1	gtex_qSig
-TENIPOSIDE	CABERGOLINE	0.0688470760822921	M1	gtex_qSig
-THIORIDAZINE	NICOTINE	0.0658525931853142	M1	gtex_qSig
-CAFFEINE	CABERGOLINE	0.0647446483317081	M1	gtex_qSig
-ETOPOSIDE	CABERGOLINE	0.0642572710101393	M1	gtex_qSig
-NICOTINE	CABERGOLINE	0.0493894448889857	M1	gtex_qSig
-BELINOSTAT	TENIPOSIDE	0.0321731884166565	M1	gtex_qSig
-BELINOSTAT	ETOPOSIDE	0.0300283091888794	M1	gtex_qSig
-TENIPOSIDE	ETOPOSIDE	0.0280691762832683	M1	gtex_qSig
-BELINOSTAT	CELECOXIB	0.0262428001547596	M4	gtex_qSig
-CLOFIBRATE	TENIPOSIDE	0.0232120230892106	M1	gtex_qSig
-SIROLIMUS	TENIPOSIDE	0.0230780186586588	M1	gtex_qSig
-CLOFIBRATE	ETOPOSIDE	0.0216645548832632	M1	gtex_qSig
-SIROLIMUS	ETOPOSIDE	0.0215394840814149	M1	gtex_qSig
-CLOZAPINE	CELECOXIB	0.021133084916375	M4	gtex_qSig
-VORINOSTAT	TENIPOSIDE	0.0194632868069557	M1	gtex_qSig
-FLUTAMIDE	TENIPOSIDE	0.0193416975759477	M1	gtex_qSig
-VORINOSTAT	ETOPOSIDE	0.0181657343531587	M1	gtex_qSig
-FLUTAMIDE	ETOPOSIDE	0.0180522510708846	M1	gtex_qSig
-CELECOXIB	CAFFEINE	0.0180055438340867	M4	gtex_qSig
-SIROLIMUS	BELINOSTAT	0.0177443813100283	M1	gtex_qSig
-CAFFEINE	TENIPOSIDE	0.0174814524039281	M1	gtex_qSig
-CLOFIBRATE	BELINOSTAT	0.017269949112251	M1	gtex_qSig
-BELINOSTAT	CLOZAPINE	0.017026600657734	M9	gtex_qSig
-CELECOXIB	THIORIDAZINE	0.0169969252951932	M4	gtex_qSig
-CAFFEINE	ETOPOSIDE	0.0163160222436662	M1	gtex_qSig
-BELINOSTAT	TENIPOSIDE	0.0161790262416653	M5	gtex_qSig
-BELINOSTAT	VORINOSTAT	0.0153319103198428	M1	gtex_qSig
-CLOFIBRATE	TENIPOSIDE	0.0151768553353288	M5	gtex_qSig
-CELECOXIB	TENIPOSIDE	0.0150874779579198	M4	gtex_qSig
-BELINOSTAT	THIORIDAZINE	0.0148982755755172	M9	gtex_qSig
-TENIPOSIDE	ETOPOSIDE	0.0148386982526466	M5	gtex_qSig
-BELINOSTAT	FLUTAMIDE	0.014499646995882	M1	gtex_qSig
-BELINOSTAT	ETOPOSIDE	0.014381356659258	M5	gtex_qSig
-CELECOXIB	ETOPOSIDE	0.0135787301621278	M4	gtex_qSig
-CLOFIBRATE	ETOPOSIDE	0.0134905380758478	M5	gtex_qSig
-BELINOSTAT	CAFFEINE	0.0132193805561539	M1	gtex_qSig
-TENIPOSIDE	NICOTINE	0.0132167088089267	M1	gtex_qSig
-BELINOSTAT	TENIPOSIDE	0.0127699504933005	M9	gtex_qSig
-ETOPOSIDE	NICOTINE	0.0123355948883316	M1	gtex_qSig
-FLUTAMIDE	TENIPOSIDE	0.0122185311967421	M5	gtex_qSig
-CELECOXIB	CABERGOLINE	0.0119928782050099	M4	gtex_qSig
-VORINOSTAT	TENIPOSIDE	0.011444744611994	M5	gtex_qSig
-FLUTAMIDE	ETOPOSIDE	0.0108609166193263	M5	gtex_qSig
-BELINOSTAT	ETOPOSIDE	0.0106416254110837	M9	gtex_qSig
-VORINOSTAT	ETOPOSIDE	0.0101731063217724	M5	gtex_qSig
-BELINOSTAT	NICOTINE	0.0098968931253509	M1	gtex_qSig
-THIORIDAZINE	TENIPOSIDE	0.00956141003139266	M5	gtex_qSig
-THIORIDAZINE	ETOPOSIDE	0.0084990311390157	M5	gtex_qSig
-CLOFIBRATE	BELINOSTAT	0.00729394879862313	M5	gtex_qSig
-BELINOSTAT	CAFFEINE	0.00666931606887783	M6	gtex_qSig
-BELINOSTAT	CLOZAPINE	0.00506864635630235	M6	gtex_qSig
-BELINOSTAT	FLUTAMIDE	0.00486737696092519	M5	gtex_qSig
-BELINOSTAT	VORINOSTAT	0.0047513417958133	M5	gtex_qSig
-BELINOSTAT	CLOZAPINE	0.00450522180365066	M4	gtex_qSig
-BELINOSTAT	THIORIDAZINE	0.00399697593720377	M5	gtex_qSig
-BELINOSTAT	THIORIDAZINE	0.00399253856434475	M4	gtex_qSig
-BELINOSTAT	CAFFEINE	0.00373639297571541	M4	gtex_qSig
-BELINOSTAT	THIORIDAZINE	0.00360654595658392	M6	gtex_qSig
-SIROLIMUS	VORINOSTAT	0.00330932966833391	M1	gtex_qSig
-BELINOSTAT	TENIPOSIDE	0.00320926630868947	M4	gtex_qSig
-CLOZAPINE	CAFFEINE	0.00313486061938911	M6	gtex_qSig
-BELINOSTAT	ETOPOSIDE	0.00288833967782052	M4	gtex_qSig
-BELINOSTAT	CABERGOLINE	0.0024784467069601	M4	gtex_qSig
-CLOFIBRATE	VORINOSTAT	0.00236175804308438	M1	gtex_qSig
-CAFFEINE	THIORIDAZINE	0.00225237021224681	M6	gtex_qSig
-CLOFIBRATE	VORINOSTAT	0.00221363583547841	M5	gtex_qSig
-FLUTAMIDE	VORINOSTAT	0.00215087519481562	M1	gtex_qSig
-VORINOSTAT	CAFFEINE	0.00213533487221539	M1	gtex_qSig
-CLOFIBRATE	FLUTAMIDE	0.00209820193357149	M5	gtex_qSig
-CLOFIBRATE	THIORIDAZINE	0.00188490128745037	M5	gtex_qSig
-SIROLIMUS	CAFFEINE	0.00180468500584906	M1	gtex_qSig
-CLOFIBRATE	SIROLIMUS	0.00179724723919634	M1	gtex_qSig
-SIROLIMUS	FLUTAMIDE	0.00172895300089996	M1	gtex_qSig
-VORINOSTAT	NICOTINE	0.00145115032586038	M1	gtex_qSig
-SIROLIMUS	NICOTINE	0.00115791091433614	M1	gtex_qSig
-CLOZAPINE	THIORIDAZINE	0.00102596829678128	M6	gtex_qSig
-FLUTAMIDE	CAFFEINE	0.000890697252498902	M1	gtex_qSig
-CLOZAPINE	THIORIDAZINE	0.000883127210664823	M4	gtex_qSig
-CLOFIBRATE	CAFFEINE	0.000849720202566939	M1	gtex_qSig
-VORINOSTAT	THIORIDAZINE	0.000733765856328	M5	gtex_qSig
-FLUTAMIDE	VORINOSTAT	0.000672159821135215	M5	gtex_qSig
-CAFFEINE	THIORIDAZINE	0.00066513399094264	M4	gtex_qSig
-CLOFIBRATE	FLUTAMIDE	0.000648546311413969	M1	gtex_qSig
-THIORIDAZINE	TENIPOSIDE	0.000624389022553947	M4	gtex_qSig
-FLUTAMIDE	THIORIDAZINE	0.000594977307779701	M5	gtex_qSig
-CAFFEINE	NICOTINE	0.000590062263986531	M1	gtex_qSig
-THIORIDAZINE	ETOPOSIDE	0.000561950120298552	M4	gtex_qSig
-FLUTAMIDE	NICOTINE	0.000489271238236745	M1	gtex_qSig
-THIORIDAZINE	CABERGOLINE	0.000434269235382739	M4	gtex_qSig
-CLOFIBRATE	NICOTINE	0.000417546333397615	M1	gtex_qSig
-CLOZAPINE	TENIPOSIDE	0.000410549661391742	M4	gtex_qSig
-CLOZAPINE	THIORIDAZINE	0.000397144463283148	M9	gtex_qSig
-CLOZAPINE	CAFFEINE	0.000385581438605604	M4	gtex_qSig
-CLOZAPINE	ETOPOSIDE	0.000369494695252567	M4	gtex_qSig
-CLOZAPINE	TENIPOSIDE	0.000340409539956984	M9	gtex_qSig
-THIORIDAZINE	TENIPOSIDE	0.000297858347462361	M9	gtex_qSig
-CLOZAPINE	ETOPOSIDE	0.00028367461663082	M9	gtex_qSig
-CAFFEINE	TENIPOSIDE	0.000268415901012343	M4	gtex_qSig
-TENIPOSIDE	ETOPOSIDE	0.000258675223115232	M4	gtex_qSig
-THIORIDAZINE	ETOPOSIDE	0.000248215289551967	M9	gtex_qSig
-CLOZAPINE	CABERGOLINE	0.000245404478454678	M4	gtex_qSig
-CAFFEINE	ETOPOSIDE	0.000241574310911108	M4	gtex_qSig
-TENIPOSIDE	ETOPOSIDE	0.000212755962473115	M9	gtex_qSig
-TENIPOSIDE	CABERGOLINE	0.00017062263833033	M4	gtex_qSig
-ETOPOSIDE	CABERGOLINE	0.000153560374497297	M4	gtex_qSig
-CAFFEINE	CABERGOLINE	0.00014355964881669	M4	gtex_qSig
+drug1	drug2	synergy_score	module	comparison	drug1_MOA	drug1_target_hgnc_symbol	drug2_MOA	drug2_target_hgnc_symbol
+CLOFIBRATE	CAFFEINE	0.245784857870771	M5	gtex_qSig	Peroxisome proliferator-activated receptor alpha agonist	PPARA	Adenosine receptor antagonist	ADORA2A
+CLOFIBRATE	CAFFEINE	0.245784857870771	M5	gtex_qSig	Peroxisome proliferator-activated receptor alpha agonist	PPARA	Adenosine receptor antagonist	ADORA2B
+BELINOSTAT	CAFFEINE	0.231860708888528	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC8	Adenosine receptor antagonist	ADORA2A
+BELINOSTAT	CAFFEINE	0.231860708888528	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC8	Adenosine receptor antagonist	ADORA2B
+BELINOSTAT	CAFFEINE	0.231860708888528	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC11	Adenosine receptor antagonist	ADORA2A
+BELINOSTAT	CAFFEINE	0.231860708888528	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC11	Adenosine receptor antagonist	ADORA2B
+BELINOSTAT	CAFFEINE	0.231860708888528	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC6	Adenosine receptor antagonist	ADORA2A
+BELINOSTAT	CAFFEINE	0.231860708888528	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC6	Adenosine receptor antagonist	ADORA2B
+BELINOSTAT	CAFFEINE	0.231860708888528	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC10	Adenosine receptor antagonist	ADORA2A
+BELINOSTAT	CAFFEINE	0.231860708888528	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC10	Adenosine receptor antagonist	ADORA2B
+BELINOSTAT	CAFFEINE	0.231860708888528	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC4	Adenosine receptor antagonist	ADORA2A
+BELINOSTAT	CAFFEINE	0.231860708888528	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC4	Adenosine receptor antagonist	ADORA2B
+BELINOSTAT	CAFFEINE	0.231860708888528	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC1	Adenosine receptor antagonist	ADORA2A
+BELINOSTAT	CAFFEINE	0.231860708888528	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC1	Adenosine receptor antagonist	ADORA2B
+BELINOSTAT	CAFFEINE	0.231860708888528	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC5	Adenosine receptor antagonist	ADORA2A
+BELINOSTAT	CAFFEINE	0.231860708888528	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC5	Adenosine receptor antagonist	ADORA2B
+BELINOSTAT	CAFFEINE	0.231860708888528	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC7	Adenosine receptor antagonist	ADORA2A
+BELINOSTAT	CAFFEINE	0.231860708888528	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC7	Adenosine receptor antagonist	ADORA2B
+FLUTAMIDE	CAFFEINE	0.21187107929919	M5	gtex_qSig	Androgen Receptor antagonist	AR	Adenosine receptor antagonist	ADORA2A
+FLUTAMIDE	CAFFEINE	0.21187107929919	M5	gtex_qSig	Androgen Receptor antagonist	AR	Adenosine receptor antagonist	ADORA2B
+CLOZAPINE	THIORIDAZINE	0.202017525702217	M1	gtex_qSig	Dopamine D2 receptor antagonist	DRD2	D2-like dopamine receptor antagonist	DRD2
+CLOZAPINE	THIORIDAZINE	0.202017525702217	M1	gtex_qSig	Dopamine D2 receptor antagonist	DRD2	D2-like dopamine receptor antagonist	DRD4
+CLOZAPINE	THIORIDAZINE	0.202017525702217	M1	gtex_qSig	Dopamine D2 receptor antagonist	DRD2	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+CLOZAPINE	THIORIDAZINE	0.202017525702217	M1	gtex_qSig	Dopamine D2 receptor antagonist	DRD2	D2-like dopamine receptor antagonist	DRD3
+CLOZAPINE	THIORIDAZINE	0.202017525702217	M1	gtex_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	D2-like dopamine receptor antagonist	DRD2
+CLOZAPINE	THIORIDAZINE	0.202017525702217	M1	gtex_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	D2-like dopamine receptor antagonist	DRD4
+CLOZAPINE	THIORIDAZINE	0.202017525702217	M1	gtex_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+CLOZAPINE	THIORIDAZINE	0.202017525702217	M1	gtex_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	D2-like dopamine receptor antagonist	DRD3
+VORINOSTAT	CAFFEINE	0.195776315605621	M5	gtex_qSig	Histone deacetylase 6 inhibitor	HDAC6	Adenosine receptor antagonist	ADORA2A
+VORINOSTAT	CAFFEINE	0.195776315605621	M5	gtex_qSig	Histone deacetylase 6 inhibitor	HDAC6	Adenosine receptor antagonist	ADORA2B
+VORINOSTAT	CAFFEINE	0.195776315605621	M5	gtex_qSig	Histone deacetylase 1 inhibitor	HDAC1	Adenosine receptor antagonist	ADORA2A
+VORINOSTAT	CAFFEINE	0.195776315605621	M5	gtex_qSig	Histone deacetylase 1 inhibitor	HDAC1	Adenosine receptor antagonist	ADORA2B
+CAFFEINE	THIORIDAZINE	0.163176413160467	M5	gtex_qSig	Adenosine receptor antagonist	ADORA2A	D2-like dopamine receptor antagonist	DRD2
+CAFFEINE	THIORIDAZINE	0.163176413160467	M5	gtex_qSig	Adenosine receptor antagonist	ADORA2A	D2-like dopamine receptor antagonist	DRD4
+CAFFEINE	THIORIDAZINE	0.163176413160467	M5	gtex_qSig	Adenosine receptor antagonist	ADORA2A	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+CAFFEINE	THIORIDAZINE	0.163176413160467	M5	gtex_qSig	Adenosine receptor antagonist	ADORA2A	D2-like dopamine receptor antagonist	DRD3
+CAFFEINE	THIORIDAZINE	0.163176413160467	M5	gtex_qSig	Adenosine receptor antagonist	ADORA2B	D2-like dopamine receptor antagonist	DRD2
+CAFFEINE	THIORIDAZINE	0.163176413160467	M5	gtex_qSig	Adenosine receptor antagonist	ADORA2B	D2-like dopamine receptor antagonist	DRD4
+CAFFEINE	THIORIDAZINE	0.163176413160467	M5	gtex_qSig	Adenosine receptor antagonist	ADORA2B	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+CAFFEINE	THIORIDAZINE	0.163176413160467	M5	gtex_qSig	Adenosine receptor antagonist	ADORA2B	D2-like dopamine receptor antagonist	DRD3
+CAFFEINE	TENIPOSIDE	0.156744430907277	M5	gtex_qSig	Adenosine receptor antagonist	ADORA2A	DNA topoisomerase II inhibitor	TOP2B
+CAFFEINE	TENIPOSIDE	0.156744430907277	M5	gtex_qSig	Adenosine receptor antagonist	ADORA2B	DNA topoisomerase II inhibitor	TOP2B
+CLOZAPINE	CABERGOLINE	0.151513144276663	M1	gtex_qSig	Dopamine D2 receptor antagonist	DRD2	Dopamine D2 receptor agonist	DRD2
+CLOZAPINE	CABERGOLINE	0.151513144276663	M1	gtex_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Dopamine D2 receptor agonist	DRD2
+BELINOSTAT	CLOZAPINE	0.147402409514354	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC8	Dopamine D2 receptor antagonist	DRD2
+BELINOSTAT	CLOZAPINE	0.147402409514354	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC8	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	CLOZAPINE	0.147402409514354	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC11	Dopamine D2 receptor antagonist	DRD2
+BELINOSTAT	CLOZAPINE	0.147402409514354	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC11	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	CLOZAPINE	0.147402409514354	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC6	Dopamine D2 receptor antagonist	DRD2
+BELINOSTAT	CLOZAPINE	0.147402409514354	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC6	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	CLOZAPINE	0.147402409514354	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC10	Dopamine D2 receptor antagonist	DRD2
+BELINOSTAT	CLOZAPINE	0.147402409514354	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC10	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	CLOZAPINE	0.147402409514354	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC4	Dopamine D2 receptor antagonist	DRD2
+BELINOSTAT	CLOZAPINE	0.147402409514354	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC4	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	CLOZAPINE	0.147402409514354	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC1	Dopamine D2 receptor antagonist	DRD2
+BELINOSTAT	CLOZAPINE	0.147402409514354	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC1	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	CLOZAPINE	0.147402409514354	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC5	Dopamine D2 receptor antagonist	DRD2
+BELINOSTAT	CLOZAPINE	0.147402409514354	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC5	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	CLOZAPINE	0.147402409514354	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC7	Dopamine D2 receptor antagonist	DRD2
+BELINOSTAT	CLOZAPINE	0.147402409514354	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC7	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+CLOFIBRATE	CLOZAPINE	0.145407029550027	M1	gtex_qSig	Peroxisome proliferator-activated receptor alpha agonist	PPARA	Dopamine D2 receptor antagonist	DRD2
+CLOFIBRATE	CLOZAPINE	0.145407029550027	M1	gtex_qSig	Peroxisome proliferator-activated receptor alpha agonist	PPARA	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+SIROLIMUS	CLOZAPINE	0.140251936739824	M1	gtex_qSig	FK506-binding protein 1A inhibitor	FKBP1A	Dopamine D2 receptor antagonist	DRD2
+SIROLIMUS	CLOZAPINE	0.140251936739824	M1	gtex_qSig	FK506-binding protein 1A inhibitor	FKBP1A	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+CAFFEINE	ETOPOSIDE	0.139328383028691	M5	gtex_qSig	Adenosine receptor antagonist	ADORA2A	DNA topoisomerase II inhibitor	TOP2B
+CAFFEINE	ETOPOSIDE	0.139328383028691	M5	gtex_qSig	Adenosine receptor antagonist	ADORA2B	DNA topoisomerase II inhibitor	TOP2B
+THIORIDAZINE	CABERGOLINE	0.12121051542133	M1	gtex_qSig	D2-like dopamine receptor antagonist	DRD2	Dopamine D2 receptor agonist	DRD2
+THIORIDAZINE	CABERGOLINE	0.12121051542133	M1	gtex_qSig	D2-like dopamine receptor antagonist	DRD4	Dopamine D2 receptor agonist	DRD2
+THIORIDAZINE	CABERGOLINE	0.12121051542133	M1	gtex_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Dopamine D2 receptor agonist	DRD2
+THIORIDAZINE	CABERGOLINE	0.12121051542133	M1	gtex_qSig	D2-like dopamine receptor antagonist	DRD3	Dopamine D2 receptor agonist	DRD2
+CLOZAPINE	FLUTAMIDE	0.120340914587807	M1	gtex_qSig	Dopamine D2 receptor antagonist	DRD2	Androgen Receptor antagonist	AR
+CLOZAPINE	FLUTAMIDE	0.120340914587807	M1	gtex_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Androgen Receptor antagonist	AR
+BELINOSTAT	THIORIDAZINE	0.117921927611483	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC8	D2-like dopamine receptor antagonist	DRD2
+BELINOSTAT	THIORIDAZINE	0.117921927611483	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC8	D2-like dopamine receptor antagonist	DRD4
+BELINOSTAT	THIORIDAZINE	0.117921927611483	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC8	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	THIORIDAZINE	0.117921927611483	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC8	D2-like dopamine receptor antagonist	DRD3
+BELINOSTAT	THIORIDAZINE	0.117921927611483	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC11	D2-like dopamine receptor antagonist	DRD2
+BELINOSTAT	THIORIDAZINE	0.117921927611483	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC11	D2-like dopamine receptor antagonist	DRD4
+BELINOSTAT	THIORIDAZINE	0.117921927611483	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC11	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	THIORIDAZINE	0.117921927611483	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC11	D2-like dopamine receptor antagonist	DRD3
+BELINOSTAT	THIORIDAZINE	0.117921927611483	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC6	D2-like dopamine receptor antagonist	DRD2
+BELINOSTAT	THIORIDAZINE	0.117921927611483	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC6	D2-like dopamine receptor antagonist	DRD4
+BELINOSTAT	THIORIDAZINE	0.117921927611483	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC6	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	THIORIDAZINE	0.117921927611483	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC6	D2-like dopamine receptor antagonist	DRD3
+BELINOSTAT	THIORIDAZINE	0.117921927611483	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC10	D2-like dopamine receptor antagonist	DRD2
+BELINOSTAT	THIORIDAZINE	0.117921927611483	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC10	D2-like dopamine receptor antagonist	DRD4
+BELINOSTAT	THIORIDAZINE	0.117921927611483	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC10	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	THIORIDAZINE	0.117921927611483	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC10	D2-like dopamine receptor antagonist	DRD3
+BELINOSTAT	THIORIDAZINE	0.117921927611483	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC4	D2-like dopamine receptor antagonist	DRD2
+BELINOSTAT	THIORIDAZINE	0.117921927611483	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC4	D2-like dopamine receptor antagonist	DRD4
+BELINOSTAT	THIORIDAZINE	0.117921927611483	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC4	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	THIORIDAZINE	0.117921927611483	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC4	D2-like dopamine receptor antagonist	DRD3
+BELINOSTAT	THIORIDAZINE	0.117921927611483	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC1	D2-like dopamine receptor antagonist	DRD2
+BELINOSTAT	THIORIDAZINE	0.117921927611483	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC1	D2-like dopamine receptor antagonist	DRD4
+BELINOSTAT	THIORIDAZINE	0.117921927611483	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC1	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	THIORIDAZINE	0.117921927611483	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC1	D2-like dopamine receptor antagonist	DRD3
+BELINOSTAT	THIORIDAZINE	0.117921927611483	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC5	D2-like dopamine receptor antagonist	DRD2
+BELINOSTAT	THIORIDAZINE	0.117921927611483	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC5	D2-like dopamine receptor antagonist	DRD4
+BELINOSTAT	THIORIDAZINE	0.117921927611483	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC5	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	THIORIDAZINE	0.117921927611483	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC5	D2-like dopamine receptor antagonist	DRD3
+BELINOSTAT	THIORIDAZINE	0.117921927611483	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC7	D2-like dopamine receptor antagonist	DRD2
+BELINOSTAT	THIORIDAZINE	0.117921927611483	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC7	D2-like dopamine receptor antagonist	DRD4
+BELINOSTAT	THIORIDAZINE	0.117921927611483	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC7	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	THIORIDAZINE	0.117921927611483	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC7	D2-like dopamine receptor antagonist	DRD3
+CLOFIBRATE	THIORIDAZINE	0.116325623640021	M1	gtex_qSig	Peroxisome proliferator-activated receptor alpha agonist	PPARA	D2-like dopamine receptor antagonist	DRD2
+CLOFIBRATE	THIORIDAZINE	0.116325623640021	M1	gtex_qSig	Peroxisome proliferator-activated receptor alpha agonist	PPARA	D2-like dopamine receptor antagonist	DRD4
+CLOFIBRATE	THIORIDAZINE	0.116325623640021	M1	gtex_qSig	Peroxisome proliferator-activated receptor alpha agonist	PPARA	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+CLOFIBRATE	THIORIDAZINE	0.116325623640021	M1	gtex_qSig	Peroxisome proliferator-activated receptor alpha agonist	PPARA	D2-like dopamine receptor antagonist	DRD3
+CLOZAPINE	VORINOSTAT	0.115526613326351	M1	gtex_qSig	Dopamine D2 receptor antagonist	DRD2	Histone deacetylase 6 inhibitor	HDAC6
+CLOZAPINE	VORINOSTAT	0.115526613326351	M1	gtex_qSig	Dopamine D2 receptor antagonist	DRD2	Histone deacetylase 1 inhibitor	HDAC1
+CLOZAPINE	VORINOSTAT	0.115526613326351	M1	gtex_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Histone deacetylase 6 inhibitor	HDAC6
+CLOZAPINE	VORINOSTAT	0.115526613326351	M1	gtex_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Histone deacetylase 1 inhibitor	HDAC1
+CLOZAPINE	TENIPOSIDE	0.11474512680382	M1	gtex_qSig	Dopamine D2 receptor antagonist	DRD2	DNA topoisomerase II inhibitor	TOP2B
+CLOZAPINE	TENIPOSIDE	0.11474512680382	M1	gtex_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	DNA topoisomerase II inhibitor	TOP2B
+SIROLIMUS	THIORIDAZINE	0.112201549391859	M1	gtex_qSig	FK506-binding protein 1A inhibitor	FKBP1A	D2-like dopamine receptor antagonist	DRD2
+SIROLIMUS	THIORIDAZINE	0.112201549391859	M1	gtex_qSig	FK506-binding protein 1A inhibitor	FKBP1A	D2-like dopamine receptor antagonist	DRD4
+SIROLIMUS	THIORIDAZINE	0.112201549391859	M1	gtex_qSig	FK506-binding protein 1A inhibitor	FKBP1A	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+SIROLIMUS	THIORIDAZINE	0.112201549391859	M1	gtex_qSig	FK506-binding protein 1A inhibitor	FKBP1A	D2-like dopamine receptor antagonist	DRD3
+CLOZAPINE	CAFFEINE	0.107907747219514	M1	gtex_qSig	Dopamine D2 receptor antagonist	DRD2	Adenosine receptor antagonist	ADORA2A
+CLOZAPINE	CAFFEINE	0.107907747219514	M1	gtex_qSig	Dopamine D2 receptor antagonist	DRD2	Adenosine receptor antagonist	ADORA2B
+CLOZAPINE	CAFFEINE	0.107907747219514	M1	gtex_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Adenosine receptor antagonist	ADORA2A
+CLOZAPINE	CAFFEINE	0.107907747219514	M1	gtex_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Adenosine receptor antagonist	ADORA2B
+CLOZAPINE	ETOPOSIDE	0.107095451683565	M1	gtex_qSig	Dopamine D2 receptor antagonist	DRD2	DNA topoisomerase II inhibitor	TOP2B
+CLOZAPINE	ETOPOSIDE	0.107095451683565	M1	gtex_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	DNA topoisomerase II inhibitor	TOP2B
+FLUTAMIDE	THIORIDAZINE	0.096272731670246	M1	gtex_qSig	Androgen Receptor antagonist	AR	D2-like dopamine receptor antagonist	DRD2
+FLUTAMIDE	THIORIDAZINE	0.096272731670246	M1	gtex_qSig	Androgen Receptor antagonist	AR	D2-like dopamine receptor antagonist	DRD4
+FLUTAMIDE	THIORIDAZINE	0.096272731670246	M1	gtex_qSig	Androgen Receptor antagonist	AR	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+FLUTAMIDE	THIORIDAZINE	0.096272731670246	M1	gtex_qSig	Androgen Receptor antagonist	AR	D2-like dopamine receptor antagonist	DRD3
+VORINOSTAT	THIORIDAZINE	0.0924212906610807	M1	gtex_qSig	Histone deacetylase 6 inhibitor	HDAC6	D2-like dopamine receptor antagonist	DRD2
+VORINOSTAT	THIORIDAZINE	0.0924212906610807	M1	gtex_qSig	Histone deacetylase 6 inhibitor	HDAC6	D2-like dopamine receptor antagonist	DRD4
+VORINOSTAT	THIORIDAZINE	0.0924212906610807	M1	gtex_qSig	Histone deacetylase 6 inhibitor	HDAC6	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+VORINOSTAT	THIORIDAZINE	0.0924212906610807	M1	gtex_qSig	Histone deacetylase 6 inhibitor	HDAC6	D2-like dopamine receptor antagonist	DRD3
+VORINOSTAT	THIORIDAZINE	0.0924212906610807	M1	gtex_qSig	Histone deacetylase 1 inhibitor	HDAC1	D2-like dopamine receptor antagonist	DRD2
+VORINOSTAT	THIORIDAZINE	0.0924212906610807	M1	gtex_qSig	Histone deacetylase 1 inhibitor	HDAC1	D2-like dopamine receptor antagonist	DRD4
+VORINOSTAT	THIORIDAZINE	0.0924212906610807	M1	gtex_qSig	Histone deacetylase 1 inhibitor	HDAC1	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+VORINOSTAT	THIORIDAZINE	0.0924212906610807	M1	gtex_qSig	Histone deacetylase 1 inhibitor	HDAC1	D2-like dopamine receptor antagonist	DRD3
+THIORIDAZINE	TENIPOSIDE	0.0917961014430561	M1	gtex_qSig	D2-like dopamine receptor antagonist	DRD2	DNA topoisomerase II inhibitor	TOP2B
+THIORIDAZINE	TENIPOSIDE	0.0917961014430561	M1	gtex_qSig	D2-like dopamine receptor antagonist	DRD4	DNA topoisomerase II inhibitor	TOP2B
+THIORIDAZINE	TENIPOSIDE	0.0917961014430561	M1	gtex_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	DNA topoisomerase II inhibitor	TOP2B
+THIORIDAZINE	TENIPOSIDE	0.0917961014430561	M1	gtex_qSig	D2-like dopamine receptor antagonist	DRD3	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	CABERGOLINE	0.0884414457086122	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC8	Dopamine D2 receptor agonist	DRD2
+BELINOSTAT	CABERGOLINE	0.0884414457086122	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC11	Dopamine D2 receptor agonist	DRD2
+BELINOSTAT	CABERGOLINE	0.0884414457086122	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC6	Dopamine D2 receptor agonist	DRD2
+BELINOSTAT	CABERGOLINE	0.0884414457086122	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC10	Dopamine D2 receptor agonist	DRD2
+BELINOSTAT	CABERGOLINE	0.0884414457086122	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC4	Dopamine D2 receptor agonist	DRD2
+BELINOSTAT	CABERGOLINE	0.0884414457086122	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC1	Dopamine D2 receptor agonist	DRD2
+BELINOSTAT	CABERGOLINE	0.0884414457086122	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC5	Dopamine D2 receptor agonist	DRD2
+BELINOSTAT	CABERGOLINE	0.0884414457086122	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC7	Dopamine D2 receptor agonist	DRD2
+CLOFIBRATE	CABERGOLINE	0.0872442177300161	M1	gtex_qSig	Peroxisome proliferator-activated receptor alpha agonist	PPARA	Dopamine D2 receptor agonist	DRD2
+CAFFEINE	THIORIDAZINE	0.0863261977756108	M1	gtex_qSig	Adenosine receptor antagonist	ADORA2A	D2-like dopamine receptor antagonist	DRD2
+CAFFEINE	THIORIDAZINE	0.0863261977756108	M1	gtex_qSig	Adenosine receptor antagonist	ADORA2A	D2-like dopamine receptor antagonist	DRD4
+CAFFEINE	THIORIDAZINE	0.0863261977756108	M1	gtex_qSig	Adenosine receptor antagonist	ADORA2A	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+CAFFEINE	THIORIDAZINE	0.0863261977756108	M1	gtex_qSig	Adenosine receptor antagonist	ADORA2A	D2-like dopamine receptor antagonist	DRD3
+CAFFEINE	THIORIDAZINE	0.0863261977756108	M1	gtex_qSig	Adenosine receptor antagonist	ADORA2B	D2-like dopamine receptor antagonist	DRD2
+CAFFEINE	THIORIDAZINE	0.0863261977756108	M1	gtex_qSig	Adenosine receptor antagonist	ADORA2B	D2-like dopamine receptor antagonist	DRD4
+CAFFEINE	THIORIDAZINE	0.0863261977756108	M1	gtex_qSig	Adenosine receptor antagonist	ADORA2B	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+CAFFEINE	THIORIDAZINE	0.0863261977756108	M1	gtex_qSig	Adenosine receptor antagonist	ADORA2B	D2-like dopamine receptor antagonist	DRD3
+THIORIDAZINE	ETOPOSIDE	0.0856763613468524	M1	gtex_qSig	D2-like dopamine receptor antagonist	DRD2	DNA topoisomerase II inhibitor	TOP2B
+THIORIDAZINE	ETOPOSIDE	0.0856763613468524	M1	gtex_qSig	D2-like dopamine receptor antagonist	DRD4	DNA topoisomerase II inhibitor	TOP2B
+THIORIDAZINE	ETOPOSIDE	0.0856763613468524	M1	gtex_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	DNA topoisomerase II inhibitor	TOP2B
+THIORIDAZINE	ETOPOSIDE	0.0856763613468524	M1	gtex_qSig	D2-like dopamine receptor antagonist	DRD3	DNA topoisomerase II inhibitor	TOP2B
+SIROLIMUS	CABERGOLINE	0.0841511620438943	M1	gtex_qSig	FK506-binding protein 1A inhibitor	FKBP1A	Dopamine D2 receptor agonist	DRD2
+CLOZAPINE	NICOTINE	0.0823157414816428	M1	gtex_qSig	Dopamine D2 receptor antagonist	DRD2	Neuronal acetylcholine receptor; alpha4/beta2 agonist	CHRNA4
+CLOZAPINE	NICOTINE	0.0823157414816428	M1	gtex_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Neuronal acetylcholine receptor; alpha4/beta2 agonist	CHRNA4
+FLUTAMIDE	CABERGOLINE	0.0722045487526845	M1	gtex_qSig	Androgen Receptor antagonist	AR	Dopamine D2 receptor agonist	DRD2
+VORINOSTAT	CABERGOLINE	0.0693159679958105	M1	gtex_qSig	Histone deacetylase 6 inhibitor	HDAC6	Dopamine D2 receptor agonist	DRD2
+VORINOSTAT	CABERGOLINE	0.0693159679958105	M1	gtex_qSig	Histone deacetylase 1 inhibitor	HDAC1	Dopamine D2 receptor agonist	DRD2
+TENIPOSIDE	CABERGOLINE	0.0688470760822921	M1	gtex_qSig	DNA topoisomerase II inhibitor	TOP2B	Dopamine D2 receptor agonist	DRD2
+THIORIDAZINE	NICOTINE	0.0658525931853142	M1	gtex_qSig	D2-like dopamine receptor antagonist	DRD2	Neuronal acetylcholine receptor; alpha4/beta2 agonist	CHRNA4
+THIORIDAZINE	NICOTINE	0.0658525931853142	M1	gtex_qSig	D2-like dopamine receptor antagonist	DRD4	Neuronal acetylcholine receptor; alpha4/beta2 agonist	CHRNA4
+THIORIDAZINE	NICOTINE	0.0658525931853142	M1	gtex_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Neuronal acetylcholine receptor; alpha4/beta2 agonist	CHRNA4
+THIORIDAZINE	NICOTINE	0.0658525931853142	M1	gtex_qSig	D2-like dopamine receptor antagonist	DRD3	Neuronal acetylcholine receptor; alpha4/beta2 agonist	CHRNA4
+CAFFEINE	CABERGOLINE	0.0647446483317081	M1	gtex_qSig	Adenosine receptor antagonist	ADORA2A	Dopamine D2 receptor agonist	DRD2
+CAFFEINE	CABERGOLINE	0.0647446483317081	M1	gtex_qSig	Adenosine receptor antagonist	ADORA2B	Dopamine D2 receptor agonist	DRD2
+ETOPOSIDE	CABERGOLINE	0.0642572710101393	M1	gtex_qSig	DNA topoisomerase II inhibitor	TOP2B	Dopamine D2 receptor agonist	DRD2
+NICOTINE	CABERGOLINE	0.0493894448889857	M1	gtex_qSig	Neuronal acetylcholine receptor; alpha4/beta2 agonist	CHRNA4	Dopamine D2 receptor agonist	DRD2
+BELINOSTAT	TENIPOSIDE	0.0321731884166565	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC8	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	TENIPOSIDE	0.0321731884166565	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC11	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	TENIPOSIDE	0.0321731884166565	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC6	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	TENIPOSIDE	0.0321731884166565	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC10	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	TENIPOSIDE	0.0321731884166565	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC4	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	TENIPOSIDE	0.0321731884166565	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC1	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	TENIPOSIDE	0.0321731884166565	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC5	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	TENIPOSIDE	0.0321731884166565	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC7	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	ETOPOSIDE	0.0300283091888794	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC8	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	ETOPOSIDE	0.0300283091888794	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC11	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	ETOPOSIDE	0.0300283091888794	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC6	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	ETOPOSIDE	0.0300283091888794	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC10	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	ETOPOSIDE	0.0300283091888794	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC4	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	ETOPOSIDE	0.0300283091888794	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC1	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	ETOPOSIDE	0.0300283091888794	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC5	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	ETOPOSIDE	0.0300283091888794	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC7	DNA topoisomerase II inhibitor	TOP2B
+TENIPOSIDE	ETOPOSIDE	0.0280691762832683	M1	gtex_qSig	DNA topoisomerase II inhibitor	TOP2B	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	CELECOXIB	0.0262428001547596	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC8	Cyclooxygenase-2 inhibitor	PTGS2
+BELINOSTAT	CELECOXIB	0.0262428001547596	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC11	Cyclooxygenase-2 inhibitor	PTGS2
+BELINOSTAT	CELECOXIB	0.0262428001547596	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC6	Cyclooxygenase-2 inhibitor	PTGS2
+BELINOSTAT	CELECOXIB	0.0262428001547596	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC10	Cyclooxygenase-2 inhibitor	PTGS2
+BELINOSTAT	CELECOXIB	0.0262428001547596	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC4	Cyclooxygenase-2 inhibitor	PTGS2
+BELINOSTAT	CELECOXIB	0.0262428001547596	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC1	Cyclooxygenase-2 inhibitor	PTGS2
+BELINOSTAT	CELECOXIB	0.0262428001547596	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC5	Cyclooxygenase-2 inhibitor	PTGS2
+BELINOSTAT	CELECOXIB	0.0262428001547596	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC7	Cyclooxygenase-2 inhibitor	PTGS2
+CLOFIBRATE	TENIPOSIDE	0.0232120230892106	M1	gtex_qSig	Peroxisome proliferator-activated receptor alpha agonist	PPARA	DNA topoisomerase II inhibitor	TOP2B
+SIROLIMUS	TENIPOSIDE	0.0230780186586588	M1	gtex_qSig	FK506-binding protein 1A inhibitor	FKBP1A	DNA topoisomerase II inhibitor	TOP2B
+CLOFIBRATE	ETOPOSIDE	0.0216645548832632	M1	gtex_qSig	Peroxisome proliferator-activated receptor alpha agonist	PPARA	DNA topoisomerase II inhibitor	TOP2B
+SIROLIMUS	ETOPOSIDE	0.0215394840814149	M1	gtex_qSig	FK506-binding protein 1A inhibitor	FKBP1A	DNA topoisomerase II inhibitor	TOP2B
+CLOZAPINE	CELECOXIB	0.021133084916375	M4	gtex_qSig	Dopamine D2 receptor antagonist	DRD2	Cyclooxygenase-2 inhibitor	PTGS2
+CLOZAPINE	CELECOXIB	0.021133084916375	M4	gtex_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Cyclooxygenase-2 inhibitor	PTGS2
+VORINOSTAT	TENIPOSIDE	0.0194632868069557	M1	gtex_qSig	Histone deacetylase 6 inhibitor	HDAC6	DNA topoisomerase II inhibitor	TOP2B
+VORINOSTAT	TENIPOSIDE	0.0194632868069557	M1	gtex_qSig	Histone deacetylase 1 inhibitor	HDAC1	DNA topoisomerase II inhibitor	TOP2B
+FLUTAMIDE	TENIPOSIDE	0.0193416975759477	M1	gtex_qSig	Androgen Receptor antagonist	AR	DNA topoisomerase II inhibitor	TOP2B
+VORINOSTAT	ETOPOSIDE	0.0181657343531587	M1	gtex_qSig	Histone deacetylase 6 inhibitor	HDAC6	DNA topoisomerase II inhibitor	TOP2B
+VORINOSTAT	ETOPOSIDE	0.0181657343531587	M1	gtex_qSig	Histone deacetylase 1 inhibitor	HDAC1	DNA topoisomerase II inhibitor	TOP2B
+FLUTAMIDE	ETOPOSIDE	0.0180522510708846	M1	gtex_qSig	Androgen Receptor antagonist	AR	DNA topoisomerase II inhibitor	TOP2B
+CELECOXIB	CAFFEINE	0.0180055438340867	M4	gtex_qSig	Cyclooxygenase-2 inhibitor	PTGS2	Adenosine receptor antagonist	ADORA2A
+CELECOXIB	CAFFEINE	0.0180055438340867	M4	gtex_qSig	Cyclooxygenase-2 inhibitor	PTGS2	Adenosine receptor antagonist	ADORA2B
+SIROLIMUS	BELINOSTAT	0.0177443813100283	M1	gtex_qSig	FK506-binding protein 1A inhibitor	FKBP1A	Histone deacetylase inhibitor	HDAC8
+SIROLIMUS	BELINOSTAT	0.0177443813100283	M1	gtex_qSig	FK506-binding protein 1A inhibitor	FKBP1A	Histone deacetylase inhibitor	HDAC11
+SIROLIMUS	BELINOSTAT	0.0177443813100283	M1	gtex_qSig	FK506-binding protein 1A inhibitor	FKBP1A	Histone deacetylase inhibitor	HDAC6
+SIROLIMUS	BELINOSTAT	0.0177443813100283	M1	gtex_qSig	FK506-binding protein 1A inhibitor	FKBP1A	Histone deacetylase inhibitor	HDAC10
+SIROLIMUS	BELINOSTAT	0.0177443813100283	M1	gtex_qSig	FK506-binding protein 1A inhibitor	FKBP1A	Histone deacetylase inhibitor	HDAC4
+SIROLIMUS	BELINOSTAT	0.0177443813100283	M1	gtex_qSig	FK506-binding protein 1A inhibitor	FKBP1A	Histone deacetylase inhibitor	HDAC1
+SIROLIMUS	BELINOSTAT	0.0177443813100283	M1	gtex_qSig	FK506-binding protein 1A inhibitor	FKBP1A	Histone deacetylase inhibitor	HDAC5
+SIROLIMUS	BELINOSTAT	0.0177443813100283	M1	gtex_qSig	FK506-binding protein 1A inhibitor	FKBP1A	Histone deacetylase inhibitor	HDAC7
+CAFFEINE	TENIPOSIDE	0.0174814524039281	M1	gtex_qSig	Adenosine receptor antagonist	ADORA2A	DNA topoisomerase II inhibitor	TOP2B
+CAFFEINE	TENIPOSIDE	0.0174814524039281	M1	gtex_qSig	Adenosine receptor antagonist	ADORA2B	DNA topoisomerase II inhibitor	TOP2B
+CLOFIBRATE	BELINOSTAT	0.017269949112251	M1	gtex_qSig	Peroxisome proliferator-activated receptor alpha agonist	PPARA	Histone deacetylase inhibitor	HDAC8
+CLOFIBRATE	BELINOSTAT	0.017269949112251	M1	gtex_qSig	Peroxisome proliferator-activated receptor alpha agonist	PPARA	Histone deacetylase inhibitor	HDAC11
+CLOFIBRATE	BELINOSTAT	0.017269949112251	M1	gtex_qSig	Peroxisome proliferator-activated receptor alpha agonist	PPARA	Histone deacetylase inhibitor	HDAC6
+CLOFIBRATE	BELINOSTAT	0.017269949112251	M1	gtex_qSig	Peroxisome proliferator-activated receptor alpha agonist	PPARA	Histone deacetylase inhibitor	HDAC10
+CLOFIBRATE	BELINOSTAT	0.017269949112251	M1	gtex_qSig	Peroxisome proliferator-activated receptor alpha agonist	PPARA	Histone deacetylase inhibitor	HDAC4
+CLOFIBRATE	BELINOSTAT	0.017269949112251	M1	gtex_qSig	Peroxisome proliferator-activated receptor alpha agonist	PPARA	Histone deacetylase inhibitor	HDAC1
+CLOFIBRATE	BELINOSTAT	0.017269949112251	M1	gtex_qSig	Peroxisome proliferator-activated receptor alpha agonist	PPARA	Histone deacetylase inhibitor	HDAC5
+CLOFIBRATE	BELINOSTAT	0.017269949112251	M1	gtex_qSig	Peroxisome proliferator-activated receptor alpha agonist	PPARA	Histone deacetylase inhibitor	HDAC7
+BELINOSTAT	CLOZAPINE	0.017026600657734	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC8	Dopamine D2 receptor antagonist	DRD2
+BELINOSTAT	CLOZAPINE	0.017026600657734	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC8	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	CLOZAPINE	0.017026600657734	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC11	Dopamine D2 receptor antagonist	DRD2
+BELINOSTAT	CLOZAPINE	0.017026600657734	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC11	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	CLOZAPINE	0.017026600657734	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC6	Dopamine D2 receptor antagonist	DRD2
+BELINOSTAT	CLOZAPINE	0.017026600657734	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC6	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	CLOZAPINE	0.017026600657734	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC10	Dopamine D2 receptor antagonist	DRD2
+BELINOSTAT	CLOZAPINE	0.017026600657734	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC10	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	CLOZAPINE	0.017026600657734	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC4	Dopamine D2 receptor antagonist	DRD2
+BELINOSTAT	CLOZAPINE	0.017026600657734	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC4	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	CLOZAPINE	0.017026600657734	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC1	Dopamine D2 receptor antagonist	DRD2
+BELINOSTAT	CLOZAPINE	0.017026600657734	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC1	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	CLOZAPINE	0.017026600657734	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC5	Dopamine D2 receptor antagonist	DRD2
+BELINOSTAT	CLOZAPINE	0.017026600657734	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC5	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	CLOZAPINE	0.017026600657734	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC7	Dopamine D2 receptor antagonist	DRD2
+BELINOSTAT	CLOZAPINE	0.017026600657734	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC7	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+CELECOXIB	THIORIDAZINE	0.0169969252951932	M4	gtex_qSig	Cyclooxygenase-2 inhibitor	PTGS2	D2-like dopamine receptor antagonist	DRD2
+CELECOXIB	THIORIDAZINE	0.0169969252951932	M4	gtex_qSig	Cyclooxygenase-2 inhibitor	PTGS2	D2-like dopamine receptor antagonist	DRD4
+CELECOXIB	THIORIDAZINE	0.0169969252951932	M4	gtex_qSig	Cyclooxygenase-2 inhibitor	PTGS2	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+CELECOXIB	THIORIDAZINE	0.0169969252951932	M4	gtex_qSig	Cyclooxygenase-2 inhibitor	PTGS2	D2-like dopamine receptor antagonist	DRD3
+CAFFEINE	ETOPOSIDE	0.0163160222436662	M1	gtex_qSig	Adenosine receptor antagonist	ADORA2A	DNA topoisomerase II inhibitor	TOP2B
+CAFFEINE	ETOPOSIDE	0.0163160222436662	M1	gtex_qSig	Adenosine receptor antagonist	ADORA2B	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	TENIPOSIDE	0.0161790262416653	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC8	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	TENIPOSIDE	0.0161790262416653	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC11	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	TENIPOSIDE	0.0161790262416653	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC6	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	TENIPOSIDE	0.0161790262416653	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC10	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	TENIPOSIDE	0.0161790262416653	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC4	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	TENIPOSIDE	0.0161790262416653	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC1	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	TENIPOSIDE	0.0161790262416653	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC5	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	TENIPOSIDE	0.0161790262416653	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC7	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	VORINOSTAT	0.0153319103198428	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC8	Histone deacetylase 6 inhibitor	HDAC6
+BELINOSTAT	VORINOSTAT	0.0153319103198428	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC8	Histone deacetylase 1 inhibitor	HDAC1
+BELINOSTAT	VORINOSTAT	0.0153319103198428	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC11	Histone deacetylase 6 inhibitor	HDAC6
+BELINOSTAT	VORINOSTAT	0.0153319103198428	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC11	Histone deacetylase 1 inhibitor	HDAC1
+BELINOSTAT	VORINOSTAT	0.0153319103198428	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC6	Histone deacetylase 6 inhibitor	HDAC6
+BELINOSTAT	VORINOSTAT	0.0153319103198428	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC6	Histone deacetylase 1 inhibitor	HDAC1
+BELINOSTAT	VORINOSTAT	0.0153319103198428	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC10	Histone deacetylase 6 inhibitor	HDAC6
+BELINOSTAT	VORINOSTAT	0.0153319103198428	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC10	Histone deacetylase 1 inhibitor	HDAC1
+BELINOSTAT	VORINOSTAT	0.0153319103198428	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC4	Histone deacetylase 6 inhibitor	HDAC6
+BELINOSTAT	VORINOSTAT	0.0153319103198428	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC4	Histone deacetylase 1 inhibitor	HDAC1
+BELINOSTAT	VORINOSTAT	0.0153319103198428	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC1	Histone deacetylase 6 inhibitor	HDAC6
+BELINOSTAT	VORINOSTAT	0.0153319103198428	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC1	Histone deacetylase 1 inhibitor	HDAC1
+BELINOSTAT	VORINOSTAT	0.0153319103198428	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC5	Histone deacetylase 6 inhibitor	HDAC6
+BELINOSTAT	VORINOSTAT	0.0153319103198428	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC5	Histone deacetylase 1 inhibitor	HDAC1
+BELINOSTAT	VORINOSTAT	0.0153319103198428	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC7	Histone deacetylase 6 inhibitor	HDAC6
+BELINOSTAT	VORINOSTAT	0.0153319103198428	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC7	Histone deacetylase 1 inhibitor	HDAC1
+CLOFIBRATE	TENIPOSIDE	0.0151768553353288	M5	gtex_qSig	Peroxisome proliferator-activated receptor alpha agonist	PPARA	DNA topoisomerase II inhibitor	TOP2B
+CELECOXIB	TENIPOSIDE	0.0150874779579198	M4	gtex_qSig	Cyclooxygenase-2 inhibitor	PTGS2	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	THIORIDAZINE	0.0148982755755172	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC8	D2-like dopamine receptor antagonist	DRD2
+BELINOSTAT	THIORIDAZINE	0.0148982755755172	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC8	D2-like dopamine receptor antagonist	DRD4
+BELINOSTAT	THIORIDAZINE	0.0148982755755172	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC8	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	THIORIDAZINE	0.0148982755755172	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC8	D2-like dopamine receptor antagonist	DRD3
+BELINOSTAT	THIORIDAZINE	0.0148982755755172	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC11	D2-like dopamine receptor antagonist	DRD2
+BELINOSTAT	THIORIDAZINE	0.0148982755755172	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC11	D2-like dopamine receptor antagonist	DRD4
+BELINOSTAT	THIORIDAZINE	0.0148982755755172	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC11	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	THIORIDAZINE	0.0148982755755172	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC11	D2-like dopamine receptor antagonist	DRD3
+BELINOSTAT	THIORIDAZINE	0.0148982755755172	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC6	D2-like dopamine receptor antagonist	DRD2
+BELINOSTAT	THIORIDAZINE	0.0148982755755172	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC6	D2-like dopamine receptor antagonist	DRD4
+BELINOSTAT	THIORIDAZINE	0.0148982755755172	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC6	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	THIORIDAZINE	0.0148982755755172	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC6	D2-like dopamine receptor antagonist	DRD3
+BELINOSTAT	THIORIDAZINE	0.0148982755755172	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC10	D2-like dopamine receptor antagonist	DRD2
+BELINOSTAT	THIORIDAZINE	0.0148982755755172	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC10	D2-like dopamine receptor antagonist	DRD4
+BELINOSTAT	THIORIDAZINE	0.0148982755755172	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC10	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	THIORIDAZINE	0.0148982755755172	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC10	D2-like dopamine receptor antagonist	DRD3
+BELINOSTAT	THIORIDAZINE	0.0148982755755172	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC4	D2-like dopamine receptor antagonist	DRD2
+BELINOSTAT	THIORIDAZINE	0.0148982755755172	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC4	D2-like dopamine receptor antagonist	DRD4
+BELINOSTAT	THIORIDAZINE	0.0148982755755172	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC4	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	THIORIDAZINE	0.0148982755755172	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC4	D2-like dopamine receptor antagonist	DRD3
+BELINOSTAT	THIORIDAZINE	0.0148982755755172	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC1	D2-like dopamine receptor antagonist	DRD2
+BELINOSTAT	THIORIDAZINE	0.0148982755755172	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC1	D2-like dopamine receptor antagonist	DRD4
+BELINOSTAT	THIORIDAZINE	0.0148982755755172	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC1	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	THIORIDAZINE	0.0148982755755172	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC1	D2-like dopamine receptor antagonist	DRD3
+BELINOSTAT	THIORIDAZINE	0.0148982755755172	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC5	D2-like dopamine receptor antagonist	DRD2
+BELINOSTAT	THIORIDAZINE	0.0148982755755172	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC5	D2-like dopamine receptor antagonist	DRD4
+BELINOSTAT	THIORIDAZINE	0.0148982755755172	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC5	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	THIORIDAZINE	0.0148982755755172	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC5	D2-like dopamine receptor antagonist	DRD3
+BELINOSTAT	THIORIDAZINE	0.0148982755755172	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC7	D2-like dopamine receptor antagonist	DRD2
+BELINOSTAT	THIORIDAZINE	0.0148982755755172	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC7	D2-like dopamine receptor antagonist	DRD4
+BELINOSTAT	THIORIDAZINE	0.0148982755755172	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC7	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	THIORIDAZINE	0.0148982755755172	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC7	D2-like dopamine receptor antagonist	DRD3
+TENIPOSIDE	ETOPOSIDE	0.0148386982526466	M5	gtex_qSig	DNA topoisomerase II inhibitor	TOP2B	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	FLUTAMIDE	0.014499646995882	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC8	Androgen Receptor antagonist	AR
+BELINOSTAT	FLUTAMIDE	0.014499646995882	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC11	Androgen Receptor antagonist	AR
+BELINOSTAT	FLUTAMIDE	0.014499646995882	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC6	Androgen Receptor antagonist	AR
+BELINOSTAT	FLUTAMIDE	0.014499646995882	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC10	Androgen Receptor antagonist	AR
+BELINOSTAT	FLUTAMIDE	0.014499646995882	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC4	Androgen Receptor antagonist	AR
+BELINOSTAT	FLUTAMIDE	0.014499646995882	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC1	Androgen Receptor antagonist	AR
+BELINOSTAT	FLUTAMIDE	0.014499646995882	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC5	Androgen Receptor antagonist	AR
+BELINOSTAT	FLUTAMIDE	0.014499646995882	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC7	Androgen Receptor antagonist	AR
+BELINOSTAT	ETOPOSIDE	0.014381356659258	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC8	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	ETOPOSIDE	0.014381356659258	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC11	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	ETOPOSIDE	0.014381356659258	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC6	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	ETOPOSIDE	0.014381356659258	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC10	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	ETOPOSIDE	0.014381356659258	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC4	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	ETOPOSIDE	0.014381356659258	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC1	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	ETOPOSIDE	0.014381356659258	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC5	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	ETOPOSIDE	0.014381356659258	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC7	DNA topoisomerase II inhibitor	TOP2B
+CELECOXIB	ETOPOSIDE	0.0135787301621278	M4	gtex_qSig	Cyclooxygenase-2 inhibitor	PTGS2	DNA topoisomerase II inhibitor	TOP2B
+CLOFIBRATE	ETOPOSIDE	0.0134905380758478	M5	gtex_qSig	Peroxisome proliferator-activated receptor alpha agonist	PPARA	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	CAFFEINE	0.0132193805561539	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC8	Adenosine receptor antagonist	ADORA2A
+BELINOSTAT	CAFFEINE	0.0132193805561539	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC8	Adenosine receptor antagonist	ADORA2B
+BELINOSTAT	CAFFEINE	0.0132193805561539	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC11	Adenosine receptor antagonist	ADORA2A
+BELINOSTAT	CAFFEINE	0.0132193805561539	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC11	Adenosine receptor antagonist	ADORA2B
+BELINOSTAT	CAFFEINE	0.0132193805561539	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC6	Adenosine receptor antagonist	ADORA2A
+BELINOSTAT	CAFFEINE	0.0132193805561539	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC6	Adenosine receptor antagonist	ADORA2B
+BELINOSTAT	CAFFEINE	0.0132193805561539	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC10	Adenosine receptor antagonist	ADORA2A
+BELINOSTAT	CAFFEINE	0.0132193805561539	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC10	Adenosine receptor antagonist	ADORA2B
+BELINOSTAT	CAFFEINE	0.0132193805561539	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC4	Adenosine receptor antagonist	ADORA2A
+BELINOSTAT	CAFFEINE	0.0132193805561539	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC4	Adenosine receptor antagonist	ADORA2B
+BELINOSTAT	CAFFEINE	0.0132193805561539	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC1	Adenosine receptor antagonist	ADORA2A
+BELINOSTAT	CAFFEINE	0.0132193805561539	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC1	Adenosine receptor antagonist	ADORA2B
+BELINOSTAT	CAFFEINE	0.0132193805561539	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC5	Adenosine receptor antagonist	ADORA2A
+BELINOSTAT	CAFFEINE	0.0132193805561539	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC5	Adenosine receptor antagonist	ADORA2B
+BELINOSTAT	CAFFEINE	0.0132193805561539	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC7	Adenosine receptor antagonist	ADORA2A
+BELINOSTAT	CAFFEINE	0.0132193805561539	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC7	Adenosine receptor antagonist	ADORA2B
+TENIPOSIDE	NICOTINE	0.0132167088089267	M1	gtex_qSig	DNA topoisomerase II inhibitor	TOP2B	Neuronal acetylcholine receptor; alpha4/beta2 agonist	CHRNA4
+BELINOSTAT	TENIPOSIDE	0.0127699504933005	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC8	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	TENIPOSIDE	0.0127699504933005	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC11	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	TENIPOSIDE	0.0127699504933005	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC6	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	TENIPOSIDE	0.0127699504933005	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC10	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	TENIPOSIDE	0.0127699504933005	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC4	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	TENIPOSIDE	0.0127699504933005	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC1	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	TENIPOSIDE	0.0127699504933005	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC5	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	TENIPOSIDE	0.0127699504933005	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC7	DNA topoisomerase II inhibitor	TOP2B
+ETOPOSIDE	NICOTINE	0.0123355948883316	M1	gtex_qSig	DNA topoisomerase II inhibitor	TOP2B	Neuronal acetylcholine receptor; alpha4/beta2 agonist	CHRNA4
+FLUTAMIDE	TENIPOSIDE	0.0122185311967421	M5	gtex_qSig	Androgen Receptor antagonist	AR	DNA topoisomerase II inhibitor	TOP2B
+CELECOXIB	CABERGOLINE	0.0119928782050099	M4	gtex_qSig	Cyclooxygenase-2 inhibitor	PTGS2	Dopamine D2 receptor agonist	DRD2
+VORINOSTAT	TENIPOSIDE	0.011444744611994	M5	gtex_qSig	Histone deacetylase 6 inhibitor	HDAC6	DNA topoisomerase II inhibitor	TOP2B
+VORINOSTAT	TENIPOSIDE	0.011444744611994	M5	gtex_qSig	Histone deacetylase 1 inhibitor	HDAC1	DNA topoisomerase II inhibitor	TOP2B
+FLUTAMIDE	ETOPOSIDE	0.0108609166193263	M5	gtex_qSig	Androgen Receptor antagonist	AR	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	ETOPOSIDE	0.0106416254110837	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC8	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	ETOPOSIDE	0.0106416254110837	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC11	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	ETOPOSIDE	0.0106416254110837	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC6	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	ETOPOSIDE	0.0106416254110837	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC10	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	ETOPOSIDE	0.0106416254110837	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC4	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	ETOPOSIDE	0.0106416254110837	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC1	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	ETOPOSIDE	0.0106416254110837	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC5	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	ETOPOSIDE	0.0106416254110837	M9	gtex_qSig	Histone deacetylase inhibitor	HDAC7	DNA topoisomerase II inhibitor	TOP2B
+VORINOSTAT	ETOPOSIDE	0.0101731063217724	M5	gtex_qSig	Histone deacetylase 6 inhibitor	HDAC6	DNA topoisomerase II inhibitor	TOP2B
+VORINOSTAT	ETOPOSIDE	0.0101731063217724	M5	gtex_qSig	Histone deacetylase 1 inhibitor	HDAC1	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	NICOTINE	0.0098968931253509	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC8	Neuronal acetylcholine receptor; alpha4/beta2 agonist	CHRNA4
+BELINOSTAT	NICOTINE	0.0098968931253509	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC11	Neuronal acetylcholine receptor; alpha4/beta2 agonist	CHRNA4
+BELINOSTAT	NICOTINE	0.0098968931253509	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC6	Neuronal acetylcholine receptor; alpha4/beta2 agonist	CHRNA4
+BELINOSTAT	NICOTINE	0.0098968931253509	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC10	Neuronal acetylcholine receptor; alpha4/beta2 agonist	CHRNA4
+BELINOSTAT	NICOTINE	0.0098968931253509	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC4	Neuronal acetylcholine receptor; alpha4/beta2 agonist	CHRNA4
+BELINOSTAT	NICOTINE	0.0098968931253509	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC1	Neuronal acetylcholine receptor; alpha4/beta2 agonist	CHRNA4
+BELINOSTAT	NICOTINE	0.0098968931253509	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC5	Neuronal acetylcholine receptor; alpha4/beta2 agonist	CHRNA4
+BELINOSTAT	NICOTINE	0.0098968931253509	M1	gtex_qSig	Histone deacetylase inhibitor	HDAC7	Neuronal acetylcholine receptor; alpha4/beta2 agonist	CHRNA4
+THIORIDAZINE	TENIPOSIDE	0.00956141003139266	M5	gtex_qSig	D2-like dopamine receptor antagonist	DRD2	DNA topoisomerase II inhibitor	TOP2B
+THIORIDAZINE	TENIPOSIDE	0.00956141003139266	M5	gtex_qSig	D2-like dopamine receptor antagonist	DRD4	DNA topoisomerase II inhibitor	TOP2B
+THIORIDAZINE	TENIPOSIDE	0.00956141003139266	M5	gtex_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	DNA topoisomerase II inhibitor	TOP2B
+THIORIDAZINE	TENIPOSIDE	0.00956141003139266	M5	gtex_qSig	D2-like dopamine receptor antagonist	DRD3	DNA topoisomerase II inhibitor	TOP2B
+THIORIDAZINE	ETOPOSIDE	0.0084990311390157	M5	gtex_qSig	D2-like dopamine receptor antagonist	DRD2	DNA topoisomerase II inhibitor	TOP2B
+THIORIDAZINE	ETOPOSIDE	0.0084990311390157	M5	gtex_qSig	D2-like dopamine receptor antagonist	DRD4	DNA topoisomerase II inhibitor	TOP2B
+THIORIDAZINE	ETOPOSIDE	0.0084990311390157	M5	gtex_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	DNA topoisomerase II inhibitor	TOP2B
+THIORIDAZINE	ETOPOSIDE	0.0084990311390157	M5	gtex_qSig	D2-like dopamine receptor antagonist	DRD3	DNA topoisomerase II inhibitor	TOP2B
+CLOFIBRATE	BELINOSTAT	0.00729394879862313	M5	gtex_qSig	Peroxisome proliferator-activated receptor alpha agonist	PPARA	Histone deacetylase inhibitor	HDAC8
+CLOFIBRATE	BELINOSTAT	0.00729394879862313	M5	gtex_qSig	Peroxisome proliferator-activated receptor alpha agonist	PPARA	Histone deacetylase inhibitor	HDAC11
+CLOFIBRATE	BELINOSTAT	0.00729394879862313	M5	gtex_qSig	Peroxisome proliferator-activated receptor alpha agonist	PPARA	Histone deacetylase inhibitor	HDAC6
+CLOFIBRATE	BELINOSTAT	0.00729394879862313	M5	gtex_qSig	Peroxisome proliferator-activated receptor alpha agonist	PPARA	Histone deacetylase inhibitor	HDAC10
+CLOFIBRATE	BELINOSTAT	0.00729394879862313	M5	gtex_qSig	Peroxisome proliferator-activated receptor alpha agonist	PPARA	Histone deacetylase inhibitor	HDAC4
+CLOFIBRATE	BELINOSTAT	0.00729394879862313	M5	gtex_qSig	Peroxisome proliferator-activated receptor alpha agonist	PPARA	Histone deacetylase inhibitor	HDAC1
+CLOFIBRATE	BELINOSTAT	0.00729394879862313	M5	gtex_qSig	Peroxisome proliferator-activated receptor alpha agonist	PPARA	Histone deacetylase inhibitor	HDAC5
+CLOFIBRATE	BELINOSTAT	0.00729394879862313	M5	gtex_qSig	Peroxisome proliferator-activated receptor alpha agonist	PPARA	Histone deacetylase inhibitor	HDAC7
+BELINOSTAT	CAFFEINE	0.00666931606887783	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC8	Adenosine receptor antagonist	ADORA2A
+BELINOSTAT	CAFFEINE	0.00666931606887783	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC8	Adenosine receptor antagonist	ADORA2B
+BELINOSTAT	CAFFEINE	0.00666931606887783	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC11	Adenosine receptor antagonist	ADORA2A
+BELINOSTAT	CAFFEINE	0.00666931606887783	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC11	Adenosine receptor antagonist	ADORA2B
+BELINOSTAT	CAFFEINE	0.00666931606887783	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC6	Adenosine receptor antagonist	ADORA2A
+BELINOSTAT	CAFFEINE	0.00666931606887783	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC6	Adenosine receptor antagonist	ADORA2B
+BELINOSTAT	CAFFEINE	0.00666931606887783	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC10	Adenosine receptor antagonist	ADORA2A
+BELINOSTAT	CAFFEINE	0.00666931606887783	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC10	Adenosine receptor antagonist	ADORA2B
+BELINOSTAT	CAFFEINE	0.00666931606887783	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC4	Adenosine receptor antagonist	ADORA2A
+BELINOSTAT	CAFFEINE	0.00666931606887783	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC4	Adenosine receptor antagonist	ADORA2B
+BELINOSTAT	CAFFEINE	0.00666931606887783	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC1	Adenosine receptor antagonist	ADORA2A
+BELINOSTAT	CAFFEINE	0.00666931606887783	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC1	Adenosine receptor antagonist	ADORA2B
+BELINOSTAT	CAFFEINE	0.00666931606887783	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC5	Adenosine receptor antagonist	ADORA2A
+BELINOSTAT	CAFFEINE	0.00666931606887783	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC5	Adenosine receptor antagonist	ADORA2B
+BELINOSTAT	CAFFEINE	0.00666931606887783	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC7	Adenosine receptor antagonist	ADORA2A
+BELINOSTAT	CAFFEINE	0.00666931606887783	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC7	Adenosine receptor antagonist	ADORA2B
+BELINOSTAT	CLOZAPINE	0.00506864635630235	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC8	Dopamine D2 receptor antagonist	DRD2
+BELINOSTAT	CLOZAPINE	0.00506864635630235	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC8	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	CLOZAPINE	0.00506864635630235	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC11	Dopamine D2 receptor antagonist	DRD2
+BELINOSTAT	CLOZAPINE	0.00506864635630235	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC11	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	CLOZAPINE	0.00506864635630235	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC6	Dopamine D2 receptor antagonist	DRD2
+BELINOSTAT	CLOZAPINE	0.00506864635630235	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC6	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	CLOZAPINE	0.00506864635630235	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC10	Dopamine D2 receptor antagonist	DRD2
+BELINOSTAT	CLOZAPINE	0.00506864635630235	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC10	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	CLOZAPINE	0.00506864635630235	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC4	Dopamine D2 receptor antagonist	DRD2
+BELINOSTAT	CLOZAPINE	0.00506864635630235	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC4	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	CLOZAPINE	0.00506864635630235	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC1	Dopamine D2 receptor antagonist	DRD2
+BELINOSTAT	CLOZAPINE	0.00506864635630235	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC1	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	CLOZAPINE	0.00506864635630235	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC5	Dopamine D2 receptor antagonist	DRD2
+BELINOSTAT	CLOZAPINE	0.00506864635630235	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC5	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	CLOZAPINE	0.00506864635630235	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC7	Dopamine D2 receptor antagonist	DRD2
+BELINOSTAT	CLOZAPINE	0.00506864635630235	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC7	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	FLUTAMIDE	0.00486737696092519	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC8	Androgen Receptor antagonist	AR
+BELINOSTAT	FLUTAMIDE	0.00486737696092519	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC11	Androgen Receptor antagonist	AR
+BELINOSTAT	FLUTAMIDE	0.00486737696092519	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC6	Androgen Receptor antagonist	AR
+BELINOSTAT	FLUTAMIDE	0.00486737696092519	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC10	Androgen Receptor antagonist	AR
+BELINOSTAT	FLUTAMIDE	0.00486737696092519	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC4	Androgen Receptor antagonist	AR
+BELINOSTAT	FLUTAMIDE	0.00486737696092519	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC1	Androgen Receptor antagonist	AR
+BELINOSTAT	FLUTAMIDE	0.00486737696092519	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC5	Androgen Receptor antagonist	AR
+BELINOSTAT	FLUTAMIDE	0.00486737696092519	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC7	Androgen Receptor antagonist	AR
+BELINOSTAT	VORINOSTAT	0.0047513417958133	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC8	Histone deacetylase 6 inhibitor	HDAC6
+BELINOSTAT	VORINOSTAT	0.0047513417958133	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC8	Histone deacetylase 1 inhibitor	HDAC1
+BELINOSTAT	VORINOSTAT	0.0047513417958133	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC11	Histone deacetylase 6 inhibitor	HDAC6
+BELINOSTAT	VORINOSTAT	0.0047513417958133	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC11	Histone deacetylase 1 inhibitor	HDAC1
+BELINOSTAT	VORINOSTAT	0.0047513417958133	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC6	Histone deacetylase 6 inhibitor	HDAC6
+BELINOSTAT	VORINOSTAT	0.0047513417958133	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC6	Histone deacetylase 1 inhibitor	HDAC1
+BELINOSTAT	VORINOSTAT	0.0047513417958133	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC10	Histone deacetylase 6 inhibitor	HDAC6
+BELINOSTAT	VORINOSTAT	0.0047513417958133	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC10	Histone deacetylase 1 inhibitor	HDAC1
+BELINOSTAT	VORINOSTAT	0.0047513417958133	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC4	Histone deacetylase 6 inhibitor	HDAC6
+BELINOSTAT	VORINOSTAT	0.0047513417958133	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC4	Histone deacetylase 1 inhibitor	HDAC1
+BELINOSTAT	VORINOSTAT	0.0047513417958133	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC1	Histone deacetylase 6 inhibitor	HDAC6
+BELINOSTAT	VORINOSTAT	0.0047513417958133	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC1	Histone deacetylase 1 inhibitor	HDAC1
+BELINOSTAT	VORINOSTAT	0.0047513417958133	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC5	Histone deacetylase 6 inhibitor	HDAC6
+BELINOSTAT	VORINOSTAT	0.0047513417958133	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC5	Histone deacetylase 1 inhibitor	HDAC1
+BELINOSTAT	VORINOSTAT	0.0047513417958133	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC7	Histone deacetylase 6 inhibitor	HDAC6
+BELINOSTAT	VORINOSTAT	0.0047513417958133	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC7	Histone deacetylase 1 inhibitor	HDAC1
+BELINOSTAT	CLOZAPINE	0.00450522180365066	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC8	Dopamine D2 receptor antagonist	DRD2
+BELINOSTAT	CLOZAPINE	0.00450522180365066	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC8	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	CLOZAPINE	0.00450522180365066	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC11	Dopamine D2 receptor antagonist	DRD2
+BELINOSTAT	CLOZAPINE	0.00450522180365066	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC11	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	CLOZAPINE	0.00450522180365066	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC6	Dopamine D2 receptor antagonist	DRD2
+BELINOSTAT	CLOZAPINE	0.00450522180365066	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC6	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	CLOZAPINE	0.00450522180365066	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC10	Dopamine D2 receptor antagonist	DRD2
+BELINOSTAT	CLOZAPINE	0.00450522180365066	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC10	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	CLOZAPINE	0.00450522180365066	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC4	Dopamine D2 receptor antagonist	DRD2
+BELINOSTAT	CLOZAPINE	0.00450522180365066	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC4	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	CLOZAPINE	0.00450522180365066	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC1	Dopamine D2 receptor antagonist	DRD2
+BELINOSTAT	CLOZAPINE	0.00450522180365066	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC1	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	CLOZAPINE	0.00450522180365066	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC5	Dopamine D2 receptor antagonist	DRD2
+BELINOSTAT	CLOZAPINE	0.00450522180365066	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC5	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	CLOZAPINE	0.00450522180365066	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC7	Dopamine D2 receptor antagonist	DRD2
+BELINOSTAT	CLOZAPINE	0.00450522180365066	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC7	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	THIORIDAZINE	0.00399697593720377	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC8	D2-like dopamine receptor antagonist	DRD2
+BELINOSTAT	THIORIDAZINE	0.00399697593720377	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC8	D2-like dopamine receptor antagonist	DRD4
+BELINOSTAT	THIORIDAZINE	0.00399697593720377	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC8	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	THIORIDAZINE	0.00399697593720377	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC8	D2-like dopamine receptor antagonist	DRD3
+BELINOSTAT	THIORIDAZINE	0.00399697593720377	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC11	D2-like dopamine receptor antagonist	DRD2
+BELINOSTAT	THIORIDAZINE	0.00399697593720377	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC11	D2-like dopamine receptor antagonist	DRD4
+BELINOSTAT	THIORIDAZINE	0.00399697593720377	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC11	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	THIORIDAZINE	0.00399697593720377	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC11	D2-like dopamine receptor antagonist	DRD3
+BELINOSTAT	THIORIDAZINE	0.00399697593720377	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC6	D2-like dopamine receptor antagonist	DRD2
+BELINOSTAT	THIORIDAZINE	0.00399697593720377	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC6	D2-like dopamine receptor antagonist	DRD4
+BELINOSTAT	THIORIDAZINE	0.00399697593720377	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC6	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	THIORIDAZINE	0.00399697593720377	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC6	D2-like dopamine receptor antagonist	DRD3
+BELINOSTAT	THIORIDAZINE	0.00399697593720377	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC10	D2-like dopamine receptor antagonist	DRD2
+BELINOSTAT	THIORIDAZINE	0.00399697593720377	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC10	D2-like dopamine receptor antagonist	DRD4
+BELINOSTAT	THIORIDAZINE	0.00399697593720377	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC10	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	THIORIDAZINE	0.00399697593720377	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC10	D2-like dopamine receptor antagonist	DRD3
+BELINOSTAT	THIORIDAZINE	0.00399697593720377	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC4	D2-like dopamine receptor antagonist	DRD2
+BELINOSTAT	THIORIDAZINE	0.00399697593720377	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC4	D2-like dopamine receptor antagonist	DRD4
+BELINOSTAT	THIORIDAZINE	0.00399697593720377	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC4	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	THIORIDAZINE	0.00399697593720377	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC4	D2-like dopamine receptor antagonist	DRD3
+BELINOSTAT	THIORIDAZINE	0.00399697593720377	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC1	D2-like dopamine receptor antagonist	DRD2
+BELINOSTAT	THIORIDAZINE	0.00399697593720377	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC1	D2-like dopamine receptor antagonist	DRD4
+BELINOSTAT	THIORIDAZINE	0.00399697593720377	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC1	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	THIORIDAZINE	0.00399697593720377	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC1	D2-like dopamine receptor antagonist	DRD3
+BELINOSTAT	THIORIDAZINE	0.00399697593720377	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC5	D2-like dopamine receptor antagonist	DRD2
+BELINOSTAT	THIORIDAZINE	0.00399697593720377	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC5	D2-like dopamine receptor antagonist	DRD4
+BELINOSTAT	THIORIDAZINE	0.00399697593720377	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC5	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	THIORIDAZINE	0.00399697593720377	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC5	D2-like dopamine receptor antagonist	DRD3
+BELINOSTAT	THIORIDAZINE	0.00399697593720377	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC7	D2-like dopamine receptor antagonist	DRD2
+BELINOSTAT	THIORIDAZINE	0.00399697593720377	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC7	D2-like dopamine receptor antagonist	DRD4
+BELINOSTAT	THIORIDAZINE	0.00399697593720377	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC7	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	THIORIDAZINE	0.00399697593720377	M5	gtex_qSig	Histone deacetylase inhibitor	HDAC7	D2-like dopamine receptor antagonist	DRD3
+BELINOSTAT	THIORIDAZINE	0.00399253856434475	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC8	D2-like dopamine receptor antagonist	DRD2
+BELINOSTAT	THIORIDAZINE	0.00399253856434475	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC8	D2-like dopamine receptor antagonist	DRD4
+BELINOSTAT	THIORIDAZINE	0.00399253856434475	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC8	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	THIORIDAZINE	0.00399253856434475	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC8	D2-like dopamine receptor antagonist	DRD3
+BELINOSTAT	THIORIDAZINE	0.00399253856434475	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC11	D2-like dopamine receptor antagonist	DRD2
+BELINOSTAT	THIORIDAZINE	0.00399253856434475	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC11	D2-like dopamine receptor antagonist	DRD4
+BELINOSTAT	THIORIDAZINE	0.00399253856434475	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC11	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	THIORIDAZINE	0.00399253856434475	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC11	D2-like dopamine receptor antagonist	DRD3
+BELINOSTAT	THIORIDAZINE	0.00399253856434475	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC6	D2-like dopamine receptor antagonist	DRD2
+BELINOSTAT	THIORIDAZINE	0.00399253856434475	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC6	D2-like dopamine receptor antagonist	DRD4
+BELINOSTAT	THIORIDAZINE	0.00399253856434475	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC6	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	THIORIDAZINE	0.00399253856434475	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC6	D2-like dopamine receptor antagonist	DRD3
+BELINOSTAT	THIORIDAZINE	0.00399253856434475	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC10	D2-like dopamine receptor antagonist	DRD2
+BELINOSTAT	THIORIDAZINE	0.00399253856434475	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC10	D2-like dopamine receptor antagonist	DRD4
+BELINOSTAT	THIORIDAZINE	0.00399253856434475	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC10	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	THIORIDAZINE	0.00399253856434475	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC10	D2-like dopamine receptor antagonist	DRD3
+BELINOSTAT	THIORIDAZINE	0.00399253856434475	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC4	D2-like dopamine receptor antagonist	DRD2
+BELINOSTAT	THIORIDAZINE	0.00399253856434475	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC4	D2-like dopamine receptor antagonist	DRD4
+BELINOSTAT	THIORIDAZINE	0.00399253856434475	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC4	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	THIORIDAZINE	0.00399253856434475	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC4	D2-like dopamine receptor antagonist	DRD3
+BELINOSTAT	THIORIDAZINE	0.00399253856434475	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC1	D2-like dopamine receptor antagonist	DRD2
+BELINOSTAT	THIORIDAZINE	0.00399253856434475	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC1	D2-like dopamine receptor antagonist	DRD4
+BELINOSTAT	THIORIDAZINE	0.00399253856434475	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC1	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	THIORIDAZINE	0.00399253856434475	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC1	D2-like dopamine receptor antagonist	DRD3
+BELINOSTAT	THIORIDAZINE	0.00399253856434475	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC5	D2-like dopamine receptor antagonist	DRD2
+BELINOSTAT	THIORIDAZINE	0.00399253856434475	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC5	D2-like dopamine receptor antagonist	DRD4
+BELINOSTAT	THIORIDAZINE	0.00399253856434475	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC5	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	THIORIDAZINE	0.00399253856434475	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC5	D2-like dopamine receptor antagonist	DRD3
+BELINOSTAT	THIORIDAZINE	0.00399253856434475	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC7	D2-like dopamine receptor antagonist	DRD2
+BELINOSTAT	THIORIDAZINE	0.00399253856434475	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC7	D2-like dopamine receptor antagonist	DRD4
+BELINOSTAT	THIORIDAZINE	0.00399253856434475	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC7	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	THIORIDAZINE	0.00399253856434475	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC7	D2-like dopamine receptor antagonist	DRD3
+BELINOSTAT	CAFFEINE	0.00373639297571541	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC8	Adenosine receptor antagonist	ADORA2A
+BELINOSTAT	CAFFEINE	0.00373639297571541	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC8	Adenosine receptor antagonist	ADORA2B
+BELINOSTAT	CAFFEINE	0.00373639297571541	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC11	Adenosine receptor antagonist	ADORA2A
+BELINOSTAT	CAFFEINE	0.00373639297571541	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC11	Adenosine receptor antagonist	ADORA2B
+BELINOSTAT	CAFFEINE	0.00373639297571541	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC6	Adenosine receptor antagonist	ADORA2A
+BELINOSTAT	CAFFEINE	0.00373639297571541	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC6	Adenosine receptor antagonist	ADORA2B
+BELINOSTAT	CAFFEINE	0.00373639297571541	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC10	Adenosine receptor antagonist	ADORA2A
+BELINOSTAT	CAFFEINE	0.00373639297571541	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC10	Adenosine receptor antagonist	ADORA2B
+BELINOSTAT	CAFFEINE	0.00373639297571541	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC4	Adenosine receptor antagonist	ADORA2A
+BELINOSTAT	CAFFEINE	0.00373639297571541	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC4	Adenosine receptor antagonist	ADORA2B
+BELINOSTAT	CAFFEINE	0.00373639297571541	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC1	Adenosine receptor antagonist	ADORA2A
+BELINOSTAT	CAFFEINE	0.00373639297571541	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC1	Adenosine receptor antagonist	ADORA2B
+BELINOSTAT	CAFFEINE	0.00373639297571541	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC5	Adenosine receptor antagonist	ADORA2A
+BELINOSTAT	CAFFEINE	0.00373639297571541	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC5	Adenosine receptor antagonist	ADORA2B
+BELINOSTAT	CAFFEINE	0.00373639297571541	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC7	Adenosine receptor antagonist	ADORA2A
+BELINOSTAT	CAFFEINE	0.00373639297571541	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC7	Adenosine receptor antagonist	ADORA2B
+BELINOSTAT	THIORIDAZINE	0.00360654595658392	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC8	D2-like dopamine receptor antagonist	DRD2
+BELINOSTAT	THIORIDAZINE	0.00360654595658392	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC8	D2-like dopamine receptor antagonist	DRD4
+BELINOSTAT	THIORIDAZINE	0.00360654595658392	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC8	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	THIORIDAZINE	0.00360654595658392	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC8	D2-like dopamine receptor antagonist	DRD3
+BELINOSTAT	THIORIDAZINE	0.00360654595658392	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC11	D2-like dopamine receptor antagonist	DRD2
+BELINOSTAT	THIORIDAZINE	0.00360654595658392	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC11	D2-like dopamine receptor antagonist	DRD4
+BELINOSTAT	THIORIDAZINE	0.00360654595658392	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC11	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	THIORIDAZINE	0.00360654595658392	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC11	D2-like dopamine receptor antagonist	DRD3
+BELINOSTAT	THIORIDAZINE	0.00360654595658392	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC6	D2-like dopamine receptor antagonist	DRD2
+BELINOSTAT	THIORIDAZINE	0.00360654595658392	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC6	D2-like dopamine receptor antagonist	DRD4
+BELINOSTAT	THIORIDAZINE	0.00360654595658392	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC6	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	THIORIDAZINE	0.00360654595658392	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC6	D2-like dopamine receptor antagonist	DRD3
+BELINOSTAT	THIORIDAZINE	0.00360654595658392	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC10	D2-like dopamine receptor antagonist	DRD2
+BELINOSTAT	THIORIDAZINE	0.00360654595658392	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC10	D2-like dopamine receptor antagonist	DRD4
+BELINOSTAT	THIORIDAZINE	0.00360654595658392	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC10	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	THIORIDAZINE	0.00360654595658392	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC10	D2-like dopamine receptor antagonist	DRD3
+BELINOSTAT	THIORIDAZINE	0.00360654595658392	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC4	D2-like dopamine receptor antagonist	DRD2
+BELINOSTAT	THIORIDAZINE	0.00360654595658392	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC4	D2-like dopamine receptor antagonist	DRD4
+BELINOSTAT	THIORIDAZINE	0.00360654595658392	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC4	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	THIORIDAZINE	0.00360654595658392	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC4	D2-like dopamine receptor antagonist	DRD3
+BELINOSTAT	THIORIDAZINE	0.00360654595658392	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC1	D2-like dopamine receptor antagonist	DRD2
+BELINOSTAT	THIORIDAZINE	0.00360654595658392	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC1	D2-like dopamine receptor antagonist	DRD4
+BELINOSTAT	THIORIDAZINE	0.00360654595658392	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC1	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	THIORIDAZINE	0.00360654595658392	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC1	D2-like dopamine receptor antagonist	DRD3
+BELINOSTAT	THIORIDAZINE	0.00360654595658392	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC5	D2-like dopamine receptor antagonist	DRD2
+BELINOSTAT	THIORIDAZINE	0.00360654595658392	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC5	D2-like dopamine receptor antagonist	DRD4
+BELINOSTAT	THIORIDAZINE	0.00360654595658392	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC5	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	THIORIDAZINE	0.00360654595658392	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC5	D2-like dopamine receptor antagonist	DRD3
+BELINOSTAT	THIORIDAZINE	0.00360654595658392	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC7	D2-like dopamine receptor antagonist	DRD2
+BELINOSTAT	THIORIDAZINE	0.00360654595658392	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC7	D2-like dopamine receptor antagonist	DRD4
+BELINOSTAT	THIORIDAZINE	0.00360654595658392	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC7	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+BELINOSTAT	THIORIDAZINE	0.00360654595658392	M6	gtex_qSig	Histone deacetylase inhibitor	HDAC7	D2-like dopamine receptor antagonist	DRD3
+SIROLIMUS	VORINOSTAT	0.00330932966833391	M1	gtex_qSig	FK506-binding protein 1A inhibitor	FKBP1A	Histone deacetylase 6 inhibitor	HDAC6
+SIROLIMUS	VORINOSTAT	0.00330932966833391	M1	gtex_qSig	FK506-binding protein 1A inhibitor	FKBP1A	Histone deacetylase 1 inhibitor	HDAC1
+BELINOSTAT	TENIPOSIDE	0.00320926630868947	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC8	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	TENIPOSIDE	0.00320926630868947	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC11	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	TENIPOSIDE	0.00320926630868947	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC6	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	TENIPOSIDE	0.00320926630868947	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC10	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	TENIPOSIDE	0.00320926630868947	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC4	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	TENIPOSIDE	0.00320926630868947	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC1	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	TENIPOSIDE	0.00320926630868947	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC5	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	TENIPOSIDE	0.00320926630868947	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC7	DNA topoisomerase II inhibitor	TOP2B
+CLOZAPINE	CAFFEINE	0.00313486061938911	M6	gtex_qSig	Dopamine D2 receptor antagonist	DRD2	Adenosine receptor antagonist	ADORA2A
+CLOZAPINE	CAFFEINE	0.00313486061938911	M6	gtex_qSig	Dopamine D2 receptor antagonist	DRD2	Adenosine receptor antagonist	ADORA2B
+CLOZAPINE	CAFFEINE	0.00313486061938911	M6	gtex_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Adenosine receptor antagonist	ADORA2A
+CLOZAPINE	CAFFEINE	0.00313486061938911	M6	gtex_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Adenosine receptor antagonist	ADORA2B
+BELINOSTAT	ETOPOSIDE	0.00288833967782052	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC8	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	ETOPOSIDE	0.00288833967782052	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC11	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	ETOPOSIDE	0.00288833967782052	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC6	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	ETOPOSIDE	0.00288833967782052	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC10	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	ETOPOSIDE	0.00288833967782052	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC4	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	ETOPOSIDE	0.00288833967782052	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC1	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	ETOPOSIDE	0.00288833967782052	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC5	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	ETOPOSIDE	0.00288833967782052	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC7	DNA topoisomerase II inhibitor	TOP2B
+BELINOSTAT	CABERGOLINE	0.0024784467069601	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC8	Dopamine D2 receptor agonist	DRD2
+BELINOSTAT	CABERGOLINE	0.0024784467069601	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC11	Dopamine D2 receptor agonist	DRD2
+BELINOSTAT	CABERGOLINE	0.0024784467069601	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC6	Dopamine D2 receptor agonist	DRD2
+BELINOSTAT	CABERGOLINE	0.0024784467069601	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC10	Dopamine D2 receptor agonist	DRD2
+BELINOSTAT	CABERGOLINE	0.0024784467069601	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC4	Dopamine D2 receptor agonist	DRD2
+BELINOSTAT	CABERGOLINE	0.0024784467069601	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC1	Dopamine D2 receptor agonist	DRD2
+BELINOSTAT	CABERGOLINE	0.0024784467069601	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC5	Dopamine D2 receptor agonist	DRD2
+BELINOSTAT	CABERGOLINE	0.0024784467069601	M4	gtex_qSig	Histone deacetylase inhibitor	HDAC7	Dopamine D2 receptor agonist	DRD2
+CLOFIBRATE	VORINOSTAT	0.00236175804308438	M1	gtex_qSig	Peroxisome proliferator-activated receptor alpha agonist	PPARA	Histone deacetylase 6 inhibitor	HDAC6
+CLOFIBRATE	VORINOSTAT	0.00236175804308438	M1	gtex_qSig	Peroxisome proliferator-activated receptor alpha agonist	PPARA	Histone deacetylase 1 inhibitor	HDAC1
+CAFFEINE	THIORIDAZINE	0.00225237021224681	M6	gtex_qSig	Adenosine receptor antagonist	ADORA2A	D2-like dopamine receptor antagonist	DRD2
+CAFFEINE	THIORIDAZINE	0.00225237021224681	M6	gtex_qSig	Adenosine receptor antagonist	ADORA2A	D2-like dopamine receptor antagonist	DRD4
+CAFFEINE	THIORIDAZINE	0.00225237021224681	M6	gtex_qSig	Adenosine receptor antagonist	ADORA2A	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+CAFFEINE	THIORIDAZINE	0.00225237021224681	M6	gtex_qSig	Adenosine receptor antagonist	ADORA2A	D2-like dopamine receptor antagonist	DRD3
+CAFFEINE	THIORIDAZINE	0.00225237021224681	M6	gtex_qSig	Adenosine receptor antagonist	ADORA2B	D2-like dopamine receptor antagonist	DRD2
+CAFFEINE	THIORIDAZINE	0.00225237021224681	M6	gtex_qSig	Adenosine receptor antagonist	ADORA2B	D2-like dopamine receptor antagonist	DRD4
+CAFFEINE	THIORIDAZINE	0.00225237021224681	M6	gtex_qSig	Adenosine receptor antagonist	ADORA2B	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+CAFFEINE	THIORIDAZINE	0.00225237021224681	M6	gtex_qSig	Adenosine receptor antagonist	ADORA2B	D2-like dopamine receptor antagonist	DRD3
+CLOFIBRATE	VORINOSTAT	0.00221363583547841	M5	gtex_qSig	Peroxisome proliferator-activated receptor alpha agonist	PPARA	Histone deacetylase 6 inhibitor	HDAC6
+CLOFIBRATE	VORINOSTAT	0.00221363583547841	M5	gtex_qSig	Peroxisome proliferator-activated receptor alpha agonist	PPARA	Histone deacetylase 1 inhibitor	HDAC1
+FLUTAMIDE	VORINOSTAT	0.00215087519481562	M1	gtex_qSig	Androgen Receptor antagonist	AR	Histone deacetylase 6 inhibitor	HDAC6
+FLUTAMIDE	VORINOSTAT	0.00215087519481562	M1	gtex_qSig	Androgen Receptor antagonist	AR	Histone deacetylase 1 inhibitor	HDAC1
+VORINOSTAT	CAFFEINE	0.00213533487221539	M1	gtex_qSig	Histone deacetylase 6 inhibitor	HDAC6	Adenosine receptor antagonist	ADORA2A
+VORINOSTAT	CAFFEINE	0.00213533487221539	M1	gtex_qSig	Histone deacetylase 6 inhibitor	HDAC6	Adenosine receptor antagonist	ADORA2B
+VORINOSTAT	CAFFEINE	0.00213533487221539	M1	gtex_qSig	Histone deacetylase 1 inhibitor	HDAC1	Adenosine receptor antagonist	ADORA2A
+VORINOSTAT	CAFFEINE	0.00213533487221539	M1	gtex_qSig	Histone deacetylase 1 inhibitor	HDAC1	Adenosine receptor antagonist	ADORA2B
+CLOFIBRATE	FLUTAMIDE	0.00209820193357149	M5	gtex_qSig	Peroxisome proliferator-activated receptor alpha agonist	PPARA	Androgen Receptor antagonist	AR
+CLOFIBRATE	THIORIDAZINE	0.00188490128745037	M5	gtex_qSig	Peroxisome proliferator-activated receptor alpha agonist	PPARA	D2-like dopamine receptor antagonist	DRD2
+CLOFIBRATE	THIORIDAZINE	0.00188490128745037	M5	gtex_qSig	Peroxisome proliferator-activated receptor alpha agonist	PPARA	D2-like dopamine receptor antagonist	DRD4
+CLOFIBRATE	THIORIDAZINE	0.00188490128745037	M5	gtex_qSig	Peroxisome proliferator-activated receptor alpha agonist	PPARA	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+CLOFIBRATE	THIORIDAZINE	0.00188490128745037	M5	gtex_qSig	Peroxisome proliferator-activated receptor alpha agonist	PPARA	D2-like dopamine receptor antagonist	DRD3
+SIROLIMUS	CAFFEINE	0.00180468500584906	M1	gtex_qSig	FK506-binding protein 1A inhibitor	FKBP1A	Adenosine receptor antagonist	ADORA2A
+SIROLIMUS	CAFFEINE	0.00180468500584906	M1	gtex_qSig	FK506-binding protein 1A inhibitor	FKBP1A	Adenosine receptor antagonist	ADORA2B
+CLOFIBRATE	SIROLIMUS	0.00179724723919634	M1	gtex_qSig	Peroxisome proliferator-activated receptor alpha agonist	PPARA	FK506-binding protein 1A inhibitor	FKBP1A
+SIROLIMUS	FLUTAMIDE	0.00172895300089996	M1	gtex_qSig	FK506-binding protein 1A inhibitor	FKBP1A	Androgen Receptor antagonist	AR
+VORINOSTAT	NICOTINE	0.00145115032586038	M1	gtex_qSig	Histone deacetylase 6 inhibitor	HDAC6	Neuronal acetylcholine receptor; alpha4/beta2 agonist	CHRNA4
+VORINOSTAT	NICOTINE	0.00145115032586038	M1	gtex_qSig	Histone deacetylase 1 inhibitor	HDAC1	Neuronal acetylcholine receptor; alpha4/beta2 agonist	CHRNA4
+SIROLIMUS	NICOTINE	0.00115791091433614	M1	gtex_qSig	FK506-binding protein 1A inhibitor	FKBP1A	Neuronal acetylcholine receptor; alpha4/beta2 agonist	CHRNA4
+CLOZAPINE	THIORIDAZINE	0.00102596829678128	M6	gtex_qSig	Dopamine D2 receptor antagonist	DRD2	D2-like dopamine receptor antagonist	DRD2
+CLOZAPINE	THIORIDAZINE	0.00102596829678128	M6	gtex_qSig	Dopamine D2 receptor antagonist	DRD2	D2-like dopamine receptor antagonist	DRD4
+CLOZAPINE	THIORIDAZINE	0.00102596829678128	M6	gtex_qSig	Dopamine D2 receptor antagonist	DRD2	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+CLOZAPINE	THIORIDAZINE	0.00102596829678128	M6	gtex_qSig	Dopamine D2 receptor antagonist	DRD2	D2-like dopamine receptor antagonist	DRD3
+CLOZAPINE	THIORIDAZINE	0.00102596829678128	M6	gtex_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	D2-like dopamine receptor antagonist	DRD2
+CLOZAPINE	THIORIDAZINE	0.00102596829678128	M6	gtex_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	D2-like dopamine receptor antagonist	DRD4
+CLOZAPINE	THIORIDAZINE	0.00102596829678128	M6	gtex_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+CLOZAPINE	THIORIDAZINE	0.00102596829678128	M6	gtex_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	D2-like dopamine receptor antagonist	DRD3
+FLUTAMIDE	CAFFEINE	0.000890697252498902	M1	gtex_qSig	Androgen Receptor antagonist	AR	Adenosine receptor antagonist	ADORA2A
+FLUTAMIDE	CAFFEINE	0.000890697252498902	M1	gtex_qSig	Androgen Receptor antagonist	AR	Adenosine receptor antagonist	ADORA2B
+CLOZAPINE	THIORIDAZINE	0.000883127210664823	M4	gtex_qSig	Dopamine D2 receptor antagonist	DRD2	D2-like dopamine receptor antagonist	DRD2
+CLOZAPINE	THIORIDAZINE	0.000883127210664823	M4	gtex_qSig	Dopamine D2 receptor antagonist	DRD2	D2-like dopamine receptor antagonist	DRD4
+CLOZAPINE	THIORIDAZINE	0.000883127210664823	M4	gtex_qSig	Dopamine D2 receptor antagonist	DRD2	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+CLOZAPINE	THIORIDAZINE	0.000883127210664823	M4	gtex_qSig	Dopamine D2 receptor antagonist	DRD2	D2-like dopamine receptor antagonist	DRD3
+CLOZAPINE	THIORIDAZINE	0.000883127210664823	M4	gtex_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	D2-like dopamine receptor antagonist	DRD2
+CLOZAPINE	THIORIDAZINE	0.000883127210664823	M4	gtex_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	D2-like dopamine receptor antagonist	DRD4
+CLOZAPINE	THIORIDAZINE	0.000883127210664823	M4	gtex_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+CLOZAPINE	THIORIDAZINE	0.000883127210664823	M4	gtex_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	D2-like dopamine receptor antagonist	DRD3
+CLOFIBRATE	CAFFEINE	0.000849720202566939	M1	gtex_qSig	Peroxisome proliferator-activated receptor alpha agonist	PPARA	Adenosine receptor antagonist	ADORA2A
+CLOFIBRATE	CAFFEINE	0.000849720202566939	M1	gtex_qSig	Peroxisome proliferator-activated receptor alpha agonist	PPARA	Adenosine receptor antagonist	ADORA2B
+VORINOSTAT	THIORIDAZINE	0.000733765856328	M5	gtex_qSig	Histone deacetylase 6 inhibitor	HDAC6	D2-like dopamine receptor antagonist	DRD2
+VORINOSTAT	THIORIDAZINE	0.000733765856328	M5	gtex_qSig	Histone deacetylase 6 inhibitor	HDAC6	D2-like dopamine receptor antagonist	DRD4
+VORINOSTAT	THIORIDAZINE	0.000733765856328	M5	gtex_qSig	Histone deacetylase 6 inhibitor	HDAC6	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+VORINOSTAT	THIORIDAZINE	0.000733765856328	M5	gtex_qSig	Histone deacetylase 6 inhibitor	HDAC6	D2-like dopamine receptor antagonist	DRD3
+VORINOSTAT	THIORIDAZINE	0.000733765856328	M5	gtex_qSig	Histone deacetylase 1 inhibitor	HDAC1	D2-like dopamine receptor antagonist	DRD2
+VORINOSTAT	THIORIDAZINE	0.000733765856328	M5	gtex_qSig	Histone deacetylase 1 inhibitor	HDAC1	D2-like dopamine receptor antagonist	DRD4
+VORINOSTAT	THIORIDAZINE	0.000733765856328	M5	gtex_qSig	Histone deacetylase 1 inhibitor	HDAC1	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+VORINOSTAT	THIORIDAZINE	0.000733765856328	M5	gtex_qSig	Histone deacetylase 1 inhibitor	HDAC1	D2-like dopamine receptor antagonist	DRD3
+FLUTAMIDE	VORINOSTAT	0.000672159821135215	M5	gtex_qSig	Androgen Receptor antagonist	AR	Histone deacetylase 6 inhibitor	HDAC6
+FLUTAMIDE	VORINOSTAT	0.000672159821135215	M5	gtex_qSig	Androgen Receptor antagonist	AR	Histone deacetylase 1 inhibitor	HDAC1
+CAFFEINE	THIORIDAZINE	0.00066513399094264	M4	gtex_qSig	Adenosine receptor antagonist	ADORA2A	D2-like dopamine receptor antagonist	DRD2
+CAFFEINE	THIORIDAZINE	0.00066513399094264	M4	gtex_qSig	Adenosine receptor antagonist	ADORA2A	D2-like dopamine receptor antagonist	DRD4
+CAFFEINE	THIORIDAZINE	0.00066513399094264	M4	gtex_qSig	Adenosine receptor antagonist	ADORA2A	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+CAFFEINE	THIORIDAZINE	0.00066513399094264	M4	gtex_qSig	Adenosine receptor antagonist	ADORA2A	D2-like dopamine receptor antagonist	DRD3
+CAFFEINE	THIORIDAZINE	0.00066513399094264	M4	gtex_qSig	Adenosine receptor antagonist	ADORA2B	D2-like dopamine receptor antagonist	DRD2
+CAFFEINE	THIORIDAZINE	0.00066513399094264	M4	gtex_qSig	Adenosine receptor antagonist	ADORA2B	D2-like dopamine receptor antagonist	DRD4
+CAFFEINE	THIORIDAZINE	0.00066513399094264	M4	gtex_qSig	Adenosine receptor antagonist	ADORA2B	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+CAFFEINE	THIORIDAZINE	0.00066513399094264	M4	gtex_qSig	Adenosine receptor antagonist	ADORA2B	D2-like dopamine receptor antagonist	DRD3
+CLOFIBRATE	FLUTAMIDE	0.000648546311413969	M1	gtex_qSig	Peroxisome proliferator-activated receptor alpha agonist	PPARA	Androgen Receptor antagonist	AR
+THIORIDAZINE	TENIPOSIDE	0.000624389022553947	M4	gtex_qSig	D2-like dopamine receptor antagonist	DRD2	DNA topoisomerase II inhibitor	TOP2B
+THIORIDAZINE	TENIPOSIDE	0.000624389022553947	M4	gtex_qSig	D2-like dopamine receptor antagonist	DRD4	DNA topoisomerase II inhibitor	TOP2B
+THIORIDAZINE	TENIPOSIDE	0.000624389022553947	M4	gtex_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	DNA topoisomerase II inhibitor	TOP2B
+THIORIDAZINE	TENIPOSIDE	0.000624389022553947	M4	gtex_qSig	D2-like dopamine receptor antagonist	DRD3	DNA topoisomerase II inhibitor	TOP2B
+FLUTAMIDE	THIORIDAZINE	0.000594977307779701	M5	gtex_qSig	Androgen Receptor antagonist	AR	D2-like dopamine receptor antagonist	DRD2
+FLUTAMIDE	THIORIDAZINE	0.000594977307779701	M5	gtex_qSig	Androgen Receptor antagonist	AR	D2-like dopamine receptor antagonist	DRD4
+FLUTAMIDE	THIORIDAZINE	0.000594977307779701	M5	gtex_qSig	Androgen Receptor antagonist	AR	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+FLUTAMIDE	THIORIDAZINE	0.000594977307779701	M5	gtex_qSig	Androgen Receptor antagonist	AR	D2-like dopamine receptor antagonist	DRD3
+CAFFEINE	NICOTINE	0.000590062263986531	M1	gtex_qSig	Adenosine receptor antagonist	ADORA2A	Neuronal acetylcholine receptor; alpha4/beta2 agonist	CHRNA4
+CAFFEINE	NICOTINE	0.000590062263986531	M1	gtex_qSig	Adenosine receptor antagonist	ADORA2B	Neuronal acetylcholine receptor; alpha4/beta2 agonist	CHRNA4
+THIORIDAZINE	ETOPOSIDE	0.000561950120298552	M4	gtex_qSig	D2-like dopamine receptor antagonist	DRD2	DNA topoisomerase II inhibitor	TOP2B
+THIORIDAZINE	ETOPOSIDE	0.000561950120298552	M4	gtex_qSig	D2-like dopamine receptor antagonist	DRD4	DNA topoisomerase II inhibitor	TOP2B
+THIORIDAZINE	ETOPOSIDE	0.000561950120298552	M4	gtex_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	DNA topoisomerase II inhibitor	TOP2B
+THIORIDAZINE	ETOPOSIDE	0.000561950120298552	M4	gtex_qSig	D2-like dopamine receptor antagonist	DRD3	DNA topoisomerase II inhibitor	TOP2B
+FLUTAMIDE	NICOTINE	0.000489271238236745	M1	gtex_qSig	Androgen Receptor antagonist	AR	Neuronal acetylcholine receptor; alpha4/beta2 agonist	CHRNA4
+THIORIDAZINE	CABERGOLINE	0.000434269235382739	M4	gtex_qSig	D2-like dopamine receptor antagonist	DRD2	Dopamine D2 receptor agonist	DRD2
+THIORIDAZINE	CABERGOLINE	0.000434269235382739	M4	gtex_qSig	D2-like dopamine receptor antagonist	DRD4	Dopamine D2 receptor agonist	DRD2
+THIORIDAZINE	CABERGOLINE	0.000434269235382739	M4	gtex_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Dopamine D2 receptor agonist	DRD2
+THIORIDAZINE	CABERGOLINE	0.000434269235382739	M4	gtex_qSig	D2-like dopamine receptor antagonist	DRD3	Dopamine D2 receptor agonist	DRD2
+CLOFIBRATE	NICOTINE	0.000417546333397615	M1	gtex_qSig	Peroxisome proliferator-activated receptor alpha agonist	PPARA	Neuronal acetylcholine receptor; alpha4/beta2 agonist	CHRNA4
+CLOZAPINE	TENIPOSIDE	0.000410549661391742	M4	gtex_qSig	Dopamine D2 receptor antagonist	DRD2	DNA topoisomerase II inhibitor	TOP2B
+CLOZAPINE	TENIPOSIDE	0.000410549661391742	M4	gtex_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	DNA topoisomerase II inhibitor	TOP2B
+CLOZAPINE	THIORIDAZINE	0.000397144463283148	M9	gtex_qSig	Dopamine D2 receptor antagonist	DRD2	D2-like dopamine receptor antagonist	DRD2
+CLOZAPINE	THIORIDAZINE	0.000397144463283148	M9	gtex_qSig	Dopamine D2 receptor antagonist	DRD2	D2-like dopamine receptor antagonist	DRD4
+CLOZAPINE	THIORIDAZINE	0.000397144463283148	M9	gtex_qSig	Dopamine D2 receptor antagonist	DRD2	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+CLOZAPINE	THIORIDAZINE	0.000397144463283148	M9	gtex_qSig	Dopamine D2 receptor antagonist	DRD2	D2-like dopamine receptor antagonist	DRD3
+CLOZAPINE	THIORIDAZINE	0.000397144463283148	M9	gtex_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	D2-like dopamine receptor antagonist	DRD2
+CLOZAPINE	THIORIDAZINE	0.000397144463283148	M9	gtex_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	D2-like dopamine receptor antagonist	DRD4
+CLOZAPINE	THIORIDAZINE	0.000397144463283148	M9	gtex_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A
+CLOZAPINE	THIORIDAZINE	0.000397144463283148	M9	gtex_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	D2-like dopamine receptor antagonist	DRD3
+CLOZAPINE	CAFFEINE	0.000385581438605604	M4	gtex_qSig	Dopamine D2 receptor antagonist	DRD2	Adenosine receptor antagonist	ADORA2A
+CLOZAPINE	CAFFEINE	0.000385581438605604	M4	gtex_qSig	Dopamine D2 receptor antagonist	DRD2	Adenosine receptor antagonist	ADORA2B
+CLOZAPINE	CAFFEINE	0.000385581438605604	M4	gtex_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Adenosine receptor antagonist	ADORA2A
+CLOZAPINE	CAFFEINE	0.000385581438605604	M4	gtex_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Adenosine receptor antagonist	ADORA2B
+CLOZAPINE	ETOPOSIDE	0.000369494695252567	M4	gtex_qSig	Dopamine D2 receptor antagonist	DRD2	DNA topoisomerase II inhibitor	TOP2B
+CLOZAPINE	ETOPOSIDE	0.000369494695252567	M4	gtex_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	DNA topoisomerase II inhibitor	TOP2B
+CLOZAPINE	TENIPOSIDE	0.000340409539956984	M9	gtex_qSig	Dopamine D2 receptor antagonist	DRD2	DNA topoisomerase II inhibitor	TOP2B
+CLOZAPINE	TENIPOSIDE	0.000340409539956984	M9	gtex_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	DNA topoisomerase II inhibitor	TOP2B
+THIORIDAZINE	TENIPOSIDE	0.000297858347462361	M9	gtex_qSig	D2-like dopamine receptor antagonist	DRD2	DNA topoisomerase II inhibitor	TOP2B
+THIORIDAZINE	TENIPOSIDE	0.000297858347462361	M9	gtex_qSig	D2-like dopamine receptor antagonist	DRD4	DNA topoisomerase II inhibitor	TOP2B
+THIORIDAZINE	TENIPOSIDE	0.000297858347462361	M9	gtex_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	DNA topoisomerase II inhibitor	TOP2B
+THIORIDAZINE	TENIPOSIDE	0.000297858347462361	M9	gtex_qSig	D2-like dopamine receptor antagonist	DRD3	DNA topoisomerase II inhibitor	TOP2B
+CLOZAPINE	ETOPOSIDE	0.00028367461663082	M9	gtex_qSig	Dopamine D2 receptor antagonist	DRD2	DNA topoisomerase II inhibitor	TOP2B
+CLOZAPINE	ETOPOSIDE	0.00028367461663082	M9	gtex_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	DNA topoisomerase II inhibitor	TOP2B
+CAFFEINE	TENIPOSIDE	0.000268415901012343	M4	gtex_qSig	Adenosine receptor antagonist	ADORA2A	DNA topoisomerase II inhibitor	TOP2B
+CAFFEINE	TENIPOSIDE	0.000268415901012343	M4	gtex_qSig	Adenosine receptor antagonist	ADORA2B	DNA topoisomerase II inhibitor	TOP2B
+TENIPOSIDE	ETOPOSIDE	0.000258675223115232	M4	gtex_qSig	DNA topoisomerase II inhibitor	TOP2B	DNA topoisomerase II inhibitor	TOP2B
+THIORIDAZINE	ETOPOSIDE	0.000248215289551967	M9	gtex_qSig	D2-like dopamine receptor antagonist	DRD2	DNA topoisomerase II inhibitor	TOP2B
+THIORIDAZINE	ETOPOSIDE	0.000248215289551967	M9	gtex_qSig	D2-like dopamine receptor antagonist	DRD4	DNA topoisomerase II inhibitor	TOP2B
+THIORIDAZINE	ETOPOSIDE	0.000248215289551967	M9	gtex_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	DNA topoisomerase II inhibitor	TOP2B
+THIORIDAZINE	ETOPOSIDE	0.000248215289551967	M9	gtex_qSig	D2-like dopamine receptor antagonist	DRD3	DNA topoisomerase II inhibitor	TOP2B
+CLOZAPINE	CABERGOLINE	0.000245404478454678	M4	gtex_qSig	Dopamine D2 receptor antagonist	DRD2	Dopamine D2 receptor agonist	DRD2
+CLOZAPINE	CABERGOLINE	0.000245404478454678	M4	gtex_qSig	Serotonin 2a (5-HT2a) receptor antagonist	HTR2A	Dopamine D2 receptor agonist	DRD2
+CAFFEINE	ETOPOSIDE	0.000241574310911108	M4	gtex_qSig	Adenosine receptor antagonist	ADORA2A	DNA topoisomerase II inhibitor	TOP2B
+CAFFEINE	ETOPOSIDE	0.000241574310911108	M4	gtex_qSig	Adenosine receptor antagonist	ADORA2B	DNA topoisomerase II inhibitor	TOP2B
+TENIPOSIDE	ETOPOSIDE	0.000212755962473115	M9	gtex_qSig	DNA topoisomerase II inhibitor	TOP2B	DNA topoisomerase II inhibitor	TOP2B
+TENIPOSIDE	CABERGOLINE	0.00017062263833033	M4	gtex_qSig	DNA topoisomerase II inhibitor	TOP2B	Dopamine D2 receptor agonist	DRD2
+ETOPOSIDE	CABERGOLINE	0.000153560374497297	M4	gtex_qSig	DNA topoisomerase II inhibitor	TOP2B	Dopamine D2 receptor agonist	DRD2
+CAFFEINE	CABERGOLINE	0.00014355964881669	M4	gtex_qSig	Adenosine receptor antagonist	ADORA2A	Dopamine D2 receptor agonist	DRD2
+CAFFEINE	CABERGOLINE	0.00014355964881669	M4	gtex_qSig	Adenosine receptor antagonist	ADORA2B	Dopamine D2 receptor agonist	DRD2
