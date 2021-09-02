@@ -56,5 +56,5 @@ p <- ggplot(data = test, aes(x = comparison, y = drug_pair, fill = comparison)) 
   scale_size(range = c(.1, 15)) + theme_Publication() +
   guides(fill = "none") + xlab("") + ylab("") + 
   ggtitle("Drug pair synergy scores")
-ggsave(filename = output_file, width = 10, height = 8)
+ggsave(filename = output_file, width = 10, height = 10)
 
