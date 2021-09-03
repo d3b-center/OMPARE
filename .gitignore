@@ -6,18 +6,18 @@
 Archive/*
 
 # code to be ignored
-code/code_ignored/*
-!code/code_ignored/prepare_tcga_mut_analysis_tcgabiolinks.R
-!code/code_ignored/create_pbta_combined_matrices.R
-!code/code_ignored/prepare_pbta_mut_analysis.R
+code_ignored/*
+!code_ignored/prepare_tcga_mut_analysis_tcgabiolinks.R
+!code_ignored/create_pbta_combined_matrices.R
+!code_ignored/prepare_pbta_mut_analysis.R
 
 # tmb normalization folders to be ignored
 code/tmb_normalization/plots
 code/tmb_normalization/references
 code/tmb_normalization/results
 
-# graph-updates folders to be ignored
-code/graph-updates/GDCdata
+# tables_to_plots folders to be ignored
+code/tables_to_plots/GDCdata
 GDCdata/
 
 # data (pushed to s3 instead of github)
@@ -25,7 +25,6 @@ data/
 
 # results directory with all patient data (pushed to cavatica)
 results/
-# testing script
-test.R
-test.Rmd
-test.html
+
+# testing scripts
+test_scripts/*
