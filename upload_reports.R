@@ -1,7 +1,9 @@
 # Author: Komal S. Rathi
 # Function: Upload patient output and reports to data delivery project
 
-suppressPackageStartupMessages(library(optparse))
+suppressPackageStartupMessages({
+	library(optparse)
+})
 
 option_list <- list(
   make_option(c("--patient"), type = "character",
@@ -18,7 +20,7 @@ study <- opt$study
 
 # directories
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
-topDir <- file.path(root_dir, 'results', patient)
+patient_dir <- file.path(root_dir, 'results', patient)
 
 # set variables for upload commands
 readRenviron("~/.Renviron")
@@ -34,22 +36,23 @@ if(study == "PNOC008"){
 dest_folder <- file.path(patient) 
 
 # source folders
-output <- file.path(topDir, "output") # all output
-reports <- file.path(topDir, "reports") # all reports
-cemitools_reports <- file.path(topDir, "CEMITools") # cemitools output
+output <- file.path(patient_dir, "output") # all output
+reports <- file.path(patient_dir, "reports") # all reports
 
 # upload output
-cmd1 <- paste(cav, '-t', auth, '-p', project, '-f', dest_folder, '-pf', output, sep = " ")
-print(cmd1)
-system(cmd1)
+cmd <- paste(cav, 
+	'-t', auth, 
+	'-p', project, '-f', dest_folder, 
+	'-pf', output)
+print(cmd)
+system(cmd)
 
 # upload reports
-cmd2 <- paste(cav, '-t', auth, '-p', project, '-f', dest_folder, '-pf', reports, sep = " ")
-print(cmd2)
-system(cmd2)
-
-# upload cemitools reports and output
-cmd3 <- paste(cav, '-t', auth, '-p', project, '-f', dest_folder, '-pf', cemitools_reports, sep = " ")
-print(cmd3)
-system(cmd3)
+cmd <- paste(cav, 
+	'-t', auth, 
+	'-p', project, 
+	'-f', dest_folder, 
+	'-pf', reports)
+print(cmd)
+system(cmd)
 
