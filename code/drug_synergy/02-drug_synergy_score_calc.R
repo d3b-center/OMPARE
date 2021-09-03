@@ -12,8 +12,8 @@ suppressPackageStartupMessages({
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
 
 # module path
-drug_synergy_module <- file.path(root_dir, "code", "drug_synergy")
-source(file.path(drug_synergy_module, "utils", "get_synergy_score.R"))
+module_dir <- file.path(root_dir, "code", "drug_synergy")
+source(file.path(module_dir, "utils", "get_synergy_score.R"))
 
 # Parse command line options
 option_list <- list(

@@ -13,7 +13,7 @@ suppressPackageStartupMessages({
 
 # Define Directories
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
-source(file.path(root_dir, "code", "utils", "define_directories.R"))
+data_dir <- file.path(root_dir, "data")
 
 # Parse command line options
 option_list <- list(
@@ -117,7 +117,7 @@ for(i in 1:length(module_selected )){
   config <- genConfig(chemblDbPath = chemblDbPath, resultsPath = resultsPath)
   
   # generate a mapping of uniprot ids and gene symbols only once save as rds
-  map_file <- file.path(ref_dir, "uniprot_genesymbol_map.rds")
+  map_file <- file.path(data_dir, "uniprot_genesymbol_map.rds")
   if(!file.exists(map_file)){
     hsmart <- useMart(dataset = "hsapiens_gene_ensembl", biomart = "ensembl")
     annotation.uni <- getBM(attributes=c("uniprotswissprot", "hgnc_symbol"), mart=hsmart)

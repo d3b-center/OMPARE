@@ -7,25 +7,25 @@
 suppressPackageStartupMessages(library(optparse))
 
 option_list <- list(
-  make_option(c("--sourcedir"), type = "character",
+  make_option(c("--source_dir"), type = "character",
               help = "Source directory with all files"),
-  make_option(c("--destdir"), type = "character",
+  make_option(c("--patient_dir"), type = "character",
               help = "Destination directory. Should be /path/to/OMPARE/results/PNOC008-22/ for Patient 22")
 )
 
 # parameters to pass
 opt <- parse_args(OptionParser(option_list = option_list))
-sourceDir <- opt$sourcedir
-topDir <- opt$destdir
+source_dir <- opt$source_dir
+patient_dir <- opt$patient_dir
 
 # specify destination directories
-clinicaldir <- file.path(topDir, 'clinical')
-cnvdir <- file.path(topDir, 'copy-number-variations')
-exprdir <- file.path(topDir, 'gene-expressions')
-fusionsdir <- file.path(topDir, 'gene-fusions')
-mutdir <- file.path(topDir, 'simple-variants')
-reports <- file.path(topDir, 'reports')
-output <- file.path(topDir, 'output')
+clinicaldir <- file.path(patient_dir, 'clinical')
+cnvdir <- file.path(patient_dir, 'copy-number-variations')
+exprdir <- file.path(patient_dir, 'gene-expressions')
+fusionsdir <- file.path(patient_dir, 'gene-fusions')
+mutdir <- file.path(patient_dir, 'simple-variants')
+reports <- file.path(patient_dir, 'reports')
+output <- file.path(patient_dir, 'output')
 
 # create directories to move input files
 dir.create(clinicaldir, showWarnings = F, recursive = T)
@@ -40,24 +40,24 @@ dir.create(reports, showWarnings = F, recursive = T)
 
 # organize data
 # copy number
-cmd <- file.path(sourceDir, '*.{CNVs.p.value.txt,controlfreec.ratio.txt,gainloss.txt,info.txt,diagram.pdf}')
+cmd <- file.path(source_dir, '*.{CNVs.p.value.txt,controlfreec.ratio.txt,gainloss.txt,info.txt,diagram.pdf}')
 cmd <- paste('mv', cmd, cnvdir)
 system(cmd)
 
 # clinical file is to be obtained from KF data tracker
 
 # expression
-cmd <- file.path(sourceDir, '*rsem*')
+cmd <- file.path(source_dir, '*rsem*')
 cmd <- paste('mv', cmd, exprdir)
 system(cmd)
 
 # fusions
-cmd <- file.path(sourceDir, '*fusion*')
+cmd <- file.path(source_dir, '*fusion*')
 cmd <- paste('mv', cmd, fusionsdir)
 system(cmd)
 
 # mutations - somatic/germline
-cmd <- file.path(sourceDir, '*.{maf,hg38_multianno.txt.gz}')
+cmd <- file.path(source_dir, '*.{maf,hg38_multianno.txt.gz}')
 cmd <- paste('mv', cmd, mutdir)
 system(cmd)
 

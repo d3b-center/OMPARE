@@ -7,10 +7,9 @@ suppressPackageStartupMessages({
 
 # root directory
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
-source(file.path(root_dir, "code", "utils", "define_directories.R"))
 
 # source theme
-source(file.path(patient_level_analyses_utils, "pubTheme.R"))
+source(file.path(root_dir, "code", "utils", "pubTheme.R"))
 
 # Parse command line options
 option_list <- list(
@@ -23,8 +22,7 @@ opt <- parse_args(OptionParser(option_list = option_list))
 combined_synergy <- opt$combined_synergy
 output_file <- opt$output_file
 
-# read output of  
-all_combined <- read.delim('results/PNOC008-38/output/drug_synergy/combined_qSig_synergy_score.tsv')
+# read output 
 all_combined <- read.delim(combined_synergy)
 
 # create drug pairs
