@@ -9,16 +9,12 @@ source(file.path(module_dir, "utils", "dim_reduction_plot.R"))
 
 # umap clustering plot
 fname <- file.path(output_dir, "dim_reduction_plot_pediatric.rds")
-if(!file.exists(fname)){
-  dim_reduction_plot_pediatric <- dim_reduction_plot(dat = pbta_pnoc008_embedding,
-                                                     clindata = pbta_pnoc008_clinical,
-                                                     study = "PBTA",
-                                                     patient = patient,
-                                                     title =  "UMAP Correlation Clustering")
-  # save output
-  saveRDS(dim_reduction_plot_pediatric, file = fname)
-} else {
-  dim_reduction_plot_pediatric <- readRDS(fname)
-}
+dim_reduction_plot_pediatric <- dim_reduction_plot(dat = pbta_pnoc008_embedding,
+                                                   clindata = pbta_pnoc008_clinical,
+                                                   study = "PBTA",
+                                                   patient = patient,
+                                                   title =  "UMAP Correlation Clustering")
+# save output
+saveRDS(dim_reduction_plot_pediatric, file = fname)
 
 

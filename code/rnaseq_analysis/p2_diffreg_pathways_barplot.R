@@ -13,14 +13,10 @@ pathways_down <- read.delim(file.path(output_dir, paste0(patient, '_summary_Path
 
 # call function
 fname <- file.path(output_dir, "diffreg_pathways_barplot_output.rds")
-if(!file.exists(fname)){
-  diffreg_pathways_barplot_gtex <- diffreg_pathways_barplot(pathways_up, pathways_down, comparison_study = 'GTExBrain_1152')
-  diffreg_pathways_barplot_pbta_hgg <- diffreg_pathways_barplot(pathways_up, pathways_down, comparison_study = 'PBTA_HGG_189')
-  diffreg_pathways_barplot_pbta <- diffreg_pathways_barplot(pathways_up, pathways_down, comparison_study = 'PBTA_ALL_1035')
-  diffreg_pathways_barplot_output <- list(diffreg_pathways_barplot_gtex = diffreg_pathways_barplot_gtex,
-                                          diffreg_pathways_barplot_pbta_hgg = diffreg_pathways_barplot_pbta_hgg,
-                                          diffreg_pathways_barplot_pbta = diffreg_pathways_barplot_pbta)
-  saveRDS(diffreg_pathways_barplot_output, file = fname)
-} else {
-  diffreg_pathways_barplot_output <- readRDS(fname)
-}
+diffreg_pathways_barplot_gtex <- diffreg_pathways_barplot(pathways_up, pathways_down, comparison_study = 'GTExBrain_1152')
+diffreg_pathways_barplot_pbta_hgg <- diffreg_pathways_barplot(pathways_up, pathways_down, comparison_study = 'PBTA_HGG_189')
+diffreg_pathways_barplot_pbta <- diffreg_pathways_barplot(pathways_up, pathways_down, comparison_study = 'PBTA_ALL_1035')
+diffreg_pathways_barplot_output <- list(diffreg_pathways_barplot_gtex = diffreg_pathways_barplot_gtex,
+                                        diffreg_pathways_barplot_pbta_hgg = diffreg_pathways_barplot_pbta_hgg,
+                                        diffreg_pathways_barplot_pbta = diffreg_pathways_barplot_pbta)
+saveRDS(diffreg_pathways_barplot_output, file = fname)

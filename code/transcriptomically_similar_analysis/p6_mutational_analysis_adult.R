@@ -9,14 +9,11 @@ source(file.path(module_dir, "utils", 'mutational_analysis.R'))
 
 # recurrent alterations
 fname <- file.path(output_dir, "mutational_analysis_adult.rds")
-if(!file.exists(fname)){
-  mutational_analysis_adult <- mutational_analysis(top_cor = tcga_gbm_pnoc008_nn_tpm, 
-                                                   key_clinical_findings_output = key_clinical_findings_output,
-                                                   clinical = tcga_gbm_pnoc008_clinical,
-                                                   comparison = "adult")
-  
-  # save output
-  saveRDS(mutational_analysis_adult, file = fname)
-} else {
-  mutational_analysis_adult <- readRDS(fname)
-}
+mutational_analysis_adult <- mutational_analysis(top_cor = tcga_gbm_pnoc008_nn_tpm, 
+                                                 key_clinical_findings_output = key_clinical_findings_output,
+                                                 clinical = tcga_gbm_pnoc008_clinical,
+                                                 comparison = "adult")
+
+# save output
+saveRDS(mutational_analysis_adult, file = fname)
+

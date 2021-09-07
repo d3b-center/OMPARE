@@ -9,12 +9,8 @@ source(file.path(module_dir, "utils", 'transcriptomically_similar.R'))
 
 # transcriptomically similar samples table
 fname <- file.path(output_dir, "transciptomically_similar_pediatric.rds")
-if(!file.exists(fname)){
-  transciptomically_similar_pediatric <- transciptomically_similar(all_cor = pbta_pnoc008_nn_table, 
-                                                                   clin_data = pbta_pnoc008_clinical)
-  
-  # save output
-  saveRDS(transciptomically_similar_pediatric, file = fname)
-} else {
-  transciptomically_similar_pediatric <- readRDS(fname)
-}
+transciptomically_similar_pediatric <- transciptomically_similar(all_cor = pbta_pnoc008_nn_table, 
+                                                                 clin_data = pbta_pnoc008_clinical)
+
+# save output
+saveRDS(transciptomically_similar_pediatric, file = fname)

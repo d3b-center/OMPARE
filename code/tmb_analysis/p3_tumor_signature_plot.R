@@ -15,15 +15,11 @@ source(file.path(module_dir, "utils", 'tumor_signature_plot.R'))
 # output file
 fname <- file.path(output_dir, "tumor_signature_output.rds")
 
-if(!file.exists(fname)){
-  # Mutational signatures
-  signatures <- readAlexandrovSignatures(file.path(data_dir, 'signatures_probabilities.txt'))
-  
-  # tmb profile
-  tumor_signature_output <- tumor_signature_plot(patient_dir, signatures)
-  
-  # save output
-  saveRDS(tumor_signature_output, file = fname)
-} else {
-  tumor_signature_output <- readRDS(fname)
-}
+# mutational signatures
+signatures <- readAlexandrovSignatures(file.path(data_dir, 'signatures_probabilities.txt'))
+
+# tumor signature plot
+tumor_signature_output <- tumor_signature_plot(patient_dir, signatures)
+
+# save output
+saveRDS(tumor_signature_output, file = fname)

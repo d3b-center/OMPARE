@@ -12,17 +12,11 @@ source(file.path(module_dir, "utils", 'plot_immune_profile.R'))
 
 # immune profile and save scores as well
 fname <- file.path(output_dir, 'immune_scores_adult.rds')
-if(!file.exists(fname)){
-  adult_immune_profile <- immune_profile(fullmat = tcga_gbm_pnoc008_immune_profile)
-  saveRDS(adult_immune_profile, file = fname)
-} else {
-  adult_immune_profile <- readRDS(fname)
-}
+adult_immune_profile <- immune_profile(fullmat = tcga_gbm_pnoc008_immune_profile)
+saveRDS(adult_immune_profile, file = fname)
 
 # plot immune scores
 fname <- file.path(output_dir, 'immune_scores_adult.pdf')
-if(!file.exists(fname)){
-  adult_immune_profile <- plot_immune_profile(xcell_scores = adult_immune_profile)
-  ggsave(filename = fname, plot = adult_immune_profile, 
-         device = "pdf", width = 8, height = 10)
-}
+adult_immune_profile <- plot_immune_profile(xcell_scores = adult_immune_profile)
+ggsave(filename = fname, plot = adult_immune_profile, 
+       device = "pdf", width = 8, height = 10)

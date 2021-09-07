@@ -10,17 +10,11 @@ source(file.path(module_dir, "utils", 'plot_ssgsea.R'))
 
 # compute ssgsea 
 fname <- file.path(output_dir, "ssgsea_scores_pediatric.rds")
-if(!file.exists(fname)){
-  ssgsea_pediatric <- ssgsea(top_cor = pbta_pnoc008_nn_tpm, patient_of_interest = patient)
-  saveRDS(ssgsea_pediatric, file = fname)
-} else {
-  ssgsea_pediatric <- readRDS(fname)
-}
+ssgsea_pediatric <- ssgsea(top_cor = pbta_pnoc008_nn_tpm, patient_of_interest = patient)
+saveRDS(ssgsea_pediatric, file = fname)
 
 # plot ssgea
 fname <- file.path(output_dir, 'ssgsea_scores_pediatric.pdf')
-if(!file.exists(fname)){
-  ssgsea_pediatric <- plot_ssgsea(ssgsea_pediatric)
-  ggsave(filename = fname, plot = ssgsea_pediatric, 
-         device = "pdf", width = 15, height = 14)
-}
+ssgsea_pediatric <- plot_ssgsea(ssgsea_pediatric)
+ggsave(filename = fname, plot = ssgsea_pediatric, 
+       device = "pdf", width = 15, height = 14)

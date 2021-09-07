@@ -329,9 +329,12 @@ Row {data-height=700}
 
 ### Survival (PBTA HGAT)
 
-```{r km_plot_pbta, fig.width = 8, fig.height = 6}
-if(exists("kaplan_meier_pediatric")){
-  kaplan_meier_pediatric
+```{r km_plot_pbta, echo=FALSE, out.width = "100%", out.height="100%"}
+fname <- file.path(patient_dir, "output", 
+                   "survival_analysis", 
+                   "kaplan_meier_pediatric.pdf")
+if(exists(fname)){
+  knitr::include_graphics(fname)
 }
 ```
 
@@ -508,9 +511,12 @@ Row {data-height=700}
 
 ### Survival (TCGA)
 
-```{r km_plot_tcga, fig.width = 8, fig.height = 6}
-if(exists("kaplan_meier_adult")){
-  kaplan_meier_adult
+```{r km_plot_tcga, echo=FALSE, out.width = "100%", out.height="100%"}
+fname <- file.path(patient_dir, "output", 
+                   "survival_analysis", 
+                   "kaplan_meier_adult.pdf")
+if(exists(fname)){
+  knitr::include_graphics(fname)
 }
 ```
 

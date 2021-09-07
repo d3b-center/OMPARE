@@ -33,20 +33,15 @@ dir.create(output_dir, recursive = T, showWarnings = F)
 # output file
 fname <- file.path(output_dir, "rnaseq_analysis_output.rds")
 
-if(!file.exists(fname)){
-  # run single sample level edgeR analysis
-  rnaseq_analysis_output <- run_rnaseq_analysis_edger(exp.data.tpm = expData.m, # tpm
-                                                      exp.data.counts = expData.counts.m, # counts
-                                                      refData.counts = gtex_brain_counts, # gtex counts
-                                                      gene_set = gene_set, # reactome
-                                                      comparison = comparison, # comparison name
-                                                      single_sample = TRUE,    # single sample analysis
-                                                      sample_name = sampleInfo$subjectID, # pass sample name only for single sample analysis 
-                                                      cancer_genes = cancer_genes)   
-  
-  # save output
-  saveRDS(rnaseq_analysis_output, file = fname)
-} else {
-  print("output exists")
-  rnaseq_analysis_output <- readRDS(fname)
-}
+# run single sample level edgeR analysis
+rnaseq_analysis_output <- run_rnaseq_analysis_edger(exp.data.tpm = expData.m, # tpm
+                                                    exp.data.counts = expData.counts.m, # counts
+                                                    refData.counts = gtex_brain_counts, # gtex counts
+                                                    gene_set = gene_set, # reactome
+                                                    comparison = comparison, # comparison name
+                                                    single_sample = TRUE,    # single sample analysis
+                                                    sample_name = sampleInfo$subjectID, # pass sample name only for single sample analysis 
+                                                    cancer_genes = cancer_genes)   
+
+# save output
+saveRDS(rnaseq_analysis_output, file = fname)

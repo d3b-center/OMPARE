@@ -17,33 +17,30 @@ source(file.path(module_dir, "utils", "lincs_connectivity.R"))
 # reference
 gsea_dir <- file.path(data_dir, "gsea")
 
+# read edgeR output for all comparisons
+# gtex brain
+pnoc008_vs_gtex_brain <- readRDS(file.path(gsea_dir, 'pnoc008_vs_gtex_brain.rds'))
+pnoc008_vs_gtex_brain <- pnoc008_vs_gtex_brain[[patient]]
+
+# pbta hgg
+pnoc008_vs_pbta_hgg <- readRDS(file.path(gsea_dir, 'pnoc008_vs_pbta_hgg.rds'))
+pnoc008_vs_pbta_hgg <- pnoc008_vs_pbta_hgg[[patient]]
+
+# pbta all histologies
+pnoc008_vs_pbta <- readRDS(file.path(gsea_dir, 'pnoc008_vs_pbta.rds'))
+pnoc008_vs_pbta <- pnoc008_vs_pbta[[patient]]
+
+# combine all outputs
+genes_df <- rbind(pnoc008_vs_gtex_brain$genes, pnoc008_vs_pbta_hgg$genes, pnoc008_vs_pbta$genes)
+
+# LINCS-based similarity metric
+drug_pathways_barplot <- plyr::dlply(.data = genes_df, 
+                                     .variables = "comparison", 
+                                     .fun = function(x) lincs_connectivity(input = x,
+                                                                           method = "LINCS",
+                                                                           trend_val = "down",
+                                                                           output_dir = output_dir))
 fname <- file.path(output_dir, "drug_pathways_barplot.pdf")
-if(!file.exists(fname)){
-  
-  # read edgeR output for all comparisons
-  # gtex brain
-  pnoc008_vs_gtex_brain <- readRDS(file.path(gsea_dir, 'pnoc008_vs_gtex_brain.rds'))
-  pnoc008_vs_gtex_brain <- pnoc008_vs_gtex_brain[[patient]]
-  
-  # pbta hgg
-  pnoc008_vs_pbta_hgg <- readRDS(file.path(gsea_dir, 'pnoc008_vs_pbta_hgg.rds'))
-  pnoc008_vs_pbta_hgg <- pnoc008_vs_pbta_hgg[[patient]]
-  
-  # pbta all histologies
-  pnoc008_vs_pbta <- readRDS(file.path(gsea_dir, 'pnoc008_vs_pbta.rds'))
-  pnoc008_vs_pbta <- pnoc008_vs_pbta[[patient]]
-  
-  # combine all outputs
-  genes_df <- rbind(pnoc008_vs_gtex_brain$genes, pnoc008_vs_pbta_hgg$genes, pnoc008_vs_pbta$genes)
-  
-  # LINCS-based similarity metric
-  drug_pathways_barplot <- plyr::dlply(.data = genes_df, 
-                                       .variables = "comparison", 
-                                       .fun = function(x) lincs_connectivity(input = x,
-                                                                             method = "LINCS",
-                                                                             trend_val = "down",
-                                                                             output_dir = output_dir))
-  ggsave(plot = wrap_plots(drug_pathways_barplot, ncol = 1), 
-         filename = fname, 
-         width = 23, height = 25, device = 'pdf')
-}
+ggsave(plot = wrap_plots(drug_pathways_barplot, ncol = 1), 
+       filename = fname, 
+       width = 23, height = 25, device = 'pdf')

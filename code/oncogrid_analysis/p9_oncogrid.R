@@ -7,12 +7,9 @@ dir.create(output_dir, showWarnings = F, recursive = T)
 # source functions
 source(file.path(module_dir, "utils", "plot_oncogrid.R"))
 
-# plot oncogrid 
+# prepare input files for oncogrid
+source(file.path(module_dir, "utils", "prepare_files_oncogrid.R"))
+
+# plot oncogrid
 fname <- file.path(output_dir, "complexheatmap_oncogrid.pdf")
-if(!file.exists(fname)){
-  # prepare input files for oncogrid
-  source(file.path(module_dir, "utils", "prepare_files_oncogrid.R"))
-  
-  # plot oncogrid
-  plot_oncogrid(output_file = fname)
-}
+plot_oncogrid(output_file = fname)

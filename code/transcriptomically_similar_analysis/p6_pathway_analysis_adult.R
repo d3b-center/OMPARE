@@ -9,14 +9,10 @@ source(file.path(module_dir, "utils", 'pathway_analysis.R'))
 
 # pathway enrichment top correlated samples
 fname <- file.path(output_dir, "pathway_analysis_adult.rds")
-if(!file.exists(fname)){
-  pathway_analysis_adult <- pathway_analysis(all_cor = tcga_gbm_pnoc008_nn_table, 
-                                             prefix = "adult_", 
-                                             comparison = "adult",
-                                             patient_of_interest = patient)
-  
-  # save output
-  saveRDS(pathway_analysis_adult, file = fname)
-} else {
-  pathway_analysis_adult <- readRDS(fname)
-}
+pathway_analysis_adult <- pathway_analysis(all_cor = tcga_gbm_pnoc008_nn_table, 
+                                           prefix = "adult_", 
+                                           comparison = "adult",
+                                           patient_of_interest = patient)
+
+# save output
+saveRDS(pathway_analysis_adult, file = fname)

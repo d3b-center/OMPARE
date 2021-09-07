@@ -8,13 +8,11 @@ dir.create(output_dir, showWarnings = F, recursive = T)
 source(file.path(module_dir, "utils", "kaplan_meier.R"))
 
 # survival analysis
-fname <- file.path(output_dir, "kaplan_meier_adult.rds")
-if(!file.exists(fname)){
-  kaplan_meier_adult <- kaplan_meier(all_cor = tcga_gbm_pnoc008_nn_table, 
-                                     surv_data = tcga_gbm_survival)
-  
-  # save output
-  saveRDS(kaplan_meier_adult, file = fname)
-} else {
-  kaplan_meier_adult <- readRDS(fname)
-}
+fname <- file.path(output_dir, "kaplan_meier_adult.pdf")
+kaplan_meier_adult <- kaplan_meier(all_cor = tcga_gbm_pnoc008_nn_table, 
+                                   surv_data = tcga_gbm_survival)
+
+# save plot
+pdf(fname)
+print(kaplan_meier_adult, newpage = FALSE)
+dev.off()
