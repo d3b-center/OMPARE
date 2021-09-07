@@ -34,7 +34,7 @@ Prerequisites
 .. code-block:: bash
 
 	# get reference data from s3
-	aws s3 --profile saml sync s3://d3b-bix-dev-data-bucket/PNOC008/reference /path-to/OMPARE/data/reference
+	aws s3 --profile saml sync s3://d3b-bix-dev-data-bucket/PNOC008/reference /path-to/OMPARE/data/
 
 4. Download patient-specific files from `data delivery project <https://cavatica.sbgenomics.com/u/cavatica/sd-8y99qzjj>`_:
 
@@ -63,14 +63,14 @@ Prerequisites
 
   * ``{uuid}.gatk.PASS.vcf.gz.hg38_multianno.txt.gz``
 
-5. Download the following clinical and sample information files and add data manually to ``data/reference/manifest/manifest.xlsx`` 
+5. Download the following clinical and sample information files and add data manually to ``data/manifest/manifest.xlsx`` 
    
 * Files from `Kids First DRC <https://data-tracker.kidsfirstdrc.org/study/SD_8Y99QZJJ/documents>`_
 
   * PNOC008 Clinical Manifest
   * PNOC008 Sample Manifest
 
-* Files from ADAPT (this part has been automated using ``code/update_pbta.R``): 
+* Files from ADAPT (this part has been automated using ``code/update_pbta_histology.R``): 
   
   * pbta-histologies-base-adapt.tsv
 
@@ -80,7 +80,7 @@ Detailed instructions are given in `d3b-analysis-toolkit <https://github.com/d3b
 
 	cd /path-to/d3b-analysis-toolkit/scripts
 	source .envrc
-	python select-all-pbta-histologies.py -o /path-to/OMPARE/data/reference/pbta/pbta-histologies-base-adapt.tsv 
+	python select-all-pbta-histologies.py -o /path-to/OMPARE/data/pbta/pbta-histologies-base-adapt.tsv 
 
 Scripts
 =======
@@ -92,13 +92,11 @@ Master script
    
 1. **code/create_project_dir.R**: create project directory and organize files.
 2. **code/create_clinfile.R**: create clinical file for patient of interest.
-3. **code/update_pbta.R**: pull pbta histologies data from datawarehouse
-4. **code/patient_level_analyses/pnoc_format.R**: update PNOC008 data matrices (cnv, mutations, fusions, expression) with each new patient.
-5. **code/patient_level_analyses/gsea_enrichment.R**: update GSEA enrichment outputs with each new patient.
-6. **code/patient_level_analyses/enrichment_output.R**: generate genes and pathway enrichment output for each new patient.
-7. **OMPARE.Rmd**: run html reports
-8. Using ``aws s3 sync``, sync back updated reference folder to ``s3://d3b-bix-dev-data-bucket/PNOC008/reference``
-9. **upload_reports.R**: upload reports and output folders to PNOC008 data delivery project on cavatica.
+3. **code/update_pbta_histology.R**: pull pbta histologies data from datawarehouse
+4. **code/update_pnoc008_matrices.R**: update PNOC008 data matrices (cnv, mutations, fusions, expression) with each new patient.
+5. **OMPARE.Rmd**: run html reports
+6. Using ``aws s3 sync``, sync back updated data folder to ``s3://d3b-bix-dev-data-bucket/PNOC008/reference``
+7. **upload_reports.R**: upload reports and output folders to PNOC008 data delivery project on cavatica.
 
 .. code-block:: bash
 	
@@ -128,7 +126,7 @@ Master script
 	Rscript run_OMPARE.R \
 	--patient PNOC008-40 \
 	--sourcedir ~/Downloads/p40 \
-	--clin_file data/reference/manifest/pnoc008_manifest.xlsx \
+	--clin_file data/manifest/pnoc008_manifest.xlsx \
 	--update_pbta FALSE \
 	--sync_data TRUE \
 	--upload_reports FALSE \
@@ -158,7 +156,7 @@ Create project directory
 Create clinical file
 --------------------
 
-**code/create_clinfile.R**: this script creates clinical file for patient of interest and stores under ``results/PNOC008-patient_num/clinical/``.
+**code/create_clinfile.R**: this script creates clinical file for patient of interest and stores under ``results/PNOC008-XX/clinical/``.
 
 .. code-block:: bash
 
@@ -176,7 +174,7 @@ Create clinical file
 
 	# Example for patient PNOC008-40
 	Rscript code/create_clinfile.R \
-	--sheet /path-to/OMPARE/data/reference/manifest/pnoc008_manifest.xlsx \
+	--sheet /path-to/OMPARE/data/manifest/pnoc008_manifest.xlsx \
 	--patient PNOC008-40 \
 	--dir /path-to/OMPARE/results/PNOC008-40
 
@@ -193,6 +191,7 @@ NOTE: The above steps will create a directory structure for the patient of inter
 	│   ├── {uuid}.controlfreec.CNVs.p.value.txt
 	│   ├── {uuid}.controlfreec.info.txt
 	│   ├── {uuid}.controlfreec.ratio.txt
+	│   ├── {uuid}.diagram.pdf	
 	│   └── {uuid}.gainloss.txt
 	├── gene-expressions
 	│   └── {uuid}.rsem.genes.results.gz
@@ -213,14 +212,14 @@ NOTE: The above steps will create a directory structure for the patient of inter
 Update PNOC008 data matrices:
 -----------------------------
 
-**code/patient_level_analyses/pnoc_format.R**: this script updates the 008 patient matrices (cnv, mutations, fusions, expression) by adding current patient of interest
+**code/update_pnoc008_matrices.R**: this script updates the 008 patient matrices (cnv, mutations, fusions, expression) by adding current patient of interest
    
 .. code-block:: bash
 
-	Rscript code/patient_level_analyses/pnoc_format.R
+	Rscript code/update_pnoc008_matrices.R
 
 	# Running the script will update the following files:
-	data/reference/pnoc008
+	data/pnoc008
 	├── pnoc008_clinical.rds
 	├── pnoc008_cnv_filtered.rds
 	├── pnoc008_consensus_mutation_filtered.rds
@@ -231,70 +230,6 @@ Update PNOC008 data matrices:
 	├── pnoc008_tpm_matrix.rds
 	└── pnoc008_vs_gtex_brain_degs.rds
 
-
-Update GSEA enrichment:
------------------------
-
-**code/patient_level_analyses/gsea_enrichment.R**: this script will update GSEA enrichment output with each new patient data.
-   
-.. code-block:: bash
-
-	Rscript code/patient_level_analyses/gsea_enrichment.R --help
-
-	Options:
-	--patient=PATIENT
-		Patient identifier for e.g. PNOC008-1, PNOC008-10 etc
-
-	# Example for patient PNOC008-40
-	Rscript code/patient_level_analyses/gsea_enrichment.R \
-	--patient PNOC008-40
-
-	# Running the script will update the following files:
-
-	# reactome msigdb
-	data/reference/gsea
-	├── pbta_vs_gtex_brain.rds
-	├── pbta_vs_pbta.rds
-	├── pbta_vs_pbta_hgg.rds
-	├── pnoc008_vs_gtex_brain.rds
-	├── pnoc008_vs_pbta.rds
-	├── pnoc008_vs_pbta_hgg.rds
-	├── pnoc008_vs_tcga_gbm.rds
-	├── tcga_gbm_vs_gtex_brain.rds
-	└── tcga_gbm_vs_tcga_gbm.rds
-
-	# dsigdb
-	data/reference/dsigdb
-	├── pnoc008_vs_gtex_brain.rds
-	├── pnoc008_vs_pbta.rds
-	└── pnoc008_vs_pbta_hgg.rds
-
-
-Excel file with differential results:
--------------------------------------
-
-**code/patient_level_analyses/enrichment_output.R**: this script will create an text file summaries containing up/down pathways and genes of patient of interest vs ``GTEx Brain``, ``PBTA HGG`` and ``PBTA all histologies``:
-
-.. code-block:: bash
-
-	Rscript code/patient_level_analyses/enrichment_output.R --help
-
-	Options:
-	--input=INPUT
-		Directory e.g. data/PNOC008-04
-
-	--output=OUTPUT
-		output excel filename i.e. PNOC008-04_summary
-
-	--type=TYPE
-		text or excel
-
-	# Example for patient PNOC008-40
-	Rscript code/enrichment_output.R \
-	--input /path-to/OMPARE/results/PNOC008-40 \
-	--output PNOC008-40_summary \
-	--type text
-
 HTML reports:
 -------------
 
@@ -302,146 +237,161 @@ Generate markdown report:
 
 .. code-block:: bash
 
-	# topDir is the project directory of current patient
+	# patient_dir is the project directory of current patient
 	# fusion_method is the fusion method. Allowed values: star, arriba, both or not specified. (Optional) 
 	# set_title is the title for the report. (Optional)
 	# snv_pattern is one of the six values for simple variants: lancet, mutect2, strelka2, vardict, consensus, all (all four callers together)
-	for(i in 1:length(callers)) {
-    	output_dir <- file.path(topDir, 'Reports')
-    	output_file <- paste0(patient, '_', callers[i], '.html')
-    	input_file <- file.path(root_dir, 'OMPARE.Rmd')
-    	rmarkdown::render(input = input_file,
-    		params = list(topDir = topDir,
-    			fusion_method = 'arriba',
-        		set_title = set_title,
-        		snv_caller = callers[i]), 
-        	output_dir = output_dir, 
+	Rscript -e "rmarkdown::render(input = 'OMPARE.Rmd', 
+	params = list(patient_dir = patient_dir,
+			fusion_method = fusion_method,
+			set_title = set_title,
+			snv_caller = snv_caller), 
+			output_dir = output_dir, 
 			intermediates_dir = output_dir,
-			output_file = output_file)
-	}
-
+			output_file = output_file, clean = TRUE)"
 
 After running the reports, the project folder will have all output files with plots and tables under ``output`` and all html reports under ``reports``:
 
 .. code-block:: bash
 
-	results/PNOC008-40
-	├── CEMITools
-	│   ├── beta_r2.pdf
-	│   ├── clustered_samples.rds
-	│   ├── diagnostics.html
-	│   ├── enrichment_es.tsv
-	│   ├── enrichment_nes.tsv
-	│   ├── enrichment_padj.tsv
-	│   ├── expected_counts_corrected.rds
-	│   ├── gsea.pdf
-	│   ├── hist.pdf
-	│   ├── hubs.rds
-	│   ├── interaction.pdf
-	│   ├── interactions.tsv
-	│   ├── mean_k.pdf
-	│   ├── mean_var.pdf
-	│   ├── module.tsv
-	│   ├── modules_genes.gmt
-	│   ├── ora.pdf
-	│   ├── ora.tsv
-	│   ├── parameters.tsv
-	│   ├── profile.pdf
-	│   ├── qq.pdf
-	│   ├── report.html
-	│   ├── sample_tree.pdf
-	│   ├── selected_genes.txt
-	│   ├── summary.rds
-	│   ├── summary_eigengene.tsv
-	│   ├── summary_mean.tsv
-	│   └── summary_median.tsv
-	├── clinical
-	│   └── patient_report.txt
-	├── copy-number-variations
-	│   ├── 106762e7-e100-405b-9ae9-bb80a186cdf9.controlfreec.CNVs.p.value.txt
-	│   ├── 106762e7-e100-405b-9ae9-bb80a186cdf9.controlfreec.ratio.txt
-	│   └── 106762e7-e100-405b-9ae9-bb80a186cdf9.gainloss.txt
-	├── gene-expressions
-	│   └── 806668be-e3a2-4ea3-90fb-f67eba78c7b3.rsem.genes.results.gz
-	├── gene-fusions
-	│   ├── 806668be-e3a2-4ea3-90fb-f67eba78c7b3.STAR.fusion_predictions.abridged.coding_effect.tsv
-	│   └── 806668be-e3a2-4ea3-90fb-f67eba78c7b3.arriba.fusions.tsv
-	├── output
-	│   ├── PNOC008-40_summary_DE_Genes_Down.txt
-	│   ├── PNOC008-40_summary_DE_Genes_Up.txt
-	│   ├── PNOC008-40_summary_Pathways_Down.txt
-	│   ├── PNOC008-40_summary_Pathways_Up.txt
-	│   ├── circos_plot.png
-	│   ├── cnv_plot.png
-	│   ├── complexheatmap_cgs.png
-	│   ├── complexheatmap_oncogrid.png
-	│   ├── complexheatmap_phgg.png
-	│   ├── consensus_mpf_output.txt
-	│   ├── diffexpr_genes_barplot_output.rds
-	│   ├── diffreg_pathways_barplot_output.rds
-	│   ├── dim_reduction_plot_adult.rds
-	│   ├── dim_reduction_plot_pediatric.rds
+	.
+	├── drug_recommendations
+	│   ├── CEMITools
+	│   │   ├── beta_r2.pdf
+	│   │   ├── clustered_samples.rds
+	│   │   ├── diagnostics.html
+	│   │   ├── enrichment_es.tsv
+	│   │   ├── enrichment_nes.tsv
+	│   │   ├── enrichment_padj.tsv
+	│   │   ├── expected_counts_corrected.rds
+	│   │   ├── gsea.pdf
+	│   │   ├── hist.pdf
+	│   │   ├── hubs.rds
+	│   │   ├── interaction.pdf
+	│   │   ├── interactions.tsv
+	│   │   ├── mean_k.pdf
+	│   │   ├── mean_var.pdf
+	│   │   ├── module.tsv
+	│   │   ├── modules_genes.gmt
+	│   │   ├── ora.pdf
+	│   │   ├── ora.tsv
+	│   │   ├── parameters.tsv
+	│   │   ├── profile.pdf
+	│   │   ├── qq.pdf
+	│   │   ├── report.html
+	│   │   ├── sample_tree.pdf
+	│   │   ├── selected_genes.txt
+	│   │   ├── summary.rds
+	│   │   ├── summary_eigengene.tsv
+	│   │   ├── summary_mean.tsv
+	│   │   ├── summary_median.tsv
+	│   │   ├── umap_output.rds
+	│   │   └── umap_top_20_neighbors_output.rds
+	│   ├── GTExBrain_dsea_go_mf_output.html
+	│   ├── GTExBrain_dsea_go_mf_output.pdf
+	│   ├── GTExBrain_dsea_go_mf_output.txt
+	│   ├── GTExBrain_dsea_go_mf_output_files
+	│   ├── GTExBrain_qSig_output.txt
+	│   ├── GTExBrain_tsea_reactome_output.txt
+	│   ├── PBTA_ALL_dsea_go_mf_output.html
+	│   ├── PBTA_ALL_dsea_go_mf_output.pdf
+	│   ├── PBTA_ALL_dsea_go_mf_output.txt
+	│   ├── PBTA_ALL_dsea_go_mf_output_files
+	│   ├── PBTA_ALL_qSig_output.txt
+	│   ├── PBTA_ALL_tsea_reactome_output.txt
+	│   ├── PBTA_HGG_dsea_go_mf_output.html
+	│   ├── PBTA_HGG_dsea_go_mf_output.pdf
+	│   ├── PBTA_HGG_dsea_go_mf_output.txt
+	│   ├── PBTA_HGG_dsea_go_mf_output_files
+	│   ├── PBTA_HGG_qSig_output.txt
+	│   ├── PBTA_HGG_tsea_reactome_output.txt
+	│   ├── {patient_id}_CHEMBL_drug-gene.tsv
 	│   ├── drug_dge_density_plots
-	│   ├── drug_pathways_barplot.rds
-	│   ├── dsigdb_de_genes_down.txt
-	│   ├── dsigdb_de_genes_up.txt
-	│   ├── dsigdb_pathways_down.txt
-	│   ├── dsigdb_pathways_up.txt
-	│   ├── filtered_germline_vars.rds
-	│   ├── kaplan_meier_adult.rds
-	│   ├── kaplan_meier_pediatric.rds
-	│   ├── mutational_analysis_adult.rds
-	│   ├── mutational_analysis_pediatric.rds
+	│   │   ├── {gene}_drug_dge_density_plots.png
+	│   │   └── top_drug_dge_density_plots.pdf
+	│   ├── drug_pathways_barplot.pdf
+	│   ├── ora_plots.pdf
+	│   └── transcriptome_drug_rec.rds
+	├── drug_synergy
+	│   ├── combined_qSig_synergy_score.tsv
+	│   ├── combined_qSig_synergy_score_top10.pdf
+	│   ├── gtex_qSig_subnetwork_drug_gene_map.tsv
+	│   ├── gtex_qSig_synergy_score.tsv
+	│   ├── pbta_hgg_qSig_subnetwork_drug_gene_map.tsv
+	│   ├── pbta_hgg_qSig_synergy_score.tsv
+	│   ├── pbta_qSig_subnetwork_drug_gene_map.tsv
+	│   ├── pbta_qSig_synergy_score.tsv
+	│   ├── subnetwork_gene_drug_map.tsv
+	│   └── subnetwork_genes.tsv
+	├── filtered_germline_vars.rds
+	├── genomic_landscape_plots
+	│   └── circos_plot.png
+	├── immune_analysis
+	│   ├── immune_scores_adult.pdf
+	│   ├── immune_scores_adult.rds
+	│   ├── immune_scores_pediatric.pdf
+	│   ├── immune_scores_pediatric.rds
+	│   ├── immune_scores_topcor_pediatric.pdf
+	│   ├── immune_scores_topcor_pediatric.rds
+	│   ├── tis_scores.pdf
+	│   └── tis_scores.rds
+	├── oncogrid_analysis
+	│   └── complexheatmap_oncogrid.pdf
+	├── oncokb_analysis
 	│   ├── oncokb_cnv.txt
 	│   ├── oncokb_cnv_annotated.txt
-	│   ├── oncokb_consensus_annotated.txt
 	│   ├── oncokb_fusion.txt
 	│   ├── oncokb_fusion_annotated.txt
 	│   ├── oncokb_lancet_annotated.txt
-	│   ├── oncokb_merged_all_annotated.txt
-	│   ├── oncokb_merged_all_annotated_actgenes.txt
-	│   ├── oncokb_merged_consensus_annotated.txt
-	│   ├── oncokb_merged_consensus_annotated_actgenes.txt
 	│   ├── oncokb_merged_lancet_annotated.txt
-	│   ├── oncokb_merged_lancet_annotated_actgenes.txt
-	│   ├── oncokb_merged_mutect2_annotated.txt
-	│   ├── oncokb_merged_mutect2_annotated_actgenes.txt
-	│   ├── oncokb_merged_strelka2_annotated.txt
-	│   ├── oncokb_merged_strelka2_annotated_actgenes.txt
-	│   ├── oncokb_merged_vardict_annotated.txt
-	│   ├── oncokb_merged_vardict_annotated_actgenes.txt
-	│   ├── oncokb_mutect2_annotated.txt
-	│   ├── oncokb_strelka2_annotated.txt
-	│   ├── oncokb_vardict_annotated.txt
-	│   ├── ora_plots.png
-	│   ├── pathway_analysis_adult.rds
-	│   ├── pathway_analysis_pediatric.rds
-	│   ├── pbta_pnoc008_umap_output.rds
-	│   ├── rnaseq_analysis_output.rds
-	│   ├── ssgsea_scores_pediatric.rds
-	│   ├── tcga_pnoc008_umap_output.rds
-	│   ├── tis_scores.rds
+	│   └── oncokb_merged_lancet_annotated_actgenes.txt
+	├── rnaseq_analysis
+	│   ├── {patient_id}_summary_DE_Genes_Down.txt
+	│   ├── {patient_id}_summary_DE_Genes_Up.txt
+	│   ├── {patient_id}_summary_Pathways_Down.txt
+	│   ├── {patient_id}_summary_Pathways_Up.txt
+	│   ├── diffexpr_genes_barplot_output.rds
+	│   ├── diffreg_pathways_barplot_output.rds
+	│   └── rnaseq_analysis_output.rds
+	├── survival_analysis
+	│   ├── kaplan_meier_adult.pdf
+	│   └── kaplan_meier_pediatric.pdf
+	├── tmb_analysis
+	│   ├── consensus_mpf_output.txt
 	│   ├── tmb_profile_output.rds
-	│   ├── transciptomically_similar_adult.rds
-	│   ├── transciptomically_similar_pediatric.rds
-	│   ├── transcriptome_drug_rec.rds
 	│   └── tumor_signature_output.rds
-	├── reports
-	│   ├── PNOC008-40_all.html
-	│   ├── PNOC008-40_consensus.html
-	│   ├── PNOC008-40_lancet.html
-	│   ├── PNOC008-40_mutect2.html
-	│   ├── PNOC008-40_strelka2.html
-	│   └── PNOC008-40_vardict.html
-	└── simple-variants
-	    ├── 106762e7-e100-405b-9ae9-bb80a186cdf9.lancet_somatic.vep.maf
-	    ├── 106762e7-e100-405b-9ae9-bb80a186cdf9.mutect2_somatic.vep.maf
-	    ├── 106762e7-e100-405b-9ae9-bb80a186cdf9.strelka2_somatic.vep.maf
-	    ├── 106762e7-e100-405b-9ae9-bb80a186cdf9.vardict_somatic.vep.maf
-	    ├── c185fc36-97d9-433d-9ea9-25a608b2f660.gatk.PASS.vcf.gz.hg38_multianno.txt.gz
-	    └── e9248ac8-79e5-41e7-a97d-3ccd9c406074.consensus_somatic.vep.maf
+	└── transcriptomically_similar_analysis
+	    ├── dim_reduction_plot_adult.rds
+	    ├── dim_reduction_plot_pediatric.rds
+	    ├── lollipop_recurrent_adult.pdf
+	    ├── lollipop_recurrent_pediatric.pdf
+	    ├── lollipop_shared_adult.pdf
+	    ├── lollipop_shared_pediatric.pdf
+	    ├── mutational_analysis_adult.rds
+	    ├── mutational_analysis_pediatric.rds
+	    ├── mutational_cnv_recurrent_adult.pdf
+	    ├── mutational_cnv_recurrent_pediatric.pdf
+	    ├── mutational_cnv_shared_adult.pdf
+	    ├── mutational_cnv_shared_pediatric.pdf
+	    ├── mutational_recurrent_adult.pdf
+	    ├── mutational_recurrent_pediatric.pdf
+	    ├── mutational_shared_adult.pdf
+	    ├── mutational_shared_pediatric.pdf
+	    ├── pathway_analysis_adult.pdf
+	    ├── pathway_analysis_adult.rds
+	    ├── pathway_analysis_pediatric.pdf
+	    ├── pathway_analysis_pediatric.rds
+	    ├── pbta_hgat_pnoc008_nn_table.rds
+	    ├── pbta_hgat_pnoc008_umap_output.rds
+	    ├── pbta_pnoc008_nn_table.rds
+	    ├── pbta_pnoc008_umap_output.rds
+	    ├── ssgsea_scores_pediatric.pdf
+	    ├── ssgsea_scores_pediatric.rds
+	    ├── tcga_gbm_pnoc008_nn_table.rds
+	    ├── tcga_pnoc008_umap_output.rds
+	    ├── transciptomically_similar_adult.rds
+	    └── transciptomically_similar_pediatric.rds
 
-	9 directories, 105 files
 
 
 Upload to data-delivery project
