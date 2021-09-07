@@ -46,7 +46,7 @@ tmb_calculate <- function(patient_dir,
 
 tmb_profile <- function(patient_dir, pbta_tmb, tcga_in_pbta_tmb, tcga_not_in_pbta_tmb, tmb_bed_file) {
   
-  TMB <- tmb_calculate(tmb_bed_file = tmb_bed_file)
+  TMB <- tmb_calculate(patient_dir = patient_dir, tmb_bed_file = tmb_bed_file)
   # pedTMBScores$Type <- "Pediatric"
   # adultTMBScores$Type <- "Adult"
   pbta_tmb$Type <- "PBTA"

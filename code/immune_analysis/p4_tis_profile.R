@@ -9,7 +9,7 @@ source(file.path(module_dir, "utils", 'tis_profile.R'))
 source(file.path(module_dir, "utils", 'plot_tis_profile.R'))
 
 # save only scores
-fname = file.path(output_dir, 'tis_scores.rds')
+fname <- file.path(output_dir, 'tis_scores.rds')
 if(file.exists(fname)){
   tis_profile_output <- readRDS(fname)
 } else {

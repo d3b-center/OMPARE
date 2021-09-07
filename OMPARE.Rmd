@@ -292,9 +292,12 @@ Row {data-height=700}
 
 ### Tumor Inflammation Signature Profile (TCGA + PBTA)
 
-```{r tis_profile, fig.width = 28, fig.height = 14}
-if(exists("tis_profile_output")){
-  ggplotly(tis_profile_output)
+```{r tis_profile, echo=FALSE, out.width = "100%", out.height="100%"}
+fname <- file.path(patient_dir, "output", 
+                   "immune_analysis", 
+                   "tis_scores.pdf")
+if(file.exists(fname)){
+  knitr::include_graphics(fname) 
 }
 ```
 

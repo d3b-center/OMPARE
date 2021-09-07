@@ -150,40 +150,40 @@ source(file.path(code_dir, "genomic_landscape_plots", "p7_circos_plot.R"))
 
 ## page 9
 # fname <- file.path(patient_dir, "output", "complexheatmap_oncogrid.pdf")
-source(file.path("code", "oncogrid_analysis", "p9_oncogrid.R"))
+source(file.path(code_dir, "oncogrid_analysis", "p9_oncogrid.R"))
 
 ## page 10
 # targeted findings
-source(file.path("code", "oncokb_analysis", 'p10_run_oncokb.R'))
+source(file.path(code_dir, "oncokb_analysis", 'p10_run_oncokb.R'))
 
 # transcriptome based drug recommendations
-source(file.path("code", "drug_recommendations", "p10_transcriptome_drug_rec.R"))
+source(file.path(code_dir, "drug_recommendations", "p10_transcriptome_drug_rec.R"))
 
 # network plot - changes with snv caller (page 7)
 # this is dependent on the output of transcriptome based drug recommendations
 # so needs to be called after drug recommendations
-source(file.path("code", "genomic_landscape_plots", "p7_network_plot.R"))
+source(file.path(code_dir, "genomic_landscape_plots", "p7_network_plot.R"))
 
 # run CEMiTool to annotate hub genes in drug recommendations output
-cemitools_script <- file.path("code", "drug_recommendations", "p10_run_cemitools.R")
+cemitools_script <- file.path(code_dir, "drug_recommendations", "p10_run_cemitools.R")
 cmd <- paste('Rscript', cemitools_script, 
              '--patient', patient)
 print(cmd)
 system(cmd)
 
 # dge density plots
-source(file.path("code", "drug_recommendations", "p10_drug_dge_density_plots.R"))
+source(file.path(code_dir, "drug_recommendations", "p10_drug_dge_density_plots.R"))
 
 # drug pathways
-source(file.path("code", "drug_recommendations", 'p10_drug_pathways.R'))
+source(file.path(code_dir, "drug_recommendations", 'p10_drug_pathways.R'))
 
 # convert table outputs to visualizations
 if(snv_caller == "lancet"){
-  source(file.path("code", "tables_to_plots", 'run_tables_to_plots.R'))
+  source(file.path(code_dir, "tables_to_plots", 'run_tables_to_plots.R'))
 }
 
 # run drug synergy module
 if(snv_caller == "lancet"){
-  source(file.path(patient_level_analyses, 'run_synergy.R'))
+  source(file.path(code_dir, "drug_synergy", 'run_synergy.R'))
 }
 

@@ -9,7 +9,7 @@ dir.create(output_dir, showWarnings = F, recursive = T)
 source(file.path(module_dir, "utils", "network_plot.R"))
 
 # input transcriptomic drug recommendations output
-fname <- file.path(root_dir, "output", "drug_recommendations", "transcriptome_drug_rec.rds")
+fname <- file.path(patient_dir, "output", "drug_recommendations", "transcriptome_drug_rec.rds")
 transcriptome_drug_rec_output <- readRDS(fname)
 
 # gene mania reference

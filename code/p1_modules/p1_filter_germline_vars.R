@@ -3,6 +3,7 @@
 # directories
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
 module_dir <- file.path(root_dir, "code", "p1_modules")
+patient_dir <- file.path(root_dir, "results", patient)
 output_dir <- file.path(patient_dir, "output")
 dir.create(output_dir, recursive = T, showWarnings = F)
 

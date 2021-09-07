@@ -17,7 +17,7 @@ oncogrid_path_output <- file.path(oncogrid_path, "output")
 
 plot_oncogrid <- function(output_file){
   # matrix
-  mat = read.table(file.path(oncogrid.path.output, "oncoprint.cohort3.pnoc008.txt"),  header = TRUE, stringsAsFactors=FALSE, sep = "\t",check.names = FALSE)
+  mat = read.table(file.path(oncogrid_path_output, "oncoprint.cohort3.pnoc008.txt"),  header = TRUE, stringsAsFactors=FALSE, sep = "\t",check.names = FALSE)
   mat[is.na(mat)] = ""
   rownames(mat) = mat[, 1]
   mat = mat[, -1]
@@ -67,12 +67,12 @@ plot_oncogrid <- function(output_file){
   col = c("GAI" = "#ff4d4d", "LOS" = "#0D47A1" , "MIS" = "#77b300", "FUS" = "#AB47BC","NOS" ="#80bfff", "FSD" = "#1a53ff", "FSI" ="#8D6E63", "NOT" = "#9966ff","SPS" = "#E69F00","IFD" = "#827717","OVE" = "#dbc6eb","UNE" = "#709fb0")
   
   # read annotation and TMB info
-  annot_info <- read.table(file.path(oncogrid.path.output, "annotation.cohort3.pnoc008.txt"), header = TRUE, check.names = TRUE)
+  annot_info <- read.table(file.path(oncogrid_path_output, "annotation.cohort3.pnoc008.txt"), header = TRUE, check.names = TRUE)
   annot_info <- annot_info %>%
     remove_rownames() %>%
     column_to_rownames('Sample') %>%
     as.data.frame()
-  tmb_info <- read.table(file.path(oncogrid.path.output, "tmb.cohort3.pnoc008.txt"), header = TRUE, check.names = TRUE)
+  tmb_info <- read.table(file.path(oncogrid_path_output, "tmb.cohort3.pnoc008.txt"), header = TRUE, check.names = TRUE)
   tmb_info <- tmb_info %>%
     column_to_rownames('Sample') %>%
     as.data.frame()
@@ -107,7 +107,7 @@ plot_oncogrid <- function(output_file){
     ))
   
   # split samples
-  split.samples =read.table(file.path(oncogrid.path.output, "split_samples.cohort3.pnoc008.txt"), header = TRUE, check.names = TRUE)
+  split.samples =read.table(file.path(oncogrid_path_output, "split_samples.cohort3.pnoc008.txt"), header = TRUE, check.names = TRUE)
   split.samples = data.frame(split.samples)
   subgroup = split.samples$split_samples
   
@@ -118,7 +118,7 @@ plot_oncogrid <- function(output_file){
   amp = factor(amp, levels = c("Genetic and Fusion alteration", "Copy number alteration and RNAseq Expression"))
   
   # gene order
-  gene_order = scan(file.path(oncogrid.path.input, "sample_cohort3.gene_order"), what = "character")
+  gene_order = scan(file.path(oncogrid_path_input, "sample_cohort3.gene_order"), what = "character")
   
   # oncoprint
   ht = oncoPrint(mat, get_type = function(x)strsplit(x, ";")[[1]],

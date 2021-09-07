@@ -27,6 +27,7 @@ type <- opt$type
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
 data_dir <- file.path(root_dir, "data")
 gsea_dir <- file.path(data_dir, "gsea")
+patient_dir <- file.path(root_dir, "results", patient_of_interest)
 
 # output filename
 output_dir <- file.path(patient_dir, "output", "rnaseq_analysis")

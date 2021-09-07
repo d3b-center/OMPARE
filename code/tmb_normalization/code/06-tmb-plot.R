@@ -1,5 +1,5 @@
 # this script is adapted from https://github.com/d3b-center/OMPARE/
-# blob/master/code/patient_level_analyses/utils/tmb_profile.R in the OMPARE repo
+# code/tmb_analysis/utils/tmb_profile.R in the OMPARE repo
 
 library(tidyverse)
 library(GenomicRanges)

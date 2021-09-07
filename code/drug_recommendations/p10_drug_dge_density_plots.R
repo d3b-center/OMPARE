@@ -96,7 +96,7 @@ if(!file.exists(fname)){
     mutate(batch = paste0(RNA_library, "_", study_id))
   
   # batch correct 
-  combined_tpm_corrected <- quiet(batch.correct(mat = combined_tpm, clin = combined_histology))
+  combined_tpm_corrected <- quiet(batch_correct(mat = combined_tpm, clin = combined_histology))
   
   # now subset to genes of interest
   combined_tpm_corrected <- combined_tpm_corrected[unique(dge_all$Gene),]

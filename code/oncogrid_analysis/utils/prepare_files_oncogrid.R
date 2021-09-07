@@ -3,6 +3,7 @@
 # Function: Script to generat Oncogrid matrix/additional files using CNV, SNV, Fusion and Expression data
 suppressPackageStartupMessages({
   library(tidyverse)
+  library(dplyr)
 })
 
 # directories
@@ -16,7 +17,7 @@ oncogrid_path_output <- file.path(oncogrid_path, "output")
 
 # pnoc008 directory
 pnoc008_dir <- file.path(data_dir, "pnoc008")
-pnoc008_clinical <- readRDS(pnoc008_dir, "pnoc008_clinical.rds")
+pnoc008_clinical <- readRDS(file.path(pnoc008_dir, "pnoc008_clinical.rds"))
 
 ## Oncoprint matrix
 # cohort 3 matrix
@@ -40,33 +41,30 @@ deg <- read.delim(file.path(oncogrid_path_input, "all_cnv_tgen_genes"), header =
 
 # fill in details for PNOC008 patients
 # 1. get degene info PNOC008 patientss vs GTEx Brain
-fname <- file.path(pnoc008_dir, "pnoc008_vs_gtex_brain_degs.rds")
-genes_df <- readRDS(fname)
+genes_df <- readRDS(file.path(pnoc008_dir, "pnoc008_vs_gtex_brain_degs.rds"))
 deg_genes <- genes_df %>%
   filter(sample_name != "C3342894") %>%
-  mutate(label = ifelse(diff_expr == "up", "OVE", "UNE"),
+  dplyr::mutate(label = ifelse(diff_expr == "up", "OVE", "UNE"),
          Gene_name = genes) %>%
   filter(Gene_name %in% deg$V1) %>%
   dplyr::select(sample_name, Gene_name, label) %>%
   unique()
 
 # 2. get cnv info
-fname <- file.path(pnoc008_dir, "pnoc008_cnv_filtered.rds")
-cnv_genes <- readRDS(fname)
+cnv_genes <- readRDS(file.path(pnoc008_dir, "pnoc008_cnv_filtered.rds"))
 cnv_genes <- cnv_genes %>%
-  mutate(label = ifelse(Alteration_Type == "Gain", "GAI", "LOS")) %>%
+  dplyr::mutate(label = ifelse(Alteration_Type == "Gain", "GAI", "LOS")) %>%
   filter(Gene %in% cnv$V1) %>%
-  mutate(Gene_name = Gene,
+  dplyr::mutate(Gene_name = Gene,
          sample_name = SampleID) %>%
   dplyr::select(sample_name, Gene_name, label) %>%
   unique()
 
 # 3. get snv info
-fname <- file.path(pnoc008_dir, "pnoc008_consensus_mutation_filtered.rds")
-mut_genes <- readRDS(fname)
+mut_genes <- readRDS(file.path(pnoc008_dir, "pnoc008_consensus_mutation_filtered.rds"))
 mut_genes <- mut_genes %>%
   filter(!Alteration_Type %in% c("3'Flank", "5'Flank", "3'UTR", "5'UTR", "IGR", "Intron", "RNA")) %>%
-  mutate(label = case_when(Alteration_Type %in% "Missense_Mutation" ~ "MIS",
+  dplyr::mutate(label = case_when(Alteration_Type %in% "Missense_Mutation" ~ "MIS",
                            Alteration_Type %in% "Nonsense_Mutation" ~ "NOS",
                            Alteration_Type %in% "Frame_Shift_Del" ~ "FSD",
                            Alteration_Type %in% "Frame_Shift_Ins" ~ "FSI",
@@ -79,12 +77,11 @@ mut_genes <- mut_genes %>%
   unique()
 
 # 4. get fusion info
-fname <- file.path(pnoc008_dir, "pnoc008_fusions_filtered.rds")
-fus_genes <- readRDS(fname)
+fus_genes <- readRDS(file.path(pnoc008_dir, "pnoc008_fusions_filtered.rds"))
 fus_genes <- fus_genes %>%
-  mutate(label = "FUS") %>%
+  dplyr::mutate(label = "FUS") %>%
   filter(Gene %in% fusion$V1) %>%
-  mutate(Gene_name = Gene,
+  dplyr::mutate(Gene_name = Gene,
          sample_name = SampleID) %>%
   dplyr::select(sample_name, Gene_name, label) %>%
   unique()
@@ -98,10 +95,10 @@ cnv_deg <- rbind(cnv_genes, deg_genes)
 # uniquify rows
 snv_fus <- snv_fus %>%
   group_by(sample_name, Gene_name) %>%
-  summarise(label = paste0(label, collapse = ';'))
+  dplyr::summarise(label = paste0(label, collapse = ';'))
 cnv_deg <- cnv_deg %>%
   group_by(sample_name, Gene_name) %>%
-  summarise(label = paste0(label, collapse = ';'))
+  dplyr::summarise(label = paste0(label, collapse = ';'))
 
 # convert to matrix
 snv_fus <- snv_fus %>%
@@ -139,7 +136,7 @@ annot_info <- annot_info %>%
   dplyr::rename(Sample = 1)
 annot_info_p <- pnoc008_clinical 
 annot_info_p <- annot_info_p %>%
-  mutate(Sample = subjectID,
+  dplyr::mutate(Sample = subjectID,
          Sequencing_Experiment = "WXS,RNA-Seq",
          Cohort = study_id,
          Tumor_Descriptor = "Primary",

@@ -16,6 +16,10 @@ patient <- opt$patient
 snv_caller <- opt$snv_caller
 output_dir <- opt$output_dir
 
+# set directories
+root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
+data_dir <- file.path(root_dir, "data")
+
 # input files
 if(snv_caller != "all"){
   maf_file <- file.path(output_dir, paste0('oncokb_', snv_caller, '_annotated.txt'))
@@ -27,7 +31,7 @@ cnv_file <- file.path(output_dir, 'oncokb_cnv_annotated.txt')
 fusion_file <- file.path(output_dir, 'oncokb_fusion_annotated.txt')
 
 # read cancer genes and split into oncogenes and tsgs
-cancer_genes <- readRDS(file.path(ref_dir, 'cancer_gene_list.rds'))
+cancer_genes <- readRDS(file.path(data_dir, 'cancer_gene_list.rds'))
 oncogenes <- cancer_genes %>%
   filter(type %in% c("Is.Oncogene", "Oncogene")) %>%
   .$Gene_Symbol %>% unique
