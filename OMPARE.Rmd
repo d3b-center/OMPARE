@@ -803,7 +803,6 @@ Row {data-height=700}
 ```{r drug_gene_network_pbta_hgg, echo=FALSE, out.width = "100%", out.height="100%"}
 fname <- file.path(patient_dir, "output", 
                    "drug_recommendations",
-                   "drug_dge_density_plots", 
                    "PBTA_HGG_dsea_go_mf_output.pdf")
 if(file.exists(fname)){
  knitr::include_graphics(fname) 
@@ -820,7 +819,6 @@ Row {data-height=700}
 ```{r drug_gene_network_pbta, echo=FALSE, out.width = "100%", out.height="100%"}
 fname <- file.path(patient_dir, "output", 
                    "drug_recommendations",
-                   "drug_dge_density_plots",
                    "PBTA_ALL_dsea_go_mf_output.pdf")
 if(file.exists(fname)){
   knitr::include_graphics(fname)
