@@ -225,7 +225,7 @@ Row {data-height=700}
 ```{r network_alt_pbta_hgg, echo=FALSE, out.width = "100%", out.height="100%"}
 fname <- file.path(patient_dir, "output", 
                    "drug_recommendations", 
-                   "CEMITools", 
+                   "drug_recommendations", 
                    "ora_plots.pdf")
 if(file.exists(fname)){
  knitr::include_graphics(fname) 
@@ -634,7 +634,9 @@ Row {data-height=700}
 ### Circos
 
 ```{r circos, fig.width = 7, fig.height = 6}
-fname <- file.path(patient_dir, "output", "circos_plot.png")
+fname <- file.path(patient_dir, "output",
+                   "genomic_landscape_plots",
+                   "circos_plot.png")
 if(file.exists(fname)){
  knitr::include_graphics(fname)
 }
@@ -764,7 +766,6 @@ Row {data-height=700}
 ```{r drug_signatures, echo=FALSE, out.width = "100%", out.height="100%"}
 fname <- file.path(patient_dir, "output", 
                    "drug_recommendations",
-                   "drug_dge_density_plots", 
                    "drug_pathways_barplot.pdf")
 if(file.exists(fname)){
   knitr::include_graphics(fname)
@@ -781,7 +782,6 @@ Row {data-height=700}
 ```{r drug_gene_network_gtex, echo=FALSE, out.width = "100%", out.height="100%"}
 fname <- file.path(patient_dir, "output", 
                    "drug_recommendations",
-                   "drug_dge_density_plots", 
                    "GTExBrain_dsea_go_mf_output.pdf")
 if(file.exists(fname)){
   knitr::include_graphics(fname)
