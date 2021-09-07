@@ -1,3 +1,5 @@
+`%>%` <- dplyr::`%>%`
+
 tmb_calculate <- function(patient_dir,
                           tmb_bed_file = tmb_bed_file, 
                           var_class = c('Missense_Mutation', 'Nonsense_Mutation',
