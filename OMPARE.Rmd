@@ -225,7 +225,6 @@ Row {data-height=700}
 ```{r network_alt_pbta_hgg, echo=FALSE, out.width = "100%", out.height="100%"}
 fname <- file.path(patient_dir, "output", 
                    "drug_recommendations", 
-                   "drug_recommendations", 
                    "ora_plots.pdf")
 if(file.exists(fname)){
  knitr::include_graphics(fname) 
@@ -333,7 +332,7 @@ Row {data-height=700}
 fname <- file.path(patient_dir, "output", 
                    "survival_analysis", 
                    "kaplan_meier_pediatric.pdf")
-if(exists(fname)){
+if(file.exists(fname)){
   knitr::include_graphics(fname)
 }
 ```
@@ -515,7 +514,7 @@ Row {data-height=700}
 fname <- file.path(patient_dir, "output", 
                    "survival_analysis", 
                    "kaplan_meier_adult.pdf")
-if(exists(fname)){
+if(file.exists(fname)){
   knitr::include_graphics(fname)
 }
 ```
