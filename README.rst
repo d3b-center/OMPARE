@@ -342,9 +342,9 @@ After running the reports, the project folder will have all output files with pl
 	│   ├── oncokb_cnv_annotated.txt
 	│   ├── oncokb_fusion.txt
 	│   ├── oncokb_fusion_annotated.txt
-	│   ├── oncokb_lancet_annotated.txt
-	│   ├── oncokb_merged_lancet_annotated.txt
-	│   └── oncokb_merged_lancet_annotated_actgenes.txt
+	│   ├── oncokb_{snv_caller}_annotated.txt
+	│   ├── oncokb_merged_{snv_caller}_annotated.txt
+	│   └── oncokb_merged_{snv_caller}_annotated_actgenes.txt
 	├── rnaseq_analysis
 	│   ├── {patient_id}_summary_DE_Genes_Down.txt
 	│   ├── {patient_id}_summary_DE_Genes_Up.txt
