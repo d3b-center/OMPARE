@@ -26,11 +26,6 @@ title: `r params$set_title`
 }
 </style>
 
-```{r set_options, include=FALSE, echo=FALSE}
-knitr::opts_chunk$set(comment = NA)
-`%>%` <- dplyr::`%>%`
-```
-
 ```{r set_root_dir}
 # directories
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
@@ -38,6 +33,11 @@ root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
 
 ```{r load_libraries}
 source(file.path(root_dir, "code", "utils", "load_libraries.R"))
+```
+
+```{r set_options, include=FALSE, echo=FALSE}
+knitr::opts_chunk$set(comment = NA)
+`%>%` <- dplyr::`%>%`
 ```
 
 ```{r set_params}

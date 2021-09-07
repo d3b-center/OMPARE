@@ -9,6 +9,7 @@ utils_dir <- file.path(code_dir, "utils")
 
 # load libraries
 source(file.path(utils_dir, "load_libraries.R"))
+`%>%` <- dplyr::`%>%`
 
 # load reference data
 source(file.path(utils_dir, 'load_reference.R')) 
