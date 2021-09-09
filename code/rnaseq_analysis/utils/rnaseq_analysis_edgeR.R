@@ -3,8 +3,8 @@
 
 suppressPackageStartupMessages({
   library(tidyverse)
-  library(plyr)
   library(fgsea)
+  library(dplyr)
 })
 
 # source functions for edgeR's single sample differential analysis

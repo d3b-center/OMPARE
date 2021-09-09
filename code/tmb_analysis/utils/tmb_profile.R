@@ -1,11 +1,11 @@
-`%>%` <- dplyr::`%>%`
-
 tmb_calculate <- function(patient_dir,
                           tmb_bed_file = tmb_bed_file, 
                           var_class = c('Missense_Mutation', 'Nonsense_Mutation',
                                         'Frame_Shift_Del', 'Frame_Shift_Ins', 
                                         'In_Frame_Del', 'In_Frame_Ins'), 
                           vaf_cutoff = 0.05, var_count = 3, tumor_depth = 25) {
+  
+  `%>%` <- dplyr::`%>%`
   
   # calculate the length of the bed file
   bed_length <- 0

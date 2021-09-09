@@ -2,6 +2,7 @@ suppressPackageStartupMessages({
   library(ggplot2)
   library(plyr)
   library(patchwork)
+  library(dplyr)
 })
 
 # directories
