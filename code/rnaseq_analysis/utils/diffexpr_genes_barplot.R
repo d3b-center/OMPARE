@@ -1,18 +1,21 @@
 # barplot of differentially expressed genes
 
-diffexpr_genes_barplot <- function(genes_up, genes_down, comparison_study, cancer_genes) {
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(ggplot2)
+})
+
+diffexpr_genes_barplot <- function(genes_diffexpr, cancer_genes) {
   
   # filter by comparison
-  geneDataUp <- genes_up %>%
-    filter(comparison == comparison_study,
-           diff_expr == "up",
+  geneDataUp <- genes_diffexpr %>%
+    filter(diff_expr == "up",
            genes %in% cancer_genes) %>%
     arrange(desc(logFC)) %>%
     slice_head(n = 20)
   
-  geneDataDown <- genes_down %>%
-    filter(comparison == comparison_study,
-           diff_expr == "down",
+  geneDataDown <- genes_diffexpr %>%
+    filter(diff_expr == "down",
            genes %in% cancer_genes) %>%
     arrange(logFC) %>%
     slice_head(n = 20)
@@ -26,12 +29,14 @@ diffexpr_genes_barplot <- function(genes_up, genes_down, comparison_study, cance
   geneData$Gene <- factor(geneData$Gene, levels = geneData$Gene)
   geneData$Direction <- factor(geneData$Direction, levels = c("up", "down"))
   
+  # comparison study
+  comparison_study <- unique(geneData$comparison)
+  
   # plot barplot of top 20 up/down genes
   p <- ggplot(geneData, aes(Gene, y = logFC, fill = Direction)) + 
     geom_bar(stat="identity") + coord_flip() + theme_bw() + 
     xlab("") + scale_fill_manual(values = c("up" = "red", "down" = "forest green")) +
-    theme(plot.margin = unit(c(0, 0, 0, 0), "cm"),
-          legend.direction = "none",
+    theme(legend.direction = "none",
           legend.position = "none")  +
     ggtitle(paste0("Comparison: ", comparison_study)) +
     guides(fill = "none")

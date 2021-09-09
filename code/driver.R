@@ -83,20 +83,16 @@ source(file.path(code_dir, "p1_modules", 'p1_genomic_summary.R'))
 # this is also part of the rnaseq_analysis module
 # barplot of top 20 up/down genes
 output_dir <- file.path(patient_dir, "output", "rnaseq_analysis")
-fname <- file.path(output_dir, "diffexpr_genes_barplot_output.rds")
+fname <- file.path(output_dir, "diffexpr_genes_barplot_output.pdf")
 if(!file.exists(fname)){
   source(file.path(code_dir, "rnaseq_analysis", 'p2_diffexpr_genes_barplot.R'))
-} else{
-  diffexpr_genes_barplot_output <- readRDS(fname)
 }
 
 # barplot of top 10 up/down pathways
 output_dir <- file.path(patient_dir, "output", "rnaseq_analysis")
-fname <- file.path(output_dir, "diffreg_pathways_barplot_output.rds")
+fname <- file.path(output_dir, "diffreg_pathways_barplot_output.pdf")
 if(!file.exists(fname)){
   source(file.path(code_dir, "rnaseq_analysis", 'p2_diffreg_pathways_barplot.R'))  
-} else {
-  diffreg_pathways_barplot_output <- readRDS(fname)
 }
 
 ## page 3 (tmb analysis)

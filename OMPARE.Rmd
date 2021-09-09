@@ -146,72 +146,30 @@ Gene Alterations (P2) {data-navmenu="Transcriptomic Alterations"}
 Row {data-height700}
 ---
 
-### Gene Alterations (GTEx Brain)
+### Gene Alterations 
     
-```{r plot_genes_gtex}
-if(exists("diffexpr_genes_barplot_output")){
-  ggplotly(diffexpr_genes_barplot_output$diffexpr_genes_barplot_gtex) 
+```{r plot_genes, echo=FALSE, out.width = "100%", out.height="100%"}
+fname <- file.path(patient_dir, "output", 
+                   "rnaseq_analysis", 
+                   "diffexpr_genes_barplot_output.pdf")
+if(file.exists(fname)){
+ knitr::include_graphics(fname) 
 }
 ```
 
-### Gene Alterations (PBTA HGAT)
-    
-```{r plot_genes_pbta_hgg}
-if(exists("diffexpr_genes_barplot_output")){
-  ggplotly(diffexpr_genes_barplot_output$diffexpr_genes_barplot_pbta_hgg) 
-}
-```
-
-### Gene Alterations (PBTA)
-    
-```{r plot_genes_pbta}
-if(exists("diffexpr_genes_barplot_output")){
-  ggplotly(diffexpr_genes_barplot_output$diffexpr_genes_barplot_pbta) 
-}
-```
-
-Row {data-height=100}
----
-
-Pathway Alterations: GTEx Brain (P2) {data-navmenu="Transcriptomic Alterations"}
+Pathway Alterations: (P2) {data-navmenu="Transcriptomic Alterations"}
 ===
 Row {data-height=700}
 ---
 
-### Pathway Alterations (GTEx Brain)
+### Pathway Alterations
 
-```{r plot_pathway_gtex}
-#Bar chart of genes
-if(exists("diffreg_pathways_barplot_output")){
-  ggplotly(diffreg_pathways_barplot_output$diffreg_pathways_barplot_gtex)
-}
-```
-
-Pathway Alterations: PBTA HGAT (P2) {data-navmenu="Transcriptomic Alterations"}
-===
-Row {data-height=700}
----
-
-### Pathway Alterations (PBTA HGAT)
-
-```{r plot_pathway_pbta_hgg}
-#Bar chart of genes
-if(exists("diffreg_pathways_barplot_output")){
-  ggplotly(diffreg_pathways_barplot_output$diffreg_pathways_barplot_pbta_hgg)
-}
-```
-
-Pathway Alterations: PBTA (P2) {data-navmenu="Transcriptomic Alterations"}
-===
-Row {data-height=700}
----
-
-### Pathway Alterations (PBTA)
-
-```{r plot_pathway_pbta}
-#Bar chart of genes
-if(exists("diffreg_pathways_barplot_output")){
-  ggplotly(diffreg_pathways_barplot_output$diffreg_pathways_barplot_pbta)
+```{r plot_pathways, echo=FALSE, out.width = "100%", out.height="100%"}
+fname <- file.path(patient_dir, "output", 
+                   "rnaseq_analysis", 
+                   "diffreg_pathways_barplot_output.pdf")
+if(file.exists(fname)){
+ knitr::include_graphics(fname) 
 }
 ```
 

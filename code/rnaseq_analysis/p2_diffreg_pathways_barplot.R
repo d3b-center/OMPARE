@@ -10,13 +10,16 @@ source(file.path(module_dir, "utils", 'diffreg_pathways_barplot.R'))
 # input files
 pathways_up <- read.delim(file.path(output_dir, paste0(patient, '_summary_Pathways_Up.txt')))
 pathways_down <- read.delim(file.path(output_dir, paste0(patient, '_summary_Pathways_Down.txt')))
+pathways_diffreg <- rbind(pathways_up, pathways_down)
 
 # call function
-fname <- file.path(output_dir, "diffreg_pathways_barplot_output.rds")
-diffreg_pathways_barplot_gtex <- diffreg_pathways_barplot(pathways_up, pathways_down, comparison_study = 'GTExBrain_1152')
-diffreg_pathways_barplot_pbta_hgg <- diffreg_pathways_barplot(pathways_up, pathways_down, comparison_study = 'PBTA_HGG_189')
-diffreg_pathways_barplot_pbta <- diffreg_pathways_barplot(pathways_up, pathways_down, comparison_study = 'PBTA_ALL_1035')
-diffreg_pathways_barplot_output <- list(diffreg_pathways_barplot_gtex = diffreg_pathways_barplot_gtex,
-                                        diffreg_pathways_barplot_pbta_hgg = diffreg_pathways_barplot_pbta_hgg,
-                                        diffreg_pathways_barplot_pbta = diffreg_pathways_barplot_pbta)
-saveRDS(diffreg_pathways_barplot_output, file = fname)
+fname <- file.path(output_dir, "diffreg_pathways_barplot_output.pdf")
+diffreg_pathways_barplot_output <- plyr::dlply(pathways_diffreg, 
+                                             .variables = "comparison", 
+                                             .fun = function(x) diffreg_pathways_barplot(x))
+
+# save to pdf
+pdf(fname, width = 12)
+diffreg_pathways_barplot_output
+dev.off()
+
