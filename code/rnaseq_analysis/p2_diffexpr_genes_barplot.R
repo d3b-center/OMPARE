@@ -16,12 +16,12 @@ genes_down <- read.delim(file.path(output_dir, paste0(patient, '_summary_DE_Gene
 genes_diffexpr <- rbind(genes_up, genes_down)
 
 # call function
-fname <- file.path(output_dir, "diffexpr_genes_barplot_output.pdf")
 diffexpr_genes_barplot_output <- plyr::dlply(genes_diffexpr, 
                                              .variables = "comparison", 
                                              .fun = function(x) diffexpr_genes_barplot(x, cancer_genes = cancer_genes$Gene_Symbol))
 
 # save to pdf
-pdf(fname)
-diffexpr_genes_barplot_output
+fname <- file.path(output_dir, "diffexpr_genes_barplot_output.pdf")
+pdf(file = fname)
+print(diffexpr_genes_barplot_output)
 dev.off()

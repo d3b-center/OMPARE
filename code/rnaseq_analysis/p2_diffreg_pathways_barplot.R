@@ -19,7 +19,7 @@ diffreg_pathways_barplot_output <- plyr::dlply(pathways_diffreg,
                                              .fun = function(x) diffreg_pathways_barplot(x))
 
 # save to pdf
-pdf(fname, width = 12)
-diffreg_pathways_barplot_output
+pdf(file = fname, width = 12)
+print(diffreg_pathways_barplot_output)
 dev.off()
 
