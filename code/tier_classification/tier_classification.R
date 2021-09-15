@@ -96,7 +96,7 @@ oncokb_anno_tier3 <- oncokb_anno %>%
   # filter to variation of interest 
   dplyr::filter(Variant_Classification %in% c('Missense_Mutation',  # filter the files 
                                               'In_Frame_Del', 'In_Frame_Ins')) %>%
-  # filter to samples that do not have OncoKB annotation
+  # filter to samples that do not have OncoKB annotation 
   dplyr::filter(is.na(HIGHEST_LEVEL)) %>%
   dplyr::filter(is.na(HIGHEST_DX_LEVEL)) %>%
   dplyr::filter(is.na(HIGHEST_PX_LEVEL)) %>%
@@ -110,14 +110,17 @@ oncokb_anno_tier3 <- oncokb_anno %>%
 oncokb_anno_tier4 <- oncokb_anno %>% 
   # filter to variation of interest 
   dplyr::filter(Variant_Classification =='Missense_Mutation') %>%
-  # filter to samples that do not have OncoKB annotation
+  # filter to samples that do not have OncoKB annotation or related citations
   dplyr::filter(is.na(HIGHEST_LEVEL)) %>%
   dplyr::filter(is.na(HIGHEST_DX_LEVEL)) %>%
   dplyr::filter(is.na(HIGHEST_PX_LEVEL)) %>%
+  dplyr::filter(is.na(CITATIONS)) %>% 
   # contain only variants that are <1% (less likely to be germline)
   dplyr::filter(gnomAD_AF>=0.01) %>%
   # filter on VAF over 5% to avoid background noise
   dplyr::filter((VAF>=0.4 & VAF<=0.6) | VAF>=0.9) %>%
+  dplyr::filter(!grepl("deleterious", SIFT)) %>%
+  dplyr::filter(!grepl("damaging", PolyPhen)) %>%
   dplyr::mutate(tier_classification = "TIER: IV")
 
 # combine all the variants in MAF that contain Tier information 
