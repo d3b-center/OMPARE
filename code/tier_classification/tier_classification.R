@@ -143,7 +143,7 @@ for(p in 1:nrow(hotspot_snv)){
   all_findings_output_hotspot <- all_findings_output %>%
     dplyr::filter(Aberration == hotspot_gene & grepl(hotspot_aa_position, Details)) %>%
     dplyr::filter(grepl("Missense_Mutation", Details) | grepl("Nonsense_Mutation", Details) | grepl("Splice_Site", Details) | grepl("Splice_Region", Details))%>%
-    dplyr::mutate(Variant_Properties= paste0("Cancer Hotspot; ", Variant_Properties))
+    dplyr::mutate(Variant_Properties= paste0("Cancer Hotspot Location; ", Variant_Properties))
   
   all_findings_output_hotspots <- bind_rows(all_findings_output_hotspots, all_findings_output_hotspot)
   
