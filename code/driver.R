@@ -267,6 +267,9 @@ if(!file.exists(fname)){
   oncokb_output <- read.delim(fname, stringsAsFactors = F)
 }
 
+# update all findings and key clinical findings with snv/indel hotspots and tier classifications
+source(file.path(code_dir, "tier_classification", 'tier_classification.R'))
+
 # transcriptome based drug recommendations
 output_dir <- file.path(patient_dir, "output", "drug_recommendations")
 fname <- file.path(output_dir, "transcriptome_drug_rec.rds")
