@@ -7,15 +7,17 @@ suppressPackageStartupMessages({
   library(readr)
 })
 
-# function to get all directories
-
 # Define Directories
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
 data_dir <- file.path(root_dir, "data")
 input_dir <- file.path(patient_dir, "output", "oncokb_analysis")
 
 # Read in files necessary for analyses
-oncokb_anno <- readr::read_tsv(file.path(input_dir, "oncokb_consensus_annotated.txt"))
+if(snv_caller != "all"){
+  oncokb_anno <- readr::read_tsv(file.path(input_dir, paste0("oncokb_", snv_caller, "_annotated.txt")))
+} else {
+  oncokb_anno <- readr::read_tsv(file.path(input_dir, paste0("oncokb_consensus_annotated.txt")))
+}
 
 # Read in cancer genes list from OMPARE knowledge base
 cancer_genes <- readRDS(file.path(data_dir, 'cancer_gene_list.rds'))

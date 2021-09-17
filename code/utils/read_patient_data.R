@@ -26,10 +26,8 @@ read_patient_data <- function(patient_dir, fusion_method = c("star","arriba"), s
   
   # patient sample info (at most one with .txt extension)
   sampleInfo <- list.files(path = file.path(patient_dir, 'clinical'), pattern = "patient_report.txt", recursive = T, full.names = T)
-  if(length(sampleInfo) == 1){
-    sampleInfo <- read.delim(sampleInfo, stringsAsFactors = F)
-    assign("sampleInfo", sampleInfo, envir = globalenv())
-  }
+  sampleInfo <- read.delim(sampleInfo, stringsAsFactors = F)
+  assign("sampleInfo", sampleInfo, envir = globalenv())
   
   # get patient subject id
   patient_of_interest <- sampleInfo$subjectID
@@ -127,9 +125,7 @@ read_patient_data <- function(patient_dir, fusion_method = c("star","arriba"), s
     fusFiles <- lapply(fusFiles, filter_fusions, myCancerGenes = cancer_genes)
     fusData <- do.call('rbind', fusFiles)
     fusData <- unique(fusData)
-    if(nrow(fusData) >= 1){
-      assign("fusData", fusData, envir = globalenv())
-    }
+    assign("fusData", fusData, envir = globalenv())
   }
   
   # expression data: TPM (can be only 1 per patient with .genes.results)

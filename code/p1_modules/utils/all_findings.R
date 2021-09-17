@@ -50,7 +50,7 @@ all_findings <- function(annotated_mutations, filtered_fusions, filtered_cnvs, e
   # Add Fusions
   if(exists('filtered_fusions')){
     tmpFus <- filtered_fusions %>%
-      mutate(Aberration = X.fusion_name,
+      dplyr::mutate(Aberration = X.fusion_name,
              Type = "Fusion",
              Details = paste0("Fusion Type: ", Splice_type),
              Variant_Properties = "") %>%
@@ -63,7 +63,7 @@ all_findings <- function(annotated_mutations, filtered_fusions, filtered_cnvs, e
   if(exists('filtered_cnvs')){
     tmpCnv <- filtered_cnvs %>%
       rowwise() %>%
-      mutate(Aberration = hgnc_symbol,
+      dplyr::mutate(Aberration = hgnc_symbol,
              Type = status,
              Details = paste0("Copy Number: ", copy.number, 
                               " | Pos: ", chr, ":", start, "-", end),
@@ -77,7 +77,7 @@ all_findings <- function(annotated_mutations, filtered_fusions, filtered_cnvs, e
   if(exists('expr_data')){
     tmpExp <- rnaseq_analysis_output$diffexpr.top20 %>%
       rownames_to_column("Aberration") %>%
-      mutate(Type = c(rep("Outlier-High (mRNA)", 20), rep("Outlier-Low (mRNA)", 20)),
+      dplyr::mutate(Type = c(rep("Outlier-High (mRNA)", 20), rep("Outlier-Low (mRNA)", 20)),
              Details = paste0("logFC: ", round(logfc, 2)," | TPM: ", tpm),
              Variant_Properties = "")  %>%
       dplyr::select(Aberration, Type, Details, Variant_Properties)
@@ -90,17 +90,17 @@ all_findings <- function(annotated_mutations, filtered_fusions, filtered_cnvs, e
     tmpPath <- rnaseq_analysis_output$pathways
     tmpPathUp <- tmpPath %>%
       filter(direction == "up") %>%
-      mutate(Type = "Pathway Up") %>%
+      dplyr::mutate(Type = "Pathway Up") %>%
       arrange(padj) %>%
       slice_head(n = 20)
     tmpPathDown <- tmpPath %>%
       filter(direction == "down") %>%
-      mutate(Type = "Pathway Down") %>%
+      dplyr::mutate(Type = "Pathway Down") %>%
       arrange(padj) %>%
       slice_head(n = 20)
     tmpPath <- rbind(tmpPathUp, tmpPathDown)
     tmpPath <- tmpPath %>%
-      mutate(Aberration = pathway,
+      dplyr::mutate(Aberration = pathway,
              Details = paste0("Adj. P-Value: ", formatC(padj, format = "e", digits = 2)),
              Variant_Properties = "") %>%
       dplyr::select(Aberration, Type, Details, Variant_Properties)
@@ -114,7 +114,7 @@ all_findings <- function(annotated_mutations, filtered_fusions, filtered_cnvs, e
   # add Ensembl ids and map to targetvalidation.org
   myTable <- allFindingsDF %>%
     left_join(expr_data %>% dplyr::select(gene_id, gene_symbol), by = c("Aberration" = "gene_symbol")) %>%
-    mutate(TargetValidation = ifelse(is.na(gene_id), "", paste0('<a href = \"https://www.targetvalidation.org/target/',gene_id,'\">',gene_id,"</a>"))) %>%
+    dplyr::mutate(TargetValidation = ifelse(is.na(gene_id), "", paste0('<a href = \"https://www.targetvalidation.org/target/',gene_id,'\">',gene_id,"</a>"))) %>%
     dplyr::select(-c(gene_id)) 
   
   return(myTable)
