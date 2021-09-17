@@ -48,7 +48,7 @@ Input file `oncokb_consensus_annotated.txt`
   f. Pathways: Gene is not a known TSG or oncogene
   g. Publications: from `oncokb_consensus_annotated.txt`, `CITATIONS` is empty
   
-For annotating cancer hotspot, `hotspot_database_2017_indel.tsv` and `hotspot_database_2017_snv.tsv` were used.
+`hotspot_database_2017_indel.tsv` and `hotspot_database_2017_snv.tsv` derived from curated MSKCC data in OpenPBTA (https://github.com/AlexsLemonade/OpenPBTA-analysis/tree/master/analyses/hotspots-detection) were used for annotating cancer hotspot mutations.
 
 To see whether SNV hotspot were present, the `key_clinical_findings_output` and `all_findings_output` were first filtered to contain only `Missense_Mutation`, `Nonsense_Mutation`, `Splic_Variant` and `Splice_Region`. 
 For every entry in the hotspot file, the gene symbol and AA position were used to query the `key_clinical_findings_output` and `all_findings_output` table to see whether they are present - if yes, then `Cancer Hotspot` annotation will be added to the `Variant_Properties` column.
