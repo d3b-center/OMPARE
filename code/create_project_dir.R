@@ -40,7 +40,7 @@ dir.create(reports, showWarnings = F, recursive = T)
 
 # organize data
 # copy number
-cmd <- file.path(source_dir, '*.{CNVs.p.value.txt,controlfreec.ratio.txt,gainloss.txt,info.txt,diagram.pdf}')
+cmd <- file.path(source_dir, '*.{gainloss.txt,info.txt,diagram.pdf}')
 cmd <- paste('mv', cmd, cnvdir)
 system(cmd)
 

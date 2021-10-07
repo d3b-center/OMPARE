@@ -17,7 +17,6 @@ source(file.path(utils_dir, 'load_reference.R'))
 # read patient data
 source(file.path(utils_dir, "read_patient_data.R"))
 read_patient_data(patient_dir = patient_dir, 
-                  fusion_method = fusion_method, 
                   snv_caller = snv_caller)
 
 # run rna-seq analysis (output of this is required by several downstream scripts)

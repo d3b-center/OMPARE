@@ -22,7 +22,7 @@ gencode_v27 <- read.delim(file.path(data_dir, 'pnoc008', 'gencode.v27.primary_as
 gencode_v27_pc <- gencode_v27 %>%
   filter(biotype == "protein_coding")
 
-read_patient_data <- function(patient_dir, fusion_method = c("star","arriba"), snv_caller = "all"){
+read_patient_data <- function(patient_dir, snv_caller = "all"){
   
   # patient sample info (at most one with .txt extension)
   sampleInfo <- list.files(path = file.path(patient_dir, 'clinical'), pattern = "patient_report.txt", recursive = T, full.names = T)
@@ -111,14 +111,9 @@ read_patient_data <- function(patient_dir, fusion_method = c("star","arriba"), s
     assign("cnvDataFilt", cnvDataFilt, envir = globalenv())
   }
   
-  # fusion data (chose either star or arriba or both)
-  if(fusion_method == "star"){
-    fusPattern = "*star-fusion.fusion_candidates.final"
-  } else if(fusion_method == "arriba") {
-    fusPattern = "*.arriba.fusions.tsv"
-  } else {
-    fusPattern = "*star-fusion.fusion_candidates.final|*.arriba.fusions.tsv"
-  }
+  # fusion data (use both star and arriba)
+  fusPattern = "*star-fusion.fusion_candidates.final|*.arriba.fusions.tsv"
+  
   # read fusion files + filter and merge them
   fusFiles <- list.files(path = file.path(patient_dir, 'gene-fusions'), pattern = fusPattern, recursive = TRUE, full.names = T)
   if(length(fusFiles) >= 1){

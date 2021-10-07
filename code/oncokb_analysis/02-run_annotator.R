@@ -34,7 +34,7 @@ maf_dir <- file.path(patient_dir, "simple-variants")
 maf_files <- list.files(path = maf_dir, pattern = "*.maf", full.names = T)
 maf_file <- grep(snv_caller, maf_files, value = TRUE)
 maf_out <- file.path(output_dir, paste0('oncokb_', snv_caller, '_annotated.txt'))
-command <- paste('python', maf_annotator, '-i', maf_file, '-o', maf_out, '-b', oncokb_token, '-q hgvsp_short')
+command <- paste('/usr/bin/python', maf_annotator, '-i', maf_file, '-o', maf_out, '-b', oncokb_token, '-q hgvsp_short')
 system(command)
 
 # cnv

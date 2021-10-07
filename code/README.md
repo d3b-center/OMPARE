@@ -7,9 +7,7 @@
 ```
     results/PNOC008-xx
     ├── copy-number-variations
-    │   ├──.controlfreec.CNVs.p.value.txt
     │   ├──.controlfreec.info.txt
-    │   ├──.controlfreec.ratio.txt
     │   ├──.diagram.pdf
     │   └──.gainloss.txt
     ├── gene-expressions

@@ -6,8 +6,6 @@ output:
 params: 
   patient_dir: 
     value: "results"
-  fusion_method:
-    value: "arriba"
   set_title:
     value: "Patient Report"
   snv_caller:
@@ -42,7 +40,6 @@ knitr::opts_chunk$set(comment = NA)
 
 ```{r set_params}
 patient_dir <- params$patient_dir
-fusion_method <- params$fusion_method
 snv_caller <- params$snv_caller
 ```
 

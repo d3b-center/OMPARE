@@ -16,9 +16,6 @@ option_list <- list(
   make_option(c("--clin_file"), type = "character",
               default = NULL,
               help = "Manifest file (.xlsx)"),
-  make_option(c("--update_pbta"), type = "logical",
-              default = NULL,
-              help = "Update PBTA adapt file (TRUE or FALSE)"),
   make_option(c("--sync_data"), type = "logical",
               default = NULL,
               help = "Sync reference data to s3 (TRUE or FALSE)"),
@@ -35,7 +32,6 @@ opt <- parse_args(OptionParser(option_list = option_list))
 patient <- opt$patient
 clinical_sheet <- opt$clin_file
 source_dir <- opt$source_dir
-update_pbta <- opt$update_pbta
 sync_data <- opt$sync_data
 upload_reports <- opt$upload_reports
 study <- opt$study
@@ -71,16 +67,7 @@ if(!is.null(clinical_sheet)){
   system(cmd)
 }
 
-# 3. update histologies file from adapt (needs VPN)
-if(update_pbta){
-  print("Update PBTA histologies file...")
-  update_pbta <- file.path(root_dir, "code", 'update_pbta_histology.R')
-  cmd <- paste('Rscript', update_pbta)
-  print(cmd)
-  system(cmd)
-}
-
-# 4. Update PNOC008 matrices for each new patient
+# 3. Update PNOC008 matrices for each new patient
 print("Update PNOC008 data matrices...")
 update_pnoc008_matrices <- file.path(root_dir, "code", 'update_pnoc008_matrices.R')
 cmd <- paste('Rscript', update_pnoc008_matrices, 
@@ -88,7 +75,7 @@ cmd <- paste('Rscript', update_pnoc008_matrices,
 print(cmd)
 system(cmd)
 
-# 5. Run html reports
+# 4. Run html reports
 print("Run reports...")
 for(i in 1:length(callers)) {
   output_dir <- file.path(patient_dir, 'reports')
@@ -96,7 +83,6 @@ for(i in 1:length(callers)) {
   input_file <- file.path(root_dir, 'OMPARE.Rmd')
   rmarkdown::render(input = input_file,
                     params = list(patient_dir = patient_dir,
-                                  fusion_method = 'arriba',
                                   set_title = set_title,
                                   snv_caller = callers[i]), 
                     output_dir = output_dir, 
@@ -104,7 +90,7 @@ for(i in 1:length(callers)) {
                     output_file = output_file)
 }
 
-# 6. Sync to s3 (needs VPN)
+# 5. Sync to s3 (needs VPN)
 # exclude chembl folder as it is huge ~20GB and connection breaks before it is uploaded.
 if(sync_data){
   print("Sync data back to s3...")
@@ -113,7 +99,7 @@ if(sync_data){
   system(cmd)
 }
 
-# 7. Upload reports to cavatica
+# 6. Upload reports to cavatica
 if(upload_reports){
   print("Upload reports to cavatica...")
   cmd <- paste("Rscript upload_reports.R", 
