@@ -218,7 +218,7 @@ pnoc008_clinical <- pnoc008_clinical %>%
   as.data.frame()
 
 # add other identifiers from PBTA base histology
-pbta_hist <- read.delim(file.path(data_dir, 'pbta', 'pbta-histologies-base-adapt.tsv'))
+pbta_hist <- read.csv(file.path(data_dir, 'pbta', 'pbta-histologies-base-adapt.tsv'))
 pbta_hist <- pbta_hist %>%
   filter(experimental_strategy == "RNA-Seq",
          Kids_First_Biospecimen_ID != "BS_862NMAR7",
