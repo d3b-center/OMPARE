@@ -65,6 +65,12 @@ gtex_qSig <- readr::read_tsv(opt$gtex_qSig)
 pbta_qSig <- readr::read_tsv(opt$pbta_qSig)
 pbta_hgg_qSig <- readr::read_tsv(opt$pbta_hgg_qSig)
 
+if(nrow(gtex_qSig) == 0 |
+   nrow(pbta_qSig) == 0 |
+   nrow(pbta_hgg_qSig) == 0){
+  print("No qSig output")
+  stop()
+}
 #### Run drug annnotation for subnetwork -------------------------------------
 
 # Find the bs_id of our sample of interest

@@ -44,6 +44,13 @@ gtex_qSig_subnet_mapped <- readr::read_tsv(opt$gtex_mapped) %>% mutate(compariso
 pbta_qSig_subnet_mapped <- readr::read_tsv(opt$pbta_mapped) %>% mutate(comparison = "pbta_qSig")
 pbta_hgg_qSig_subnet_mapped <- readr::read_tsv(opt$pbta_hgg_mapped) %>% mutate(comparison = "pbta_hgg_qSig")
 
+if(nrow(gtex_qSig_subnet_mapped) == 0 |
+   nrow(pbta_qSig_subnet_mapped) == 0 |
+   nrow(pbta_hgg_qSig_subnet_mapped) == 0){
+  print("No qSig output")
+  stop()
+}
+
 subnetwork <- readr::read_tsv(opt$subnetwork)
 
 #### Synergy Score calculated ----------------------------------------------------------

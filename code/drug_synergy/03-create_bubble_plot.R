@@ -22,6 +22,11 @@ opt <- parse_args(OptionParser(option_list = option_list))
 combined_synergy <- opt$combined_synergy
 output_file <- opt$output_file
 
+if(!file.exists(combined_synergy)){
+  print("No qSig output")
+  stop()
+}
+
 # read output 
 all_combined <- read.delim(combined_synergy)
 
