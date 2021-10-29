@@ -68,11 +68,14 @@ Prerequisites
 
   * PNOC008 Clinical Manifest (needed to map ``Research ID`` to ADAPT ``cohort_participant_id``)
 
-* Files from ADAPT (updated each morning)
+* Files from ADAPT (updated each morning and needed to get BS identifier and other information)
 
 .. code-block:: bash
 
 	aws s3 --profile saml cp s3://d3b-bix-dev-data-bucket/pbta-histologies-base-adapt.tsv data/pbta/
+
+Note: None of these files have information on short_histology or broad_histology so currently it is being hard-coded ``HGAT`` and ``Diffuse astrocytic and oligodendroglial tumor``, respectively.
+
 
 Scripts
 =======
@@ -95,14 +98,11 @@ Master script
 	--patient=PATIENT
 		Patient identifier (PNOC008-22, C3342894...)
 
-	--sourcedir=SOURCEDIR
-		Source directory with all files (usually downloads folder on local machine)
+	--source_dir=SOURCE_DIR
+		Source directory with all files
 
 	--clin_file=CLIN_FILE
 		Manifest file (.xlsx)
-
-	--update_pbta=UPDATE_PBTA
-		Update PBTA adapt file (TRUE or FALSE)
 
 	--sync_data=SYNC_DATA
 		Sync reference data to s3 (TRUE or FALSE)
@@ -118,7 +118,6 @@ Master script
 	--patient PNOC008-40 \
 	--sourcedir ~/Downloads/p40 \
 	--clin_file data/manifest/pnoc008_manifest.xlsx \
-	--update_pbta FALSE \
 	--sync_data TRUE \
 	--upload_reports FALSE \
 	--study PNOC008
