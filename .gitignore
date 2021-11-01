@@ -22,6 +22,7 @@ GDCdata/
 
 # data (pushed to s3 instead of github)
 data/
+Rplots.pdf
 
 # results directory with all patient data (pushed to cavatica)
 results/
