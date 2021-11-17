@@ -228,10 +228,12 @@ if(nrow(oncokb_anno) == 0){
     key_clinical_findings_output_indels <- data.frame()
     
     all_findings_output_mnv <- all_findings_output %>%
-      dplyr::filter(grepl("Frame_Shift_Del", Details) | grepl("Frame_Shift_Ins", Details) | grepl("In_Frame_Del", Details) | grepl("In_Frame_Ins", Details))
+      dplyr::filter(grepl("Frame_Shift_Del", Details) | grepl("Frame_Shift_Ins", Details) | grepl("In_Frame_Del", Details) | grepl("In_Frame_Ins", Details)) %>%
+      dplyr::mutate(specific = gsub(".*HGVSp: ", "", Details)) 
       
     key_findings_output_mnv <- key_findings_output %>%
-      dplyr::filter(grepl("Frame_Shift_Del", Details) | grepl("Frame_Shift_Ins", Details) | grepl("In_Frame_Del", Details) | grepl("In_Frame_Ins", Details))
+      dplyr::filter(grepl("Frame_Shift_Del", Details) | grepl("Frame_Shift_Ins", Details) | grepl("In_Frame_Del", Details) | grepl("In_Frame_Ins", Details)) %>%
+      dplyr::mutate(specific = gsub(".*HGVSp: ", "", Details)) 
       
     for(q in 1:nrow(hotspot_indel)){
       
@@ -241,14 +243,16 @@ if(nrow(oncokb_anno) == 0){
       
       all_findings_output_indel <- all_findings_output_mnv %>%
         dplyr::filter(Aberration == hotspot_gene_indel) %>%
-        dplyr::filter(grepl(hotspot_specific_indel, Details)) %>%
-        dplyr::mutate(Variant_Properties= paste0("Cancer Hotspot; ", Variant_Properties))
+        dplyr::filter(specific == hotspot_specific_indel) %>%
+        dplyr::mutate(Variant_Properties= paste0("Cancer Hotspot; ", Variant_Properties)) %>%
+        dplyr::select(-specific)
       all_findings_output_indels <- bind_rows(all_findings_output_indel, all_findings_output_indels)
       
       key_clinical_findings_output_indel <- key_findings_output_mnv %>%
         dplyr::filter(Aberration == hotspot_gene_indel) %>%
-        dplyr::filter(grepl(hotspot_specific_indel, Details)) %>%
-        dplyr::mutate(Variant_Properties= paste0("Cancer Hotspot; ", Variant_Properties))
+        dplyr::filter(specific == hotspot_specific_indel) %>%
+        dplyr::mutate(Variant_Properties= paste0("Cancer Hotspot; ", Variant_Properties)) %>%
+        dplyr::select(-specific)
       key_clinical_findings_output_indels <- bind_rows(key_clinical_findings_output_indel, key_clinical_findings_output_indels)
     }
     
