@@ -13,20 +13,21 @@ Rscript tier_classification.R
 Input file `oncokb_consensus_annotated.txt`
 
 1. Tier 1 variants: 
-  a. Levels of evidence to include among Tier 1 would be: in the `HIGHEST_LEVEL` field, those with levels 1-3; OR in the `Highest DX Level`, levels 1-2; OR in the `Highest PX Level`, levels 1-2. 
+  a. Levels of evidence to include among Tier 1 would be: in the `HIGHEST_LEVEL` field, those with levels 1-3 or R1; OR in the `Highest DX Level`, levels 1-2; OR in the `Highest PX Level`, levels 1-2; OR annotated as `Tier 1` in COSMIC resistance variant database.
   b. Mutation type: from MAF `Variant_Classification` field - missense, nonsense, indel (frameshift/non-frameshift), splice site, splice region.
   c. Variant allele frequency > 0.05: Calculated as `VAF = t_alt_count/(t_alt_count+t_ref_count)`
   d. Population database: from MAF - `gnomad_AF` < 0.01
-  e. From MAF: `Existing_variation`: Must contain `COSM` identifier (found in COSMIC) or is present in COSMIC resistance hotspot table (downloaded from COSMIC)
+  e. From MAF: `Existing_variation`: Must contain `COSM` identifier (found in COSMIC) 
   g. Pathways: Known TSG or Oncogene given OMPARE knowledgebase (`cancer_gene_list.rds`). 
   h. Publications: from `oncokb_consensus_annotated.txt`, `CITATIONS` is non-empty
 
 2. Tier 2 variants: 
-  a. Levels of evidence to include among Tier 2 would be: - in the `HIGHEST_LEVEL` field, those variants only with level 4 evidence; OR in the `Highest DX Level`, level 3; OR in the `Highest PX Level`, level 3. (Note: a given variant may have multiple Levels of evidence in different indications, so long as the levels don't exceed 3 for DX or PX, nor 4 for `Level`, it would remain a Tier2 variant. If a variant has a level higher in any single one of these categories, it is a Tier 1 variant). 
+  a. Levels of evidence to include among Tier 2 would be: - in the `HIGHEST_LEVEL` field, those variants only with level 4 evidence OR R2; OR in the `Highest DX Level`, level 3; OR in the `Highest PX Level`, level 3; OR present in COSMIC resistance variant database without `Tier 1` annotated.
+(Note: a given variant may have multiple Levels of evidence in different indications, so long as the levels don't exceed 3 for DX or PX, nor 4 for `Level`, it would remain a Tier2 variant. If a variant has a level higher in any single one of these categories, it is a Tier 1 variant). 
   b. Mutation type: from MAF `Variant_Classification` field - missense, nonsense, indel (frameshift/non-frameshift), splice site, splice region.
   c. Variant allele frequency > 0.05: Calculated as `VAF = t_alt_count/(t_alt_count+t_ref_count)`
   d. Population database: from MAF - `gnomad_AF` < 0.01
-  e. From MAF: `Existing_variation`: Must contain `COSM` identifier (found in COSMIC) or is present in COSMIC resistance hotspot table (downloaded from COSMIC)
+  e. From MAF: `Existing_variation`: Must contain `COSM` identifier (found in COSMIC) 
   g. Pathways: Known TSG or Oncogene 
   h. Publications: from `oncokb_consensus_annotated.txt`, `CITATIONS` is non-empty
 

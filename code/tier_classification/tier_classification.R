@@ -33,9 +33,12 @@ if(nrow(oncokb_anno) == 0){
   
   # read in COSMIC resistance marker df
   cosmic_resistance <- readr::read_tsv(file.path(data_dir, 'CosmicResistanceMutations.tsv')) %>% 
-    dplyr::select(`Gene Name`, `AA Mutation`, `CDS Mutation`) %>% 
-    dplyr::mutate(cosmic_resistance_variant = "Yes", 
-                  `Gene Name` = gsub("\\_.*", "", `Gene Name`)) %>% 
+    dplyr::select(`Gene Name`, `AA Mutation`, `CDS Mutation`, `Tier`) %>% 
+    dplyr::mutate(`Gene Name` = gsub("\\_.*", "", `Gene Name`)) %>% 
+    dplyr::mutate(cosmic_tier_anno = case_when(
+      Tier == "1" ~ "Yes",
+      TRUE ~ "No"
+    )) %>% 
     dplyr::rename(HGVSp_Short = `AA Mutation`, 
                   HGVSc = `CDS Mutation`, 
                   Hugo_Symbol = `Gene Name`) %>%
@@ -68,13 +71,13 @@ if(nrow(oncokb_anno) == 0){
                                                 'In_Frame_Del', 'In_Frame_Ins', 
                                                 'Splice_Region', 'Splice_Site')) %>%
     # filter based on OncoKB annotation level 
-    dplyr::filter(HIGHEST_LEVEL %in% c("LEVEL_1","LEVEL_2","LEVEL_3A", "LEVEL_3B", "LEVEL_R1") | HIGHEST_DX_LEVEL %in% c("LEVEL_Dx1","LEVEL_Dx2") | HIGHEST_PX_LEVEL %in% c("LEVEL_Px1","LEVEL_Px2")) %>%
+    dplyr::filter(HIGHEST_LEVEL %in% c("LEVEL_1","LEVEL_2","LEVEL_3A", "LEVEL_3B", "LEVEL_R1") | HIGHEST_DX_LEVEL %in% c("LEVEL_Dx1","LEVEL_Dx2") | HIGHEST_PX_LEVEL %in% c("LEVEL_Px1","LEVEL_Px2" | cosmic_tier_anno == "Yes")) %>%
     # contain only variants that are <1% (less likely to be germline)
     dplyr::filter(gnomAD_AF<0.01| is.na(gnomAD_AF)) %>%
     # filter on VAF over 5% to avoid background noise
     dplyr::filter(VAF>0.05) %>%
     # filter to contain only mutations that has COSMIC ID or has resistance mutation
-    dplyr::filter(grepl("COSM", Existing_variation) | cosmic_resistance_variant == "Yes") %>% 
+    dplyr::filter(grepl("COSM", Existing_variation)) %>% 
     # filter to contain only mutations with citations
     dplyr::filter(!is.na(CITATIONS)) %>% 
     # filter to TSG lists in OMPARE database
@@ -90,13 +93,13 @@ if(nrow(oncokb_anno) == 0){
                                                 'In_Frame_Del', 'In_Frame_Ins', 
                                                 'Splice_Region', 'Splice_Site')) %>%
     # filter based on OncoKB annotation level 
-    dplyr::filter(HIGHEST_LEVEL %in% c("LEVEL_4","LEVEL_R2") | HIGHEST_DX_LEVEL %in% c("LEVEL_Dx3") | HIGHEST_PX_LEVEL %in% c("LEVEL_Px3")) %>%
+    dplyr::filter(HIGHEST_LEVEL %in% c("LEVEL_4","LEVEL_R2") | HIGHEST_DX_LEVEL %in% c("LEVEL_Dx3") | HIGHEST_PX_LEVEL %in% c("LEVEL_Px3") | cosmic_tier_anno == "No") %>%
     # contain only variants that are <1% (less likely to be germline)
     dplyr::filter(gnomAD_AF<0.01| is.na(gnomAD_AF)) %>%
     # filter on VAF over 5% to avoid background noise
     dplyr::filter(VAF>0.05) %>%
     # filter to contain only mutations that has COSMIC ID or has resistance mutation
-    dplyr::filter(grepl("COSM", Existing_variation) | cosmic_resistance_variant == "Yes") %>% 
+    dplyr::filter(grepl("COSM", Existing_variation)) %>% 
     # filter to contain only mutations with citations
     dplyr::filter(!is.na(CITATIONS)) %>% 
     # filter to TSG lists in OMPARE database
