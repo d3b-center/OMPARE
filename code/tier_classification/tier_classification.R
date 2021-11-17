@@ -151,7 +151,7 @@ if(nrow(oncokb_anno) == 0){
       dplyr::mutate(position = gsub(".*HGVSp: p..", "", Details)) %>% 
       dplyr::mutate(position =str_sub(position, end = -2))
     
-    key_findings_output_snv <- key_findings_output %>% 
+    key_findings_output_snv <- key_clinical_findings_output %>% 
       dplyr::filter(grepl("Missense_Mutation", Details) | grepl("Nonsense_Mutation", Details) | grepl("Splice_Site", Details) | grepl("Splice_Region", Details)) %>%
       dplyr::mutate(position = gsub(".*HGVSp: p..", "", Details)) %>% 
       dplyr::mutate(position =str_sub(position, end = -2))
