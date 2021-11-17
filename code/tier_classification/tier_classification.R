@@ -231,7 +231,7 @@ if(nrow(oncokb_anno) == 0){
       dplyr::filter(grepl("Frame_Shift_Del", Details) | grepl("Frame_Shift_Ins", Details) | grepl("In_Frame_Del", Details) | grepl("In_Frame_Ins", Details)) %>%
       dplyr::mutate(specific = gsub(".*HGVSp: ", "", Details)) 
       
-    key_findings_output_mnv <- key_findings_output %>%
+    key_findings_output_mnv <- key_clinical_findings_output %>%
       dplyr::filter(grepl("Frame_Shift_Del", Details) | grepl("Frame_Shift_Ins", Details) | grepl("In_Frame_Del", Details) | grepl("In_Frame_Ins", Details)) %>%
       dplyr::mutate(specific = gsub(".*HGVSp: ", "", Details)) 
       
