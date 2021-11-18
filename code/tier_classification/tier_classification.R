@@ -197,19 +197,19 @@ if(nrow(oncokb_anno) == 0){
       all_findings_output_hotspots <- bind_rows(all_findings_output_hotspots, all_findings_output_hotspot)
       
       # now deal with key clinical findings
-      key_findings_output_hotspot <- key_findings_output_snv %>%
+      key_clinical_findings_output_hotspot <- key_findings_output_snv %>%
         dplyr::filter(Aberration == hotspot_gene,
                       position == hotspot_aa_position) %>%
         dplyr::select(-position)
 
-      if(nrow(key_findings_output_hotspot)>0){
-        key_findings_output_hotspot <- key_findings_output_hotspot %>%
+      if(nrow(key_clinical_findings_output_hotspot)>0){
+        key_clinical_findings_output_hotspot <- key_clinical_findings_output_hotspot %>%
           dplyr::mutate(Variant_Properties= case_when(
             grepl(hotspot_aa, Details) ~ paste0("Cancer Hotspot; ", Variant_Properties),
             TRUE ~ paste0("Cancer Hotspot Location; ", Variant_Properties)
           ))
       }
-      key_findings_output_hotspots <- bind_rows(key_findings_output_hotspots, key_findings_output_hotspot)
+      key_clinical_findings_output_hotspots <- bind_rows(key_clinical_findings_output_hotspots, key_clinical_findings_output_hotspot)
     }
     
     # add the annotations to the file 
