@@ -13,7 +13,7 @@ Rscript tier_classification.R
 Input file `oncokb_consensus_annotated.txt`
 
 1. Tier 1 variants: 
-  a. Levels of evidence to include among Tier 1 would be: in the `HIGHEST_LEVEL` field, those with levels 1-3 or R1; OR in the `Highest DX Level`, levels 1-2; OR in the `Highest PX Level`, levels 1-2; OR annotated as `Tier 1` in COSMIC resistance variant database.
+  a. Levels of evidence to include among Tier 1 would be: in the `HIGHEST_LEVEL` field, those with levels 1-3 or R1; OR in the `Highest DX Level`, levels 1-2; OR in the `Highest PX Level`, levels 1-2; OR annotated as `Tier 1` in COSMIC resistance variant database; OR designated as `pathogenic` in `CLIN_SIG`.
   b. Mutation type: from MAF `Variant_Classification` field - missense, nonsense, indel (frameshift/non-frameshift), splice site, splice region.
   c. Variant allele frequency > 0.05: Calculated as `VAF = t_alt_count/(t_alt_count+t_ref_count)`
   d. Population database: from MAF - `gnomad_AF` < 0.01
