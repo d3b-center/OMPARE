@@ -93,7 +93,7 @@ if(nrow(oncokb_anno) == 0){
                                                 'In_Frame_Del', 'In_Frame_Ins', 
                                                 'Splice_Region', 'Splice_Site')) %>%
     # filter based on OncoKB annotation level 
-    dplyr::filter(HIGHEST_LEVEL %in% c("LEVEL_4","LEVEL_R2") | HIGHEST_DX_LEVEL %in% c("LEVEL_Dx3") | HIGHEST_PX_LEVEL %in% c("LEVEL_Px3") | cosmic_tier_anno == "No" | grepl('likely_pathogenic', CLIN_SIG)) %>%
+    dplyr::filter(HIGHEST_LEVEL %in% c("LEVEL_4","LEVEL_R2") | HIGHEST_DX_LEVEL %in% c("LEVEL_Dx3") | HIGHEST_PX_LEVEL %in% c("LEVEL_Px3") | cosmic_tier_anno == "No" | (grepl('likely_pathogenic', CLIN_SIG) & !grepl('\\bpathogenic\\b', CLIN_SIG))) %>%
     # contain only variants that are <1% (less likely to be germline)
     dplyr::filter(gnomAD_AF<0.01| is.na(gnomAD_AF)) %>%
     # filter on VAF over 5% to avoid background noise
