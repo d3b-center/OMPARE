@@ -383,7 +383,7 @@ After running the reports, the project folder will have all output files with pl
 Upload to data-delivery project
 -------------------------------
 
-**upload_reports.R**: this script uploads the files under ``reports``, ``output`` and ``CEMITools`` folder to the data delivery project folder on cavatica. 
+**upload_reports.R**: this script uploads the files under ``reports`` and ``output`` folders to the data delivery project folder on cavatica. 
 
 .. code-block:: bash
 

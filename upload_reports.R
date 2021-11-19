@@ -1,8 +1,8 @@
 # Author: Komal S. Rathi
-# Function: Upload patient output and reports to data delivery project
+# Function: Upload patient output and reports using sevenbridges command line to data delivery project
 
 suppressPackageStartupMessages({
-	library(optparse)
+  library(optparse)
 })
 
 option_list <- list(
@@ -24,8 +24,7 @@ patient_dir <- file.path(root_dir, 'results', patient)
 
 # set variables for upload commands
 readRenviron("~/.Renviron")
-cav <- Sys.getenv('CAV') # path to cavatica-uploader.sh
-auth <- Sys.getenv('AUTH_TOKEN') # authentication token
+sb <- Sys.getenv('SB') # path to sb uploaded
 if(study == "PNOC008"){
   project <- file.path('cavatica', 'sd-8y99qzjj') # pnoc008 project id
 } else {
@@ -33,26 +32,19 @@ if(study == "PNOC008"){
 }
 
 # destination folder
-dest_folder <- file.path(patient) 
+dest_folder <- file.path(project, patient) 
 
 # source folders
 output <- file.path(patient_dir, "output") # all output
 reports <- file.path(patient_dir, "reports") # all reports
 
 # upload output
-cmd <- paste(cav, 
-	'-t', auth, 
-	'-p', project, '-f', dest_folder, 
-	'-pf', output)
+cmd <- paste('sb upload start', output, '--destination', dest_folder)
 print(cmd)
 system(cmd)
 
 # upload reports
-cmd <- paste(cav, 
-	'-t', auth, 
-	'-p', project, 
-	'-f', dest_folder, 
-	'-pf', reports)
+cmd <- paste('sb upload start', reports, '--destination', dest_folder)
 print(cmd)
 system(cmd)
 
