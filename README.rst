@@ -27,7 +27,7 @@ Prerequisites
 	cd /path-to/OMPARE
 	Rscript code/utils/install_pkgs.R
 
-	# NOTE: ggnetwork v0.5.1 is required
+	# NOTE: ggnetwork v0.5.1 and DT.0.18 is required
 
 3. Download reference data:
    
