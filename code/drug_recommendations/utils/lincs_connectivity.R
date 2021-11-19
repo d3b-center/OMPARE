@@ -22,7 +22,6 @@ suppressPackageStartupMessages({
 # directories
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
 data_dir <- file.path(root_dir, "data")
-dsigdb_dir <- file.path(data_dir, "dsigdb")
 
 # source functions
 source(file.path(module_dir, "utils", "network_to_file.R"))
