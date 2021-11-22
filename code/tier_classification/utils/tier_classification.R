@@ -2,47 +2,11 @@
 # Classify SNV mutation results into 4 tier [@doi:10.1016/j.jmoldx.2016.10.002]
 
 suppressPackageStartupMessages({
-  library(optparse)
   library(tidyverse)
   library(readr)
 })
 
-# Define Directories
-root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
-data_dir <- file.path(root_dir, "data")
-input_dir <- file.path(patient_dir, "output", "oncokb_analysis")
-
-# Read in files necessary for analyses
-if(snv_caller != "all"){
-  oncokb_anno <- readr::read_tsv(file.path(input_dir, paste0("oncokb_", snv_caller, "_annotated.txt")))
-} else {
-  oncokb_anno <- readr::read_tsv(file.path(input_dir, paste0("oncokb_consensus_annotated.txt")))
-}
-
-if(nrow(oncokb_anno) == 0){
-  # do nothing
-} else {
-  # Read in cancer genes list from OMPARE knowledge base
-  cancer_genes <- readRDS(file.path(data_dir, 'cancer_gene_list.rds'))
-  
-  # Read in hotspot database
-  hotspot_indel <- readr::read_tsv(file.path(data_dir, 'hotspots_database', 'hotspot_database_2017_indel.tsv')) %>% 
-    distinct()
-  hotspot_snv <- readr::read_tsv(file.path(data_dir, 'hotspots_database', 'hotspot_database_2017_snv.tsv')) %>%
-    distinct()
-  
-  # read in COSMIC resistance marker df
-  cosmic_resistance <- readr::read_tsv(file.path(data_dir, 'CosmicResistanceMutations.tsv')) %>% 
-    dplyr::select(`Gene Name`, `AA Mutation`, `CDS Mutation`, `Tier`) %>% 
-    dplyr::mutate(`Gene Name` = gsub("\\_.*", "", `Gene Name`)) %>% 
-    dplyr::mutate(cosmic_tier_anno = case_when(
-      Tier == "1" ~ "Yes",
-      TRUE ~ "No"
-    )) %>% 
-    dplyr::rename(HGVSp_Short = `AA Mutation`, 
-                  HGVSc = `CDS Mutation`, 
-                  Hugo_Symbol = `Gene Name`) %>%
-    distinct()
+tier_classification <- function(all_findings_output, oncokb_anno, cancer_genes, hotspot_indel, hotspot_snv, cosmic_resistance){
   
   # subset to genes in all_findings_output corresponding to VUS and Mutation
   genes_of_interest <- all_findings_output %>%
@@ -144,7 +108,7 @@ if(nrow(oncokb_anno) == 0){
     dplyr::select(Hugo_Symbol, Variant_Classification, HGVSp_Short, tier_classification)
   
   
-  ######################### annotate MSK SNV hotspot database to key clinical findings & all findings table
+  ######################### annotate MSK SNV hotspot database to all findings table
   
   # annotate SNV first
   if(nrow(hotspot_snv)>0){
@@ -154,13 +118,7 @@ if(nrow(oncokb_anno) == 0){
       dplyr::mutate(position = gsub(".*HGVSp: p..", "", Details)) %>% 
       dplyr::mutate(position =str_sub(position, end = -2))
     
-    key_findings_output_snv <- key_clinical_findings_output %>% 
-      dplyr::filter(grepl("Missense_Mutation", Details) | grepl("Nonsense_Mutation", Details) | grepl("Splice_Site", Details) | grepl("Splice_Region", Details)) %>%
-      dplyr::mutate(position = gsub(".*HGVSp: p..", "", Details)) %>% 
-      dplyr::mutate(position =str_sub(position, end = -2))
-      
     all_findings_output_hotspots <- data.frame()
-    key_clinical_findings_output_hotspots <- data.frame()
     
     snv_location <- hotspot_snv %>% 
       dplyr::select(Hugo_Symbol, Amino_Acid_Position) %>% 
@@ -193,29 +151,9 @@ if(nrow(oncokb_anno) == 0){
             grepl(hotspot_aa, Details) ~ paste0("Cancer Hotspot; ", Variant_Properties),
             TRUE ~ paste0("Cancer Hotspot Location; ", Variant_Properties)
           ))
-        }
-      all_findings_output_hotspots <- bind_rows(all_findings_output_hotspots, all_findings_output_hotspot)
-      
-      # now deal with key clinical findings
-      key_clinical_findings_output_hotspot <- key_findings_output_snv %>%
-        dplyr::filter(Aberration == hotspot_gene,
-                      position == hotspot_aa_position) %>%
-        dplyr::select(-position)
-
-      if(nrow(key_clinical_findings_output_hotspot)>0){
-        key_clinical_findings_output_hotspot <- key_clinical_findings_output_hotspot %>%
-          dplyr::mutate(Variant_Properties= case_when(
-            grepl(hotspot_aa, Details) ~ paste0("Cancer Hotspot; ", Variant_Properties),
-            TRUE ~ paste0("Cancer Hotspot Location; ", Variant_Properties)
-          ))
       }
-      key_clinical_findings_output_hotspots <- bind_rows(key_clinical_findings_output_hotspots, key_clinical_findings_output_hotspot)
+      all_findings_output_hotspots <- bind_rows(all_findings_output_hotspots, all_findings_output_hotspot)
     }
-    
-    # add the annotations to the file 
-    key_clinical_findings_output_not_hotspot <- key_clinical_findings_output %>% 
-      dplyr::filter(!Details %in% key_clinical_findings_output_hotspots$Details)
-    key_clinical_findings_output <- bind_rows(key_clinical_findings_output_not_hotspot, key_clinical_findings_output_hotspots)
     
     # add the annotations to the file 
     all_findings_output_not_hotspot <- all_findings_output %>% 
@@ -223,21 +161,16 @@ if(nrow(oncokb_anno) == 0){
     all_findings_output <- bind_rows(all_findings_output_not_hotspot, all_findings_output_hotspots)
   }
   
-  ######################### annotate MSK Indel hotspot database to key clinical findings & all findings table
+  ######################### annotate MSK Indel hotspot database to all findings table
   
   # annotate Indel now
   if(nrow(hotspot_indel)>0){
     all_findings_output_indels <- data.frame()
-    key_clinical_findings_output_indels <- data.frame()
     
     all_findings_output_mnv <- all_findings_output %>%
       dplyr::filter(grepl("Frame_Shift_Del", Details) | grepl("Frame_Shift_Ins", Details) | grepl("In_Frame_Del", Details) | grepl("In_Frame_Ins", Details)) %>%
       dplyr::mutate(specific = gsub(".*HGVSp: ", "", Details)) 
-      
-    key_findings_output_mnv <- key_clinical_findings_output %>%
-      dplyr::filter(grepl("Frame_Shift_Del", Details) | grepl("Frame_Shift_Ins", Details) | grepl("In_Frame_Del", Details) | grepl("In_Frame_Ins", Details)) %>%
-      dplyr::mutate(specific = gsub(".*HGVSp: ", "", Details)) 
-      
+    
     for(q in 1:nrow(hotspot_indel)){
       
       each_indel <- hotspot_indel[q,]
@@ -251,18 +184,7 @@ if(nrow(oncokb_anno) == 0){
         dplyr::select(-specific)
       all_findings_output_indels <- bind_rows(all_findings_output_indel, all_findings_output_indels)
       
-      key_clinical_findings_output_indel <- key_findings_output_mnv %>%
-        dplyr::filter(Aberration == hotspot_gene_indel) %>%
-        dplyr::filter(specific == hotspot_specific_indel) %>%
-        dplyr::mutate(Variant_Properties= paste0("Cancer Hotspot; ", Variant_Properties)) %>%
-        dplyr::select(-specific)
-      key_clinical_findings_output_indels <- bind_rows(key_clinical_findings_output_indel, key_clinical_findings_output_indels)
     }
-    
-    # add the annotations to the file 
-    key_clinical_findings_output_no_indels <- key_clinical_findings_output %>% 
-      dplyr::filter(!Details %in% key_clinical_findings_output_indels$Details)
-    key_clinical_findings_output <- bind_rows(key_clinical_findings_output_indels, key_clinical_findings_output_no_indels)
     
     # add the annotations to the file 
     all_findings_output_no_indels <- all_findings_output %>% 
@@ -271,27 +193,19 @@ if(nrow(oncokb_anno) == 0){
   }
   
   
-  ######################### annotate TIER information to Key clinical findings output and all findings output
+  ######################### annotate TIER information to all findings output
   
   # annotate TIER info
   if(nrow(oncokb_anno_tiers)){
-    key_clinical_findings_output_tiers <- data.frame()
     all_findings_output_tiers <- data.frame()
     
     for(i in 1:nrow(oncokb_anno_tiers)) {
-      # for each mutation, find the matching entries in the key clinical findings table (if present)
+      # for each mutation, find the matching entries in the all findings table (if present)
       each <- oncokb_anno_tiers[i,]
       gene_symbol <- each$Hugo_Symbol
       variant_classification <- each$Variant_Classification
       hgvs_short <- each$HGVSp_Short
       tier_class <- each$tier_classification
-      
-      # make changes to variant property column when TIER information is available
-      key_clinical_findings_output_tier <- key_clinical_findings_output %>% 
-        dplyr::filter(Aberration == gene_symbol & grepl(variant_classification, Details) & grepl(hgvs_short, Details)) %>%
-        dplyr::mutate(Variant_Properties =paste0(tier_class, "; ", Variant_Properties))
-      
-      key_clinical_findings_output_tiers <- rbind(key_clinical_findings_output_tiers, key_clinical_findings_output_tier)
       
       # make changes to variant property column when TIER information is available
       all_findings_output_tier <- all_findings_output %>% 
@@ -302,17 +216,11 @@ if(nrow(oncokb_anno) == 0){
     }
     
     # filter to the ones that do not have modification
-    key_clinical_findings_output_no_tier <- key_clinical_findings_output %>% 
-      dplyr::filter(!Details %in% key_clinical_findings_output_tiers$Details)
-    key_clinical_findings_output <- bind_rows(key_clinical_findings_output_no_tier, key_clinical_findings_output_tiers)
-    
-    # filter to the ones that do not have modification
     all_findings_output_no_tier <- all_findings_output %>% 
       dplyr::filter(!Details %in% all_findings_output_tiers$Details)
     all_findings_output <- bind_rows(all_findings_output_no_tier, all_findings_output_tiers)
   }
+  
+  # return annotated output
+  return(all_findings_output)
 }
-
-
-
-
