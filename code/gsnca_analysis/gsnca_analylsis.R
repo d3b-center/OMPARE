@@ -36,7 +36,6 @@ source(file.path(module_dir, "utils", "gsnca_calc.R"))
 #### Read in files necessary for analyses --------------------------------------
 # UMAP results
 transciptomically_similar_pediatric <- readRDS(file.path(input_dir, "transciptomically_similar_pediatric.rds"))
-transciptomically_similar_adult <- readRDS(file.path(input_dir, "transciptomically_similar_adult.rds"))
 
 # gencode reference
 gencode_v27 <- read.delim(file.path(data_dir, 'pnoc008', 'gencode.v27.primary_assembly.annotation.txt'))
@@ -44,12 +43,10 @@ gencode_v27_pc <- gencode_v27 %>%
   filter(biotype == "protein_coding")
 
 # pnoc008 samples 
-pnoc008_histology <- readRDS(file.path(data_dir, 'pnoc008', 'pnoc008_clinical.rds'))
 pnoc008_tpm<- readRDS(file.path(data_dir, 'pnoc008', 'pnoc008_tpm_matrix.rds')) %>% 
   tibble::rownames_to_column("geneID")
 
 # GTex Brain TPM
-gtex_brain_clinical <- readRDS(file.path(data_dir, 'gtex', 'gtex_brain_clinical.rds'))
 gtex_brain_tpm <- readRDS(file.path(data_dir, "gtex", "gtex_brain_tpm.rds"))
 gtex_brain_tpm <- gtex_brain_tpm[grep("^HIST", rownames(gtex_brain_tpm), invert = T),]
 gtex_brain_tpm <- gtex_brain_tpm[rownames(gtex_brain_tpm) %in% gencode_v27_pc$gene_symbol,]
