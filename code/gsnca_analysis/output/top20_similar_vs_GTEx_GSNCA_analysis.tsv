@@ -1,0 +1,90 @@
+pathway_id	pathway_description	pvalue	hub_gene	comparison
+hsa02010	ABC transporters	9.99000999000999e-4	GBF1	GTEx
+hsa04010	MAPK signaling pathway	9.99000999000999e-4	PPP2R5D	GTEx
+hsa04014	Ras signaling pathway	9.99000999000999e-4	RAB8A	GTEx
+hsa04070	Phosphatidylinositol signaling system	9.99000999000999e-4	TYROBP	GTEx
+hsa04114	Oocyte meiosis	9.99000999000999e-4	NFYC	GTEx
+hsa04144	Endocytosis	9.99000999000999e-4	CSNK1D	GTEx
+hsa04270	Vascular smooth muscle contraction	9.99000999000999e-4	NFKB1	GTEx
+hsa04330	Notch signaling pathway	9.99000999000999e-4	FCGR2A	GTEx
+hsa04514	Cell adhesion molecules (CAMs)	9.99000999000999e-4	CSNK1D	GTEx
+hsa04540	Gap junction	9.99000999000999e-4	ALOX5AP	GTEx
+hsa04612	Antigen processing and presentation	9.99000999000999e-4	CSNK1D	GTEx
+hsa04720	Long-term potentiation	9.99000999000999e-4	FCGR2A	GTEx
+hsa04722	Neurotrophin signaling pathway	9.99000999000999e-4	MEF2A	GTEx
+hsa04727	GABAergic synapse	9.99000999000999e-4	AURKA	GTEx
+hsa04912	GnRH signaling pathway	9.99000999000999e-4	MEF2A	GTEx
+hsa04970	Salivary secretion	9.99000999000999e-4	BCL9	GTEx
+hsa04972	Pancreatic secretion	9.99000999000999e-4	AIF1	GTEx
+hsa04978	Mineral absorption	9.99000999000999e-4	AIF1	GTEx
+hsa00230	Purine metabolism	0.001998001998001998	CX3CL1	GTEx
+hsa00600	Sphingolipid metabolism	0.001998001998001998	FCGR1B	GTEx
+hsa01100	Metabolic pathways	0.001998001998001998	ATP6V1B2	GTEx
+hsa04015	Rap1 signaling pathway	0.001998001998001998	MSRA	GTEx
+hsa04022	cGMP-PKG signaling pathway	0.001998001998001998	MTMR1	GTEx
+hsa04062	Chemokine signaling pathway	0.001998001998001998	NPC1	GTEx
+hsa04110	Cell cycle	0.001998001998001998	CD4	GTEx
+hsa04142	Lysosome	0.001998001998001998	CD68	GTEx
+hsa04261	Adrenergic signaling in cardiomyocytes	0.001998001998001998	AURKA	GTEx
+hsa04610	Complement and coagulation cascades	0.001998001998001998	AP2A2	GTEx
+hsa04621	NOD-like receptor signaling pathway	0.001998001998001998	BTK	GTEx
+hsa04724	Glutamatergic synapse	0.001998001998001998	CYBA	GTEx
+hsa04726	Serotonergic synapse	0.001998001998001998	STS	GTEx
+hsa04728	Dopaminergic synapse	0.001998001998001998	ZNF112	GTEx
+hsa04810	Regulation of actin cytoskeleton	0.001998001998001998	SFSWAP	GTEx
+hsa04915	Estrogen signaling pathway	0.001998001998001998	ADAR	GTEx
+hsa04916	Melanogenesis	0.001998001998001998	POLE	GTEx
+hsa00270	Cysteine and methionine metabolism	0.002997002997002997	ADRB2	GTEx
+hsa00982	Drug metabolism - cytochrome P450	0.002997002997002997	STS	GTEx
+hsa04020	Calcium signaling pathway	0.002997002997002997	FANCC	GTEx
+hsa04140	Regulation of autophagy	0.002997002997002997	SRSF5	GTEx
+hsa04151	PI3K-Akt signaling pathway	0.002997002997002997	RAB8A	GTEx
+hsa04310	Wnt signaling pathway	0.002997002997002997	IL6R	GTEx
+hsa04622	RIG-I-like receptor signaling pathway	0.002997002997002997	NR4A2	GTEx
+hsa04721	Synaptic vesicle cycle	0.002997002997002997	TYMS	GTEx
+hsa04723	Retrograde endocannabinoid signaling	0.002997002997002997	CYBA	GTEx
+hsa04725	Cholinergic synapse	0.002997002997002997	UPF1	GTEx
+hsa04730	Long-term depression	0.002997002997002997	TRAF6	GTEx
+hsa04914	Progesterone-mediated oocyte maturation	0.002997002997002997	ITGAX	GTEx
+hsa04360	Axon guidance	0.003996003996003996	RAB8A	GTEx
+hsa04550	Signaling pathways regulating pluripotency of stem cells	0.003996003996003996	DIAPH1	GTEx
+hsa04918	Thyroid hormone synthesis	0.003996003996003996	ADAR	GTEx
+hsa03460	Fanconi anemia pathway	0.004995004995004995	TRIM21	GTEx
+hsa04024	cAMP signaling pathway	0.004995004995004995	NR4A2	GTEx
+hsa04150	mTOR signaling pathway	0.005994005994005994	SERPINF2	GTEx
+hsa04911	Insulin secretion	0.005994005994005994	SUPT6H	GTEx
+hsa04921	Oxytocin signaling pathway	0.005994005994005994	GNG4	GTEx
+hsa04064	NF-kappa B signaling pathway	0.006993006993006993	SLC1A3	GTEx
+hsa04145	Phagosome	0.006993006993006993	ACADSB	GTEx
+hsa04620	Toll-like receptor signaling pathway	0.006993006993006993	NR4A2	GTEx
+hsa04750	Inflammatory mediator regulation of TRP channels	0.006993006993006993	TIAL1	GTEx
+hsa04672	Intestinal immune network for IgA production	0.007992007992007992	ZNF225	GTEx
+hsa04141	Protein processing in endoplasmic reticulum	0.008991008991008992	ADAR	GTEx
+hsa04350	TGF-beta signaling pathway	0.008991008991008992	DOK1	GTEx
+hsa04974	Protein digestion and absorption	0.008991008991008992	PML	GTEx
+hsa00480	Glutathione metabolism	0.00999000999000999	SLC1A1	GTEx
+hsa04922	Glucagon signaling pathway	0.01098901098901099	FUS	GTEx
+hsa04510	Focal adhesion	0.011988011988011988	SFSWAP	GTEx
+hsa04713	Circadian entrainment	0.012987012987012988	CYBA	GTEx
+hsa03040	Spliceosome	0.016983016983016984	BCL7A	GTEx
+hsa03018	RNA degradation	0.01898101898101898	ATP6V1B2	GTEx
+hsa04971	Gastric acid secretion	0.01998001998001998	BCL9	GTEx
+hsa04060	Cytokine-cytokine receptor interaction	0.02097902097902098	TAF4B	GTEx
+hsa04390	Hippo signaling pathway	0.02097902097902098	TAF1	GTEx
+hsa04630	Jak-STAT signaling pathway	0.022977022977022976	BTK	GTEx
+hsa00562	Inositol phosphate metabolism	0.023976023976023976	COL16A1	GTEx
+hsa03320	PPAR signaling pathway	0.023976023976023976	ABL2	GTEx
+hsa04260	Cardiac muscle contraction	0.023976023976023976	AIF1	GTEx
+hsa04210	Apoptosis	0.026973026973026972	NR4A2	GTEx
+hsa04068	FoxO signaling pathway	0.028971028971028972	IL6R	GTEx
+hsa04080	Neuroactive ligand-receptor interaction	0.028971028971028972	WRN	GTEx
+hsa04120	Ubiquitin mediated proteolysis	0.029970029970029972	NFYC	GTEx
+hsa04668	TNF signaling pathway	0.029970029970029972	ADAR	GTEx
+hsa04611	Platelet activation	0.03296703296703297	SERPINH1	GTEx
+hsa04919	Thyroid hormone signaling pathway	0.03296703296703297	HNRNPH1	GTEx
+hsa04910	Insulin signaling pathway	0.04095904095904096	SRSF5	GTEx
+hsa04380	Osteoclast differentiation	0.04295704295704296	BTK	GTEx
+hsa04520	Adherens junction	0.04595404595404595	FCGR2A	GTEx
+hsa04530	Tight junction	0.04695304695304695	NRF1	GTEx
+hsa04920	Adipocytokine signaling pathway	0.04695304695304695	NR4A2	GTEx
+hsa00330	Arginine and proline metabolism	0.04995004995004995	HSP90AA1	GTEx
