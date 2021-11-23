@@ -142,11 +142,12 @@ gsnca_analysis_plot <- function(similar_subjects_expr_df, ref_expr_df, ref_name,
   # generate combined matrix 
   similar_subjects_expr_df <- similar_subjects_expr_df %>% tibble::rownames_to_column("geneID")
   ref_expr_df <- ref_expr_df %>% tibble::rownames_to_column("geneID")
-  # combine and filter again
-  combined_matrix <- full_join(similar_subjects_expr_df, ref_expr_df) %>%
-    replace(is.na(.), 0) %>%
-    tibble::column_to_rownames("geneID") %>%
-    filter_low_expr_df()
+  
+  # combine to contain only genes that pass filter for both expression matrix
+  genes_in_common <- intersect(similar_subjects_expr_df$geneID, ref_expr_df$geneID) %>% unique()
+  combined_matrix <- left_join(similar_subjects_expr_df[(similar_subjects_expr_df$geneID %in% genes_in_common), ], 
+                               ref_expr_df[(ref_expr_df$geneID %in% genes_in_common),]) %>%
+    tibble::column_to_rownames("geneID") 
   
   # generate pathway df 
   path_build_df <- build_pathways(rownames(combined_matrix))
