@@ -67,21 +67,21 @@ build_pathways <- function(gene_list) {
     dplyr::mutate(eg = mapIds(org.Hs.eg.db, symbol, "ENTREZID", "SYMBOL")) 
   
   # get GSCollectionSet object
-  pathway_build <- buildKEGGIdx(entrezIDs = genes_df$eg, species = "human")
+  pathway_build <- EGSEA::buildMSigDBIdx(entrezIDs = genes_df$eg, 
+                                         geneSets="c2",
+                                         species = "Homo sapiens")
   
   # get annotation to filter out disease related
-  pathway_build_anno <- pathway_build@anno %>% as.data.frame() %>% 
-    dplyr::filter(Type != "Disease") %>% 
-    dplyr::select(c("ID", "GeneSet", "Type")) %>%
-    dplyr::rename(description = GeneSet, pathway=ID)
+  pathway_build_anno <- pathway_build[["c2"]]@anno %>% as.data.frame() %>% 
+    dplyr::select(c("ID", "GeneSet", "Description")) 
   
   # get gene set IDs
-  pathway_build_genesets <- pathway_build_anno %>% pull(description)
+  pathway_build_genesets <- pathway_build_anno %>% pull(GeneSet)
   
   # build df with pathways and entrezID of genes
   pathway_build_genesets_list <- lapply(pathway_build_genesets, function(x){
-    pathway_df <- pathway_build@idx[[x]] %>% as.data.frame() %>%
-      mutate(description = x)
+    pathway_df <- pathway_build[["c2"]]@idx[[x]] %>% as.data.frame() %>%
+      mutate(GeneSet = x)
   })
   pathway_build_genesets_df <- do.call(rbind, pathway_build_genesets_list) %>%
     dplyr::left_join(pathway_build_anno) 
