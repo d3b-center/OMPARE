@@ -165,6 +165,7 @@ gsnca_analysis_plot <- function(similar_subjects_expr_df, ref_expr_df, ref_name,
   colnames(gsnca_results) <- c("pathway_id", "pathway_description", "pvalue", "hub_gene")
   
   for(i in 1:length(pathway_list)){
+    print(i)
     # iterate through path list 
     pathway_of_interest <- pathway_list[i]
     
