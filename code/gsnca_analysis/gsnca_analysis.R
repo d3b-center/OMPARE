@@ -1,16 +1,14 @@
 # Author: Run Jin
 #
 # GSNCA analysis comparing upper and lower quantile of gene expressions in each disease
-# BiocManager::install("GSAR")
-# BiocManager::install("GSVAdata")
-# BiocManager::install("DGCA")
-# BiocManager::install("EGSEA")
-suppressPackageStartupMessages(library("optparse"))
-suppressPackageStartupMessages(library("tidyverse"))
-suppressPackageStartupMessages(library("GSAR"))
-suppressPackageStartupMessages(library("org.Hs.eg.db"))
-suppressPackageStartupMessages(library("EGSEA"))
-suppressPackageStartupMessages(library("DGCA"))
+suppressPackageStartupMessages({
+  library(optparse)
+  library(tidyverse)
+  library(GSAR)
+  library(org.Hs.eg.db)
+  library(EGSEA)
+  library(DGCA)
+})
 
 # arguments
 option_list <- list(
