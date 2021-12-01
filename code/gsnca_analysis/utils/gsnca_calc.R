@@ -84,7 +84,10 @@ build_pathways <- function(gene_list) {
       mutate(GeneSet = x)
   })
   pathway_build_genesets_df <- do.call(rbind, pathway_build_genesets_list) %>%
-    dplyr::left_join(pathway_build_anno) 
+    dplyr::left_join(pathway_build_anno) %>% 
+    #filter to contain only reactome 
+    dplyr::filter(grepl("REACTOME", GeneSet))
+  
   colnames(pathway_build_genesets_df) <- c("eg", "description", "pathway", "type")
   pathway_build_genesets_df$eg <- as.character(pathway_build_genesets_df$eg)
   
@@ -186,7 +189,7 @@ gsnca_analysis_plot <- function(similar_subjects_expr_df, ref_expr_df, ref_name,
     result_pval<-GSNCAtest(object=as.matrix(combined_matrix_per_pathway), 
                            # since the matrix is selected by order of row, the group will match
                            group=combined_anno$group, 
-                           nperm=1000, 
+                           nperm=500, 
                            cor.method="spearman", 
                            check.sd=TRUE, 
                            min.sd=1e-3, 
