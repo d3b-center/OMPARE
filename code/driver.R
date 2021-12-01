@@ -269,6 +269,13 @@ if(!file.exists(fname)){
   oncokb_output <- read.delim(fname, stringsAsFactors = F)
 }
 
+# GSNCA analysis (required to annotate transcriptome_drug_rec.rds)
+output_dir <- file.path(patient_dir, "output", "gsnca_analysis")
+fname <- list.files(output_dir, "*.tsv")
+if(length(fname) != 3){
+  source(file.path(code_dir, "gsnca_analysis", "run_gsnca.R"))
+}
+
 # transcriptome based drug recommendations
 output_dir <- file.path(patient_dir, "output", "drug_recommendations")
 fname <- file.path(output_dir, "transcriptome_drug_rec.rds")
