@@ -1,10 +1,10 @@
-
-suppressPackageStartupMessages(library("tidyverse"))
-suppressPackageStartupMessages(library("GSAR"))
-suppressPackageStartupMessages(library("org.Hs.eg.db"))
-suppressPackageStartupMessages(library("EGSEA"))
-suppressPackageStartupMessages(library("DGCA"))
-
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(GSAR)
+  library(org.Hs.eg.db)
+  library(EGSEA)
+  library(DGCA)
+})
 
 ######################### prepare for GSNCA tests-filter out lowly expressed genes 
 filter_low_expr_df <- function(expr_df){
@@ -125,7 +125,7 @@ pathway_barplots <- function(dat, title){
 
 
 ######################### Run GSNCA and output plots and text files --------------
-gsnca_analysis_plot <- function(similar_subjects_expr_df, ref_expr_df, ref_name, top_bar=20, top_net=5){
+gsnca_analysis_plot <- function(similar_subjects_expr_df, ref_expr_df, ref_name, top_bar=20, top_net=5, output_dir){
   ##### get annotation df for comparison groups
   # 20+1 POI group
   similar_subjects_anno <- as.data.frame(colnames(similar_subjects_expr_df)) 

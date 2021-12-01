@@ -1,13 +1,8 @@
 # Author: Run Jin
-#
 # GSNCA analysis comparing upper and lower quantile of gene expressions in each disease
 suppressPackageStartupMessages({
   library(optparse)
   library(tidyverse)
-  library(GSAR)
-  library(org.Hs.eg.db)
-  library(EGSEA)
-  library(DGCA)
 })
 
 # arguments
@@ -72,7 +67,7 @@ pnoc008_pbta_tpm <- pbta_full_tpm %>%
   full_join(pnoc008_tpm) %>%
   replace(is.na(.), 0)
 
-similar_subject_ids<- transciptomically_similar_pediatric %>% 
+similar_subject_ids <- transciptomically_similar_pediatric %>% 
   pull(subject_id)
 stopifnot(all_of(similar_subject_ids) %in% colnames(pnoc008_pbta_tpm))
   
@@ -95,10 +90,23 @@ pbta_full_tpm_rest_filtered <- pbta_full_tpm %>%
   filter_low_expr_df()
 
 #### Run GSNCA and output results in text files ----------------------
-gsnca_analysis_plot(pnoc008_similar_tpm, gtex_brain_tpm_filtered, "GTEx", top_bar=20, top_net=5)
+gsnca_analysis_plot(similar_subjects_expr_df = pnoc008_similar_tpm, 
+                    ref_expr_df = gtex_brain_tpm_filtered, 
+                    ref_name = "GTEx", 
+                    top_bar = 20, 
+                    top_net = 5, 
+                    output_dir = output_dir)
 
-gsnca_analysis_plot(pnoc008_similar_tpm, pbta_hgg_tpm_rest_filtered, "PBTA_HGG", top_bar=20, top_net=5)
+gsnca_analysis_plot(similar_subjects_expr_df = pnoc008_similar_tpm, 
+                    ref_expr_df = pbta_hgg_tpm_rest_filtered, 
+                    ref_name = "PBTA_HGG", 
+                    top_bar = 20, 
+                    top_net = 5, 
+                    output_dir = output_dir)
 
-gsnca_analysis_plot(pnoc008_similar_tpm, pbta_full_tpm_rest_filtered, "PBTA_all", top_bar=20, top_net=5)
-
-
+gsnca_analysis_plot(similar_subjects_expr_df = pnoc008_similar_tpm, 
+                    ref_expr_df = pbta_full_tpm_rest_filtered, 
+                    ref_name = "PBTA_all", 
+                    top_bar = 20, 
+                    top_net = 5, 
+                    output_dir = output_dir)
