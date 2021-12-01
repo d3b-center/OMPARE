@@ -73,7 +73,8 @@ stopifnot(all_of(similar_subject_ids) %in% colnames(pnoc008_pbta_tpm))
   
 pnoc008_similar_tpm <- pnoc008_pbta_tpm %>%
   dplyr::select(geneID, all_of(patient), all_of(similar_subject_ids)) %>%
-  tibble::column_to_rownames("geneID")
+  tibble::column_to_rownames("geneID") %>% 
+  filter_low_expr_df()
 
 #### Prepare background/cohort comparison expression matrix -------------------------------
 # gtex matrix 
@@ -88,9 +89,6 @@ pbta_hgg_tpm_rest_filtered <- pbta_hgg_tpm %>%
 pbta_full_tpm_rest_filtered <- pbta_full_tpm %>%
   dplyr::select(-all_of(similar_subject_ids[similar_subject_ids %in% colnames(pbta_full_tpm)])) %>%
   filter_low_expr_df()
-
-# remove sd < 0.001 in PNOC008 similar tpm (GSNCAtest min.sd requirement)
-pnoc008_similar_tpm <- pnoc008_similar_tpm[apply(pnoc008_similar_tpm, MARGIN = 1, sd) >= 1e-3,]
 
 #### Run GSNCA and output results in text files ----------------------
 gsnca_analysis_plot(similar_subjects_expr_df = pnoc008_similar_tpm, 
