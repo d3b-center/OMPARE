@@ -60,9 +60,6 @@ source(file.path(code_dir, "p1_modules", 'p1_patient_sample_info.R'))
 # all findings table  
 source(file.path(code_dir, "p1_modules", 'p1_all_findings.R'))
 
-# update all findings with snv/indel hotspots and tier classifications
-source(file.path(code_dir, 'tier_classification', 'tier_classification.R'))
-
 # key findings table (this is a subset of all_findings so will automatically get updated with above)
 source(file.path(code_dir, "p1_modules", 'p1_key_clinical_findings.R'))
 
@@ -268,6 +265,10 @@ if(!file.exists(fname)){
 } else {
   oncokb_output <- read.delim(fname, stringsAsFactors = F)
 }
+
+# update all findings with snv/indel hotspots and tier classifications
+# this needs to be run after oncokb as it depends on its output
+source(file.path(code_dir, 'tier_classification', 'tier_classification.R'))
 
 # transcriptome based drug recommendations
 output_dir <- file.path(patient_dir, "output", "drug_recommendations")

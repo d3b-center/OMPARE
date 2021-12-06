@@ -52,4 +52,8 @@ if(nrow(oncokb_anno) > 0){
                                              hotspot_indel = hotspot_indel, 
                                              hotspot_snv = hotspot_snv,
                                              cosmic_resistance = cosmic_resistance)
+  
+  # key clinical findings is a subset so just call this function again
+  # this will create key_clinical_findings_output with the tier info
+  source(file.path(code_dir, "p1_modules", 'p1_key_clinical_findings.R'))
 }
