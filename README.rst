@@ -34,7 +34,7 @@ Prerequisites
 .. code-block:: bash
 
 	# get reference data from s3
-	aws s3 --profile saml sync s3://d3b-bix-dev-data-bucket/PNOC008/reference /path-to/OMPARE/data/
+	aws s3 --profile saml sync s3://d3b-bix-dev-data-bucket/PNOC008/data /path-to/OMPARE/data/
 
 4. Download patient-specific files from `data delivery project <https://cavatica.sbgenomics.com/u/cavatica/sd-8y99qzjj>`_:
 
@@ -89,7 +89,7 @@ Master script
 2. **code/create_clinfile.R**: create clinical file for patient of interest.
 3. **code/update_pnoc008_matrices.R**: update PNOC008 data matrices (cnv, mutations, fusions, expression) with each new patient.
 4. **OMPARE.Rmd**: run html reports
-5. Using ``aws s3 sync``, sync back updated data folder to ``s3://d3b-bix-dev-data-bucket/PNOC008/reference``
+5. Using ``aws s3 sync``, sync back updated data folder to ``s3://d3b-bix-dev-data-bucket/PNOC008/data``
 6. **upload_reports.R**: upload reports and output folders to PNOC008 data delivery project on cavatica.
 
 .. code-block:: bash

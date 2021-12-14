@@ -94,7 +94,7 @@ for(i in 1:length(callers)) {
 # exclude chembl folder as it is huge ~20GB and connection breaks before it is uploaded.
 if(sync_data){
   print("Sync data back to s3...")
-  cmd <- paste("aws s3 --profile saml sync", data_dir, "s3://d3b-bix-dev-data-bucket/PNOC008/reference --exclude 'chembl/*'")
+  cmd <- paste("aws s3 --profile saml sync", data_dir, "s3://d3b-bix-dev-data-bucket/PNOC008/data --exclude 'chembl/*'")
   print(cmd)
   system(cmd)
 }
