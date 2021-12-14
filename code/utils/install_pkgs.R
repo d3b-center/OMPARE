@@ -72,6 +72,10 @@ BiocManager::install("callr")
 BiocManager::install("dotenv")
 BiocManager::install("drugTargetInteractions")
 BiocManager::install("BSgenome.Hsapiens.UCSC.hg38")
+BiocManager::install("GSAR")
+BiocManager::install("GSVAdata")
+BiocManager::install("DGCA")
+BiocManager::install("EGSEA")
 
 # double check if these are needed
 BiocManager::install("R.utils")
