@@ -64,6 +64,7 @@ with_module_list <- lapply(module_list, function(y){
   
   # iterate through each module
   module_of_interest <- y
+  print(module_of_interest)
   
   #### SubNetwork Generation ---------------------------------------------------------------
   
@@ -137,7 +138,6 @@ with_module_list <- lapply(module_list, function(y){
     
     k <- 0
     for (i in 1:(nDrug-1)){
-      print(i)
       # drug of interest
       drug_of_interest1 <- drug_list[i]
       # extract the weight of scores as well
@@ -146,7 +146,6 @@ with_module_list <- lapply(module_list, function(y){
         pull(weight_score) %>% as.numeric()
       
       for(j in (i+1):nDrug){
-        print(j)
         k <- k+1
         # drug of interest
         drug_of_interest2 <- drug_list[j]
