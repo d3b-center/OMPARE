@@ -90,6 +90,7 @@ with_module_list <- lapply(module_list, function(y){
   
   #### Synergy Score Calculation ---------------------------------------------------------------
   list_of_qSigs <- list(gtex_qSig_subnet_mapped_each, pbta_qSig_subnet_mapped_each, pbta_hgg_qSig_subnet_mapped_each)
+  list_of_qSigs <- Filter(nrow, list_of_qSigs) # remove subnet with no rows
   
   # Generate an ordered list of unique drugs (ordered by their WTCS scores)
   lapply(list_of_qSigs, function(x){
