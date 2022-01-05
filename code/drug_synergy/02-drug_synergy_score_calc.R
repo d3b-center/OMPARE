@@ -13,7 +13,6 @@ root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
 
 # module path
 module_dir <- file.path(root_dir, "code", "drug_synergy")
-source(file.path(module_dir, "utils", "get_synergy_score.R"))
 
 # Parse command line options
 option_list <- list(
@@ -64,15 +63,16 @@ with_module_list <- lapply(module_list, function(y){
   
   # iterate through each module
   module_of_interest <- y
+  print(module_of_interest)
   
   #### SubNetwork Generation ---------------------------------------------------------------
   
   # subset to module of interest
   subnetwork_each <- subnetwork %>% 
-    filter(Module == module_of_interest) 
+    dplyr::filter(Module == module_of_interest) 
   # Induce subnetwork
   subnetwork_graphed <-subnetwork_each %>%
-    select(Gene1, Gene2) %>% as.matrix() %>%
+    dplyr::select(Gene1, Gene2) %>% as.matrix() %>%
     graph.edgelist()
   
   # Find the nodes of subnetwork (gene symbols in the subnetworks)
@@ -90,6 +90,7 @@ with_module_list <- lapply(module_list, function(y){
   
   #### Synergy Score Calculation ---------------------------------------------------------------
   list_of_qSigs <- list(gtex_qSig_subnet_mapped_each, pbta_qSig_subnet_mapped_each, pbta_hgg_qSig_subnet_mapped_each)
+  list_of_qSigs <- Filter(nrow, list_of_qSigs) # remove subnet with no rows
   
   # Generate an ordered list of unique drugs (ordered by their WTCS scores)
   lapply(list_of_qSigs, function(x){
@@ -101,64 +102,97 @@ with_module_list <- lapply(module_list, function(y){
     weight_score <- (1 + (1.0 - (c(1:nDrug)/nDrug)))
     drug_score_list <- data.frame(drug_list, weight_score)
     
-    # Initiate data frame that would be used to store scores
-    sScore <- data.frame(matrix(module_of_interest, nDrug*(nDrug-1)/2, 4))
+    # calculate closeness and betweenness for the module's subnetwork
+    vSet0 <- V(subnetwork_graphed)$name
+    sc1 <- closeness(subnetwork_graphed, vSet0)  
+    sc2 <- betweenness(subnetwork_graphed, vSet0, directed=F) 
+    sc3 <- page.rank(subnetwork_graphed, algo="prpack", vids=vSet0)$vector ### for normalization
     
-    k <- 0
-    targets <- x$hgnc_symbol
-    drugs <- x$Drug_Name
-    
-    for (i in 1:(nDrug-1)){
-      print(i)
-      # drug of interest
-      drug_of_interest1 <- drug_list[i]
+    # define an empty list to store the info 
+    scores <- list()
+    # get closeness and betweenness for all drugs in the subnetwork
+    for(m in 1:nrow(drug_score_list)){
+      # iterate through all drugs
+      drug_of_interest <- drug_score_list[m,1]
       
-      # gene targets of the drug
-      drug_targets1 <- x %>% 
-        dplyr::filter(Drug_Name == drug_of_interest1) %>%
+      # get the targets for this particular drug
+      drug_targets <- x %>% 
+        dplyr::filter(Drug_Name == drug_of_interest) %>%
         pull(hgnc_symbol) %>% unique() 
       
-      # only keep targets that are in the subnetwork
-      targets_in_sub1 <- intersect(drug_targets1, all_nodes)
+      # calculate closeness and betweenness for all drugs
+      sc11 <- closeness(subnetwork_graphed, drug_targets)  
+      sc12 <- betweenness(subnetwork_graphed, drug_targets, directed=F) 
+      sc13 <- page.rank(subnetwork_graphed, algo="prpack", vids=drug_targets)$vector
       
-      # subtract the weight of scores as well
+      # generate a list 
+      scores_each <- list(sc11, sc12, sc13)
+      names(scores_each) <- c(paste0(drug_of_interest, "_sc11"), 
+                              paste0(drug_of_interest, "_sc12"),
+                              paste0(drug_of_interest, "_sc13"))
+      scores <- c(scores, scores_each)
+    }
+    
+    # Initiate data frame that would be used to store scores
+    sScore_df <- data.frame(matrix(module_of_interest, nDrug*(nDrug-1)/2, 4))
+    
+    k <- 0
+    for (i in 1:(nDrug-1)){
+      # drug of interest
+      drug_of_interest1 <- drug_list[i]
+      # extract the weight of scores as well
       weight_of_drug1 <- drug_score_list %>% 
         dplyr::filter(drug_list == drug_of_interest1) %>%
         pull(weight_score) %>% as.numeric()
       
       for(j in (i+1):nDrug){
-        print(j)
         k <- k+1
         # drug of interest
         drug_of_interest2 <- drug_list[j]
         
-        # gene targets of the drug
-        drug_targets2 <- x %>% 
-          dplyr::filter(Drug_Name == drug_of_interest2) %>%
-          pull(hgnc_symbol) %>% unique() 
-        
-        # only keep targets that are in the subnetwork
-        targets_in_sub2 <- intersect(drug_targets2, all_nodes)
-        
-        # subtract the weight of scores as well
+        # extract the weight of scores as well
         weight_of_drug2 <- drug_score_list %>% 
           dplyr::filter(drug_list == drug_of_interest2) %>%
           pull(weight_score) %>% as.numeric()
         
-        sScore[k,1] <- drug_of_interest1
-        sScore[k,2] <- drug_of_interest2
+        # output the drug name to the synergy score table
+        sScore_df[k,1] <- drug_of_interest1
+        sScore_df[k,2] <- drug_of_interest2
         
-        vt0 <- getSynScore2(targets_in_sub1, targets_in_sub2, subnetwork_graphed) * weight_of_drug1 * weight_of_drug2
-        sScore[k,3] <- vt0
+        # extract closeness, betweeness and rank for drugs of interest 
+        sc11 <- scores[[paste0(drug_of_interest1, "_sc11")]]
+        sc12 <- scores[[paste0(drug_of_interest1, "_sc12")]]
+        sc13 <- scores[[paste0(drug_of_interest1, "_sc13")]]
+        
+        # extract closeness, betweeness and rank for drugs of interest 
+        sc21 <- scores[[paste0(drug_of_interest2, "_sc11")]]
+        sc22 <- scores[[paste0(drug_of_interest2, "_sc12")]]
+        sc23 <- scores[[paste0(drug_of_interest2, "_sc13")]]
+        
+        # calculate synergy score
+        sc11 <- (sc11-min(sc1))/(max(sc1)-min(sc1)) 
+        sc12 <- (sc12-min(sc2))/(max(sc2)-min(sc2)) 
+        sc13 <- (sc13-min(sc3))/(max(sc3)-min(sc3))
+        sc21 <- (sc21-min(sc1))/(max(sc1)-min(sc1)) 
+        sc22 <- (sc22-min(sc2))/(max(sc2)-min(sc2)) 
+        sc23 <- (sc23-min(sc3))/(max(sc3)-min(sc3))
+        sctar1 <- (sum(sc11)+sum(sc12)+sum(sc13))/3.0
+        sctar2 <- (sum(sc21)+sum(sc22)+sum(sc23))/3.0
+        sScore <- sctar1 + sctar2
+        
+        # calculate the synergy scores
+        vt0 <- sScore * weight_of_drug1 * weight_of_drug2
+        sScore_df[k,3] <- vt0
       }
     }
     
     # write out the results 
-    comparison_name <- x %>% select(comparison) %>% pull() %>% unique()
-    colnames(sScore) <-c("drug1", "drug2", "synergy_score", "module")
-    sScore <- sScore %>% arrange(desc(synergy_score)) %>%
+    comparison_name <- x %>% 
+      dplyr::select(comparison) %>% pull() %>% unique()
+    colnames(sScore_df) <-c("drug1", "drug2", "synergy_score", "module")
+    sScore_df <- sScore_df %>% arrange(desc(synergy_score)) %>%
       mutate(comparison = comparison_name)
-    return(sScore)
+    return(sScore_df)
     })
   }
 )  
