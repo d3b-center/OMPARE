@@ -268,7 +268,7 @@ if(!file.exists(fname)){
 
 # update all findings with snv/indel hotspots and tier classifications
 # this needs to be run after oncokb as it depends on its output
-source(file.path(code_dir, 'tier_classification', 'tier_classification.R'))
+source(file.path(code_dir, 'tier_classification', 'run_tier_classification.R'))
 
 # gsnca_module
 # GSNCA analysis (required to annotate transcriptome_drug_rec.rds)

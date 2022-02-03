@@ -39,39 +39,43 @@ combined_plot_file <- file.path(output_dir, "combined_qSig_synergy_score_top10.p
 # run script to obtain drugs that are associated with all the genes in the subnetwork
 subnetwork_qSig_gene_drug_map <- file.path(module_dir, "01-subnetwork_qSig_gene_drug_map.R")
 cmd <- paste('Rscript', subnetwork_qSig_gene_drug_map,
-       '--interaction', interaction,
-       '--enrichment_nes', enrichment_nes,
-       '--cluster', cluster,
-       '--clinical', pnoc008_clinical,
-       '--chemblDb_path', chembldb_path,
-       '--sample_of_interest', patient,
-       '--gtex_qSig', gtex_qSig,
-       '--pbta_qSig', pbta_qSig,
-       '--pbta_hgg_qSig', pbta_hgg_qSig,
-       '--subnetwork', subnetwork, 
-       '--subnetwork_mapped', subnetwork_mapped,
-       '--gtex_mapped', gtex_subnet_qSig_mapped,
-       '--pbta_mapped', pbta_subnet_qSig_mapped,
-       '--pbta_hgg_mapped', pbta_hgg_subnet_qSig_mapped)
+             '--interaction', interaction,
+             '--enrichment_nes', enrichment_nes,
+             '--cluster', cluster,
+             '--clinical', pnoc008_clinical,
+             '--chemblDb_path', chembldb_path,
+             '--sample_of_interest', patient,
+             '--gtex_qSig', gtex_qSig,
+             '--pbta_qSig', pbta_qSig,
+             '--pbta_hgg_qSig', pbta_hgg_qSig,
+             '--subnetwork', subnetwork, 
+             '--subnetwork_mapped', subnetwork_mapped,
+             '--gtex_mapped', gtex_subnet_qSig_mapped,
+             '--pbta_mapped', pbta_subnet_qSig_mapped,
+             '--pbta_hgg_mapped', pbta_hgg_subnet_qSig_mapped)
 system(cmd)
 
 # run script to obtain drugs that are both in qSig and subnetwork
-drug_synergy_score_calc <- file.path(module_dir, "02-drug_synergy_score_calc.R")
-cmd <- paste('Rscript', drug_synergy_score_calc,
-              '--subnetwork', subnetwork, 
-              '--subnetwork_mapped', subnetwork_mapped,
-              '--gtex_mapped', gtex_subnet_qSig_mapped,
-              '--pbta_mapped', pbta_subnet_qSig_mapped,
-              '--pbta_hgg_mapped', pbta_hgg_subnet_qSig_mapped,
-              '--output_gtex', output_gtex,
-              '--output_pbta', output_pbta,
-              '--output_pbta_hgg', output_pbta_hgg,
-              '--output_combined', output_combined)
-system(cmd)
+if(file.exists(subnetwork)){
+  drug_synergy_score_calc <- file.path(module_dir, "02-drug_synergy_score_calc.R")
+  cmd <- paste('Rscript', drug_synergy_score_calc,
+               '--subnetwork', subnetwork, 
+               '--subnetwork_mapped', subnetwork_mapped,
+               '--gtex_mapped', gtex_subnet_qSig_mapped,
+               '--pbta_mapped', pbta_subnet_qSig_mapped,
+               '--pbta_hgg_mapped', pbta_hgg_subnet_qSig_mapped,
+               '--output_gtex', output_gtex,
+               '--output_pbta', output_pbta,
+               '--output_pbta_hgg', output_pbta_hgg,
+               '--output_combined', output_combined)
+  system(cmd)
+}
 
 # run script to create bubble plots from output of 02-drug_synergy_score_calc.R
-create_bubble_plot <- file.path(module_dir, "03-create_bubble_plot.R")
-cmd <- paste('Rscript', create_bubble_plot,
-      '--combined_synergy', output_combined,
-      '--output_file', combined_plot_file)
-system(cmd)
+if(file.exists(output_combined)){
+  create_bubble_plot <- file.path(module_dir, "03-create_bubble_plot.R")
+  cmd <- paste('Rscript', create_bubble_plot,
+               '--combined_synergy', output_combined,
+               '--output_file', combined_plot_file)
+  system(cmd)
+}
