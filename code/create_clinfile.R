@@ -3,9 +3,11 @@
 # Function: Script to read from google sheets and create clinical file 
 # This will be called from within run_OMPARE.R
 
-suppressPackageStartupMessages(library(readxl))
-suppressPackageStartupMessages(library(optparse))
-suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages({
+  library(readxl)
+  library(optparse)
+  library(dplyr)
+})
 
 option_list <- list(
   make_option(c("--sheet"), type = "character",
