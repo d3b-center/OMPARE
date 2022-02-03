@@ -72,10 +72,15 @@ Prerequisites
 
 .. code-block:: bash
 
+	# query from data-warehouse
+	cd /path-to/d3b-analysis-toolkit/scripts
+	source .envrc
+	python select-all-pbta-histologies.py -o /path-to/OMPARE/data/pbta/pbta-histologies-base-adapt.tsv 
+
+	# alternatively from s3 (not currently updated)
 	aws s3 --profile saml cp s3://d3b-bix-dev-data-bucket/pbta-histologies-base-adapt.tsv data/pbta/
 
 Note: None of these files have information on short_histology or broad_histology so currently it is being hard-coded ``HGAT`` and ``Diffuse astrocytic and oligodendroglial tumor``, respectively.
-
 
 Scripts
 =======
