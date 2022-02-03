@@ -2,14 +2,15 @@
 # Function: Create PBTA expected count and tpm matrix with unique gene symbols
 # This needs to be run with every updated version of OpenPBTA (current v18)
 
-suppressPackageStartupMessages(library(tidyverse))
-suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(dplyr)
+})
 
 # directories
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
-source(file.path(root_dir, "code", "utils", "define_directories.R"))
-source(file.path(code_dir, 'code_ignored', 'collapse_matrix.R'))
-pbta.dir <- file.path(ref_dir, 'pbta')
+source(file.path(root_dir, 'code_ignored', 'collapse_matrix.R'))
+pbta.dir <- file.path(root_dir, 'data', 'pbta')
 
 # adapt file to remove unwanted samples
 pbta_adapt <- read.delim(file.path(pbta.dir, 'pbta-histologies-base-adapt.tsv'))
@@ -55,7 +56,7 @@ pbta.full.tpm <- pbta.tpm.polya %>%
   column_to_rownames('sym')
 
 # save
-saveRDS(pbta.tpm.stranded, file = file.path(pbta.dir, 'pbta-gene-expression-rsem-tpm-collapsed.stranded.rds'))
-saveRDS(pbta.tpm.polya, file = file.path(pbta.dir, 'pbta-gene-expression-rsem-tpm-collapsed.polya.rds'))
+# saveRDS(pbta.tpm.stranded, file = file.path(pbta.dir, 'pbta-gene-expression-rsem-tpm-collapsed.stranded.rds'))
+# saveRDS(pbta.tpm.polya, file = file.path(pbta.dir, 'pbta-gene-expression-rsem-tpm-collapsed.polya.rds'))
 saveRDS(pbta.full.tpm, file = file.path(pbta.dir, 'pbta-gene-expression-rsem-tpm-collapsed.polya.stranded.rds'))
 

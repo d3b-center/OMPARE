@@ -1,5 +1,5 @@
 # Prepare PBTA data for Mutational analysis
-# This needs to be run with every updated version of OpenPBTA (current v18)
+# This needs to be run with every updated version of OpenPBTA (current v21)
 
 suppressPackageStartupMessages({
   library(tidyverse)
@@ -9,9 +9,8 @@ suppressPackageStartupMessages({
 
 # directories
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
-source(file.path(root_dir, "code", "utils", "define_directories.R"))
-source(file.path(patient_level_analyses_utils, "filter_cnv.R"))
-pbta.dir <- file.path(ref_dir, 'pbta')
+source(file.path(root_dir, "code", "utils", "filter_cnv.R"))
+pbta.dir <- file.path(root_dir, 'data', 'pbta')
 
 # PBTA adapt histology file
 # remove unwanted samples
@@ -27,7 +26,7 @@ pbta_hist <- pbta_hist %>%
   left_join(pbta_hist_adapt, by = 'Kids_First_Biospecimen_ID')
 
 # subset to cancer genes 
-cancer_genes <- readRDS(file.path(ref_dir, "cancer_gene_list.rds"))
+cancer_genes <- readRDS(file.path(root_dir, "data", "cancer_gene_list.rds"))
 gene.list <- unique(cancer_genes$Gene_Symbol)
 
 # read controlfreec (add tumor purity from histology file and get tumor ploidy from controlfreec)
@@ -45,7 +44,7 @@ pbta.cnvkit <- pbta.cnvkit %>%
   dplyr::rename("SampleID" = "sample_id")
 
 # chr coordinates to gene symbol map
-chr_map <- read.delim(file.path(ref_dir, 'mart_export_genechr_mapping.txt'), stringsAsFactors = F, check.names = F)
+chr_map <- read.delim(file.path(root_dir, "data", 'mart_export_genechr_mapping.txt'), stringsAsFactors = F, check.names = F)
 colnames(chr_map) <- c("hgnc_symbol", "gene_start", "gene_end", "chromosome")
 chr_map <- chr_map %>%
   filter(hgnc_symbol != "") %>%
