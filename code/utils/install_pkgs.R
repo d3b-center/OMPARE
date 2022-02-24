@@ -5,7 +5,7 @@
 BiocManager::install("AnnotationDbi")
 BiocManager::install("CEMiTool")
 BiocManager::install("ComplexHeatmap")
-BiocManager::install("DT")
+BiocManager::install("DT") # 0.18
 BiocManager::install("ExperimentHub")
 BiocManager::install("GSEABase")
 BiocManager::install("GSVA")
@@ -33,7 +33,7 @@ BiocManager::install("dplyr")
 BiocManager::install("edgeR")
 BiocManager::install("fgsea")
 BiocManager::install("flexdashboard")
-BiocManager::install("ggnetwork")
+BiocManager::install("ggnetwork") # 0.5.1
 BiocManager::install("ggplot2")
 BiocManager::install("ggpubr")
 BiocManager::install("ggridges")

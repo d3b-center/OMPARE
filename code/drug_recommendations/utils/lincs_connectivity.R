@@ -31,6 +31,10 @@ source(file.path(module_dir, "utils", "drug_barplots.R"))
 eh <- ExperimentHub()
 lincs <- eh[["EH3226"]]
 
+# MOA terms to drug name mappings obtained from Touchstone database at CLUE website 
+data('clue_moa_list')
+touchstone_data <- unlist(clue_moa_list)
+
 # run connectivity analysis on each cluster
 lincs_connectivity <- function(input, num_features = 2000, num_sets = 25, method = c("LINCS", "Cor"), wtcs_fdr_cutoff = 0.05, trend_val = c("up", "down"), cor_score_cutoff = 0, output_dir){
   
@@ -58,7 +62,8 @@ lincs_connectivity <- function(input, num_features = 2000, num_sets = 25, method
     
     # filter drugs
     qSig_output <- qSig_output %>%
-      filter(trend == trend_val & WTCS_FDR < wtcs_fdr_cutoff)
+      filter(trend == trend_val & WTCS_FDR < wtcs_fdr_cutoff,
+             pert %in% touchstone_data)
     drugs <- unique(qSig_output$pert)
   } else if(method == "Cor"){
     # correlation-based similarity
@@ -75,7 +80,8 @@ lincs_connectivity <- function(input, num_features = 2000, num_sets = 25, method
     
     # filter drugs
     qSig_output <- qSig_output %>%
-      filter(cor_score < cor_score_cutoff)
+      filter(cor_score < cor_score_cutoff,
+             pert %in% touchstone_data)
     drugs <- unique(qSig_output$pert)
   }
   fname <- file.path(output_dir, paste0(comparison, "_qSig_output.txt"))

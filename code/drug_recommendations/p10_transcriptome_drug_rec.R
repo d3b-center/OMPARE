@@ -16,6 +16,11 @@ full_fname <- file.path(output_dir, paste0(patient, "_CHEMBL_drug-gene.tsv"))
 transcriptome_drug_rec_output <- transcriptome_drug_rec(diffexpr_genes = genes_up)
 write.table(x = transcriptome_drug_rec_output, file = full_fname, quote = F, sep = "\t", row.names = F)
 
+# annotate CNS penetrance from an ML-based CNS-penetrance predictor (admetSAR)
+admetsar_output <- read.delim(file.path(root_dir, "data", "cmdc201800533-sup-0001-misc_information_s7.txt"))
+transcriptome_drug_rec_output <- transcriptome_drug_rec_output %>%
+  mutate(CNS_penetrant = ifelse(DrugBank_ID %in% admetsar_output$DrugBank.ID, "Yes", "No"))
+
 # annotate GSNCA hub gene information to annotation
 gsnca_results_dir <- file.path(patient_dir, "output", "gsnca_analysis")
 gsnca_result_gtex <- readr::read_tsv(file.path(gsnca_results_dir, "top20_similar_vs_GTEx_GSNCA_analysis.tsv"))
@@ -35,6 +40,6 @@ transcriptome_drug_rec_output <- transcriptome_drug_rec_output %>%
 # subset columns for report
 fname <- file.path(output_dir, "transcriptome_drug_rec.rds")
 transcriptome_drug_rec_output <- transcriptome_drug_rec_output %>%
-  dplyr::select(Drug, Gene, Source, Comparison, logFC, MOA, hub_GSNCA) %>%
+  dplyr::select(Drug, Gene, Source, Comparison, logFC, MOA, CNS_penetrant, hub_GSNCA) %>%
   unique()
 saveRDS(transcriptome_drug_rec_output, file = fname)
