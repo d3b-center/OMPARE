@@ -35,13 +35,13 @@ pnoc008_vs_pbta <- pnoc008_vs_pbta[[patient]]
 genes_df <- rbind(pnoc008_vs_gtex_brain$genes, pnoc008_vs_pbta_hgg$genes, pnoc008_vs_pbta$genes)
 
 # LINCS-based similarity metric
+fname <- file.path(output_dir, "drug_pathways_barplot.pdf")
 drug_pathways_barplot <- plyr::dlply(.data = genes_df, 
                                      .variables = "comparison", 
                                      .fun = function(x) lincs_connectivity(input = x,
                                                                            method = "LINCS",
                                                                            trend_val = "down",
                                                                            output_dir = output_dir))
-fname <- file.path(output_dir, "drug_pathways_barplot.pdf")
-ggsave(plot = wrap_plots(drug_pathways_barplot, ncol = 1), 
-       filename = fname, 
-       width = 23, height = 25, device = 'pdf')
+pdf(file = fname, width = 22, height = 8)
+print(drug_pathways_barplot)
+dev.off()

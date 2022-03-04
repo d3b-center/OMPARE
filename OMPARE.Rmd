@@ -41,7 +41,6 @@ knitr::opts_chunk$set(comment = NA)
 ```{r set_params}
 patient_dir <- params$patient_dir
 snv_caller <- params$snv_caller
-output_dir <- file.path(patient_dir, "output")
 ```
 
 ```{r call_driver, echo=FALSE, message=FALSE, results="hide"}
@@ -49,6 +48,11 @@ output_dir <- file.path(patient_dir, "output")
 source(file.path(root_dir, "code", "utils", "view_dt.R"))
 # call driver which calls rest of the scripts to generate outputs
 source(file.path(root_dir, "code", "driver.R"))
+```
+
+```{r}
+# set output directory
+output_dir <- file.path(patient_dir, "output")
 ```
 
 Key Clinical Findings (P1) {data-navmenu="Key Findings"}
@@ -633,7 +637,7 @@ Row {data-height=700}
 ### Oncogrid (HGG-DMG)
 
 ```{r oncogrid_hgg_dmg, echo=FALSE, out.width = "100%", out.height="100%"}
-fname <- file.path(patient_dir, "output", "oncogrid_analysis", "complexheatmap_oncogrid.pdf")
+fname <- file.path(output_dir, "oncogrid_analysis", "complexheatmap_oncogrid.pdf")
 if(file.exists(fname)){
   knitr::include_graphics(fname)
 }
