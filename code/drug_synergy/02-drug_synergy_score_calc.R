@@ -98,6 +98,9 @@ with_module_list <- lapply(module_list, function(y){
       arrange(WTCS) %>%
       pull(Drug_Name) %>% unique() 
     nDrug <- length(drug_list)
+    if(nDrug == 1){
+      return()
+    }
     # Give all the drugs weighted score from 1-2 based on their ranking 
     weight_score <- (1 + (1.0 - (c(1:nDrug)/nDrug)))
     drug_score_list <- data.frame(drug_list, weight_score)
