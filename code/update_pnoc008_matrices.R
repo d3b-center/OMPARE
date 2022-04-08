@@ -218,7 +218,8 @@ pnoc008_clinical <- pnoc008_clinical %>%
   as.data.frame()
 
 # add other identifiers from PBTA base histology
-pbta_hist <- readr::read_tsv(file.path(data_dir, 'pbta', 'pbta-histologies-base-adapt.tsv'))
+# pbta_hist <- readr::read_tsv(file.path(data_dir, 'pbta', 'pbta-histologies-base-adapt.tsv'))
+pbta_hist <- readr::read_tsv(list.files(path = data_dir, pattern = 'hist', full.names = T)) # data assembly histology file up to current poi
 pbta_hist <- pbta_hist %>%
   filter(experimental_strategy == "RNA-Seq",
          Kids_First_Biospecimen_ID != "BS_862NMAR7",
