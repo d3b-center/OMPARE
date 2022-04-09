@@ -33,8 +33,14 @@ query <- GDCquery(project = "TCGA-GBM",
                   data.type = "Masked Somatic Mutation", 
                   workflow.type = "MuTect2 Variant Aggregation and Masking")
 
-GDCdownload(query)
-tcga_maf <- GDCprepare(query, add.gistic2.mut = T)
+# currently the query is not working so this is a workaround
+if(exists('query')){
+  GDCdownload(query)
+  tcga_maf <- GDCprepare(query, add.gistic2.mut = T)
+} else {
+  # read pre-existing
+  tcga_maf <- data.table::fread("GDCdata/TCGA-GBM/harmonized/Simple_Nucleotide_Variation/Masked_Somatic_Mutation/da904cd3-79d7-4ae3-b6c0-e7127998b3e6/TCGA.GBM.mutect.da904cd3-79d7-4ae3-b6c0-e7127998b3e6.DR-10.0.somatic.maf.gz")
+}
 tcga_maf$Tumor_Sample_Barcode <- gsub('D.*|W.*', '',tcga_maf$Tumor_Sample_Barcode)
 
 # Filter to the samples that we have RNA information 
