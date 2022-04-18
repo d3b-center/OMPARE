@@ -26,12 +26,14 @@ pnoc008_dir <- file.path(data_dir, "pnoc008")
 ## P6 Adult Tumor Analysis - Mutational Analysis
 ### Query for TCGA MAF file and filter using histology file
 # Query with TCGABiolinks
-query <- GDCquery(project = "TCGA-GBM", 
-                  data.category = "Simple Nucleotide Variation", 
-                  access = "open", 
-                  legacy = F, 
-                  data.type = "Masked Somatic Mutation", 
-                  workflow.type = "MuTect2 Variant Aggregation and Masking")
+query <- GDCquery(
+  project = "TCGA-GBM", 
+  data.category = "Simple Nucleotide Variation", 
+  access = "open", 
+  legacy = FALSE, 
+  data.type = "Masked Somatic Mutation", 
+  workflow.type = "Aliquot Ensemble Somatic Variant Merging and Masking"
+)
 
 # currently the query is not working so this is a workaround
 if(exists('query')){
