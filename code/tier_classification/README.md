@@ -15,7 +15,7 @@ The module annotate tier based on Oncokb annotations using tier_classification b
 Input file `oncokb_consensus_annotated.txt`
 
 1. Tier 1 variants: 
-  a. Levels of evidence to include among Tier 1 would be: in the `HIGHEST_LEVEL` field, those with levels 1-3 or R1; OR in the `Highest DX Level`, levels 1-2; OR in the `Highest PX Level`, levels 1-2; OR annotated as `Tier 1` in COSMIC resistance variant database; OR designated as `pathogenic` in `CLIN_SIG`
+  a. Levels of evidence to include among Tier 1 would be: in the `HIGHEST_LEVEL` field, those with levels 1-3 or R1; OR in the `Highest DX Level`, levels 1-2; OR in the `Highest PX Level`, levels 1-2; OR annotated as `Tier 1` in COSMIC resistance variant database; OR designated as `pathogenic` in `CLIN_SIG`.
   b. Mutation type: from MAF `Variant_Classification` field - missense, nonsense, indel (frameshift/non-frameshift), splice site, splice region.
   c. Variant allele frequency > 0.05: Calculated as `VAF = t_alt_count/(t_alt_count+t_ref_count)`
   d. Population database: from MAF - `gnomad_AF` < 0.01
@@ -24,7 +24,7 @@ Input file `oncokb_consensus_annotated.txt`
   h. Publications: from `oncokb_consensus_annotated.txt`, `CITATIONS` is non-empty
 
 2. Tier 2 variants: 
-  a. Levels of evidence to include among Tier 2 would be: - in the `HIGHEST_LEVEL` field, those variants only with level 4 evidence OR R2; OR in the `Highest DX Level`, level 3; OR in the `Highest PX Level`, level 3; OR present in COSMIC resistance variant database without `Tier 1` annotated; OR designated as `likely_pathogenic` in `CLIN_SIG`
+  a. Levels of evidence to include among Tier 2 would be: - in the `HIGHEST_LEVEL` field, those variants only with level 4 evidence OR R2; OR in the `Highest DX Level`, level 3; OR in the `Highest PX Level`, level 3; OR present in COSMIC resistance variant database without `Tier 1` annotated; OR designated as `likely_pathogenic` in `CLIN_SIG`.
 (Note: a given variant may have multiple Levels of evidence in different indications, so long as the levels don't exceed 3 for DX or PX, nor 4 for `Level`, it would remain a Tier2 variant. If a variant has a level higher in any single one of these categories, it is a Tier 1 variant). 
   b. Mutation type: from MAF `Variant_Classification` field - missense, nonsense, indel (frameshift/non-frameshift), splice site, splice region.
   c. Variant allele frequency > 0.05: Calculated as `VAF = t_alt_count/(t_alt_count+t_ref_count)`
@@ -33,7 +33,7 @@ Input file `oncokb_consensus_annotated.txt`
   g. Pathways: Known TSG or Oncogene 
   h. Publications: from `oncokb_consensus_annotated.txt`, `CITATIONS` is non-empty
 
-3. Tier 3 variants (VUS); OR designated as E in `civic_evidence`:
+3. Tier 3 variants (VUS):
   a. No levels annotation in `oncokb_consensus_annotated.txt`
   b. Mutation type: from MAF `Variant_Classification` field - missense, in-frame insertions and deletions
   c. Variant allele frequency > 0.05: Calculated as `VAF = t_alt_count/(t_alt_count+t_ref_count)`
