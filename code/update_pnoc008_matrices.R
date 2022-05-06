@@ -164,17 +164,6 @@ pnoc008_expr <- pnoc008_expr %>%
 # filter HIST genes
 pnoc008_expr <- pnoc008_expr[grep('^HIST', pnoc008_expr$gene_symbol, invert = T),]
 
-# fpkm matrix
-pnoc008_fpkm <- pnoc008_expr %>% 
-  group_by(sample_name) %>%
-  arrange(desc(FPKM)) %>% 
-  distinct(gene_symbol, .keep_all = TRUE) %>%
-  dplyr::select(gene_symbol, sample_name, FPKM) %>%
-  spread(sample_name, FPKM) %>%
-  column_to_rownames('gene_symbol')
-pnoc008_fpkm <- pnoc008_fpkm[,grep('CHOP', colnames(pnoc008_fpkm), invert = T)]
-colnames(pnoc008_fpkm)  <- gsub("-NANT", "", colnames(pnoc008_fpkm))
-
 # counts matrix
 pnoc008_counts <- pnoc008_expr %>% 
   group_by(sample_name) %>%
@@ -232,16 +221,13 @@ pnoc008_clinical <- pnoc008_clinical %>%
 
 # assign subjectID as rownames
 rownames(pnoc008_clinical) <- pnoc008_clinical$subjectID
-
 common.pnoc008 <- intersect(rownames(pnoc008_clinical), colnames(pnoc008_tpm))
 pnoc008_clinical <- pnoc008_clinical[common.pnoc008,]
 pnoc008_tpm <- pnoc008_tpm[,common.pnoc008]
-pnoc008_fpkm <- pnoc008_fpkm[,common.pnoc008]
 pnoc008_counts <- pnoc008_counts[,common.pnoc008]
 
 # save expression and clinical
 saveRDS(pnoc008_tpm, file = file.path(pnoc008_dir, 'pnoc008_tpm_matrix.rds'))
-saveRDS(pnoc008_fpkm, file = file.path(pnoc008_dir, 'pnoc008_fpkm_matrix.rds'))
 saveRDS(pnoc008_counts, file = file.path(pnoc008_dir, 'pnoc008_counts_matrix.rds'))
 saveRDS(pnoc008_clinical, file = file.path(pnoc008_dir, "pnoc008_clinical.rds"))
 
@@ -323,7 +309,6 @@ pnoc008_mutations <- pnoc008_mutations %>%
   dplyr::select(Gene, Alteration_Datatype, Alteration_Type, Alteration, Kids_First_Biospecimen_ID, SampleID, Study) %>%
   unique()
 saveRDS(pnoc008_mutations, file = file.path(pnoc008_dir, "pnoc008_consensus_mutation_filtered.rds"))
-
 
 # cohort level tmb scores
 tmb_bed_file <- data.table::fread(file.path(data_dir, 'tmb', 'ashion_confidential_exome_v2_2nt_pad.Gh38.bed'))
