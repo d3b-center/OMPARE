@@ -272,7 +272,7 @@ civic_annotation <- function(all_findings_output, civic_ref_dir, snv_caller, civ
   all_findings_civic_annotated <- bind_rows(all_findings_annotated, 
                                             all_findings_non_annotated)
   all_findings_civic_annotated %>% 
-    write_tsv(civic_output, paste0("all_findings_output_civic_annotated_", snv_caller, ".tsv"))
+    write_tsv(file.path(civic_output, paste0("all_findings_output_civic_annotated_", snv_caller, ".tsv")))
   
   # now find new files
   all_findings_civic_annotated_clean <- all_findings_civic_annotated %>% 

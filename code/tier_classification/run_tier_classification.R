@@ -60,11 +60,18 @@ if(nrow(oncokb_anno) > 0){
 
 # annotate CIVIC and output results 
 civic_ref_dir <- file.path(data_dir, "civic_data")
-tmp <- civic_annotation(all_findings_output = all_findings_output,
+all_findings_output <- civic_annotation(all_findings_output = all_findings_output,
                                         civic_ref_dir = civic_ref_dir, 
                                         snv_caller = snv_caller,
                                         civic_output = output_dir)
 
+# save all outputs
+write_tsv(all_findings_output, file = file.path(output_dir, paste0("all_findings_output_", snv_caller, ".tsv")))
+
 # key clinical findings is a subset so just call this function again
 # this will create key_clinical_findings_output with the tier info
 source(file.path(code_dir, "p1_modules", 'p1_key_clinical_findings.R'))
+
+# save key clinical findings
+write_tsv(key_clinical_findings_output, file = file.path(output_dir, paste0("key_clinical_findings_output_", snv_caller, ".tsv")))
+
