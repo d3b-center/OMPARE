@@ -74,7 +74,7 @@ This module then add CIVIC curated annotation to the `all_findings_output` table
 2) then if any fusion has a fusion partner in the file `fusion_word_only.tsv`, the entry will be annotated
 
 3. Annotate expression results using `expression_all_civic.tsv`
-4. Annotate gain and loss from CNV results using `amplification_only_civic.tsv` and `deletion_general_civic.tsv`
+4. Annotate gain and loss from CNV results using `amplification_only_civic.tsv`, `cnv_loss_civic.tsv` and `deletion_general_civic.tsv`
 
 5. Annotate all the rest using `alteration_civic.tsv`
 For any of the entries that were not annotated by the previous 4 steps, they would be annotated if the gene is annotated in `alteration_civic.tsv`.
