@@ -13,6 +13,7 @@ module_dir <- file.path(root_dir, "code", "tier_classification")
 
 # source function
 source(file.path(module_dir, "utils", "tier_classification.R"))
+source(file.path(module_dir, "utils", "civic_tier_anno.R"))
 
 # Read in files necessary for analyses
 input_dir <- file.path(patient_dir, "output", "oncokb_analysis")
@@ -46,14 +47,19 @@ cosmic_resistance <- readr::read_tsv(file.path(data_dir, 'CosmicResistanceMutati
 
 # annotate tier classification
 if(nrow(oncokb_anno) > 0){
+  # annotate tier 
   all_findings_output <- tier_classification(all_findings_output = all_findings_output, 
                                              oncokb_anno = oncokb_anno, 
                                              cancer_genes = cancer_genes, 
                                              hotspot_indel = hotspot_indel, 
                                              hotspot_snv = hotspot_snv,
                                              cosmic_resistance = cosmic_resistance)
-  
-  # key clinical findings is a subset so just call this function again
-  # this will create key_clinical_findings_output with the tier info
-  source(file.path(code_dir, "p1_modules", 'p1_key_clinical_findings.R'))
 }
+# annotate CIVIC and output results 
+all_findings_output <- civic_annotation(all_findings_output = all_findings_output,
+                                        civic_ref_dir = civic_ref_dir, 
+                                        civic_output = civic_output)
+
+# key clinical findings is a subset so just call this function again
+# this will create key_clinical_findings_output with the tier info
+source(file.path(code_dir, "p1_modules", 'p1_key_clinical_findings.R'))
