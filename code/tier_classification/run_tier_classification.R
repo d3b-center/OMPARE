@@ -10,6 +10,8 @@ suppressPackageStartupMessages({
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
 data_dir <- file.path(root_dir, "data")
 module_dir <- file.path(root_dir, "code", "tier_classification")
+output_dir <- file.path(patient_dir, "output", "tier_classification")
+dir.create(output_dir, recursive = T, showWarnings = F)
 
 # source function
 source(file.path(module_dir, "utils", "tier_classification.R"))
@@ -55,10 +57,13 @@ if(nrow(oncokb_anno) > 0){
                                              hotspot_snv = hotspot_snv,
                                              cosmic_resistance = cosmic_resistance)
 }
+
 # annotate CIVIC and output results 
-all_findings_output <- civic_annotation(all_findings_output = all_findings_output,
+civic_ref_dir <- file.path(data_dir, "civic_data")
+tmp <- civic_annotation(all_findings_output = all_findings_output,
                                         civic_ref_dir = civic_ref_dir, 
-                                        civic_output = civic_output)
+                                        snv_caller = snv_caller,
+                                        civic_output = output_dir)
 
 # key clinical findings is a subset so just call this function again
 # this will create key_clinical_findings_output with the tier info

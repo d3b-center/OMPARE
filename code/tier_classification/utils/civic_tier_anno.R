@@ -6,19 +6,19 @@ suppressPackageStartupMessages({
   library(data.table)
 })
 
-civic_annotation <- function(all_findings_output, civic_ref_dir, civic_output){
+civic_annotation <- function(all_findings_output, civic_ref_dir, snv_caller, civic_output){
   # give each entry an ID for easier match
-  all_findings_ouput <- all_findings_ouput %>%
+  all_findings_output <- all_findings_output %>%
     tibble::rownames_to_column("findings_id")
   
   # subset for different type
-  all_findings_ouput_mut <- all_findings_ouput %>%
+  all_findings_output_mut <- all_findings_output %>%
     dplyr::filter(Type %in% c("VUS", "Mutation"))
-  all_findings_ouput_cnv <- all_findings_ouput %>% 
+  all_findings_output_cnv <- all_findings_output %>% 
     dplyr::filter(Type %in% c("Gain", "Amplification", "Loss"))
-  all_findings_ouput_fusion <- all_findings_ouput %>%
+  all_findings_output_fusion <- all_findings_output %>%
     dplyr::filter(Type == "Fusion")
-  all_findings_ouput_expression <- all_findings_ouput %>%
+  all_findings_output_expression <- all_findings_output %>%
     dplyr::filter(Type %in% c("Outlier-High (mRNA)",
                               "Outlier-Low (mRNA)"))
   
@@ -44,14 +44,14 @@ civic_annotation <- function(all_findings_output, civic_ref_dir, civic_output){
     gene_of_interest <- snv_combined[i,2]
     variant_of_interest <- snv_combined[i,4]
     
-    hit_each <- all_findings_ouput_mut %>%
+    hit_each <- all_findings_output_mut %>%
       dplyr::filter(Aberration == gene_of_interest,
                     grepl(variant_of_interest, "Details")) %>%
       dplyr::left_join(snv_combined[i,], by = c("Aberration" = "gene"))
     snv_specific_hit <- bind_rows(snv_specific_hit, hit_each)
   }
   # find the un-annotated one
-  all_findings_ouput_mut_remaining <- all_findings_ouput_mut %>%
+  all_findings_output_mut_remaining <- all_findings_output_mut %>%
     dplyr::filter(!findings_id %in% snv_specific_hit$findings_id)
   
   ######################### annotate exon and domain mutations -------------------------------
@@ -75,7 +75,7 @@ civic_annotation <- function(all_findings_output, civic_ref_dir, civic_output){
     protein_end <- mutation_domain_exon_civic[1,4]
     
     # find each hit
-    hit_each <- all_findings_ouput_mut_remaining %>%
+    hit_each <- all_findings_output_mut_remaining %>%
       dplyr::filter(Aberration == gene_of_interest) %>%
       dplyr::mutate(aa_location = gsub("fs*.*", "", Details)) %>%
       dplyr::mutate(aa_location = as.numeric(str_extract(Details, "[0-9]+"))) %>%
@@ -89,7 +89,7 @@ civic_annotation <- function(all_findings_output, civic_ref_dir, civic_output){
   snv_exon_domain_hit <- snv_exon_domain_hit %>%
     dplyr::select(-c("aa_location", "protein_start", "protein_end"))
   # find the un-annotated one
-  all_findings_ouput_mut_remaining <- all_findings_ouput_mut_remaining %>%
+  all_findings_output_mut_remaining <- all_findings_output_mut_remaining %>%
     dplyr::filter(!findings_id %in% snv_exon_domain_hit$findings_id)
   
   ######################### annotate exon insertion and deletions mutations -------------------------------
@@ -106,7 +106,7 @@ civic_annotation <- function(all_findings_output, civic_ref_dir, civic_output){
     protein_end <- deletion_exon[1,4]
     
     # find each hit
-    hit_each <- all_findings_ouput_mut_remaining %>%
+    hit_each <- all_findings_output_mut_remaining %>%
       dplyr::filter(Aberration == gene_of_interest) %>%
       dplyr::filter(grepl("_Del", Details)) %>% 
       dplyr::mutate(aa_location = gsub("fs*.*", "", Details)) %>%
@@ -122,7 +122,7 @@ civic_annotation <- function(all_findings_output, civic_ref_dir, civic_output){
     dplyr::select(-c("aa_location", "protein_start", "protein_end"))
   
   # find the un-annotated one
-  all_findings_ouput_mut_remaining <- all_findings_ouput_mut_remaining %>%
+  all_findings_output_mut_remaining <- all_findings_output_mut_remaining %>%
     dplyr::filter(!findings_id %in% del_exon_hit$findings_id)
   
   # define dataframe to store results
@@ -135,7 +135,7 @@ civic_annotation <- function(all_findings_output, civic_ref_dir, civic_output){
     protein_end <- insertion_exon[1,4]
     
     # find each hit
-    hit_each <- all_findings_ouput_mut_remaining %>%
+    hit_each <- all_findings_output_mut_remaining %>%
       dplyr::filter(Aberration == gene_of_interest) %>%
       dplyr::filter(grepl("_Ins", Details)) %>% 
       dplyr::mutate(aa_location = gsub("fs*.*", "", Details)) %>%
@@ -151,14 +151,14 @@ civic_annotation <- function(all_findings_output, civic_ref_dir, civic_output){
     dplyr::select(-c("aa_location", "protein_start", "protein_end"))
   
   # find the un-annotated one
-  all_findings_ouput_mut_remaining <- all_findings_ouput_mut_remaining %>%
+  all_findings_output_mut_remaining <- all_findings_output_mut_remaining %>%
     dplyr::filter(!findings_id %in% ins_exon_hit$findings_id)
   
   ######################### annotate general mutation and combine results -------------------------------
   # finally annotate to general hits 
   mutation_general <- read_tsv(file.path(civic_ref_dir, "mutation_general_civic.tsv"),
                                guess_max = 10000) 
-  mutation_general_hit <- all_findings_ouput_mut_remaining %>% 
+  mutation_general_hit <- all_findings_output_mut_remaining %>% 
     dplyr::filter(Aberration %in% mutation_general$gene) %>%
     dplyr::left_join(mutation_general, by = c("Aberration" = "gene"))
   
@@ -167,51 +167,55 @@ civic_annotation <- function(all_findings_output, civic_ref_dir, civic_output){
                         snv_exon_domain_hit,
                         del_exon_hit,
                         ins_exon_hit,
-                        mutation_general_hit)
+                        mutation_general_hit) %>%
+    as.data.frame()
+  
   # find the un-annotated one
-  mutation_non_hit <- all_findings_ouput_mut %>%
+  mutation_non_hit <- all_findings_output_mut %>%
     dplyr::filter(!findings_id %in% mutation_hit$findings_id)
   
   ################# Annotate expression -------------------------------
   expression_all_civic <- read_tsv(file.path(civic_ref_dir, "expression_all_civic.tsv"))
-  expression_hit <- all_findings_ouput_expression %>%
+  expression_hit <- all_findings_output_expression %>%
     dplyr::filter(Aberration %in% expression_all_civic$gene) %>%
-    dplyr::left_join(expression_all_civic, by = c("Aberration" = "gene"))
+    dplyr::left_join(expression_all_civic, by = c("Aberration" = "gene")) %>%
+    as.data.frame()
   
-  expression_non_hit <- all_findings_ouput_expression %>%
+  expression_non_hit <- all_findings_output_expression %>%
     dplyr::filter(!Aberration %in% expression_all_civic$gene)
   
   ################ Annotate fusion ----------------------------------
   # read in necessary file
   fusion_column_only <- read_tsv(file.path(civic_ref_dir, "fusion_column_only.tsv")) %>% 
     dplyr::mutate(variant_match = gsub("::", "_", variant))
-  fusion_column_hit <- all_findings_ouput_fusion %>%
+  fusion_column_hit <- all_findings_output_fusion %>%
     dplyr::filter(Aberration %in% fusion_column_only$variant_match) %>%
     dplyr::left_join(fusion_column_only, by = c("Aberration" = "gene")) %>%
-    dplyr::select(-c("variant_match"))
+    dplyr::select(-c("variant_match")) %>%
+    as.data.frame()
   
   fusion_word_only <- read_tsv(file.path(civic_ref_dir, "fusion_word_only.tsv"))
-  all_findings_ouput_fusion_sep <- all_findings_ouput_fusion %>%
+  all_findings_output_fusion_sep <- all_findings_output_fusion %>%
     dplyr::filter(!findings_id %in% fusion_column_hit$variant_id) %>%
     tidyr::separate(Aberration, c("geneA", "geneB")) 
   
   # merge with CIVIC information based on gene 
-  fusion_word_geneA <- all_findings_ouput_fusion_sep %>%
+  fusion_word_geneA <- all_findings_output_fusion_sep %>%
     dplyr::filter(geneA %in% fusion_word_only$gene) %>%
     dplyr::left_join(fusion_word_only, by = c("geneA" = "gene")) 
-  fusion_word_geneB <- all_findings_ouput_fusion_sep %>%
+  fusion_word_geneB <- all_findings_output_fusion_sep %>%
     dplyr::filter(geneB %in% fusion_word_only$gene) %>%
     dplyr::left_join(fusion_word_only, by = c("geneB" = "gene")) 
   
   # combine together to get the hit
   fusion_word_hit <- bind_rows(fusion_word_geneA, fusion_word_geneB) %>%
     dplyr::mutate(Aberration = paste0(geneA, "_", geneB)) %>%
-    dplyr::select(-c("geneA", "geneB")) 
+    dplyr::select(-c("geneA", "geneB")) %>%
+    as.data.frame()
   
   # get all fusions 
-  fusion_hit <- rbind(fusion_word_hit,
-                      fusion_column_hit)
-  fusion_non_hit <- all_findings_ouput_fusion %>%
+  fusion_hit <- rbind(fusion_word_hit, fusion_column_hit)
+  fusion_non_hit <- all_findings_output_fusion %>%
     dplyr::filter(!findings_id %in% fusion_hit$findings_id)
   
   ################ Annotate amplification and loss ----------------------------------
@@ -222,20 +226,22 @@ civic_annotation <- function(all_findings_output, civic_ref_dir, civic_output){
   combined_loss <- rbind(cnv_loss, deletion_general_civic)
   
   # annotate amplification first
-  amplification_hit <- all_findings_ouput_cnv %>%
+  amplification_hit <- all_findings_output_cnv %>%
     dplyr::filter(Aberration %in% amplification_only$gene) %>%
     dplyr::filter(Type %in% c("Gain", "Amplification")) %>%
-    dplyr::left_join(amplification_only, by = c("Aberration" = "gene"))
+    dplyr::left_join(amplification_only, by = c("Aberration" = "gene")) %>%
+    as.data.frame()
+  
   # then annotate loss
-  loss_hit <- all_findings_ouput_cnv %>%
+  loss_hit <- all_findings_output_cnv %>%
     dplyr::filter(Aberration %in% combined_loss$gene) %>%
     dplyr::filter(Type %in% c("Loss")) %>%
-    dplyr::left_join(combined_loss, by = c("Aberration" = "gene"))
+    dplyr::left_join(combined_loss, by = c("Aberration" = "gene")) %>%
+    as.data.frame()
   
   # find the hit and non hit
-  cnv_hit <- rbind(amplification_hit,
-                   loss_hit)
-  cnv_non_hit <- all_findings_ouput_cnv %>%
+  cnv_hit <- rbind(amplification_hit, loss_hit)
+  cnv_non_hit <- all_findings_output_cnv %>%
     dplyr::filter(!findings_id %in% cnv_hit$findings_id)
   
   ################ Annotate alteration ----------------------------------
@@ -250,7 +256,8 @@ civic_annotation <- function(all_findings_output, civic_ref_dir, civic_output){
   
   # from the non-hit, rescue all alteration
   alteration_hit <- all_non_hit %>%
-    dplyr::filter(Aberration %in% alteration_civic$gene) 
+    dplyr::filter(Aberration %in% alteration_civic$gene) %>%
+    as.data.frame()
   
   # combined all hit together
   all_findings_annotated <- rbind(mutation_hit,
@@ -258,14 +265,14 @@ civic_annotation <- function(all_findings_output, civic_ref_dir, civic_output){
                                   fusion_hit,
                                   cnv_hit,
                                   alteration_hit)
-  all_findings_non_annotated <- all_findings_ouput %>%
+  all_findings_non_annotated <- all_findings_output %>%
     dplyr::filter(!findings_id %in% all_findings_annotated$findings_id)
   
   # add them together and write out
   all_findings_civic_annotated <- bind_rows(all_findings_annotated, 
                                             all_findings_non_annotated)
   all_findings_civic_annotated %>% 
-    write_tsv(civic_output, "all_findings_output_civic_annotated.tsv")
+    write_tsv(civic_output, paste0("all_findings_output_civic_annotated_", snv_caller, ".tsv"))
   
   # now find new files
   all_findings_civic_annotated_clean <- all_findings_civic_annotated %>% 
