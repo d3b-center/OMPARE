@@ -86,7 +86,7 @@ for(i in 1:length(callers)) {
                                   set_title = set_title,
                                   snv_caller = callers[i]), 
                     output_dir = output_dir, 
-                    intermediates_dir = output_dir,
+                    # intermediates_dir = output_dir,
                     output_file = output_file)
 }
 

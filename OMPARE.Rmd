@@ -64,7 +64,7 @@ Row {data-height=200}
 ```{r d3b_logo, echo=FALSE, out.width = "100%"}
 knitr::include_graphics(file.path(root_dir, "figures", "d3b_logo.png"))
 ```
-    
+
 ### Patient & Sample Information
 
 ```{r patient_info}
