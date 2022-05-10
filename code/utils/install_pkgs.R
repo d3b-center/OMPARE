@@ -5,7 +5,7 @@
 BiocManager::install("AnnotationDbi")
 BiocManager::install("CEMiTool")
 BiocManager::install("ComplexHeatmap")
-BiocManager::install("DT") # 0.18
+BiocManager::install("DT")
 BiocManager::install("ExperimentHub")
 BiocManager::install("GSEABase")
 BiocManager::install("GSVA")
