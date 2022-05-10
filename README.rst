@@ -34,7 +34,7 @@ Prerequisites
 .. code-block:: bash
 
 	# get reference data from s3
-	aws s3 --profile saml sync s3://d3b-bix-dev-data-bucket/PNOC008/data /path-to/OMPARE/data/
+	aws s3 --profile Mgmt-Console-Dev-chopd3bprod@684194535433 sync s3://d3b-bix-dev-data-bucket/PNOC008/data /path-to/OMPARE/data/ 
 
 4. Download patient-specific files from `data delivery project <https://cavatica.sbgenomics.com/u/cavatica/sd-8y99qzjj>`_:
 
@@ -68,19 +68,19 @@ Prerequisites
 
   * PNOC008 Clinical Manifest (needed to map ``Research ID`` to ADAPT ``cohort_participant_id``)
 
-.. * Files from ADAPT (updated each morning and needed to get BS identifier and other information)
+* Files from ADAPT (updated each morning and needed to get BS identifier and other information)
 
-.. .. code-block:: bash
+.. code-block:: bash
 
-.. 	# query from data-warehouse
-.. 	cd /path-to/d3b-analysis-toolkit/scripts
-.. 	source .envrc
-.. 	python select-all-pbta-histologies.py -o /path-to/OMPARE/data/pbta/pbta-histologies-base-adapt.tsv 
+	# query from data-warehouse
+	cd /path-to/d3b-analysis-toolkit/scripts
+	source .envrc
+	python select-all-pbta-histologies.py -o /path-to/OMPARE/data/pbta/pbta-histologies-base-adapt.tsv 
 
 .. 	# alternatively from s3 (not currently updated)
 .. 	aws s3 --profile saml cp s3://d3b-bix-dev-data-bucket/pbta-histologies-base-adapt.tsv data/pbta/
 
-* Currently, we have switched to using data assembly histology file available with each new patient: https://cavatica.sbgenomics.com/u/kfdrc-harmonization/sd-8y99qzjj-data-assembly/
+.. * Currently, we have switched to using data assembly histology file available with each new patient: https://cavatica.sbgenomics.com/u/kfdrc-harmonization/sd-8y99qzjj-data-assembly/
 
 Note: None of these files have information on short_histology or broad_histology so currently it is being hard-coded ``HGAT`` and ``Diffuse astrocytic and oligodendroglial tumor``, respectively.
 
