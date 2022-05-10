@@ -36,6 +36,9 @@ Prerequisites
 	# get reference data from s3
 	aws s3 --profile Mgmt-Console-Dev-chopd3bprod@684194535433 sync s3://d3b-bix-dev-data-bucket/PNOC008/data /path-to/OMPARE/data/ 
 
+	# chembldb v29 needs to be downloaded separately
+	# download chembldb v29 from https://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/latest/chembl_29_sqlite.tar.gz and save under data/chembl directory, then untar it. You will find the database under the path: data/chembl/chembl_29_sqlite/chembl_29.db.
+
 4. Download patient-specific files from `data delivery project <https://cavatica.sbgenomics.com/u/cavatica/sd-8y99qzjj>`_:
 
 * Copy Number: 
@@ -96,7 +99,7 @@ Master script
 2. **code/create_clinfile.R**: create clinical file for patient of interest.
 3. **code/update_pnoc008_matrices.R**: update PNOC008 data matrices (cnv, mutations, fusions, expression) with each new patient.
 4. **OMPARE.Rmd**: run html reports
-5. Using ``aws s3 sync``, sync back updated data folder to ``s3://d3b-bix-dev-data-bucket/PNOC008/data``
+5. Sync back updated data folder to s3: ``aws s3 --profile Mgmt-Console-Dev-chopd3bprod@684194535433 sync data s3://d3b-bix-dev-data-bucket/PNOC008/data/ --exclude 'chembl/*'``
 6. **upload_reports.R**: upload reports and output folders to PNOC008 data delivery project on cavatica.
 
 .. code-block:: bash
