@@ -111,6 +111,11 @@ with_module_list <- lapply(module_list, function(y){
     sc2 <- betweenness(subnetwork_graphed, vSet0, directed=F) 
     sc3 <- page.rank(subnetwork_graphed, algo="prpack", vids=vSet0)$vector ### for normalization
     
+    # remove NaNs from sc1, sc2 and sc3
+    sc1 <- sc1[!is.na(sc1)]
+    sc2 <- sc2[!is.na(sc2)]
+    sc3 <- sc3[!is.na(sc3)]
+    
     # define an empty list to store the info 
     scores <- list()
     # get closeness and betweenness for all drugs in the subnetwork
