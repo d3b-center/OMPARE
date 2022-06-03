@@ -27,7 +27,11 @@ civic_annotation <- function(all_findings_output, civic_ref_dir, snv_caller, civ
     dplyr::filter(grepl("\\(", variant)) %>%
     dplyr::mutate(variant = gsub(" \\s*\\([^\\)]+\\)", "", variant)) 
   snv_remaining <- read_tsv(file.path(civic_ref_dir, "snv_remaining_civic.tsv"),
-                            guess_max = 10000) 
+                            guess_max = 10000) %>% 
+    dplyr::mutate(gene = case_when(
+      gene == "H3-3A" ~ "H3F3A",
+      TRUE ~ gene
+    ))
   
   # bind rows and reformat
   snv_combined <- rbind(c_dot_civic, snv_remaining) %>%
@@ -157,7 +161,11 @@ civic_annotation <- function(all_findings_output, civic_ref_dir, snv_caller, civ
   ######################### annotate general mutation and combine results -------------------------------
   # finally annotate to general hits 
   mutation_general <- read_tsv(file.path(civic_ref_dir, "mutation_general_civic.tsv"),
-                               guess_max = 10000) 
+                               guess_max = 10000) %>% 
+    dplyr::mutate(gene = case_when(
+      gene == "H3-3A" ~ "H3F3A",
+      TRUE ~ gene
+    ))
   mutation_general_hit <- all_findings_output_mut_remaining %>% 
     dplyr::filter(Aberration %in% mutation_general$gene) %>%
     dplyr::left_join(mutation_general, by = c("Aberration" = "gene"))
