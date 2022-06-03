@@ -82,4 +82,4 @@ For any of the entries that were not annotated by the previous 4 steps, they wou
 Based on the civic evidence level, add additional tier or upgrade tier based on the following rules 
 1. Tier I: designated as A or B in `evidence_level_civic`
 2. Tier II: designated as C or D in `evidence_level_civic`
-3. Tier III: designated as C or D in `evidence_level_civic`
+3. Tier III: designated as E in `evidence_level_civic`
