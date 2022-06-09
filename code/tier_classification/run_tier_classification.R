@@ -69,8 +69,10 @@ all_findings_output <- civic_annotation(all_findings_output = all_findings_outpu
 write_tsv(all_findings_output, file = file.path(output_dir, paste0("all_findings_output_", snv_caller, ".tsv")))
 
 # key clinical findings is a subset so just call this function again
-# this will create key_clinical_findings_output with the tier info
-source(file.path(code_dir, "p1_modules", 'p1_key_clinical_findings.R'))
+# this will create key_clinical_findings_output with the tier and civic info
+source(file.path(root_dir, "code", "p1_modules", "utils", 'key_clinical_findings.R'))
+key_clinical_findings_output <- key_clinical_findings(rnaseq_analysis_output = rnaseq_analysis_output,
+                                                      all_findings_output = all_findings_output)
 
 # save key clinical findings
 write_tsv(key_clinical_findings_output, file = file.path(output_dir, paste0("key_clinical_findings_output_", snv_caller, ".tsv")))

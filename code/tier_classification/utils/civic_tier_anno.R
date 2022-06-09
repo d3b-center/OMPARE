@@ -284,7 +284,8 @@ civic_annotation <- function(all_findings_output, civic_ref_dir, snv_caller, civ
   
   # now find new files
   all_findings_civic_annotated_clean <- all_findings_civic_annotated %>% 
-    dplyr::select("findings_id", "Aberration", "Type", "Details", "Variant_Properties", "TargetValidation", "evidence_level") %>%
+    dplyr::select("findings_id", "Aberration", "Type", "Details", "Variant_Properties", "TargetValidation", "evidence_level",
+                  "Kids_First_Biospecimen_ID", "sample_id", "cohort", "cohort_participant_id") %>%
     dplyr::group_by(Details) %>%
     dplyr::mutate(evidence_level_civic = paste0(unique(evidence_level), collapse = ",")) %>%
     dplyr::mutate(evidence_level_civic = gsub("NA,", "", evidence_level_civic)) %>%
