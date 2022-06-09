@@ -1,11 +1,12 @@
-tmb_calculate <- function(patient_dir,
-                          tmb_bed_file = tmb_bed_file, 
-                          var_class = c('Missense_Mutation', 'Nonsense_Mutation',
-                                        'Frame_Shift_Del', 'Frame_Shift_Ins', 
-                                        'In_Frame_Del', 'In_Frame_Ins'), 
-                          vaf_cutoff = 0.05, var_count = 3, tumor_depth = 25) {
+tmb_profile <- function(patient_dir, pbta_tmb, tcga_in_pbta_tmb, tcga_not_in_pbta_tmb, tmb_bed_file) {
   
-  `%>%` <- dplyr::`%>%`
+  # Friends of Cancer Research Project cutoffs
+  var_class = c('Missense_Mutation', 'Nonsense_Mutation',
+                'Frame_Shift_Del', 'Frame_Shift_Ins', 
+                'In_Frame_Del', 'In_Frame_Ins')
+  vaf_cutoff = 0.05
+  var_count = 3
+  tumor_depth = 25
   
   # calculate the length of the bed file
   bed_length <- 0
@@ -15,18 +16,11 @@ tmb_calculate <- function(patient_dir,
   }
   
   # read mutect2 for TMB profile
-  somatic.mut.pattern <- '*.maf'
-  mutFiles <- list.files(path = patient_dir, pattern = somatic.mut.pattern, recursive = TRUE, full.names = T)
-  mutFiles <- grep("mutect2", mutFiles, value = TRUE)
-  if(length(mutFiles) >= 1){
-    mutFiles <- lapply(mutFiles, data.table::fread, skip = 1, stringsAsFactors = F)
-    mutData.mutect2 <- data.table::rbindlist(mutFiles)
-    mutData.mutect2 <- as.data.frame(mutData.mutect2)
-    mutData.mutect2 <- unique(mutData.mutect2)
-  }
+  mutect2_maf <- list.files(path = patient_dir, pattern = "mutect2", recursive = TRUE, full.names = T)
+  mutect2_maf <- data.table::fread(mutect2_maf)
   
   # apply filters using Friends of Cancer Research Project Standards 
-  myMutData <- mutData.mutect2 %>%
+  mutect2_maf <- mutect2_maf %>%
     mutate(vaf = t_alt_count/(t_alt_count+t_ref_count)) %>%
     filter(Variant_Classification %in% var_class,
            t_depth >= tumor_depth,
@@ -36,32 +30,22 @@ tmb_calculate <- function(patient_dir,
   
   # intersect with bed file
   subject <- with(tmb_bed_file, GRanges(chr, IRanges(start = start, end = end)))
-  query <- with(myMutData, GRanges(Chromosome, IRanges(start = Start_Position, end = End_Position, names = Hugo_Symbol)))
+  query <- with(mutect2_maf, GRanges(Chromosome, IRanges(start = Start_Position, end = End_Position, names = Hugo_Symbol)))
   res <- findOverlaps(query = query, subject = subject, type = "within")
-  res <- data.frame(myMutData[queryHits(res),], tmb_bed_file[subjectHits(res),])
+  res <- data.frame(mutect2_maf[queryHits(res),], tmb_bed_file[subjectHits(res),])
+  
+  # number of missense+nonsense overlapping with the bed file
   TMB <- (nrow(res))*1000000/bed_length
   
-  # return the number of missense+nonsense overlapping with the bed file
-  return(TMB)
-}
-
-
-tmb_profile <- function(patient_dir, pbta_tmb, tcga_in_pbta_tmb, tcga_not_in_pbta_tmb, tmb_bed_file) {
-  
-  TMB <- tmb_calculate(patient_dir = patient_dir, tmb_bed_file = tmb_bed_file)
-  # pedTMBScores$Type <- "Pediatric"
-  # adultTMBScores$Type <- "Adult"
   pbta_tmb$Type <- "PBTA"
   tcga_in_pbta_tmb$Type <- "TCGA in PBTA"
   tcga_not_in_pbta_tmb$Type <- "TCGA not in PBTA"
-  
-  # tmbScores <- rbind(pedTMBScores, adultTMBScores)
   tmbScores <- rbind(pbta_tmb, tcga_in_pbta_tmb, tcga_not_in_pbta_tmb)
   
   # count median per histology
   disease.order <- tmbScores %>%
     group_by(Type, Diseasetype) %>%
-    summarise(median = median(TMBscore), count = n()) %>%
+    dplyr::summarise(median = median(TMBscore), count = n()) %>%
     filter(count > 2) %>%
     arrange(desc(median)) %>%
     .$Diseasetype
@@ -83,3 +67,4 @@ tmb_profile <- function(patient_dir, pbta_tmb, tcga_in_pbta_tmb, tcga_not_in_pbt
              fontface = 'italic', color = "gray30")
   return(p)
 }
+

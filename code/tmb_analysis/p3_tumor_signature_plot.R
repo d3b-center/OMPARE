@@ -1,5 +1,4 @@
 # Tumor signature plot
-
 library(decompTumor2Sig)
 
 # directories
@@ -18,8 +17,19 @@ fname <- file.path(output_dir, "tumor_signature_output.rds")
 # mutational signatures
 signatures <- readAlexandrovSignatures(file.path(data_dir, 'signatures_probabilities.txt'))
 
+# input maf file
+if(snv_caller == "all"){
+  patient_maf <- list.files(path = file.path(patient_dir, "simple-variants"), pattern = "consensus", full.names = T)
+  patient_maf <- data.table::fread(patient_maf)
+} else {
+  patient_maf <- list.files(path = file.path(patient_dir, "simple-variants"), pattern = snv_caller, full.names = T)
+  patient_maf <- data.table::fread(patient_maf)
+}
+
 # tumor signature plot
-tumor_signature_output <- tumor_signature_plot(patient_dir, signatures)
+tumor_signature_output <- tumor_signature_plot(maf_data = patient_maf, 
+                                               signatures = signatures, 
+                                               output_dir = output_dir)
 
 # save output
 saveRDS(tumor_signature_output, file = fname)

@@ -3,10 +3,14 @@
 # directories
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
 module_dir <- file.path(root_dir, "code", "p1_modules")
+output_dir <- file.path(patient_dir, "output")
+dir.create(output_dir, recursive = T, showWarnings = F)
 
 # source functions
 source(file.path(module_dir, "utils", 'key_clinical_findings.R'))
 
 # call function
-key_clinical_findings_output <- key_clinical_findings(snv_caller = snv_caller, 
+fname <- file.path(output_dir, paste0("key_clinical_findings_output_", snv_caller, ".rds"))
+key_clinical_findings_output <- key_clinical_findings(rnaseq_analysis_output = rnaseq_analysis_output,
                                                       all_findings_output = all_findings_output)
+saveRDS(key_clinical_findings_output, file = fname)

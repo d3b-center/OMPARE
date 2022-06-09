@@ -6,14 +6,38 @@ dir.create(output_dir, showWarnings = F, recursive = T)
 
 # source functions
 source(file.path(module_dir, "utils", 'mutational_analysis.R'))
+source(file.path(module_dir, "utils", 'recurrent_alterations_plots.R'))
+source(file.path(module_dir, "utils", 'shared_alterations_plots.R'))
+
+# load inputs
+nn_tpm_input <- file.path(output_dir, "adult_nn_tpm.rds")
+nn_tpm_input <- readRDS(nn_tpm_input)
+adult_patient_clinical <-  file.path(output_dir, "adult_patient_combined_clinical_input.rds")
+adult_patient_clinical <- readRDS(adult_patient_clinical)
 
 # recurrent alterations
 fname <- file.path(output_dir, "mutational_analysis_adult.rds")
-mutational_analysis_adult <- mutational_analysis(top_cor = tcga_gbm_pnoc008_nn_tpm, 
+mutational_analysis_adult <- mutational_analysis(nn_tpm_input = nn_tpm_input, 
+                                                 ref_cancer_dir = adult_cancer_dir,
+                                                 all_findings_output = all_findings_output,
                                                  key_clinical_findings_output = key_clinical_findings_output,
-                                                 clinical = tcga_gbm_pnoc008_clinical,
+                                                 clinical = adult_patient_clinical,
                                                  comparison = "adult")
 
 # save output
 saveRDS(mutational_analysis_adult, file = fname)
 
+# convert to plots
+# recurrent alterations
+recurrent_alterations_plots(ref_cancer_dir = adult_cancer_dir, 
+                            patient_maf = filtered_maf, 
+                            patient_cnv = filtered_cnv, 
+                            mutational_analysis_output = mutational_analysis_adult, 
+                            prefix = "adult")
+
+# shared alterations
+shared_alterations_plots(ref_cancer_dir = adult_cancer_dir, 
+                         patient_maf = filtered_maf, 
+                         patient_cnv = filtered_cnv,
+                         mutational_analysis_output = mutational_analysis_adult, 
+                         prefix = "adult")

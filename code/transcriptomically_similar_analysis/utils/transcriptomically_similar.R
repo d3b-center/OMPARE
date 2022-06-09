@@ -2,7 +2,8 @@
 
 transciptomically_similar <- function(all_cor, clin_data) {
   all_cor <- clin_data %>%
-    inner_join(all_cor, by = c("subject_id" = "nearest_neighbor")) %>%
+    rownames_to_column("Kids_First_Biospecimen_ID") %>%
+    inner_join(all_cor, by = c("Kids_First_Biospecimen_ID" = "nearest_neighbor")) %>%
     arrange(distance)
   return(all_cor)
 }

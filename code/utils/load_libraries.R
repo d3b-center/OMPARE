@@ -66,7 +66,6 @@ suppressPackageStartupMessages({
   library(uwot)
   library(visNetwork)
   library(xCell)
-  library(xlsx)
   library(callr)
   library(dotenv)
   library(drugTargetInteractions)

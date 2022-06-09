@@ -1,10 +1,30 @@
-# all findings table 
+# function: generate all findings table 
+suppressPackageStartupMessages({
+  library(tidyverse)
+})
 
-all_findings <- function(annotated_mutations, filtered_fusions, filtered_cnvs, expr_data, snv_caller) {
+# directories
+root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
+data_dir <- file.path(root_dir, "data")
+
+# read gencode from OpenPedCan
+gencode_gtf <- rtracklayer::import(con = file.path(data_dir, 'OpenPedCan-analysis/data/gencode.v27.primary_assembly.annotation.gtf.gz'))
+gencode_gtf <- as.data.frame(gencode_gtf)
+gencode_gtf <- gencode_gtf %>%
+  dplyr::select(gene_id, gene_name, gene_type) %>%
+  unique()
+
+all_findings <- function(sample_info, annotated_maf, filtered_fusions, filtered_cnv, tpm_data, snv_caller) {
+  
   # Add Mutations
-  if(exists('annotated_mutations')){
+  if(!is.null(annotated_maf)){
+    # combine annotated maf with sample info
+    annotated_maf <- annotated_maf %>%
+      mutate(Kids_First_Biospecimen_ID = Tumor_Sample_Barcode) %>%
+      inner_join(sample_info, by = 'Kids_First_Biospecimen_ID')
+    
     # annotate mutations, add Aberration and Details
-    tmpMut <- annotated_mutations %>%
+    tmpMut <- annotated_maf %>%
       dplyr::mutate(Aberration = Hugo_Symbol) %>%
       filter(HGVSp_Short != "") %>%
       dplyr::mutate(Details = paste0('Variant: ', Variant_Classification, " | HGVSp: ", HGVSp_Short)) 
@@ -27,20 +47,20 @@ all_findings <- function(annotated_mutations, filtered_fusions, filtered_cnvs, e
     # now add Variant Properties depending on snv_caller
     if(snv_caller == "all"){
       tmpMut <- tmpMut %>%
-        dplyr::select(Aberration, Type, Details, SIFT, DOMAINS, Existing_variation) %>%
+        dplyr::select(Aberration, Type, Details, SIFT, DOMAINS, Existing_variation, Kids_First_Biospecimen_ID, sample_id, cohort, cohort_participant_id) %>%
         unique()
     } else {
       tmpMut <- tmpMut %>%
-        dplyr::select(Aberration, Type, Details, t_alt_count, t_depth, SIFT, DOMAINS, Existing_variation) %>%
+        dplyr::select(Aberration, Type, Details, t_alt_count, t_depth, SIFT, DOMAINS, Existing_variation, Kids_First_Biospecimen_ID, sample_id, cohort, cohort_participant_id) %>%
         unique()
     }
     
     # collapse into Variant_Properties
-    tmpMut <- reshape2::melt(as.data.frame(tmpMut), id.vars = c('Aberration', 'Type', 'Details'))
+    tmpMut <- reshape2::melt(as.data.frame(tmpMut), id.vars = c('Aberration', 'Type', 'Details', 'Kids_First_Biospecimen_ID', 'sample_id', 'cohort', 'cohort_participant_id'))
     tmpMut <- tmpMut %>%
-      group_by(Aberration, Type, Details, variable) %>%
+      group_by(Aberration, Type, Details, variable, Kids_First_Biospecimen_ID, sample_id, cohort, cohort_participant_id) %>%
       dplyr::mutate(Variant_Properties = paste0(variable,":", value))  %>%
-      group_by(Aberration, Type, Details) %>%
+      group_by(Aberration, Type, Details, Kids_First_Biospecimen_ID, sample_id, cohort, cohort_participant_id) %>%
       dplyr::summarise(Variant_Properties = paste(Variant_Properties, collapse = '; ')) %>%
       unique()
   } else {
@@ -48,62 +68,77 @@ all_findings <- function(annotated_mutations, filtered_fusions, filtered_cnvs, e
   }
   
   # Add Fusions
-  if(exists('filtered_fusions')){
+  if(!is.null(filtered_fusions)){
     tmpFus <- filtered_fusions %>%
-      dplyr::mutate(Aberration = X.fusion_name,
+      mutate(Aberration = fusion_name,
              Type = "Fusion",
-             Details = paste0("Fusion Type: ", Splice_type),
-             Variant_Properties = "") %>%
-      dplyr::select(Aberration, Type, Details, Variant_Properties)
+             Details = paste0("Fusion Type: ", type),
+             Variant_Properties = annots) %>%
+      dplyr::select(Aberration, Type, Details, Variant_Properties, Kids_First_Biospecimen_ID, sample_id, cohort, cohort_participant_id)
   } else {
     tmpFus <- data.frame()
   }
   
   # Add Copy Number
-  if(exists('filtered_cnvs')){
-    tmpCnv <- filtered_cnvs %>%
+  if(!is.null(filtered_cnv)){
+    tmpCnv <- filtered_cnv %>%
       rowwise() %>%
-      dplyr::mutate(Aberration = hgnc_symbol,
+      mutate(Aberration = hgnc_symbol,
              Type = status,
-             Details = paste0("Copy Number: ", copy.number, 
-                              " | Pos: ", chr, ":", start, "-", end),
-             Variant_Properties = NA) %>%
-      dplyr::select(Aberration, Type, Details, Variant_Properties)
+             Details = paste0("Copy Number: ", copy_number, 
+                              " | Pos: ", cytoband),
+             Variant_Properties = 'N/A') %>%
+      dplyr::select(Aberration, Type, Details, Variant_Properties, Kids_First_Biospecimen_ID, sample_id, cohort, cohort_participant_id)
   } else {
     tmpCnv <- data.frame()
   }
   
+  # for RNA data
+  if(!is.null(tpm_data)){
+    rna_sample <- sample_info %>%
+      filter(experimental_strategy == "RNA-Seq") %>%
+      dplyr::select(Kids_First_Biospecimen_ID, sample_id, cohort, cohort_participant_id)
+  }
+  
   # Add Expression
-  if(exists('expr_data')){
+  if(!is.null(tpm_data)){
     tmpExp <- rnaseq_analysis_output$diffexpr.top20 %>%
       rownames_to_column("Aberration") %>%
-      dplyr::mutate(Type = c(rep("Outlier-High (mRNA)", 20), rep("Outlier-Low (mRNA)", 20)),
+      mutate(Type = c(rep("Outlier-High (mRNA)", 20), rep("Outlier-Low (mRNA)", 20)),
              Details = paste0("logFC: ", round(logfc, 2)," | TPM: ", tpm),
-             Variant_Properties = "")  %>%
-      dplyr::select(Aberration, Type, Details, Variant_Properties)
+             Variant_Properties = "N/A",
+             cohort  = rna_sample$cohort,
+             sample_id = rna_sample$sample_id,
+             Kids_First_Biospecimen_ID = rna_sample$Kids_First_Biospecimen_ID,
+             cohort_participant_id = rna_sample$cohort_participant_id)  %>%
+      dplyr::select(Aberration, Type, Details, Variant_Properties, Kids_First_Biospecimen_ID, sample_id, cohort, cohort_participant_id)
   } else {
     tmpExp <- data.frame()
   }
   
   # Add Pathway
-  if(exists('expr_data')){
+  if(!is.null(tpm_data)){
     tmpPath <- rnaseq_analysis_output$pathways
     tmpPathUp <- tmpPath %>%
       filter(direction == "up") %>%
-      dplyr::mutate(Type = "Pathway Up") %>%
+      mutate(Type = "Pathway Up") %>%
       arrange(padj) %>%
       slice_head(n = 20)
     tmpPathDown <- tmpPath %>%
       filter(direction == "down") %>%
-      dplyr::mutate(Type = "Pathway Down") %>%
+      mutate(Type = "Pathway Down") %>%
       arrange(padj) %>%
       slice_head(n = 20)
     tmpPath <- rbind(tmpPathUp, tmpPathDown)
     tmpPath <- tmpPath %>%
-      dplyr::mutate(Aberration = pathway,
+      mutate(Aberration = pathway,
              Details = paste0("Adj. P-Value: ", formatC(padj, format = "e", digits = 2)),
-             Variant_Properties = "") %>%
-      dplyr::select(Aberration, Type, Details, Variant_Properties)
+             Variant_Properties = "N/A",
+             cohort  = rna_sample$cohort,
+             sample_id = rna_sample$sample_id,
+             Kids_First_Biospecimen_ID = rna_sample$Kids_First_Biospecimen_ID,
+             cohort_participant_id = rna_sample$cohort_participant_id) %>%
+      dplyr::select(Aberration, Type, Details, Variant_Properties, Kids_First_Biospecimen_ID, sample_id, cohort, cohort_participant_id)
   } else {
     tmpPath <- data.frame()
   }
@@ -113,9 +148,10 @@ all_findings <- function(annotated_mutations, filtered_fusions, filtered_cnvs, e
   
   # add Ensembl ids and map to targetvalidation.org
   myTable <- allFindingsDF %>%
-    left_join(expr_data %>% dplyr::select(gene_id, gene_symbol), by = c("Aberration" = "gene_symbol")) %>%
-    dplyr::mutate(TargetValidation = ifelse(is.na(gene_id), "", paste0('<a href = \"https://www.targetvalidation.org/target/',gene_id,'\">',gene_id,"</a>"))) %>%
-    dplyr::select(-c(gene_id)) 
+    left_join(gencode_gtf %>% dplyr::select(gene_id, gene_name), by = c("Aberration" = "gene_name")) %>%
+    mutate(TargetValidation = ifelse(is.na(gene_id), "", paste0('<a href = \"https://www.targetvalidation.org/target/',gene_id,'\">',gene_id,"</a>"))) %>%
+    dplyr::select(Aberration, Type, Details, Variant_Properties, TargetValidation, 
+                  Kids_First_Biospecimen_ID, sample_id, cohort, cohort_participant_id)
   
   return(myTable)
 }

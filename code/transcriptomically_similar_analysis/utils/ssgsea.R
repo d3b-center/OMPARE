@@ -5,8 +5,8 @@ suppressPackageStartupMessages({
   library(dplyr)
 })    
 
-ssgsea <- function(top_cor, patient_of_interest) {
-  expression_data <- top_cor
+ssgsea <- function(nn_tpm_input, patient_of_interest) {
+  expression_data <- nn_tpm_input
   human_geneset <- msigdbr::msigdbr(species = "Homo sapiens", category = "C2", subcategory = "CP:REACTOME") ## human REACTOME genes from `migsdbr` package. The loaded data is a tibble.
   
   # Prepare expression data: log2 transform re-cast as matrix

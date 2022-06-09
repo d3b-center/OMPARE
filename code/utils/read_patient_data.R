@@ -8,157 +8,90 @@ suppressPackageStartupMessages({
 
 # directories
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
-utils_dir <- file.path(root_dir, "code", "utils")
 data_dir <- file.path(root_dir, "data")
 
-# source functions
-source(file.path(utils_dir, 'filter_fusions.R')) # filter fusions
-source(file.path(utils_dir, 'filter_cnv.R')) # filter copy number variations
-source(file.path(utils_dir, 'filter_mutations.R')) # filter mutations
-source(file.path(utils_dir, 'annotate_mutations.R')) # annotate mutations
+# cancer genes for filtering mutation data
+cancer_genes <- readRDS(file.path(data_dir, "cancer_gene_list.rds"))
+source('code/utils/filter_mutations.R')
 
-# gencode v27 reference
-gencode_v27 <- read.delim(file.path(data_dir, 'pnoc008', 'gencode.v27.primary_assembly.annotation.txt'))
-gencode_v27_pc <- gencode_v27 %>%
-  filter(biotype == "protein_coding")
-
-read_patient_data <- function(patient_dir, snv_caller = "all"){
+read_patient_data <- function(pediatric_cancer_dir = file.path(data_dir, "pnoc008"), patient_of_interest, snv_caller = "all", mut_only = FALSE, rnaseq_only = FALSE){
   
-  # patient sample info (at most one with .txt extension)
-  sampleInfo <- list.files(path = file.path(patient_dir, 'clinical'), pattern = "patient_report.txt", recursive = T, full.names = T)
-  sampleInfo <- read.delim(sampleInfo, stringsAsFactors = F)
-  assign("sampleInfo", sampleInfo, envir = globalenv())
+  # patient dir
+  patient_dir <- file.path('results', patient_of_interest)
   
-  # get patient subject id
-  patient_of_interest <- sampleInfo$subjectID
+  # patient sample info
+  sample_info <- list.files(path = pediatric_cancer_dir, pattern = "tsv", full.names = T)
+  sample_info <- data.table::fread(sample_info)
+  sample_info <- sample_info %>%
+    filter(cohort_participant_id == patient_of_interest)
+  readr::write_tsv(x = sample_info, file = file.path(root_dir, 'results', patient_of_interest, 'output', 'sample_info.tsv'))
+  assign("sample_info", sample_info, envir = globalenv())
   
-  # mutation data (can be multiple with .maf extension)
+  # filtered mutations (can be multiple with .maf extension)
   # if snv_caller is all, then use all files except consensus
-  somatic.mut.pattern <- '*.maf'
-  mutFiles <- list.files(path = file.path(patient_dir, 'simple-variants'), pattern = somatic.mut.pattern, recursive = TRUE, full.names = T)
-  if(snv_caller == "all"){ 
-    mutFiles <- grep('consensus', mutFiles, invert = TRUE, value = TRUE)
-  } else {
-    mutFiles <- grep(snv_caller, mutFiles, value = TRUE)
-  }
-  if(length(mutFiles) >= 1){
-    mutFiles <- lapply(mutFiles, data.table::fread, skip = 1, stringsAsFactors = F)
-    mutData <- data.table::rbindlist(mutFiles, fill = TRUE)
-    mutData <- as.data.frame(mutData)
-    mutData <- unique(mutData)
-    assign("mutData", mutData, envir = globalenv())
-    
-    # filter mutations
-    mutDataFilt <- filter_mutations(myMutData = mutData, myCancerGenes = cancer_genes)
-    assign("mutDataFilt", mutDataFilt, envir = globalenv())
-    
-    # annotate mutations
-    mutDataAnnot <- annotate_mutations(myMutData = mutData, myCancerGenes = cancer_genes, cancer_hotspots = cancer_hotspots_v2)
-    assign("mutDataAnnot", mutDataAnnot, envir = globalenv())
-  } 
-  
-  # use cnv from CNVkit *gainloss.txt
-  cnvData <- list.files(path = file.path(patient_dir, 'copy-number-variations'), pattern = "*.gainloss.txt", recursive = TRUE, full.names = T)
-  if(length(cnvData) == 1){
-    cnvData <- read.delim(cnvData)
-    cnvData <- cnvData %>%
-      dplyr::rename("hgnc_symbol" = "gene",
-                    "chr" = "chromosome") %>%
-      dplyr::select(-c(depth, weight, n_bins))
-    
-    # pull ploidy and purity from controlfreec
-    controlfreec_info <- list.files(file.path(patient_dir, 'copy-number-variations'), pattern = "info.txt", full.names = T)
-    controlfreec_info <- read.delim(controlfreec_info, header = F)
-    ploidy <- controlfreec_info %>% filter(V1 == "Output_Ploidy") %>% .$V2 %>% as.numeric()
-    purity <- controlfreec_info %>% filter(V1 == "Sample_Purity") %>% .$V2 %>% as.numeric()
-    
-    # calculate absolute copy number
-    cnvData$copy.number <- 0
-    if(ploidy == 2){
-      # compute log2 ratio cutoffs
-      cutoff <- log2((1 - purity) + purity * (0:3 + .5) / ploidy)
-      cutoff <- min(cutoff)
-
-      # compute absolute copy number
-      cnvData$copy.number <- (((2^(cnvData$log2)-(1-purity)) * ploidy)/ purity) - 0.5
-      cnvData <- cnvData %>%
-        rowwise() %>%
-        mutate(copy.number = ifelse(log2 < cutoff, round(copy.number), ceiling(copy.number)))
+  if(!rnaseq_only){
+    somatic.mut.pattern <- '*.maf'
+    maf_file <- list.files(path = file.path(patient_dir, 'simple-variants'), pattern = somatic.mut.pattern, recursive = TRUE, full.names = T)
+    if(snv_caller == "all"){ 
+      maf_file <- grep('consensus', maf_file, invert = TRUE, value = TRUE)
     } else {
-      # compute log2 ratio cutoffs
-      cutoff <- log2((1 - purity) + purity * (0:6 + .5) / ploidy)
-      cutoff <- min(cutoff)
-
-      # compute absolute copy number
-      cnvData$copy.number <- (((2^(cnvData$log2)-(1-purity)) * ploidy)/ purity) - 0.5
-      cnvData <- cnvData %>%
-        rowwise() %>%
-        mutate(copy.number = ifelse(log2 < cutoff, round(copy.number), ceiling(copy.number)))
+      maf_file <- grep(snv_caller, maf_file, value = TRUE)
     }
-    
-    # add copy number status
-    cnvData <- cnvData %>%
-      mutate(status = case_when(copy.number == 0 ~ "Complete Loss",
-                                copy.number < ploidy & copy.number > 0 ~ "Loss",
-                                copy.number == ploidy ~ "Neutral",
-                                copy.number > ploidy & copy.number < ploidy + 3 ~ "Gain",
-                                copy.number >= ploidy + 3 ~ "Amplification"))
-    
-    assign("cnvData", cnvData, envir = globalenv())
-    
-    # filter cnv
-    cnvDataFilt <- filter_cnv(myCNVData = cnvData, myCancerGenes = cancer_genes)
-    assign("cnvDataFilt", cnvDataFilt, envir = globalenv())
+    if(length(maf_file) >= 1){
+      maf_file <- lapply(maf_file, data.table::fread, skip = 1, stringsAsFactors = F)
+      full_maf <- data.table::rbindlist(maf_file, fill = TRUE)
+      full_maf <- as.data.frame(full_maf)
+      full_maf <- unique(full_maf)
+      filtered_maf <- filter_mutations(myMutData = full_maf, myCancerGenes = cancer_genes)
+    } 
+  } else {
+    filtered_maf <- NULL
   }
+  assign("filtered_maf", filtered_maf, envir = globalenv())
   
-  # fusion data (use both star and arriba)
-  fusPattern = "*star-fusion.fusion_candidates.final|*.arriba.fusions.tsv"
-  
-  # read fusion files + filter and merge them
-  fusFiles <- list.files(path = file.path(patient_dir, 'gene-fusions'), pattern = fusPattern, recursive = TRUE, full.names = T)
-  if(length(fusFiles) >= 1){
-    fusFiles <- lapply(fusFiles, filter_fusions, myCancerGenes = cancer_genes)
-    fusData <- do.call('rbind', fusFiles)
-    fusData <- unique(fusData)
-    assign("fusData", fusData, envir = globalenv())
+  # filtered copy number data
+  if(!mut_only & !rnaseq_only){
+    cnv_file <- list.files(path = pediatric_cancer_dir, pattern = "cnv", full.names = T)
+    filtered_cnv <- readRDS(cnv_file)
+    filtered_cnv <- filtered_cnv %>%
+      filter(Kids_First_Biospecimen_ID %in% sample_info$Kids_First_Biospecimen_ID)
+  } else {
+    filtered_cnv <- NULL
   }
+  assign("filtered_cnv", filtered_cnv, envir = globalenv())
   
-  # expression data: TPM (can be only 1 per patient with .genes.results)
-  expDat <- list.files(path = file.path(patient_dir, 'gene-expressions'), pattern = "*.genes.results*", recursive = TRUE, full.names = T)
-  if(length(expDat) == 1){
-    expData <- read.delim(expDat)
-    expData.full <- expData %>% 
-      mutate(gene_id = str_replace(gene_id, "_PAR_Y_", "_"))  %>%
-      separate(gene_id, c("gene_id", "gene_symbol"), sep = "\\_", extra = "merge") %>%
-      mutate(gene_id = gsub('[.].*', '', gene_id))  %>%
-      unique()
+  if(!mut_only){
+    patient_rna_kfid <- sample_info %>%
+      filter(experimental_strategy == "RNA-Seq") %>%
+      .$Kids_First_Biospecimen_ID
     
-    # filter HIST genes
-    expData.full <- expData.full[grep('^HIST', expData.full$gene_symbol, invert = T),]
+    # filtered fusion data (from both star and arriba)
+    fusion_file <- list.files(path = pediatric_cancer_dir, pattern = "fusion_filtered.rds", full.names = T)
+    filtered_fusions <- readRDS(fusion_file)
+    filtered_fusions <- filtered_fusions %>%
+      filter(Kids_First_Biospecimen_ID %in% patient_rna_kfid)
+    assign("filtered_fusions", filtered_fusions, envir = globalenv())
     
-    # filter to protein coding genes
-    expData.full <- expData.full %>%
-      filter(gene_symbol %in% gencode_v27_pc$gene_symbol)
+    # expression data: TPM 
+    tpm_file <- list.files(path = pediatric_cancer_dir, pattern = "tpm", full.names = T)
+    tpm_data <- readRDS(tpm_file)
+    tpm_data <- tpm_data %>%
+      select(patient_rna_kfid)
+    assign("tpm_data", tpm_data, envir = globalenv())
     
-    # tpm data
-    expData <- expData.full %>% 
-      arrange(desc(TPM)) %>% 
-      distinct(gene_symbol, .keep_all = TRUE) %>%
-      dplyr::rename(!!patient_of_interest := TPM) %>%
-      dplyr::select(!!patient_of_interest, gene_id, gene_symbol) %>%
-      unique()
-    
-    # rownames(expData) <- expData$gene_symbol
-    assign("expData", expData, envir = globalenv())
-    
-    # count data
-    expData.counts <- expData.full %>%
-      filter(expData.full$gene_id  %in% expData$gene_id) %>%
-      dplyr::mutate(!!patient_of_interest := expected_count) %>%
-      dplyr::select(!!patient_of_interest, gene_id, gene_symbol) %>%
-      unique()
-    rownames(expData.counts) <- expData.counts$gene_symbol
-    assign("expData.counts", expData.counts, envir = globalenv())
+    # expression data: counts 
+    counts_file <- list.files(path = pediatric_cancer_dir, pattern = "count", full.names = T)
+    count_data <- readRDS(counts_file)
+    count_data <- count_data %>%
+      select(patient_rna_kfid) 
+    assign("count_data", count_data, envir = globalenv()) 
+  } else {
+    filtered_fusions <- NULL
+    tpm_data <- NULL
+    count_data <- NULL
   }
+  assign("filtered_fusions", filtered_fusions, envir = globalenv())
+  assign("tpm_data", tpm_data, envir = globalenv())
+  assign("count_data", count_data, envir = globalenv()) 
 }
 

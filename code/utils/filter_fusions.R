@@ -1,45 +1,40 @@
 # filter fusions
 
-filter_fusions <- function(myFusFile = fusFile, myCancerGenes = cancer_genes, myJunctionReads = 2) {
+filter_fusions <- function(fusion_data, myCancerGenes = cancer_genes, method, myJunctionReads = 2) {
   
-  nm <- grep('star', myFusFile)
-  if(length(nm) == 1){
-    method = "star"
-  } else {
-    method = "arriba"
-  }
-  
-  myFusData <- read.delim(myFusFile)
-  fusDataFilt <- myFusData
-  
+
   # format column names
-  if(method == "star"){
-    fusDataFilt <- fusDataFilt %>%
-      mutate(X.fusion_name = gsub('--','_', X.fusion_name),
-             HeadGene = gsub('_.*','', X.fusion_name),
-             TailGene = gsub('.*_','', X.fusion_name))
+  if(method == "star-fusion"){
+    fusion_data <- fusion_data %>%
+      mutate(gene1 = gsub("--.*", "", FusionName),
+             gene2 = gsub(".*--", "", FusionName),
+             fusion_name = gsub('--','_', FusionName),
+             type = PROT_FUSION_TYPE)
   } else {
-    fusDataFilt <- fusDataFilt %>%
-      mutate(X.fusion_name = paste0(as.character(X.gene1), "_", as.character(gene2)),
-             Splice_type = type,
-             HeadGene = X.gene1,
-             TailGene = gene2)
+    fusion_data <- fusion_data %>%
+      mutate(fusion_name = paste0(as.character(gene1), "_", as.character(gene2)))
   }
   
   # filter by number of reads (star) or confidence (arriba)
-  if(method == "star"){
-    fusDataFilt <- fusDataFilt %>% 
-      filter(JunctionReads > myJunctionReads)
+  if(method == "star-fusion"){
+    fusion_data <- fusion_data %>% 
+      filter(JunctionReadCount > myJunctionReads)
   } else {
-    fusDataFilt <- fusDataFilt %>%
+    fusion_data <- fusion_data %>%
       filter(confidence != "low")
   }
   
   # filter by cancer genes (from annoFuse)
   myCancerGenes <- as.character(myCancerGenes$Gene_Symbol)
-  fusDataFilt <- fusDataFilt %>%
-    filter(HeadGene %in% myCancerGenes | TailGene %in% myCancerGenes) %>%
-    dplyr::select(X.fusion_name, Splice_type, HeadGene, TailGene)
+  fusion_data <- fusion_data %>%
+    filter(gene1 %in% myCancerGenes | gene2 %in% myCancerGenes) %>%
+    dplyr::select(fusion_name, gene1, gene2, annots, type, tumor_id) %>%
+    unique()
+  
+  # fix missing values
+  fusion_data <- fusion_data %>%
+    mutate(annots = ifelse(annots == "[]", "", annots),
+           type = ifelse(type == ".", "", type))
     
-  return(fusDataFilt)
+  return(fusion_data)
 }

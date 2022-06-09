@@ -15,32 +15,36 @@ gencode_pc <- gencode_gtf %>%
 # collapse rnaseq data
 source(file.path(root_dir, "code", "utils", "collapse_rnaseq.R"))
 
-tis_profile <- function(pediatric_dir, adult_dir, patient_of_interest, norm_method, collapse = FALSE){
+tis_profile <- function(pediatric_dir, adult_dir, patient_of_interest, norm_method){
   
   # for this we need the full set of pediatric and adult data
   
-  # pediatric tumors
-  # histology
-  ped_clinical <- list.files(path = pediatric_dir, pattern = "histologies-base.tsv", full.names = T)
-  ped_clinical <- data.table::fread(ped_clinical)
+  # pediatric tumors from OT (because master genomics does not have short histology information)
+  ped_clinical <- read.delim(file.path(data_dir, "OpenPedCan-analysis", "data", "histologies.tsv"))
   ped_clinical <- ped_clinical %>%
     filter(experimental_strategy == "RNA-Seq",
            !cohort %in% c("GTEx", "TCGA"),
-           sample_type == "Tumor") %>%
-    mutate(type = "Pediatric")
+           sample_type == "Tumor")
+  
+  # pnoc tumors
+  pnoc_clinical <- read.delim(file.path(data_dir, "pnoc008", "pnoc008_clinical.tsv"))
+  ped_clinical <- ped_clinical %>%
+    filter(!cohort_participant_id %in% pnoc_clinical$cohort_participant_id)
+  common_cols <- intersect(colnames(ped_clinical), colnames(pnoc_clinical))
+  ped_clinical <- rbind(pnoc_clinical[,common_cols], ped_clinical[,common_cols])
+  
+  # add short_histology information from open targets
+  ped_clinical <- ped_clinical %>% 
+    mutate(type = "Pediatric") %>%
+    unique()
   
   # counts
   pediatric_counts <- list.files(path = pediatric_dir, pattern = "expected_count", full.names = T)
   pediatric_counts <- readRDS(pediatric_counts)
-  if(collapse){
-    pediatric_counts <- pediatric_counts[grep("^HIST", pediatric_counts$gene_id, invert = T),]
-    pediatric_counts <- pediatric_counts %>%
-      filter(gsub(".*_", "", gene_id) %in% gencode_pc$gene_name)
-    pediatric_counts <- collapse_rnaseq(pediatric_counts)
-  } else {
-    pediatric_counts <- pediatric_counts[grep("^HIST", rownames(pediatric_counts), invert = T),]
-    pediatric_counts <- pediatric_counts[rownames(pediatric_counts) %in% gencode_pc$gene_name,]
-  }
+  pediatric_counts <- pediatric_counts[grep("^HIST", pediatric_counts$gene_id, invert = T),]
+  pediatric_counts <- pediatric_counts %>%
+    filter(gsub(".*_", "", gene_id) %in% gencode_pc$gene_name)
+  pediatric_counts <- collapse_rnaseq(pediatric_counts)
   
   # use common ids
   common_cols <- intersect(colnames(pediatric_counts), ped_clinical$Kids_First_Biospecimen_ID)
@@ -50,7 +54,7 @@ tis_profile <- function(pediatric_dir, adult_dir, patient_of_interest, norm_meth
   
   # adult tumors
   # histology
-  adult_clinical <- list.files(path = adult_dir, pattern = "histologies.tsv", full.names = T)
+  adult_clinical <- list.files(path = adult_dir, pattern = "histologies", full.names = T)
   adult_clinical <- data.table::fread(adult_clinical)
   adult_clinical <- adult_clinical %>%
     filter(experimental_strategy == "RNA-Seq",

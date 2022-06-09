@@ -1,4 +1,5 @@
 # get umap output
+library(uwot)
 get_umap_output <- function(expr_most_var){
   set.seed(100)
   umap_out <- uwot::umap(X = t(log2(expr_most_var+1)), n_neighbors = 21, n_components = 2, metric = "correlation", ret_nn = TRUE, n_sgd_threads = 123L)

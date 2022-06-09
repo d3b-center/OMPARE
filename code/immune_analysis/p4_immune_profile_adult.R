@@ -10,13 +10,20 @@ dir.create(output_dir, recursive = T, showWarnings = F)
 source(file.path(module_dir, "utils", 'immune_profile.R'))
 source(file.path(module_dir, "utils", 'plot_immune_profile.R'))
 
+# load inputs
+adult_immune_profile_input <- file.path(patient_dir, "output", "transcriptomically_similar_analysis", "adult_immune_profile_input.rds")
+adult_immune_profile_input <- readRDS(adult_immune_profile_input)
+
 # immune profile and save scores as well
 fname <- file.path(output_dir, 'immune_scores_adult.rds')
-adult_immune_profile <- immune_profile(fullmat = tcga_gbm_pnoc008_immune_profile)
+adult_immune_profile <- immune_profile(fullmat = adult_immune_profile_input)
 saveRDS(adult_immune_profile, file = fname)
 
 # plot immune scores
 fname <- file.path(output_dir, 'immune_scores_adult.pdf')
-adult_immune_profile <- plot_immune_profile(xcell_scores = adult_immune_profile)
+patient_of_interest <- sample_info %>%
+  filter(experimental_strategy  == "RNA-Seq") %>%
+  .$Kids_First_Biospecimen_ID
+adult_immune_profile <- plot_immune_profile(xcell_scores = adult_immune_profile, patient_of_interest = patient_of_interest)
 ggsave(filename = fname, plot = adult_immune_profile, 
        device = "pdf", width = 8, height = 10)

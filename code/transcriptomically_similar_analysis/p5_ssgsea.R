@@ -8,13 +8,20 @@ dir.create(output_dir, showWarnings = F, recursive = T)
 source(file.path(module_dir, "utils", 'ssgsea.R'))
 source(file.path(module_dir, "utils", 'plot_ssgsea.R'))
 
+# load inputs
+nn_tpm_input <- file.path(patient_dir, "output", "transcriptomically_similar_analysis", "pediatric_all_nn_tpm.rds")
+nn_tpm_input <- readRDS(nn_tpm_input)
+
 # compute ssgsea 
 fname <- file.path(output_dir, "ssgsea_scores_pediatric.rds")
-ssgsea_pediatric <- ssgsea(top_cor = pbta_pnoc008_nn_tpm, patient_of_interest = patient)
+patient_of_interest <- sample_info %>%
+  filter(experimental_strategy == "RNA-Seq") %>%
+  .$Kids_First_Biospecimen_ID
+ssgsea_pediatric <- ssgsea(nn_tpm_input = nn_tpm_input, patient_of_interest = patient_of_interest)
 saveRDS(ssgsea_pediatric, file = fname)
 
 # plot ssgea
 fname <- file.path(output_dir, 'ssgsea_scores_pediatric.pdf')
-ssgsea_pediatric <- plot_ssgsea(ssgsea_pediatric)
-ggsave(filename = fname, plot = ssgsea_pediatric, 
+ssgsea_pediatric_plot <- plot_ssgsea(ssgsea_pediatric)
+ggsave(filename = fname, plot = ssgsea_pediatric_plot, 
        device = "pdf", width = 15, height = 14)

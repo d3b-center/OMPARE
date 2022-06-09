@@ -4,6 +4,7 @@
 
 # set directories
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
+data_dir <- file.path(root_dir, "data")
 code_dir <- file.path(root_dir, "code")
 utils_dir <- file.path(code_dir, "utils")
 
@@ -12,11 +13,19 @@ source(file.path(utils_dir, "load_libraries.R"))
 `%>%` <- dplyr::`%>%`
 
 # load reference data
-source(file.path(utils_dir, 'load_reference.R')) 
+# source(file.path(utils_dir, 'load_reference.R')) 
+# directories
+normal_tissue_dir <- file.path(data_dir, "normal_data")
+pediatric_cancer_dir <- file.path(data_dir, "pediatric_data")
+pediatric_cancer_all_dir <- file.path(data_dir, "pediatric_data_all")
+adult_cancer_dir <- file.path(data_dir, "adult_data")
 
 # read patient data
 source(file.path(utils_dir, "read_patient_data.R"))
-read_patient_data(patient_dir = patient_dir, 
+read_patient_data(pediatric_cancer_dir = pediatric_cancer_dir,
+                  patient_of_interest = patient,
+                  mut_only = FALSE, 
+                  rnaseq_only = FALSE,
                   snv_caller = snv_caller)
 
 # run rna-seq analysis (output of this is required by several downstream scripts)
@@ -28,43 +37,46 @@ if(!file.exists(fname)){
   rnaseq_analysis_output <- readRDS(fname)
 }
 
-# read sample information
-sample_info <- read.delim(file.path(patient_dir, "clinical", "patient_report.txt"))
-patient <- sample_info$subjectID
-
 # update gsea enrichment output with each patient
+source(file.path(code_dir, "rnaseq_analysis" ,"gsea_enrichment.R"))
 output_dir <- file.path(patient_dir, "output", "rnaseq_analysis")
-fname <- file.path(output_dir, paste0(patient, "_summary_DE_Genes_Up.txt"))
+fname <- file.path(output_dir, "genes_down.txt")
 if(!file.exists(fname)){
   # run gsea enrichment of patient vs other data sets
-  gsea_enrichment <- file.path(code_dir, "rnaseq_analysis", 'gsea_enrichment.R')
-  cmd <- paste('Rscript', gsea_enrichment, 
-               '--patient', patient)
-  print(cmd)
-  system(cmd)
-  
-  # generate genes and pathway enrichment output tables
-  enrichment_output <- file.path(code_dir, "rnaseq_analysis", 'enrichment_output.R')
-  cmd <- paste('Rscript', enrichment_output, 
-               '--patient', patient, 
-               '--output', paste0(patient, '_summary'), 
-               '--type', 'text')
-  print(cmd)
-  system(cmd)
+  gsea_enrichment(normal_tissue = "Brain", 
+                  adult_cancer = "GBM", 
+                  pediatric_cancer = "HGAT", 
+                  output_dir = output_dir,
+                  tpm_data = tpm_data, 
+                  count_data = count_data)
 }
 
-## page 1 modules
-# patient/sample information to display
-source(file.path(code_dir, "p1_modules", 'p1_patient_sample_info.R')) 
-
 # all findings table  
-source(file.path(code_dir, "p1_modules", 'p1_all_findings.R'))
+output_dir <- file.path(patient_dir, "output")
+fname <- file.path(output_dir, paste0("all_findings_output_", snv_caller, ".rds"))
+if(!file.exists(fname)){
+  source(file.path(code_dir, "p1_modules", 'p1_all_findings.R'))
+} else {
+  all_findings_output <- readRDS(fname)
+}
 
-# key findings table (this is a subset of all_findings so will automatically get updated with above)
-source(file.path(code_dir, "p1_modules", 'p1_key_clinical_findings.R'))
+# key findings table 
+output_dir <- file.path(patient_dir, "output")
+fname <- file.path(output_dir, paste0("key_clinical_findings_output_", snv_caller, ".rds"))
+if(!file.exists(fname)){
+  source(file.path(code_dir, "p1_modules", 'p1_key_clinical_findings.R'))
+} else{
+  key_clinical_findings_output <- readRDS(fname)
+}
 
 # disease specific information
-source(file.path(code_dir, "p1_modules", 'p1_disease_specific_information.R'))  
+output_dir <- file.path(patient_dir, "output")
+fname <- file.path(output_dir, "disease_specific_information_output.rds")
+if(!file.exists(fname)){
+  source(file.path(code_dir, "p1_modules", 'p1_disease_specific_information.R'))
+} else{
+  disease_specific_information_output <- readRDS(fname)
+}
 
 # filter germline data
 output_dir <- file.path(patient_dir, "output")
@@ -76,7 +88,13 @@ if(!file.exists(fname)){
 }
 
 # genomic summary table
-source(file.path(code_dir, "p1_modules", 'p1_genomic_summary.R'))   
+output_dir <- file.path(patient_dir, "output")
+fname <- file.path(output_dir, "genomic_summary_output.rds")
+if(!file.exists(fname)){
+  source(file.path(code_dir, "p1_modules", 'p1_genomic_summary.R'))
+} else {
+  genomic_summary_output <- readRDS(fname)
+}
 
 ## page 2 modules 
 # this is also part of the rnaseq_analysis module
@@ -104,7 +122,7 @@ if(!file.exists(fname)){
   tumor_signature_output <- readRDS(fname)
 }
 
-# plot tumor mutational burden
+# plot tumor mutational burden - needs mutect2 file
 output_dir <- file.path(patient_dir, "output", "tmb_analysis")
 fname <- file.path(output_dir, "tmb_profile_output.rds")
 if(!file.exists(fname)){
@@ -113,14 +131,32 @@ if(!file.exists(fname)){
   tmb_profile_output <- readRDS(fname)
 }
 
-## prepare tcga gbm + pnoc008 data for downstream functions 
+# transcriptomically similar analysis 
+source(file.path(code_dir, "transcriptomically_similar_analysis", 'transcriptomically_similar_patients.R'))
+## prepare pediatric tumors i.e. pbta + pnoc008 data for downstream functions
 if(snv_caller == "lancet"){
-  source(file.path(code_dir, "transcriptomically_similar_analysis", 'tcga_format.R'))
+  tns_similar_analysis(ref_cancer_dir = pediatric_cancer_all_dir,
+                       patient_dir = patient_dir,
+                       sample_info = sample_info, 
+                       tpm_data = tpm_data, 
+                       prefix = "pediatric_all")
 } 
 
-## prepare pbta + pnoc008 data for downstream functions
+## prepare pediatric tumors i.e. pbta hgat + pnoc008 data for downstream functions
 if(snv_caller == "lancet"){
-  source(file.path(code_dir, "transcriptomically_similar_analysis", 'pbta_format.R'))
+  tns_similar_analysis(ref_cancer_dir = pediatric_cancer_dir,
+                       patient_dir = patient_dir,
+                       sample_info = sample_info, 
+                       tpm_data = tpm_data, 
+                       prefix = "pediatric")
+} 
+
+if(snv_caller == "lancet"){
+  tns_similar_analysis(ref_cancer_dir = adult_cancer_dir,
+                       patient_dir = patient_dir,
+                       sample_info = sample_info, 
+                       tpm_data = tpm_data, 
+                       prefix = "adult")
 } 
 
 ## page 4
@@ -146,11 +182,43 @@ if(!file.exists(fname)){
 }
 
 ## page 5 (pediatric analysis: pbta tumors)
+# pediatric dimension reduction clustering
+output_dir <- file.path(patient_dir, "output", "transcriptomically_similar_analysis")
+fname <- file.path(output_dir, "dim_reduction_plot_pediatric.rds")
+if(!file.exists(fname)){
+  source(file.path(code_dir, "transcriptomically_similar_analysis", 'p5_dim_reduction_plot_pediatric.R'))
+} else {
+  dim_reduction_plot_pediatric <- readRDS(fname)
+}
+
+# pediatric transcriptomically similar patient table
+output_dir <- file.path(patient_dir, "output", "transcriptomically_similar_analysis")
+fname <- file.path(output_dir, "transciptomically_similar_pediatric.rds")
+if(!file.exists(fname)){
+  source(file.path(code_dir, "transcriptomically_similar_analysis", 'p5_transcriptomically_similar_pediatric.R'))
+} else {
+  transciptomically_similar_pediatric <- readRDS(fname)
+}
+
+# pediatric km plot
+output_dir <- file.path(patient_dir, "output", "survival_analysis")
+fname <- file.path(output_dir, "kaplan_meier_pediatric.pdf")
+if(!file.exists(fname)){
+  source(file.path(code_dir, "survival_analysis", 'p5_kaplan_meier_pediatric.R'))
+} 
+
 # ssgsea
 output_dir <- file.path(patient_dir, "output", "transcriptomically_similar_analysis")
 fname <- file.path(output_dir, 'ssgsea_scores_pediatric.pdf')
 if(!file.exists(fname)){
   source(file.path(code_dir, "transcriptomically_similar_analysis", 'p5_ssgsea.R'))
+}
+
+# pediatric immune profiling using xcell (pbta transcriptomically correlated)
+output_dir <- file.path(patient_dir, "output", "immune_analysis")
+fname <- file.path(output_dir, 'immune_scores_topcor_pediatric.pdf')
+if(!file.exists(fname)){
+  source(file.path(code_dir, "immune_analysis", 'p5_immune_profile_topcor_pediatric.R'))
 }
 
 # mutational analysis
@@ -167,53 +235,7 @@ if(!file.exists(fname)){
   source(file.path(code_dir, "transcriptomically_similar_analysis", 'p5_pathway_analysis_pediatric.R'))
 }
 
-# pediatric immune profiling using xcell (pbta transcriptomically correlated)
-output_dir <- file.path(patient_dir, "output", "immune_analysis")
-fname <- file.path(output_dir, 'immune_scores_topcor_pediatric.pdf')
-if(!file.exists(fname)){
-  source(file.path(code_dir, "immune_analysis", 'p5_immune_profile_topcor_pediatric.R'))
-}
-
-# pediatric dimension reduction clustering
-output_dir <- file.path(patient_dir, "output", "transcriptomically_similar_analysis")
-fname <- file.path(output_dir, "dim_reduction_plot_pediatric.rds")
-if(!file.exists(fname)){
-  source(file.path(code_dir, "transcriptomically_similar_analysis", 'p5_dim_reduction_plot_pediatric.R'))
-} else {
-  dim_reduction_plot_pediatric <- readRDS(fname)
-}
-
-# pediatric km plot
-output_dir <- file.path(patient_dir, "output", "survival_analysis")
-fname <- file.path(output_dir, "kaplan_meier_pediatric.pdf")
-if(!file.exists(fname)){
-  source(file.path(code_dir, "survival_analysis", 'p5_kaplan_meier_pediatric.R'))
-} 
-
-# pediatric transcriptomically similar patient table
-output_dir <- file.path(patient_dir, "output", "transcriptomically_similar_analysis")
-fname <- file.path(output_dir, "transciptomically_similar_pediatric.rds")
-if(!file.exists(fname)){
-  source(file.path(code_dir, "transcriptomically_similar_analysis", 'p5_transcriptomically_similar_pediatric.R'))
-} else {
-  transciptomically_similar_pediatric <- readRDS(fname)
-}
-
 ## page 6 (adult analysis : TCGA tumors) 
-# pathway analysis (top 20 transcriptomically similar patients)
-output_dir <- file.path(patient_dir, "output", "transcriptomically_similar_analysis")
-fname <- file.path(output_dir, "pathway_analysis_adult.rds")
-if(!file.exists(fname)){
-  source(file.path(code_dir, "transcriptomically_similar_analysis", 'p6_pathway_analysis_adult.R'))
-}
-
-# mutational analysis
-output_dir <- file.path(patient_dir, "output", "transcriptomically_similar_analysis")
-fname <- file.path(output_dir, "mutational_analysis_adult.rds")
-if(!file.exists(fname)){
-  source(file.path(code_dir, "transcriptomically_similar_analysis", 'p6_mutational_analysis_adult.R'))
-}
-
 # adult dimension reduction clustering
 output_dir <- file.path(patient_dir, "output", "transcriptomically_similar_analysis")
 fname <- file.path(output_dir, "dim_reduction_plot_adult.rds")
@@ -221,13 +243,6 @@ if(!file.exists(fname)){
   source(file.path(code_dir, "transcriptomically_similar_analysis", 'p6_dim_reduction_plot_adult.R'))
 } else {
   dim_reduction_plot_adult <- readRDS(fname)
-}
-
-# adult km plot
-output_dir <- file.path(patient_dir, "output", "survival_analysis")
-fname <- file.path(output_dir, "kaplan_meier_adult.pdf")
-if(!file.exists(fname)){
-  source(file.path(code_dir, "survival_analysis", 'p6_kaplan_meier_adult.R'))
 }
 
 # adult transcriptomically similar patient table
@@ -239,15 +254,30 @@ if(!file.exists(fname)){
   transciptomically_similar_adult <- readRDS(fname)
 }
 
+# adult km plot
+output_dir <- file.path(patient_dir, "output", "survival_analysis")
+fname <- file.path(output_dir, "kaplan_meier_adult.pdf")
+if(!file.exists(fname)){
+  source(file.path(code_dir, "survival_analysis", 'p6_kaplan_meier_adult.R'))
+}
+
+# mutational analysis
+output_dir <- file.path(patient_dir, "output", "transcriptomically_similar_analysis")
+fname <- file.path(output_dir, "mutational_analysis_adult.rds")
+if(!file.exists(fname)){
+  source(file.path(code_dir, "transcriptomically_similar_analysis", 'p6_mutational_analysis_adult.R'))
+}
+
+# pathway analysis (top 20 transcriptomically similar patients)
+output_dir <- file.path(patient_dir, "output", "transcriptomically_similar_analysis")
+fname <- file.path(output_dir, "pathway_analysis_adult.rds")
+if(!file.exists(fname)){
+  source(file.path(code_dir, "transcriptomically_similar_analysis", 'p6_pathway_analysis_adult.R'))
+}
+
 ## page 7
 # genomic landscape plots
 source(file.path(code_dir, "genomic_landscape_plots", "p7_circos_plot.R"))
-
-# cnv plot (replaced with cnvkit's diagram.pdf)
-# source(file.path(code_dir, "genomic_landscape_plots", "p7_cnv_plot.R"))
-
-## page 8 (we don't need this currently)
-# source(file.path(patient_level_analyses, 'p8_cnv_exp_heatmap.R'))
 
 ## page 9
 output_dir <- file.path(patient_dir, "output", "oncogrid_analysis")

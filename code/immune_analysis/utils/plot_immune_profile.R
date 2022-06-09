@@ -1,13 +1,15 @@
-library(tidyverse)
-library(dplyr)
-library(ggplot2)
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(dplyr)
+  library(ggplot2)
+})
 
-plot_immune_profile  <- function(xcell_scores){
+plot_immune_profile  <- function(xcell_scores, patient_of_interest){
   # format data
   xcell_scores <- xcell_scores %>%
     rownames_to_column('CellType') %>%
     gather("Sample", "Score", -CellType) %>%
-    mutate("IsSample" = ifelse(grepl(sampleInfo$subjectID, Sample), T, F))
+    mutate("IsSample" = ifelse(grepl(patient_of_interest, Sample), T, F))
   xcell_scores.sample <- xcell_scores %>%
     filter(IsSample == TRUE)
   

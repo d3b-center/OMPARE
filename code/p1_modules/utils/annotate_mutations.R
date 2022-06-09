@@ -1,6 +1,6 @@
 # annotate mutations vs vus
 
-annotate_mutations <- function(myMutData = mutData, myCancerGenes = cancerGenes, cancer_hotspots = cancer_hotspots_v2) {
+annotate_mutations <- function(myMutData, myCancerGenes, cancer_hotspots) {
 
   # variant classification filters
   keepVC <- c("Nonsense_Mutation", "Missense_Mutation", 
@@ -16,7 +16,7 @@ annotate_mutations <- function(myMutData = mutData, myCancerGenes = cancerGenes,
   myCancerGenes <- as.character(myCancerGenes$Gene_Symbol)
   
   # filter by biotype, variant class, impact 
-  mutDataFilt <- mutData %>%
+  mutDataFilt <- myMutData %>%
     filter(BIOTYPE == "protein_coding" &
              Variant_Classification %in% keepVC &
              IMPACT %in% keepVI) 
