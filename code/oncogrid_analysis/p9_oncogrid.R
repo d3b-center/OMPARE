@@ -9,7 +9,10 @@ source(file.path(module_dir, "utils", "plot_oncogrid.R"))
 
 # prepare input files for oncogrid
 source(file.path(module_dir, "utils", "prepare_files_oncogrid.R"))
+prepare_files_oncogrid(pediatric_cancer_dir = pediatric_cancer_dir,
+                       sample_info = sample_info,
+                       output_dir = output_dir)
 
 # plot oncogrid
 fname <- file.path(output_dir, "complexheatmap_oncogrid.pdf")
-plot_oncogrid(output_file = fname)
+plot_oncogrid(input_dir = output_dir, output_file = fname, width = 40, height = 14)

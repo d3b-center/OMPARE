@@ -5,7 +5,7 @@ suppressPackageStartupMessages({
 circos_plot <- function(chr_map, cancer_genes, fname, filtered_mutations, rnaseq_analysis_output, filtered_fusions) {
   
   # filter chr_map to chr 1:22, X and Y
-  chr_map.subset <- chr_map %>% 
+  chr_map_subset <- chr_map %>% 
     filter(chromosome %in% c(1:22,'X','Y'),
            hgnc_symbol != "") %>%
     mutate(chromosome = paste0("chr", chromosome))
@@ -23,67 +23,68 @@ circos_plot <- function(chr_map, cancer_genes, fname, filtered_mutations, rnaseq
   RCircos.Chromosome.Ideogram.Plot()
   
   # 1. add mutations
-  mut.genes <- unique(mutDataFilt$Hugo_Symbol)
-  if(length(mut.genes) > 0){
-    genomic.data <- chr_map.subset %>% 
-      filter(hgnc_symbol %in% mut.genes) %>%
+  mut_genes <- unique(filtered_mutations$Hugo_Symbol)
+  if(length(mut_genes) > 0){
+    genomic_data <- chr_map_subset %>% 
+      filter(hgnc_symbol %in% mut_genes) %>%
       dplyr::select(chromosome, gene_start, gene_end, hgnc_symbol) %>%
       arrange(hgnc_symbol)
-    RCircos.Gene.Connector.Plot(genomic.data = genomic.data, track.num = 1, side = "in")
-    RCircos.Gene.Name.Plot(gene.data = genomic.data, name.col = 4, track.num = 2, side = "in")
+    RCircos.Gene.Connector.Plot(genomic.data = genomic_data, track.num = 1, side = "in")
+    RCircos.Gene.Name.Plot(gene.data = genomic_data, name.col = 4, track.num = 2, side = "in")
   }
   
   # 2. add expression 
-  expr.data <- data.frame('hgnc_symbol' = names(rnaseq_analysis_output$expr.genes.logfc), 
+  expr_data <- data.frame('hgnc_symbol' = names(rnaseq_analysis_output$expr.genes.logfc), 
                           'expression' = rnaseq_analysis_output$expr.genes.logfc)
-  expr.data$expression <- ifelse(expr.data$expression > 5, 5, ifelse(expr.data$expression < (-5), -5, expr.data$expression))
+  expr_data$expression <- ifelse(expr_data$expression > 5, 5, ifelse(expr_data$expression < (-5), -5, expr_data$expression))
   
   # create heatmap with all genes
-  heatmap.data <- chr_map.subset %>%
-    inner_join(expr.data, by = "hgnc_symbol") %>%
+  heatmap_data <- chr_map_subset %>%
+    inner_join(expr_data, by = "hgnc_symbol") %>%
     dplyr::select(chromosome, gene_start, gene_end, hgnc_symbol, expression)
-  RCircos.Heatmap.Plot(heatmap.data = heatmap.data, data.col = 5, track.num = 4, side = "in")
+  RCircos.Heatmap.Plot(heatmap.data = heatmap_data, data.col = 5, track.num = 4, side = "in")
   
   # only label highly differential (abs(z-score) > 5)
-  genomic.data <- heatmap.data %>%
+  genomic_data <- heatmap_data %>%
     filter(abs(expression) == 5,
            hgnc_symbol %in% cancer_genes$Gene_Symbol)
-  RCircos.Gene.Connector.Plot(genomic.data = genomic.data, track.num = 5, side = "in")
-  RCircos.Gene.Name.Plot(gene.data = genomic.data, name.col = 4, track.num = 6, side = "in")
+  RCircos.Gene.Connector.Plot(genomic.data = genomic_data, track.num = 5, side = "in")
+  RCircos.Gene.Name.Plot(gene.data = genomic_data, name.col = 4, track.num = 6, side = "in")
   
   # 3. add fusions 
-  if(exists('fusData')){
-    fusion.data <- fusData %>%
-      filter(!grepl(",", TailGene),
-             !grepl(",", HeadGene)) %>%
-      filter(HeadGene %in% chr_map.subset$hgnc_symbol | TailGene %in% chr_map.subset$hgnc_symbol) %>%
+  if(exists('filtered_fusions')){
+    fusion_data <- filtered_fusions %>%
+      filter(!grepl(",", gene2),
+             !grepl(",", gene1)) %>%
+      filter(gene1 %in% chr_map_subset$hgnc_symbol | gene2 %in% chr_map_subset$hgnc_symbol) %>%
       unique()
     
-    if(nrow(fusion.data) > 0){
-      fusion.data <- fusion.data %>%
-        inner_join(chr_map.subset, by = c("HeadGene" = "hgnc_symbol")) %>%
-        inner_join(chr_map.subset, by = c("TailGene" = "hgnc_symbol")) %>%
-        dplyr::select(X.fusion_name, 
-                      HeadGene, gene_start.x, gene_end.x, chromosome.x,
-                      TailGene, gene_start.y, gene_end.y, chromosome.y) 
+    if(nrow(fusion_data) > 0){
+      fusion_data <- fusion_data %>%
+        inner_join(chr_map_subset, by = c("gene1" = "hgnc_symbol")) %>%
+        inner_join(chr_map_subset, by = c("gene2" = "hgnc_symbol")) %>%
+        dplyr::select(fusion_name, 
+                      gene1, gene_start.x, gene_end.x, chromosome.x,
+                      gene2, gene_start.y, gene_end.y, chromosome.y) 
       
       # add link between fusion coordinates
-      link.data <- fusion.data %>%
+      link_data <- fusion_data %>%
         dplyr::select(chromosome.x, gene_start.x, gene_end.x,
-                      chromosome.y, gene_start.y, gene_end.y)
+                      chromosome.y, gene_start.y, gene_end.y) %>% 
+        as.data.frame()
       
-      if(nrow(link.data) > 0){
-        RCircos.Link.Plot(link.data = link.data, track.num = 12, by.chromosome = TRUE)
+      if(nrow(link_data) > 0){
+        RCircos.Link.Plot(link.data = link_data, track.num = 12, by.chromosome = TRUE)
         
         # add fusion gene names
-        gene.data.head <- fusion.data %>%
-          dplyr::select(chromosome.x, gene_start.x, gene_end.x, HeadGene) %>%
+        gene_data_head <- fusion_data %>%
+          dplyr::select(chromosome.x, gene_start.x, gene_end.x, gene1) %>%
           setNames(., c("chromosome", "gene_start", "gene_end", "hgnc_symbol"))
-        gene.data.tail <- fusion.data %>%
-          dplyr::select(chromosome.y, gene_start.y, gene_end.y, TailGene) %>%
+        gene_data_tail <- fusion_data %>%
+          dplyr::select(chromosome.y, gene_start.y, gene_end.y, gene2) %>%
           setNames(., c("chromosome", "gene_start", "gene_end", "hgnc_symbol"))
-        gene.data <- rbind(gene.data.head, gene.data.tail)
-        RCircos.Gene.Name.Plot(gene.data = gene.data, name.col = 4, track.num = 9, inside.pos = 50)
+        gene_data <- rbind(gene_data_head, gene_data_tail) %>% as.data.frame()
+        RCircos.Gene.Name.Plot(gene.data = gene_data, name.col = 4, track.num = 9, inside.pos = 50)
       }
     }
   }

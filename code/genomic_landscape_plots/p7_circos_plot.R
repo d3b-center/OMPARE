@@ -19,6 +19,6 @@ colnames(chr_map) <- c("hgnc_symbol", "gene_start", "gene_end", "chromosome")
 circos_plot(chr_map = chr_map, 
             cancer_genes = cancer_genes, 
             fname = file.path(output_dir, "circos_plot.png"),
-            filtered_mutations = mutDataFilt, 
+            filtered_mutations = filtered_maf, 
             rnaseq_analysis_output = rnaseq_analysis_output, 
-            filtered_fusions = fusData)
+            filtered_fusions = filtered_fusions)
