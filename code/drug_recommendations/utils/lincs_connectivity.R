@@ -22,6 +22,7 @@ suppressPackageStartupMessages({
 # directories
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
 data_dir <- file.path(root_dir, "data")
+dsigdb_dir <- file.path(data_dir, "dsigdb")
 
 # source functions
 source(file.path(module_dir, "utils", "network_to_file.R"))
@@ -38,7 +39,8 @@ touchstone_data <- unlist(clue_moa_list)
 # run connectivity analysis on each cluster
 lincs_connectivity <- function(input, num_features = 2000, num_sets = 25, method = c("LINCS", "Cor"), wtcs_fdr_cutoff = 0.05, trend_val = c("up", "down"), cor_score_cutoff = 0, output_dir){
   
-  comparison <- unique(gsub('_[0-9].*', '', input$comparison))
+  # comparison name
+  comparison <- unique(input$comparison)
   
   # up and down genes
   cluster_upset <- input %>%
@@ -130,7 +132,7 @@ lincs_connectivity <- function(input, num_features = 2000, num_sets = 25, method
               plot_grid(p1, p2, p3, ncol = 3, axis = "lr", align = "h"), 
               ncol = 1, rel_heights = c(0.05, 1))
   } else {
-    p <- ggplot()
+    p <- NULL
   }
 
   return(p)

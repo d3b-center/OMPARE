@@ -7,17 +7,25 @@ suppressPackageStartupMessages({
 })
 
 # function to run cemitools analysis
-run_cemitools <- function(exp_counts_corrected, clinical, output_dir, cemitools_dir, pnoc008_cluster){
+run_cemitools <- function(expr_mat, annot, output_dir, cemitools_dir, poi_cluster, transcriptome_drug_rec_output){
+  
+  # reorder
+  expr_mat <- expr_mat %>%
+    as.data.frame() %>%
+    dplyr::select(annot$Kids_First_Biospecimen_ID)
+  annot <- annot %>%
+    as.data.frame()
+
   # run CEMItools
   n <- 100
-  cem <- cemitool(as.data.frame(exp_counts_corrected), 
-                  clinical, 
+  cem <- cemitool(expr = expr_mat, 
+                  annot = annot, 
                   filter = T,
-                  cor_functio = 'bicor', 
+                  cor_function = 'bicor', 
                   network_type = 'signed',
                   tom_type = 'signed',
                   sample_name_column = 'Kids_First_Biospecimen_ID',
-                  class_column = 'CC',
+                  class_column = 'cluster_assigned_nb',
                   merge_similar = T,
                   apply_vst = T, 
                   verbose = F)
@@ -64,14 +72,14 @@ run_cemitools <- function(exp_counts_corrected, clinical, output_dir, cemitools_
   write_files(cem, directory = cemitools_dir, force = T)
   save_plots(cem, "all", directory = cemitools_dir, force = T)
   
-  # get pos/neg correlated modules for pnoc008 cluster using p-adj < 0.05 cut-off
+  # get pos/neg correlated modules for poi cluster using p-adj < 0.05 cut-off
   corr_modules <- cem@enrichment$padj %>%
-    filter(get(as.character(pnoc008_cluster)) < 0.05) %>%
+    filter(get(as.character(poi_cluster)) < 0.05) %>%
     .$pathway
   corr_modules <- cem@enrichment$nes %>%
     filter(pathway %in% corr_modules,
            pathway != "Not.Correlated") %>%
-    mutate(direction = ifelse(get(as.character(pnoc008_cluster)) > 0, "pos", "neg"))
+    mutate(direction = ifelse(get(as.character(poi_cluster)) > 0, "pos", "neg"))
   
   # get hub genes for pos/neg correlated modules with a cutoff of 0.5
   # note: when using method = "kME", the hubs object does not behave like a normal list and so I am unable to use stack to unlist the list recursively
@@ -83,13 +91,15 @@ run_cemitools <- function(exp_counts_corrected, clinical, output_dir, cemitools_
            values >= 0.5)
   
   # annotate targetable hubs
-  fname <- file.path(output_dir, "transcriptome_drug_rec.rds")
-  dge_genes <- readRDS(fname)
-  dge_genes <- dge_genes %>% 
-    mutate(Network_Hub = ifelse(Comparison == "PBTA_HGG_189" & Gene %in% network_hubs$genes, "Yes", "No"))
-  
-  # rewrite transcriptiomic based drug recommendations
-  saveRDS(dge_genes, file = fname)
+  if(!is.null(transcriptome_drug_rec_output)){
+    fname <- file.path(output_dir, "transcriptome_drug_rec.rds")
+    dge_genes <- transcriptome_drug_rec_output %>% 
+      mutate(Network_Hub = ifelse(grepl("Pediatric", Comparison) & 
+                                    Gene %in% network_hubs$genes, "Yes", "No"))
+    
+    # rewrite transcriptomic based drug recommendations
+    saveRDS(dge_genes, file = fname)
+  }
   
   # get ora data for pos/neg correlated modules
   ora_dat <- ora_data(cem = cem)

@@ -26,9 +26,9 @@ gsnca_results_dir <- file.path(patient_dir, "output", "gsnca_analysis")
 gsnca_result_normal<- readr::read_tsv(file.path(gsnca_results_dir, 
                                                 "cluster_samples_vs_normal_data_GSNCA_analysis.tsv"))
 gsnca_result_pediatric <- readr::read_tsv(file.path(gsnca_results_dir, 
-                                                    "cluster_samples_vs_pediatric_data_GSNCA_analysis.tsv"))
+                                             "cluster_samples_vs_pediatric_data_GSNCA_analysis.tsv"))
 gsnca_result_adult <- readr::read_tsv(file.path(gsnca_results_dir, 
-                                                "cluster_samples_vs_adult_data_GSNCA_analysis.tsv"))
+                                               "cluster_samples_vs_adult_data_GSNCA_analysis.tsv"))
 
 # annotate GSNCA hub gene
 transcriptome_drug_rec_output <- transcriptome_drug_rec_output %>% 
@@ -38,7 +38,7 @@ transcriptome_drug_rec_output <- transcriptome_drug_rec_output %>%
     grepl("Pediatric", Comparison) & Gene %in% gsnca_result_pediatric$hub_gene ~ "Yes",
     TRUE ~ "No"
   )
-  )
+)
 
 # subset columns for report
 fname <- file.path(output_dir, "transcriptome_drug_rec.rds")
