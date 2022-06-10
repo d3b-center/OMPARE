@@ -1,18 +1,17 @@
 # merge annotations from the preceding steps with actionable genes information.
-library(tidyverse)
-library(optparse)
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(optparse)
+})
 
 # arguments
 option_list <- list(
-  make_option(c("-p", "--patient"), type = "character",
-              help = "Patient identifier (PNOC008-22, C3342894...)"),
-  make_option(c("-s", "--snv_caller"), type = "character",
+  make_option(c("--snv_caller"), type = "character",
               help = "SNV caller pattern: lancet, vardict, consensus, strelka2, mutect2 and all"),
   make_option(c("--output_dir"), type = "character",
               help = "output directory")
 )
 opt <- parse_args(OptionParser(option_list = option_list))
-patient <- opt$patient
 snv_caller <- opt$snv_caller
 output_dir <- opt$output_dir
 
