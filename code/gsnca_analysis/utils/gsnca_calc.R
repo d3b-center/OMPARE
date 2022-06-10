@@ -17,8 +17,8 @@ filter_low_expr_df <- function(expr_df){
   
   # also additionally filter on sd to avoid error message on GSNCA step
   expr_df_filtered_sd <- apply(expr_df_filtered, 1, sd, na.rm = TRUE)
-  expr_df_filtered_sd_filter <- which(expr_df_filtered_sd <= 0.015) %>% as.data.frame() %>% rownames()
-  expr_df_filtered <- expr_df_filtered[!(row.names(expr_df_filtered) %in% expr_df_filtered_sd_filter),]
+  expr_df_filtered_sd_filter <- which(expr_df_filtered_sd > 0.015) %>% as.data.frame() %>% rownames()
+  expr_df_filtered <- expr_df_filtered[(row.names(expr_df_filtered) %in% expr_df_filtered_sd_filter),]
   
   return(expr_df_filtered)
 }
@@ -55,7 +55,6 @@ return_hub_gene <- function(object, group, name=NULL, cor.method="pearson", min.
     
     return(gnames[major1.ind])
   }
-
 
 #### Get the pathway information and select genes in the pathways---------------
 build_pathways <- function(gene_list) {
@@ -125,12 +124,12 @@ pathway_barplots <- function(dat, title){
 
 
 ######################### Run GSNCA and output plots and text files --------------
-gsnca_analysis_plot <- function(similar_subjects_expr_df, ref_expr_df, ref_name, top_bar=20, top_net=5, output_dir){
+gsnca_analysis_plot <- function(cluster_samples_tpm_df, ref_expr_df, ref_name, top_bar=20, top_net=5, output_dir){
   ##### get annotation df for comparison groups
-  # 20+1 POI group
-  similar_subjects_anno <- as.data.frame(colnames(similar_subjects_expr_df)) 
-  colnames(similar_subjects_anno) <- "subject_id"
-  similar_subjects_anno <- similar_subjects_anno %>%
+  # samples in the cluster
+  cluster_samples_anno <- as.data.frame(colnames(cluster_samples_tpm_df)) 
+  colnames(cluster_samples_anno) <- "subject_id"
+  cluster_samples_anno <- cluster_samples_anno %>%
     dplyr::mutate(group="1")
 
   # reference group
@@ -140,15 +139,15 @@ gsnca_analysis_plot <- function(similar_subjects_expr_df, ref_expr_df, ref_name,
     dplyr::mutate(group="2")
   
   # combine both 
-  combined_anno <- bind_rows(similar_subjects_anno, ref_subjects_anno)
+  combined_anno <- bind_rows(cluster_samples_anno, ref_subjects_anno)
   
   # generate combined matrix 
-  similar_subjects_expr_df <- similar_subjects_expr_df %>% tibble::rownames_to_column("geneID")
+  cluster_samples_tpm_df <- cluster_samples_tpm_df %>% tibble::rownames_to_column("geneID")
   ref_expr_df <- ref_expr_df %>% tibble::rownames_to_column("geneID")
   
   # combine to contain only genes that pass filter for both expression matrix
-  genes_in_common <- intersect(similar_subjects_expr_df$geneID, ref_expr_df$geneID) %>% unique()
-  combined_matrix <- left_join(similar_subjects_expr_df[(similar_subjects_expr_df$geneID %in% genes_in_common), ], 
+  genes_in_common <- intersect(cluster_samples_tpm_df$geneID, ref_expr_df$geneID) %>% unique()
+  combined_matrix <- left_join(cluster_samples_tpm_df[(cluster_samples_tpm_df$geneID %in% genes_in_common), ], 
                                ref_expr_df[(ref_expr_df$geneID %in% genes_in_common),]) %>%
     tibble::column_to_rownames("geneID") 
   
@@ -168,7 +167,6 @@ gsnca_analysis_plot <- function(similar_subjects_expr_df, ref_expr_df, ref_name,
   colnames(gsnca_results) <- c("pathway_id", "pathway_description", "pvalue", "hub_gene")
   
   for(i in 1:length(pathway_list)){
-    print(i)
     # iterate through path list 
     pathway_of_interest <- pathway_list[i]
     
@@ -183,7 +181,7 @@ gsnca_analysis_plot <- function(similar_subjects_expr_df, ref_expr_df, ref_name,
       pull(symbol) %>% unique()
     
     # filter to genes in target pathway
-    combined_matrix_per_pathway <- combined_matrix[row.names(combined_matrix) %in% genes_in_pathway,]
+    combined_matrix_per_pathway <- combined_matrix[row.names(combined_matrix) %in% genes_in_pathway,] 
     
     # run GSNCA test on filtered 
     result_pval<-GSNCAtest(object=as.matrix(combined_matrix_per_pathway), 
@@ -217,13 +215,13 @@ gsnca_analysis_plot <- function(similar_subjects_expr_df, ref_expr_df, ref_name,
     dplyr::mutate(comparison = ref_name)
   
   gsnca_results %>% 
-    readr::write_tsv(file.path(output_dir, paste0("top20_similar_vs_", ref_name, "_GSNCA_analysis.tsv")))
+    readr::write_tsv(file.path(output_dir, paste0("cluster_samples_vs_", ref_name, "_GSNCA_analysis.tsv")))
 
   # we plot out top n for networks
   gsnca_top_net <- gsnca_results %>%
     slice_head(n = top_net) 
   
-  pdf(file = file.path(output_dir, paste0("top20_similar_vs_", ref_name, "_GSNCA_plots.pdf")))
+  pdf(file = file.path(output_dir, paste0("cluster_samples_vs_", ref_name, "_GSNCA_plots.pdf")))
   
   #### For pathways with top 5 pval, we plot out the network plots for them
   for(j in 1:nrow(gsnca_top_net)){
