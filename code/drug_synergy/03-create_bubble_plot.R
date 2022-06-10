@@ -22,11 +22,6 @@ opt <- parse_args(OptionParser(option_list = option_list))
 combined_synergy <- opt$combined_synergy
 output_file <- opt$output_file
 
-if(!file.exists(combined_synergy)){
-  print("No qSig output")
-  stop()
-}
-
 # read output 
 all_combined <- read.delim(combined_synergy)
 
@@ -35,11 +30,11 @@ all_combined <- all_combined %>%
   mutate(drug_pair = paste(drug1, drug2, sep = "_")) %>%
   dplyr::select(drug_pair, module, synergy_score, comparison) %>%
   unique()
-  
+
 # modify comparison names
-all_combined$comparison[all_combined$comparison == "pbta_qSig"] <- "PBTA"
-all_combined$comparison[all_combined$comparison == "pbta_hgg_qSig"] <- "PBTA (HGG)"
-all_combined$comparison[all_combined$comparison == "gtex_qSig"] <- "GTEx"
+all_combined$comparison[all_combined$comparison == "pediatric_qSig"] <- "Pediatric"
+all_combined$comparison[all_combined$comparison == "adult_qSig"] <- "Adult"
+all_combined$comparison[all_combined$comparison == "normal_qSig"] <- "Normal"
 
 # pick top 10 drug pairs per comparator 
 test <- all_combined %>%

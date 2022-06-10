@@ -17,91 +17,77 @@ data_dir <- file.path(root_dir, "data")
 
 # Parse command line options
 option_list <- list(
-  make_option(c("-i", "--interaction"),type="character",
+  make_option(c("--interaction"),type="character",
               help="Gene interaction file for all modules (.tsv) "),
-  make_option(c("-r","--enrichment_nes"),type="character",
+  make_option(c("--enrichment_nes"),type="character",
               help="cluster vs. modules enrichment score file (.tsv) "),
-  make_option(c("-c","--cluster"),type="character",
+  make_option(c("--cluster"),type="character",
               help="File with cluster assignments for samples (.rds)"),
-  make_option(c("-n","--clinical"),type="character",
-              help="clinical files of PNOC008 samples (.rds)"),
-  make_option(c("-s","--sample_of_interest"),type="character",
-              help="sample of interest to run this analysis "),
-  make_option(c("-l","--chemblDb_path"),type="character",
+  make_option(c("--patient_of_interest"),type="character",
+              help="Kids_First_Biospecimen_ID of patient of interest"),
+  make_option(c("--chemblDb_path"),type="character",
               help="Path to chemblDb sqlite database"),
-  make_option(c("-e", "--gtex_qSig"),type="character",
-              help="qSig output from CEMiTools comparing to GTEx brain normal (.txt) "),
-  make_option(c("-b","--pbta_qSig"),type="character",
-              help="qSig output from CEMiTools comparing to all PBTA samples (.txt) "),
-  make_option(c("-a","--pbta_hgg_qSig"),type="character",
-              help="qSig output from CEMiTools comparing to PBTA HGG samples (.txt)"),
-  make_option(c("-f","--subnetwork"),type="character",
+  make_option(c("--normal_qSig"),type="character",
+              help="qSig output from CEMiTools comparing to normal tissues (.txt) "),
+  make_option(c("--pediatric_qSig"),type="character",
+              help="qSig output from CEMiTools comparing to all pediatric samples (.txt) "),
+  make_option(c("--adult_qSig"),type="character",
+              help="qSig output from CEMiTools comparing to adult samples (.txt)"),
+  make_option(c("--subnetwork"),type="character",
               help="Output file for subnetworks of module of interest (.tsv) "),
-  make_option(c("-o","--subnetwork_mapped"),type="character",
+  make_option(c("--subnetwork_mapped"),type="character",
               help="Output file for drug-mapped subnetworks (.tsv) "),
-  make_option(c("-g","--gtex_mapped"),type="character",
-              help="Output file for drug-mapped gtex qSig subsetted subnetworks (.tsv) "),
-  make_option(c("-p","--pbta_mapped"),type="character",
-              help="Output file for drug-mapped pbta qSig subsetted subnetworks (.tsv) "),
-  make_option(c("-d","--pbta_hgg_mapped"),type="character",
-              help="Output file for drug-mapped pbta hgg subsetted subnetworks (.tsv) ")
+  make_option(c("--normal_mapped"),type="character",
+              help="Output file for drug-mapped normal qSig subsetted subnetworks (.tsv) "),
+  make_option(c("--pediatric_mapped"),type="character",
+              help="Output file for drug-mapped pediatric qSig subsetted subnetworks (.tsv) "),
+  make_option(c("--adult_mapped"),type="character",
+              help="Output file for drug-mapped adult subsetted subnetworks (.tsv) ")
 )
 
-opt <- parse_args(OptionParser(option_list=option_list,add_help_option = FALSE))
-sample_of_interest <- opt$sample_of_interest
-
-# Read in files necessary for analyses
+opt <- parse_args(OptionParser(option_list = option_list))
+patient_of_interest <- opt$patient_of_interest
 interaction_df <- readr::read_tsv(opt$interaction)
-
-enrichment_nes_df <- readr::read_tsv(opt$enrichment_nes) %>%
-  dplyr::rename(cluster_1 = `1`,
-                cluster_2 = `2`,
-                cluster_3 = `3`)
-
-cluster_df <- readRDS(opt$cluster)
-clinical_df <- readRDS(opt$clinical)
-gtex_qSig <- readr::read_tsv(opt$gtex_qSig)
-pbta_qSig <- readr::read_tsv(opt$pbta_qSig)
-pbta_hgg_qSig <- readr::read_tsv(opt$pbta_hgg_qSig)
+enrichment_nes_df <- readr::read_tsv(opt$enrichment_nes)
+colnames(enrichment_nes_df)[2:ncol(enrichment_nes_df)] <- paste0('cluster_', colnames(enrichment_nes_df)[2:ncol(enrichment_nes_df)])
+cluster_df <- readr::read_tsv(opt$cluster)
+normal_qSig <- readr::read_tsv(opt$normal_qSig)
+pediatric_qSig <- readr::read_tsv(opt$pediatric_qSig)
+adult_qSig <- readr::read_tsv(opt$adult_qSig)
 
 #### Run drug annnotation for subnetwork -------------------------------------
 
-# Find the bs_id of our sample of interest
-bs_id <- clinical_df %>% filter(subjectID == sample_of_interest) %>%
-  pull(Kids_First_Biospecimen_ID)
-
 # Find the cluster assignment of samples of interest 
 cluster_assignment <- cluster_df %>% 
-  dplyr::filter(Kids_First_Biospecimen_ID == bs_id ) %>%
-  pull(CC)
-
+  dplyr::filter(Kids_First_Biospecimen_ID == patient_of_interest) %>%
+  pull(cluster_assigned_nb)
 cluster_assignment <- paste0("cluster_", cluster_assignment)
-  
+
 # Find the modules positive correlated with the cluster
 enrichment_nes_df <- enrichment_nes_df %>%
   dplyr::select(pathway, all_of(cluster_assignment))
 colnames(enrichment_nes_df) = c("modules", "cluster_of_interest")
 
 module_selected <- enrichment_nes_df %>% 
-  filter(cluster_of_interest >0) %>%
+  filter(cluster_of_interest > 0) %>%
   pull(modules) %>% unique()
 
-if((length(module_selected) == 0) | (nrow(gtex_qSig) == 0 & nrow(pbta_qSig) == 0 & nrow(pbta_hgg_qSig) == 0)){
+if((length(module_selected) == 0) | (nrow(normal_qSig) == 0 & nrow(pediatric_qSig) == 0 & nrow(adult_qSig) == 0)){
   # do nothing
 } else {
   # Use the module selected to subset the gene interaction file for all modules and generate sub-network
   sub_network <- interaction_df %>%
     dplyr::filter(Module %in% module_selected)
   
-  readr::write_tsv(sub_network, opt$subnetwork)
+  readr::write_tsv(sub_network, file = opt$subnetwork)
   
   # Define dataframes to store the results
   qresult2_combined <- data.frame()
-  subnetwork_gtex_qSig_combined <- data.frame()
-  subnetwork_pbta_qSig_combined <- data.frame()
-  subnetwork_pbta_hgg_qSig_combined <- data.frame()
+  subnetwork_normal_qSig_combined <- data.frame()
+  subnetwork_pediatric_qSig_combined <- data.frame()
+  subnetwork_adult_qSig_combined <- data.frame()
   
-  for(i in 1:length(module_selected )){
+  for(i in 1:length(module_selected)){
     module_each <- module_selected[i]
     sub_network_each <- interaction_df %>%
       dplyr::filter(Module == module_each)
@@ -145,44 +131,44 @@ if((length(module_selected) == 0) | (nrow(gtex_qSig) == 0 & nrow(pbta_qSig) == 0
     #### Intersect subnetwork and qSig output-------------------------------------
     
     # First select drugs that are negatively correlated (WTCS<0) and keep the WTCS scores
-    gtex_qSig_df <- gtex_qSig %>% 
+    normal_qSig_df <- normal_qSig %>% 
       dplyr::filter(WTCS<0) %>% mutate(Drug_Name = toupper(pert)) %>% 
       dplyr::select(Drug_Name, WTCS)
-    gtex_qSig_drugs <- gtex_qSig_df %>% pull(Drug_Name) %>% unique()
+    normal_qSig_drugs <- normal_qSig_df %>% pull(Drug_Name) %>% unique()
     
-    pbta_qSig_df <- pbta_qSig %>% 
+    pediatric_qSig_df <- pediatric_qSig %>% 
       dplyr::filter(WTCS<0) %>% mutate(Drug_Name = toupper(pert)) %>% 
       dplyr::select(Drug_Name, WTCS)
-    pbta_qSig_drugs <- pbta_qSig_df %>% pull(Drug_Name) %>% unique()
+    pediatric_qSig_drugs <- pediatric_qSig_df %>% pull(Drug_Name) %>% unique()
     
-    pbta_hgg_qSig_df <- pbta_hgg_qSig %>% 
+    adult_qSig_df <- adult_qSig %>% 
       dplyr::filter(WTCS<0) %>% mutate(Drug_Name = toupper(pert)) %>% 
       dplyr::select(Drug_Name, WTCS)
-    pbta_hgg_qSig_drugs <- pbta_hgg_qSig_df %>% pull(Drug_Name) %>% unique()
+    adult_qSig_drugs <- adult_qSig_df %>% pull(Drug_Name) %>% unique()
     
     # Combine the results with WTCS scores and save the results
-    subnetwork_gtex_qSig <- qresult2 %>% 
-      dplyr::filter(Drug_Name %in% gtex_qSig_drugs) %>%
-      dplyr::left_join(gtex_qSig_df) %>% distinct() %>% 
+    subnetwork_normal_qSig <- qresult2 %>% 
+      dplyr::filter(Drug_Name %in% normal_qSig_drugs) %>%
+      dplyr::left_join(normal_qSig_df) %>% distinct() %>% 
       dplyr::mutate(module = module_each)
-    subnetwork_gtex_qSig_combined <- rbind(subnetwork_gtex_qSig_combined, subnetwork_gtex_qSig)
+    subnetwork_normal_qSig_combined <- rbind(subnetwork_normal_qSig_combined, subnetwork_normal_qSig)
     
-    subnetwork_pbta_qSig <- qresult2 %>% 
-      dplyr::filter(Drug_Name %in% pbta_qSig_drugs) %>%
-      dplyr::left_join(pbta_qSig_df) %>% distinct() %>% 
+    subnetwork_pediatric_qSig <- qresult2 %>% 
+      dplyr::filter(Drug_Name %in% pediatric_qSig_drugs) %>%
+      dplyr::left_join(pediatric_qSig_df) %>% distinct() %>% 
       dplyr::mutate(module = module_each)
-    subnetwork_pbta_qSig_combined <- rbind(subnetwork_pbta_qSig_combined, subnetwork_pbta_qSig)
+    subnetwork_pediatric_qSig_combined <- rbind(subnetwork_pediatric_qSig_combined, subnetwork_pediatric_qSig)
     
-    subnetwork_pbta_hgg_qSig <- qresult2 %>% 
-      dplyr::filter(Drug_Name %in% pbta_hgg_qSig_drugs) %>%
-      dplyr::left_join(pbta_hgg_qSig_df) %>% distinct() %>% 
+    subnetwork_adult_qSig <- qresult2 %>% 
+      dplyr::filter(Drug_Name %in% adult_qSig_drugs) %>%
+      dplyr::left_join(adult_qSig_df) %>% distinct() %>% 
       dplyr::mutate(module = module_each)
-    subnetwork_pbta_hgg_qSig_combined <- rbind(subnetwork_pbta_hgg_qSig_combined, subnetwork_pbta_hgg_qSig)
+    subnetwork_adult_qSig_combined <- rbind(subnetwork_adult_qSig_combined, subnetwork_adult_qSig)
   }
   
   # write out results
-  readr::write_tsv(qresult2_combined, opt$subnetwork_mapped)
-  readr::write_tsv(subnetwork_gtex_qSig_combined, opt$gtex_mapped)
-  readr::write_tsv(subnetwork_pbta_qSig_combined, opt$pbta_mapped)
-  readr::write_tsv(subnetwork_pbta_hgg_qSig_combined, opt$pbta_hgg_mapped)
+  readr::write_tsv(qresult2_combined, file = opt$subnetwork_mapped)
+  readr::write_tsv(subnetwork_normal_qSig_combined, file = opt$normal_mapped)
+  readr::write_tsv(subnetwork_pediatric_qSig_combined, file = opt$pediatric_mapped)
+  readr::write_tsv(subnetwork_adult_qSig_combined, file = opt$adult_mapped)
 }

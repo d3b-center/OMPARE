@@ -8,70 +8,77 @@ dir.create(output_dir, showWarnings = F, recursive = T)
 # references
 chembldb_path <- file.path(data_dir, "chembl", "chembl_29_sqlite", "chembl_29.db")
 
-# pnoc008 clinical file
-pnoc008_clinical <- file.path(data_dir, "pnoc008", "pnoc008_clinical.rds")
-
 # inputs from patient's cemitools directory
 cemitools_dir <- file.path(patient_dir, "output", "drug_recommendations", "CEMiTools")
 interaction <- file.path(cemitools_dir, "interactions.tsv")
 enrichment_nes <- file.path(cemitools_dir, "enrichment_nes.tsv")
-cluster <- file.path(cemitools_dir, "clustered_samples.rds")
+
+# inputs from patient's coseq directory
+coseq_dir <- file.path(patient_dir, "output", "coseq_detect", "pediatric")
+cluster <- file.path(coseq_dir, "cancer_group_of_interest_nb_cluster_assigned.tsv")
 
 # inputs from patient's output directory (lincs connectivity analysis output)
-gtex_qSig <- file.path(patient_dir, "output", "drug_recommendations", "GTExBrain_qSig_output.txt")
-pbta_qSig <- file.path(patient_dir, "output", "drug_recommendations", "PBTA_ALL_qSig_output.txt")
-pbta_hgg_qSig <- file.path(patient_dir, "output", "drug_recommendations", "PBTA_HGG_qSig_output.txt")
+normal_qSig <- file.path(patient_dir, "output", "drug_recommendations", "patient_vs_normals_qSig_output.txt")
+pediatric_qSig <- file.path(patient_dir, "output", "drug_recommendations", "patient_vs_pediatric_qSig_output.txt")
+adult_qSig <- file.path(patient_dir, "output", "drug_recommendations", "patient_vs_adult_qSig_output.txt")
 
 # subnetwork file and drug mapped subnetwork qSig file
 subnetwork <- file.path(output_dir, "subnetwork_genes.tsv")
 subnetwork_mapped <- file.path(output_dir, "subnetwork_gene_drug_map.tsv")
-gtex_subnet_qSig_mapped <- file.path(output_dir, "gtex_qSig_subnetwork_drug_gene_map.tsv")
-pbta_subnet_qSig_mapped <- file.path(output_dir, "pbta_qSig_subnetwork_drug_gene_map.tsv")
-pbta_hgg_subnet_qSig_mapped <- file.path(output_dir, "pbta_hgg_qSig_subnetwork_drug_gene_map.tsv")
+normal_subnet_qSig_mapped <- file.path(output_dir, "patient_vs_normal_qSig_subnetwork_drug_gene_map.tsv")
+pediatric_subnet_qSig_mapped <- file.path(output_dir, "patient_vs_pediatric_qSig_subnetwork_drug_gene_map.tsv")
+adult_subnet_qSig_mapped <- file.path(output_dir, "patient_vs_adult_qSig_subnetwork_drug_gene_map.tsv")
 
 # synergy score for all comparisons
-output_gtex <- file.path(output_dir, "gtex_qSig_synergy_score.tsv")
-output_pbta <- file.path(output_dir, "pbta_qSig_synergy_score.tsv")
-output_pbta_hgg <- file.path(output_dir, "pbta_hgg_qSig_synergy_score.tsv")
+output_normal <- file.path(output_dir, "patient_vs_normal_qSig_synergy_score.tsv")
+output_pediatric <- file.path(output_dir, "patient_vs_pediatric_qSig_synergy_score.tsv")
+output_adult <- file.path(output_dir, "patient_vs_adult_qSig_synergy_score.tsv")
 output_combined <- file.path(output_dir, "combined_qSig_synergy_score.tsv")
 combined_plot_file <- file.path(output_dir, "combined_qSig_synergy_score_top10.pdf")
 
+# patient of interest
+patient_of_interest <- sample_info %>%
+  filter(experimental_strategy == "RNA-Seq") %>%
+  pull(Kids_First_Biospecimen_ID)
+
 # run script to obtain drugs that are associated with all the genes in the subnetwork
+# this script will only generate outputs if there are any positively correlated modules identified via CEMiTool
 subnetwork_qSig_gene_drug_map <- file.path(module_dir, "01-subnetwork_qSig_gene_drug_map.R")
 cmd <- paste('Rscript', subnetwork_qSig_gene_drug_map,
              '--interaction', interaction,
              '--enrichment_nes', enrichment_nes,
              '--cluster', cluster,
-             '--clinical', pnoc008_clinical,
+             '--patient_of_interest', patient_of_interest,
              '--chemblDb_path', chembldb_path,
-             '--sample_of_interest', patient,
-             '--gtex_qSig', gtex_qSig,
-             '--pbta_qSig', pbta_qSig,
-             '--pbta_hgg_qSig', pbta_hgg_qSig,
+             '--normal_qSig', normal_qSig,
+             '--pediatric_qSig', pediatric_qSig,
+             '--adult_qSig', adult_qSig,
              '--subnetwork', subnetwork, 
              '--subnetwork_mapped', subnetwork_mapped,
-             '--gtex_mapped', gtex_subnet_qSig_mapped,
-             '--pbta_mapped', pbta_subnet_qSig_mapped,
-             '--pbta_hgg_mapped', pbta_hgg_subnet_qSig_mapped)
+             '--normal_mapped', normal_subnet_qSig_mapped,
+             '--pediatric_mapped', pediatric_subnet_qSig_mapped,
+             '--adult_mapped', adult_subnet_qSig_mapped)
 system(cmd)
 
 # run script to obtain drugs that are both in qSig and subnetwork
+# only run if subnetwork output file is generated using above script
 if(file.exists(subnetwork)){
   drug_synergy_score_calc <- file.path(module_dir, "02-drug_synergy_score_calc.R")
   cmd <- paste('Rscript', drug_synergy_score_calc,
                '--subnetwork', subnetwork, 
                '--subnetwork_mapped', subnetwork_mapped,
-               '--gtex_mapped', gtex_subnet_qSig_mapped,
-               '--pbta_mapped', pbta_subnet_qSig_mapped,
-               '--pbta_hgg_mapped', pbta_hgg_subnet_qSig_mapped,
-               '--output_gtex', output_gtex,
-               '--output_pbta', output_pbta,
-               '--output_pbta_hgg', output_pbta_hgg,
+               '--normal_mapped', normal_subnet_qSig_mapped,
+               '--pediatric_mapped', pediatric_subnet_qSig_mapped,
+               '--adult_mapped', adult_subnet_qSig_mapped,
+               '--output_normal', output_normal,
+               '--output_pediatric', output_pediatric,
+               '--output_adult', output_adult,
                '--output_combined', output_combined)
   system(cmd)
 }
 
 # run script to create bubble plots from output of 02-drug_synergy_score_calc.R
+# only run if combined output is generated by above script
 if(file.exists(output_combined)){
   create_bubble_plot <- file.path(module_dir, "03-create_bubble_plot.R")
   cmd <- paste('Rscript', create_bubble_plot,
@@ -79,3 +86,4 @@ if(file.exists(output_combined)){
                '--output_file', combined_plot_file)
   system(cmd)
 }
+

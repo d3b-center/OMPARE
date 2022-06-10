@@ -1,5 +1,5 @@
 # Author: Run Jin
-# Obtain Drug Target of Interest for each qSig output (comparing to GTEx, PBTA all or PBTA HGG)
+# Obtain Drug Target of Interest for each qSig output (comparing to normal tissues, pediatric and adult tumors)
 
 suppressPackageStartupMessages({
   library(optparse)
@@ -16,22 +16,22 @@ module_dir <- file.path(root_dir, "code", "drug_synergy")
 
 # Parse command line options
 option_list <- list(
-  make_option(c("-g","--gtex_mapped"),type="character",
-              help="Output file for drug-mapped gtex qSig subsetted subnetworks (.tsv) "),
-  make_option(c("-p","--pbta_mapped"),type="character",
-              help="Output file for drug-mapped pbta qSig subsetted subnetworks (.tsv) "),
-  make_option(c("-h","--pbta_hgg_mapped"),type="character",
-              help="Output file for drug-mapped pbta hgg subsetted subnetworks (.tsv) "),
+  make_option(c("-g","--normal_mapped"),type="character",
+              help="Output file for drug-mapped normal qSig subsetted subnetworks (.tsv) "),
+  make_option(c("-p","--pediatric_mapped"),type="character",
+              help="Output file for drug-mapped pediatric qSig subsetted subnetworks (.tsv) "),
+  make_option(c("-h","--adult_mapped"),type="character",
+              help="Output file for drug-mapped adult subsetted subnetworks (.tsv) "),
   make_option(c("-f","--subnetwork"),type="character",
-               help="File for subnetworks of module of interest (.tsv) "),
+              help="File for subnetworks of module of interest (.tsv) "),
   make_option(c("-m","--subnetwork_mapped"),type="character",
               help="File for subnetworks with mapped drug information of module of interest (.tsv) "),
-  make_option(c("-b","--output_gtex"),type="character",
-              help="Path and file name for gtex synergy score (.tsv) "), 
-  make_option(c("-c","--output_pbta"),type="character",
-              help="Path and file name for pbta synergy score (.tsv) "), 
-  make_option(c("-d","--output_pbta_hgg"),type="character",
-              help="Path and file name for pbta hgg synergy score (.tsv) "),
+  make_option(c("-b","--output_normal"),type="character",
+              help="Path and file name for normal synergy score (.tsv) "), 
+  make_option(c("-c","--output_pediatric"),type="character",
+              help="Path and file name for pediatric synergy score (.tsv) "), 
+  make_option(c("-d","--output_adult"),type="character",
+              help="Path and file name for adult synergy score (.tsv) "),
   make_option(c("-e","--output_combined"),type="character",
               help="Path and file name for all combined synergy score (.tsv) ")
 )
@@ -39,16 +39,9 @@ opt <- parse_args(OptionParser(option_list=option_list,add_help_option = FALSE))
 output_path <- opt$output_path 
 
 #### Read in files necessary for analyses -----------------------------------
-gtex_qSig_subnet_mapped <- readr::read_tsv(opt$gtex_mapped) %>% mutate(comparison = "gtex_qSig")
-pbta_qSig_subnet_mapped <- readr::read_tsv(opt$pbta_mapped) %>% mutate(comparison = "pbta_qSig")
-pbta_hgg_qSig_subnet_mapped <- readr::read_tsv(opt$pbta_hgg_mapped) %>% mutate(comparison = "pbta_hgg_qSig")
-
-if(nrow(gtex_qSig_subnet_mapped) == 0 |
-   nrow(pbta_qSig_subnet_mapped) == 0 |
-   nrow(pbta_hgg_qSig_subnet_mapped) == 0){
-  print("No qSig output")
-  stop()
-}
+normal_qSig_subnet_mapped <- readr::read_tsv(opt$normal_mapped) %>% mutate(comparison = "normal_qSig")
+pediatric_qSig_subnet_mapped <- readr::read_tsv(opt$pediatric_mapped) %>% mutate(comparison = "pediatric_qSig")
+adult_qSig_subnet_mapped <- readr::read_tsv(opt$adult_mapped) %>% mutate(comparison = "adult_qSig")
 
 subnetwork <- readr::read_tsv(opt$subnetwork)
 
@@ -69,10 +62,10 @@ with_module_list <- lapply(module_list, function(y){
   
   # subset to module of interest
   subnetwork_each <- subnetwork %>% 
-    dplyr::filter(Module == module_of_interest) 
+    filter(Module == module_of_interest) 
   # Induce subnetwork
   subnetwork_graphed <-subnetwork_each %>%
-    dplyr::select(Gene1, Gene2) %>% as.matrix() %>%
+    select(Gene1, Gene2) %>% as.matrix() %>%
     graph.edgelist()
   
   # Find the nodes of subnetwork (gene symbols in the subnetworks)
@@ -81,15 +74,15 @@ with_module_list <- lapply(module_list, function(y){
   all_nodes <- union(gene1_names, gene2_names)
   
   # filter all three qSig files to module of interest as well
-  gtex_qSig_subnet_mapped_each <- gtex_qSig_subnet_mapped %>% 
+  normal_qSig_subnet_mapped_each <- normal_qSig_subnet_mapped %>% 
     filter(module == module_of_interest)
-  pbta_qSig_subnet_mapped_each <- pbta_qSig_subnet_mapped %>% 
+  pediatric_qSig_subnet_mapped_each <- pediatric_qSig_subnet_mapped %>% 
     filter(module == module_of_interest)
-  pbta_hgg_qSig_subnet_mapped_each <- pbta_hgg_qSig_subnet_mapped %>% 
+  adult_qSig_subnet_mapped_each <- adult_qSig_subnet_mapped %>% 
     filter(module == module_of_interest)
   
   #### Synergy Score Calculation ---------------------------------------------------------------
-  list_of_qSigs <- list(gtex_qSig_subnet_mapped_each, pbta_qSig_subnet_mapped_each, pbta_hgg_qSig_subnet_mapped_each)
+  list_of_qSigs <- list(normal_qSig_subnet_mapped_each, pediatric_qSig_subnet_mapped_each, adult_qSig_subnet_mapped_each)
   list_of_qSigs <- Filter(nrow, list_of_qSigs) # remove subnet with no rows
   
   # Generate an ordered list of unique drugs (ordered by their WTCS scores)
@@ -98,9 +91,6 @@ with_module_list <- lapply(module_list, function(y){
       arrange(WTCS) %>%
       pull(Drug_Name) %>% unique() 
     nDrug <- length(drug_list)
-    if(nDrug == 1){
-      return()
-    }
     # Give all the drugs weighted score from 1-2 based on their ranking 
     weight_score <- (1 + (1.0 - (c(1:nDrug)/nDrug)))
     drug_score_list <- data.frame(drug_list, weight_score)
@@ -201,8 +191,8 @@ with_module_list <- lapply(module_list, function(y){
     sScore_df <- sScore_df %>% arrange(desc(synergy_score)) %>%
       mutate(comparison = comparison_name)
     return(sScore_df)
-    })
-  }
+  })
+}
 )  
 
 each_module_combined <- lapply (with_module_list, function(x){
@@ -222,23 +212,23 @@ drug2_moa <- subnetwork_mapped %>% select(Drug_Name, MOA, hgnc_symbol) %>% disti
 
 
 # writing out results 
-all_combined %>% filter(comparison == "gtex_qSig") %>% 
+all_combined %>% filter(comparison == "normal_qSig") %>% 
   dplyr::left_join(drug1_moa) %>% 
   dplyr::left_join(drug2_moa) %>%
   arrange(desc(synergy_score)) %>% 
-  readr::write_tsv(opt$output_gtex)
+  readr::write_tsv(opt$output_normal)
 
-all_combined %>% filter(comparison == "pbta_qSig") %>%
+all_combined %>% filter(comparison == "pediatric_qSig") %>%
   dplyr::left_join(drug1_moa) %>% 
   dplyr::left_join(drug2_moa) %>%
   arrange(desc(synergy_score)) %>%
-  readr::write_tsv(opt$output_pbta)
+  readr::write_tsv(opt$output_pediatric)
 
-all_combined %>% filter(comparison == "pbta_hgg_qSig")%>%
+all_combined %>% filter(comparison == "adult_qSig")%>%
   dplyr::left_join(drug1_moa) %>% 
   dplyr::left_join(drug2_moa) %>%
   arrange(desc(synergy_score)) %>%
-  readr::write_tsv(opt$output_pbta_hgg)
+  readr::write_tsv(opt$output_adult)
 
 all_combined %>% arrange(desc(synergy_score)) %>%
   dplyr::left_join(drug1_moa) %>% 
