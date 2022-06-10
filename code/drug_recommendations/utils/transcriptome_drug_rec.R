@@ -48,8 +48,8 @@ transcriptome_drug_rec <- function(diffexpr_genes){
   qresult2 <- qresult2 %>%
     inner_join(diffexpr_genes, by = c("hgnc_symbol" = "genes")) %>% 
     dplyr::rename("Comparison" = "comparison",
-           "Gene" = "hgnc_symbol",
-           "Drug" = "Drug_Name") %>%
+                  "Gene" = "hgnc_symbol",
+                  "Drug" = "Drug_Name") %>%
     dplyr::mutate(Source = "FDA") %>%
     filter(logFC > 0) %>%
     unique()

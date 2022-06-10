@@ -8,11 +8,11 @@ dir.create(output_dir, showWarnings = F, recursive = T)
 source(file.path(module_dir, "utils", "transcriptome_drug_rec.R"))
 
 # input files
-genes_up <- read.delim(file.path(patient_dir, "output", "rnaseq_analysis", paste0(patient, '_summary_DE_Genes_Up.txt')))
+genes_up <- read.delim(file.path(patient_dir, "output", "rnaseq_analysis", 'genes_up.txt'))
 
 # transcriptomic drug recommendations
 # full output save as tsv
-full_fname <- file.path(output_dir, paste0(patient, "_CHEMBL_drug-gene.tsv"))
+full_fname <- file.path(output_dir, "CHEMBL_drug-gene.tsv")
 transcriptome_drug_rec_output <- transcriptome_drug_rec(diffexpr_genes = genes_up)
 write.table(x = transcriptome_drug_rec_output, file = full_fname, quote = F, sep = "\t", row.names = F)
 
@@ -23,19 +23,22 @@ transcriptome_drug_rec_output <- transcriptome_drug_rec_output %>%
 
 # annotate GSNCA hub gene information to annotation
 gsnca_results_dir <- file.path(patient_dir, "output", "gsnca_analysis")
-gsnca_result_gtex <- readr::read_tsv(file.path(gsnca_results_dir, "top20_similar_vs_GTEx_GSNCA_analysis.tsv"))
-gsnca_result_pbta_all <- readr::read_tsv(file.path(gsnca_results_dir, "top20_similar_vs_PBTA_all_GSNCA_analysis.tsv"))
-gsnca_result_pbta_hgg <- readr::read_tsv(file.path(gsnca_results_dir, "top20_similar_vs_PBTA_HGG_GSNCA_analysis.tsv"))
+gsnca_result_normal<- readr::read_tsv(file.path(gsnca_results_dir, 
+                                                "cluster_samples_vs_normal_data_GSNCA_analysis.tsv"))
+gsnca_result_pediatric <- readr::read_tsv(file.path(gsnca_results_dir, 
+                                                    "cluster_samples_vs_pediatric_data_GSNCA_analysis.tsv"))
+gsnca_result_adult <- readr::read_tsv(file.path(gsnca_results_dir, 
+                                                "cluster_samples_vs_adult_data_GSNCA_analysis.tsv"))
 
 # annotate GSNCA hub gene
 transcriptome_drug_rec_output <- transcriptome_drug_rec_output %>% 
   mutate(hub_GSNCA = case_when(
-    grepl("GTEx", Comparison) & Gene %in% gsnca_result_gtex$hub_gene ~ "Yes",
-    grepl("PBTA_ALL", Comparison) & Gene %in% gsnca_result_pbta_all$hub_gene ~ "Yes",
-    grepl("PBTA_HGG", Comparison) & Gene %in% gsnca_result_pbta_hgg$hub_gene ~ "Yes",
+    grepl("Normal", Comparison) & Gene %in% gsnca_result_normal$hub_gene ~ "Yes",
+    grepl("Adult", Comparison) & Gene %in% gsnca_result_adult$hub_gene ~ "Yes",
+    grepl("Pediatric", Comparison) & Gene %in% gsnca_result_pediatric$hub_gene ~ "Yes",
     TRUE ~ "No"
   )
-)
+  )
 
 # subset columns for report
 fname <- file.path(output_dir, "transcriptome_drug_rec.rds")
