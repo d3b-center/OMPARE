@@ -1,0 +1,455 @@
+---
+output:
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    theme: cosmo
+params: 
+  set_title:
+    value: "Patient Report"
+  patient:
+    value: "C3508206"
+  patient_dir:
+    value: "results/C3508206"
+  snv_caller:
+    value: consensus
+editor_options: 
+  chunk_output_type: console
+---
+---
+title: `r params$set_title`
+---
+
+<style>
+/* Fix DT / Flexdashboard container cut off */
+.chart-stage-flex {
+  overflow: scroll !important;
+}
+</style>
+
+```{r load_libraries}
+suppressPackageStartupMessages({
+  library(flexdashboard)
+  library(DT)
+  library(knitr)
+  library(tidyverse)
+  library(plotly)
+  library(kableExtra)
+})
+```
+
+```{r set_options, include=FALSE, echo=FALSE}
+knitr::opts_chunk$set(comment = NA)
+`%>%` <- dplyr::`%>%`
+```
+
+```{r set_params}
+patient <- params$patient
+patient_dir <- params$patient_dir
+snv_caller <- params$snv_caller
+```
+
+```{r set_root_dir}
+# directories
+root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
+patient_output_dir <- file.path(patient_dir, "output")
+```
+
+```{r call_driver, echo=FALSE, message=FALSE, results="hide"}
+# function for viewing datatables
+source(file.path(root_dir, "code", "utils", "view_dt.R"))
+```
+
+Key Clinical Findings (P1) {data-navmenu="Key Findings"}
+===
+Row {data-height=200}
+---   
+### {data-width=200}
+
+```{r d3b_logo, echo=FALSE, out.width = "100%"}
+knitr::include_graphics(file.path(root_dir, "figures", "d3b_logo.png"))
+```
+    
+### Patient & Sample Information
+
+```{r patient_info}
+metadata <- file.path(patient_output_dir, "sample_info.tsv")
+metadata <- readr::read_tsv(metadata) %>%
+  filter(cohort_participant_id %in% patient)
+kable(metadata, format="html") %>%
+  kable_styling(bootstrap_options = c("bordered", "condensed", "responsive")) %>% 
+  column_spec(c(1,2), bold=T, border_left = "2px solid gray", border_right = "2px solid gray")
+```
+
+Row {data-height=500}
+---
+    
+### Key Clinical Findings
+    
+```{r key_findings}
+fname <- file.path(patient_output_dir, "tier_classification", paste0("key_clinical_findings_output_", snv_caller, ".tsv"))
+if(file.exists(fname)){
+  key_clinical_findings_output <- read_tsv(fname)
+  view_dt_minimal(key_clinical_findings_output)
+}
+```
+
+Row {data-height=300}
+---
+    
+### Disease Specific Information
+    
+```{r disease_specific_info}
+fname <- file.path(patient_output_dir, "disease_specific_information_output.rds")
+if(file.exists(fname)){
+  disease_specific_information_output <- readRDS(fname)
+  DT::datatable(disease_specific_information_output, 
+                extensions = "FixedColumns",
+                class = "cell-border stripe",
+                options = list(dom = "t",
+                               scrollX = TRUE,
+                               fixedColumns = TRUE), 
+                rownames = F, colnames = c("Type", "Value"))
+}
+```
+
+### Cancer Germline Variants
+
+```{r filtered_germline_vars}
+fname <- file.path(patient_output_dir, "filtered_germline_vars.rds")
+if(file.exists(fname)){
+  filtered_germ_vars <- readRDS(fname)
+  DT::datatable(filtered_germ_vars, 
+                extensions = "FixedColumns",
+                class = "cell-border stripe",
+                options = list(dom = "t",
+                               scrollX = TRUE,
+                               fixedColumns = TRUE), 
+                rownames = F)
+}
+```
+
+### Genomic Summary
+    
+```{r genomic_summary}
+fname <- file.path(patient_output_dir, "genomic_summary_output.rds")
+if(file.exists(fname)){
+  genomic_summary_output <- readRDS(fname)
+  DT::datatable(genomic_summary_output, 
+                extensions = "FixedColumns",
+                class = "cell-border stripe",
+                options = list(dom = "t",
+                               scrollX = TRUE,
+                               fixedColumns = TRUE), 
+                rownames = F, colnames = c("Type", "Value"))
+}
+```
+
+All Findings (P1) {data-navmenu="Key Findings"}
+===
+Row {data-height=700}
+---
+
+### All Findings
+    
+```{r all_findings}
+fname <- file.path(patient_output_dir, "tier_classification", paste0("all_findings_output_", snv_caller, ".tsv"))
+if(file.exists(fname)){
+  all_findings_output <- read_tsv(fname)
+  view_dt_minimal(all_findings_output)
+}
+```
+
+Network Alterations (Pediatric): (P2) {data-navmenu="Network Alterations"}
+===
+Row {data-height=700}
+---
+
+### Network Alterations (vs Pediatric tumors)
+
+```{r network_alt_pediatric, echo=FALSE, out.width = "100%", out.height="100%"}
+fname <- file.path(patient_output_dir, "drug_recommendations", "pediatric", "ora_plots.pdf")
+if(file.exists(fname)){
+ knitr::include_graphics(fname) 
+}
+```
+
+Network Alterations (Adult): (P2) {data-navmenu="Network Alterations"}
+===
+Row {data-height=700}
+---
+
+### Network Alterations (vs Adult tumors)
+
+```{r network_alt_adult, echo=FALSE, out.width = "100%", out.height="100%"}
+fname <- file.path(patient_output_dir, "drug_recommendations", "adult", "ora_plots.pdf")
+if(file.exists(fname)){
+ knitr::include_graphics(fname) 
+}
+```
+
+Tumor Burden/Signatures (P3)
+===
+Row {data-height=700}
+---
+
+### Tumor Mutational Signatures
+
+```{r tm_signature}
+fname <- file.path(patient_output_dir, "tmb_analysis", "tumor_signature_output.rds")
+if(file.exists(fname)){
+  tumor_signature_output <- readRDS(fname)
+  ggplotly(tumor_signature_output)
+}
+```
+
+### Tumor Mutational Burden
+
+```{r tm_burden, fig.width = 11, fig.height = 7}
+fname <- file.path(patient_output_dir, "tmb_analysis", "tmb_profile_output.rds")
+if(file.exists(fname)){
+  tmb_profile_output <- readRDS(fname)
+  ggplotly(tmb_profile_output)
+}
+```
+
+Survival (P4) {data-navmenu="Pediatric Tumors Analysis"}
+===
+Row {data-height=700}
+---
+
+### Survival (Mutationally Similar Patients)
+
+```{r km_plot_pbta, echo=FALSE, out.width = "100%", out.height="100%"}
+fname <- file.path(patient_output_dir, "mutationally_similar_analysis", "kaplan_meier_pediatric.pdf")
+if(file.exists(fname)){
+  knitr::include_graphics(fname)
+}
+```
+
+Shared Mutations (P4) {data-navmenu="Pediatric Tumors Analysis"}
+===
+Row {data-height=500}
+---
+
+### Shared Mutations (Mutationally Similar Patients)
+
+```{r shared_mutations_pediatric, echo=FALSE, out.width = "100%", out.height="100%"}
+fname <- file.path(patient_output_dir, "mutationally_similar_analysis", "shared_mutations_pediatric.pdf")
+if(file.exists(fname)){
+  knitr::include_graphics(fname) 
+}
+```
+
+Shared Mutations AA changes (P4) {data-navmenu="Pediatric Tumors Analysis"}
+===
+Row {data-height=500}
+---
+
+### Shared Mutations AA changes (Mutationally Similar Patients)
+
+```{r lollipop_shared_pediatric, echo=FALSE, out.width = "100%", out.height="100%"}
+fname <- file.path(patient_output_dir, "mutationally_similar_analysis",
+                   "shared_mutations_lollipop_pediatric.pdf")
+if(file.exists(fname)){
+  knitr::include_graphics(fname) 
+}
+```
+
+Recurrent Mutations (P4) {data-navmenu="Pediatric Tumors Analysis"}
+===
+Row {data-height=500}
+---
+
+### Recurrent Mutations (Mutationally Similar Patients)
+
+```{r recurrent_mutations_pediatric, echo=FALSE, out.width = "100%", out.height="100%"}
+fname <- file.path(patient_output_dir, "mutationally_similar_analysis",
+                   "recurrent_mutations_pediatric.pdf")
+if(file.exists(fname)){
+  knitr::include_graphics(fname) 
+}
+```
+
+Recurrent Mutations AA changes (P4) {data-navmenu="Pediatric Tumors Analysis"}
+===
+Row {data-height=500}
+---
+
+### Recurrent Mutations AA changes (Mutationally Similar Patients)
+
+```{r lollipop_recurrent_pediatric, echo=FALSE, out.width = "100%", out.height="100%"}
+fname <- file.path(patient_output_dir, "mutationally_similar_analysis",
+                   "recurrent_mutations_lollipop_pediatric.pdf")
+if(file.exists(fname)){
+  knitr::include_graphics(fname) 
+}
+```
+
+Survival (P5) {data-navmenu="Adult Tumors Analysis"}
+===
+Row {data-height=700}
+---
+
+### Survival (Mutationally Similar Patients)
+
+```{r km_plot_adult, echo=FALSE, out.width = "100%", out.height="100%"}
+fname <- file.path(patient_output_dir, "mutationally_similar_analysis", 
+                   "kaplan_meier_adult.pdf")
+if(file.exists(fname)){
+  knitr::include_graphics(fname)
+}
+```
+
+Shared Mutations (P5) {data-navmenu="Adult Tumors Analysis"}
+===
+Row {data-height=500}
+---
+
+### Shared Mutations (Mutationally Similar Patients)
+
+```{r shared_mutations_adult, echo=FALSE, out.width = "100%", out.height="100%"}
+fname <- file.path(patient_output_dir, "mutationally_similar_analysis",
+                   "shared_mutations_adult.pdf")
+if(file.exists(fname)){
+  knitr::include_graphics(fname) 
+}
+```
+
+Shared Mutations AA changes (P5) {data-navmenu="Adult Tumors Analysis"}
+===
+Row {data-height=500}
+---
+
+### Shared Mutations AA changes (Mutationally Similar Patients)
+
+```{r lollipop_shared_adult, echo=FALSE, out.width = "100%", out.height="100%"}
+fname <- file.path(patient_output_dir, "mutationally_similar_analysis",
+                   "shared_mutations_lollipop_adult.pdf")
+if(file.exists(fname)){
+  knitr::include_graphics(fname) 
+}
+```
+
+Recurrent Mutations (P5) {data-navmenu="Adult Tumors Analysis"}
+===
+Row {data-height=500}
+---
+
+### Recurrent Mutations (Mutationally Similar Patients)
+
+```{r recurrent_mutations_adult, echo=FALSE, out.width = "100%", out.height="100%"}
+fname <- file.path(patient_output_dir, "mutationally_similar_analysis",
+                   "recurrent_mutations_adult.pdf")
+if(file.exists(fname)){
+  knitr::include_graphics(fname) 
+}
+```
+
+Recurrent Mutations AA changes (P5) {data-navmenu="Adult Tumors Analysis"}
+===
+Row {data-height=500}
+---
+
+### Recurrent Mutations AA changes (Mutationally Similar Patients)
+
+```{r lollipop_recurrent_adult, echo=FALSE, out.width = "100%", out.height="100%"}
+fname <- file.path(patient_output_dir, "mutationally_similar_analysis",
+                   "recurrent_mutations_lollipop_adult.pdf")
+if(file.exists(fname)){
+  knitr::include_graphics(fname) 
+}
+```
+
+Oncogrid (HGG-DMG)  (P6)
+===
+Row {data-height=700}
+---
+
+### Oncogrid (HGG-DMG)
+
+```{r oncogrid_hgg_dmg, echo=FALSE, out.width = "100%", out.height="100%"}
+fname <- file.path(patient_output_dir, "oncogrid_analysis", "complexheatmap_oncogrid.pdf")
+if(file.exists(fname)){
+  knitr::include_graphics(fname)
+}
+```
+
+Targeted findings (P7) {data-navmenu="Drug Recommendations"}
+===
+Row {data-height=700}
+---
+
+### Drug Recommendations
+
+```{r targeted_findings}
+fname <- file.path(patient_output_dir, "oncokb_analysis",
+                   paste0('oncokb_merged_', snv_caller, '_annotated_actgenes.txt'))
+if(file.exists(fname)){
+  oncokb_output <- read.delim(fname)
+  view_dt_minimal(oncokb_output)
+}
+```
+
+Pediatric Drug Signatures (P7) {data-navmenu="Drug Recommendations"}
+===
+Row {data-height=700}
+---
+
+### Drug Signatures (Pediatric)
+
+```{r drug_signatures_pediatric, echo=FALSE, out.width = "100%", out.height="100%"}
+fname <- file.path(patient_output_dir, "mut_distance_calc", 
+                   "pediatric",
+                   "drug_pathways_barplot.pdf")
+if(file.exists(fname)){
+  knitr::include_graphics(fname)
+}
+```
+
+Pediatric Drug-Gene Network (P7) {data-navmenu="Drug Recommendations"}
+===
+Row {data-height=700}
+---
+
+### POI vtest (Pediatric)
+
+```{r drug_gene_network_poi_vtest_pediatric, echo=FALSE, out.width = "100%", out.height="100%"}
+fname <- file.path(patient_output_dir, "mut_distance_calc", 
+                   "pediatric",
+                   "poi_vtest_dsea_go_mf_output.pdf")
+if(file.exists(fname)){
+  knitr::include_graphics(fname)
+}
+```
+
+Adult Drug Signatures (P7) {data-navmenu="Drug Recommendations"}
+===
+Row {data-height=700}
+---
+
+### Drug Signatures (Adult)
+
+```{r drug_signatures_adult, echo=FALSE, out.width = "100%", out.height="100%"}
+fname <- file.path(patient_output_dir, "mut_distance_calc", 
+                   "adult",
+                   "drug_pathways_barplot.pdf")
+if(file.exists(fname)){
+  knitr::include_graphics(fname)
+}
+```
+
+Adult Drug-Gene Network (P7) {data-navmenu="Drug Recommendations"}
+===
+Row {data-height=700}
+---
+
+### POI vtest (Adult)
+
+```{r drug_gene_network_poi_vtest_adult, echo=FALSE, out.width = "100%", out.height="100%"}
+fname <- file.path(patient_output_dir, "mut_distance_calc", 
+                   "adult",
+                   "poi_vtest_dsea_go_mf_output.pdf")
+if(file.exists(fname)){
+  knitr::include_graphics(fname)
+}
+```
