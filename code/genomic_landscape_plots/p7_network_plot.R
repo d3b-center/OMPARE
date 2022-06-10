@@ -16,8 +16,10 @@ transcriptome_drug_rec_output <- readRDS(fname)
 gene_mania <- read.delim(file.path(data_dir, 'GeneManiaNetwork.txt'), stringsAsFactors =F)
 
 # network plot
-network_plot_output <- network_plot(transcriptome_drug_rec_output, 
+fname <- file.path(output_dir, "network_plot_output.rds")
+network_plot_output <- network_plot(transcriptome_drug_rec_output = transcriptome_drug_rec_output, 
                                     geneMania = gene_mania,
-                                    filtered_mutations = mutDataFilt, 
-                                    filtered_fusions = fusData, 
+                                    filtered_mutations = filtered_maf, 
+                                    filtered_fusions = filtered_fusions, 
                                     rnaseq_analysis_output = rnaseq_analysis_output)
+saveRDS(network_plot_output, file = fname)

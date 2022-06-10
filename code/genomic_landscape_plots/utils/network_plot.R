@@ -8,34 +8,34 @@ network_plot <- function(transcriptome_drug_rec_output, geneMania, filtered_muta
   
   # filter to GTEx only
   transcriptome_drug_rec_output <- transcriptome_drug_rec_output %>%
-    filter(Comparison == "GTExBrain_1152")
+    filter(grepl("Normal", Comparison))
   
   # filtered mutations
-  if(exists('mutDataFilt')){
-    nodeGenesMut <- unique(mutDataFilt$Hugo_Symbol) 
+  if(!is.null(filtered_mutations)){
+    nodeGenesMut <- unique(filtered_mutations$Hugo_Symbol) 
   } else {
     nodeGenesMut <- ""
   }
   
   # filtered fusions
-  if(exists('fusData')){
-    fusion_head <- fusData %>%
-      mutate(HeadGene = strsplit(as.character(HeadGene), ",")) %>% 
-      unnest(HeadGene) %>%
-      mutate(HeadGene = gsub("[(].*", "", HeadGene)) %>%
-      .$HeadGene %>% unique()
-    fusion_tail <- fusData %>%
-      mutate(TailGene = strsplit(as.character(TailGene), ",")) %>% 
-      unnest(TailGene) %>%
-      mutate(TailGene = gsub("[(].*", "", TailGene)) %>%
-      .$TailGene %>% unique()
+  if(!is.null(filtered_fusions)){
+    fusion_head <- filtered_fusions %>%
+      mutate(gene1 = strsplit(as.character(gene1), ",")) %>% 
+      unnest(gene1) %>%
+      mutate(gene1 = gsub("[(].*", "", gene1)) %>%
+      .$gene1 %>% unique()
+    fusion_tail <- filtered_fusions %>%
+      mutate(gene2 = strsplit(as.character(gene2), ",")) %>% 
+      unnest(gene2) %>%
+      mutate(gene2 = gsub("[(].*", "", gene2)) %>%
+      .$gene2 %>% unique()
     nodeGenesFus <- c(fusion_head, fusion_tail) 
   } else {
     nodeGenesFus <- ""
   }
   
   # expression logfc
-  if(exists('rnaseq_analysis_output')){
+  if(!is.null(rnaseq_analysis_output)){
     rnaGenes <- rnaseq_analysis_output$expr.genes.logfc
     rnaGenes <- data.frame(gene = names(rnaGenes), logfc = rnaGenes)
     rnaGenes <- rnaGenes %>%
