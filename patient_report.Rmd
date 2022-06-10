@@ -4,12 +4,14 @@ output:
     orientation: rows
     theme: cosmo
 params: 
-  patient_dir: 
-    value: "results"
   set_title:
     value: "Patient Report"
+  patient:
+    value: "C3508206"
+  patient_dir:
+    value: "results/C3508206"
   snv_caller:
-    value: NULL
+    value: lancet
 editor_options: 
   chunk_output_type: console
 ---
@@ -24,13 +26,15 @@ title: `r params$set_title`
 }
 </style>
 
-```{r set_root_dir}
-# directories
-root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
-```
-
 ```{r load_libraries}
-source(file.path(root_dir, "code", "utils", "load_libraries.R"))
+suppressPackageStartupMessages({
+  library(flexdashboard)
+  library(DT)
+  library(knitr)
+  library(tidyverse)
+  library(plotly)
+  library(kableExtra)
+})
 ```
 
 ```{r set_options, include=FALSE, echo=FALSE}
@@ -39,20 +43,20 @@ knitr::opts_chunk$set(comment = NA)
 ```
 
 ```{r set_params}
+patient <- params$patient
 patient_dir <- params$patient_dir
 snv_caller <- params$snv_caller
+```
+
+```{r set_root_dir}
+# directories
+root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
+patient_output_dir <- file.path(patient_dir, "output")
 ```
 
 ```{r call_driver, echo=FALSE, message=FALSE, results="hide"}
 # function for viewing datatables
 source(file.path(root_dir, "code", "utils", "view_dt.R"))
-# call driver which calls rest of the scripts to generate outputs
-source(file.path(root_dir, "code", "driver.R"))
-```
-
-```{r}
-# set output directory
-output_dir <- file.path(patient_dir, "output")
 ```
 
 Key Clinical Findings (P1) {data-navmenu="Key Findings"}
@@ -68,10 +72,12 @@ knitr::include_graphics(file.path(root_dir, "figures", "d3b_logo.png"))
 ### Patient & Sample Information
 
 ```{r patient_info}
-x = kable(patient_sample_info(), format="html") %>%
+metadata <- file.path(patient_output_dir, "sample_info.tsv")
+metadata <- readr::read_tsv(metadata) %>%
+  filter(cohort_participant_id %in% patient)
+kable(metadata, format="html") %>%
   kable_styling(bootstrap_options = c("bordered", "condensed", "responsive")) %>% 
-  column_spec(c(1,3), bold=T, border_left = "2px solid gray", border_right = "2px solid gray")
-gsub("<thead>.*</thead>", "", x)
+  column_spec(c(1,2), bold=T, border_left = "2px solid gray", border_right = "2px solid gray")
 ```
 
 Row {data-height=500}
@@ -80,7 +86,7 @@ Row {data-height=500}
 ### Key Clinical Findings
     
 ```{r key_findings}
-fname <- file.path(output_dir, "tier_classification", paste0("key_clinical_findings_output_", snv_caller, ".tsv"))
+fname <- file.path(patient_output_dir, "tier_classification", paste0("key_clinical_findings_output_", snv_caller, ".tsv"))
 if(file.exists(fname)){
   key_clinical_findings_output <- read_tsv(fname)
   view_dt_minimal(key_clinical_findings_output)
@@ -93,7 +99,9 @@ Row {data-height=300}
 ### Disease Specific Information
     
 ```{r disease_specific_info}
-if(nrow(disease_specific_information_output) >= 1){
+fname <- file.path(patient_output_dir, "disease_specific_information_output.rds")
+if(file.exists(fname)){
+  disease_specific_information_output <- readRDS(fname)
   DT::datatable(disease_specific_information_output, 
                 extensions = "FixedColumns",
                 class = "cell-border stripe",
@@ -107,7 +115,7 @@ if(nrow(disease_specific_information_output) >= 1){
 ### Cancer Germline Variants
 
 ```{r filtered_germline_vars}
-fname <- file.path(output_dir, "filtered_germline_vars.rds")
+fname <- file.path(patient_output_dir, "filtered_germline_vars.rds")
 if(file.exists(fname)){
   filtered_germ_vars <- readRDS(fname)
   DT::datatable(filtered_germ_vars, 
@@ -123,7 +131,9 @@ if(file.exists(fname)){
 ### Genomic Summary
     
 ```{r genomic_summary}
-if(nrow(genomic_summary_output) >= 1){
+fname <- file.path(patient_output_dir, "genomic_summary_output.rds")
+if(file.exists(fname)){
+  genomic_summary_output <- readRDS(fname)
   DT::datatable(genomic_summary_output, 
                 extensions = "FixedColumns",
                 class = "cell-border stripe",
@@ -142,7 +152,7 @@ Row {data-height=700}
 ### All Findings
     
 ```{r all_findings}
-fname <- file.path(output_dir, "tier_classification", paste0("all_findings_output_", snv_caller, ".tsv"))
+fname <- file.path(patient_output_dir, "tier_classification", paste0("all_findings_output_", snv_caller, ".tsv"))
 if(file.exists(fname)){
   all_findings_output <- read_tsv(fname)
   view_dt_minimal(all_findings_output)
@@ -157,7 +167,7 @@ Row {data-height700}
 ### Gene Alterations 
     
 ```{r plot_genes, echo=FALSE, out.width = "100%", out.height="100%"}
-fname <- file.path(output_dir, "rnaseq_analysis", "diffexpr_genes_barplot_output.pdf")
+fname <- file.path(patient_output_dir, "rnaseq_analysis", "diffexpr_genes_barplot_output.pdf")
 if(file.exists(fname)){
  knitr::include_graphics(fname) 
 }
@@ -171,21 +181,21 @@ Row {data-height=700}
 ### Pathway Alterations
 
 ```{r plot_pathways, echo=FALSE, out.width = "100%", out.height="100%"}
-fname <- file.path(output_dir, "rnaseq_analysis", "diffreg_pathways_barplot_output.pdf")
+fname <- file.path(patient_output_dir, "rnaseq_analysis", "diffreg_pathways_barplot_output.pdf")
 if(file.exists(fname)){
  knitr::include_graphics(fname) 
 }
 ```
 
-Network Alterations: PBTA HGAT (P2) {data-navmenu="Transcriptomic Alterations"}
+Network Alterations: (P2) {data-navmenu="Transcriptomic Alterations"}
 ===
 Row {data-height=700}
 ---
 
-### Pathway Alterations (PBTA)
+### Network Alterations (vs Pediatric tumors)
 
-```{r network_alt_pbta_hgg, echo=FALSE, out.width = "100%", out.height="100%"}
-fname <- file.path(output_dir, "drug_recommendations", "ora_plots.pdf")
+```{r network_alt_pediatric, echo=FALSE, out.width = "100%", out.height="100%"}
+fname <- file.path(patient_output_dir, "drug_recommendations", "ora_plots.pdf")
 if(file.exists(fname)){
  knitr::include_graphics(fname) 
 }
@@ -199,7 +209,7 @@ Row {data-height=700}
 ### Tumor Mutational Signatures
 
 ```{r tm_signature}
-fname <- file.path(output_dir, "tmb_analysis", "tumor_signature_output.rds")
+fname <- file.path(patient_output_dir, "tmb_analysis", "tumor_signature_output.rds")
 if(file.exists(fname)){
   tumor_signature_output <- readRDS(fname)
   ggplotly(tumor_signature_output)
@@ -209,7 +219,7 @@ if(file.exists(fname)){
 ### Tumor Mutational Burden
 
 ```{r tm_burden, fig.width = 11, fig.height = 7}
-fname <- file.path(output_dir, "tmb_analysis", "tmb_profile_output.rds")
+fname <- file.path(patient_output_dir, "tmb_analysis", "tmb_profile_output.rds")
 if(file.exists(fname)){
   tmb_profile_output <- readRDS(fname)
   ggplotly(tmb_profile_output)
@@ -221,10 +231,10 @@ Immune Profile: Pediatric (P4) {data-navmenu="Immune Analyses"}
 Row {data-height=700}
 ---
 
-### Immune Profile (with PBTA)
+### Immune Profile (vs Pediatric tumors)
 
 ```{r immune_profile_pbta, echo=FALSE, out.width = "100%", out.height="100%"}
-fname <- file.path(output_dir, "immune_analysis", "immune_scores_pediatric.pdf")
+fname <- file.path(patient_output_dir, "immune_analysis", "immune_scores_pediatric.pdf")
 if(file.exists(fname)){
   knitr::include_graphics(fname) 
 }
@@ -235,10 +245,10 @@ Immune Profile: Adult (P4) {data-navmenu="Immune Analyses"}
 Row {data-height=700}
 ---
 
-### Immune Profile (with TCGA GBM)
+### Immune Profile (with Adult tumors)
 
 ```{r immune_profile_tcga, echo=FALSE, out.width = "100%", out.height="100%"}
-fname <- file.path(output_dir, "immune_analysis", "immune_scores_adult.pdf")
+fname <- file.path(patient_output_dir, "immune_analysis", "immune_scores_adult.pdf")
 if(file.exists(fname)){
   knitr::include_graphics(fname) 
 }
@@ -249,16 +259,16 @@ Tumor Inflammation Signature (P4) {data-navmenu="Immune Analyses"}
 Row {data-height=700}
 ---
 
-### Tumor Inflammation Signature Profile (TCGA + PBTA)
+### Tumor Inflammation Signature Profile
 
 ```{r tis_profile, echo=FALSE, out.width = "100%", out.height="100%"}
-fname <- file.path(output_dir, "immune_analysis", "tis_scores.pdf")
+fname <- file.path(patient_output_dir, "immune_analysis", "tis_scores.pdf")
 if(file.exists(fname)){
   knitr::include_graphics(fname) 
 }
 ```
 
-Transcriptomically Similar Samples (PBTA) (P5) {data-navmenu="Pediatric Tumors Analysis"}
+Transcriptomically Similar Samples (P5) {data-navmenu="Pediatric Tumors Analysis"}
 ===
 Row {data-height=700}
 ---
@@ -266,7 +276,7 @@ Row {data-height=700}
 ### Nearest-Neighbor Analysis
 
 ```{r dimred_plot_pbta, fig.width = 14, fig.height = 10}
-fname <- file.path(output_dir, "transcriptomically_similar_analysis", "dim_reduction_plot_pediatric.rds")
+fname <- file.path(patient_output_dir, "transcriptomically_similar_analysis", "dim_reduction_plot_pediatric.rds")
 if(file.exists(fname)){
   dim_reduction_plot_pediatric <- readRDS(fname)
   ggplotly(dim_reduction_plot_pediatric, tooltip = "text")
@@ -276,7 +286,7 @@ if(file.exists(fname)){
 ### Transcriptomically Similar Patients
 
 ```{r similar_patients_pbta}
-fname <- file.path(output_dir, "transcriptomically_similar_analysis",
+fname <- file.path(patient_output_dir, "transcriptomically_similar_analysis",
                    "transciptomically_similar_pediatric.rds")
 if(file.exists(fname)){
   transciptomically_similar_pediatric <- readRDS(fname)
@@ -284,15 +294,15 @@ if(file.exists(fname)){
 }
 ```
 
-Survival (PBTA HGAT) (P5) {data-navmenu="Pediatric Tumors Analysis"}
+Survival (P5) {data-navmenu="Pediatric Tumors Analysis"}
 ===
 Row {data-height=700}
 ---
 
-### Survival (PBTA HGAT)
+### Survival (Transcriptomically Similar Patients)
 
 ```{r km_plot_pbta, echo=FALSE, out.width = "100%", out.height="100%"}
-fname <- file.path(output_dir, "survival_analysis", "kaplan_meier_pediatric.pdf")
+fname <- file.path(patient_output_dir, "survival_analysis", "kaplan_meier_pediatric.pdf")
 if(file.exists(fname)){
   knitr::include_graphics(fname)
 }
@@ -306,21 +316,21 @@ Row {data-height=700}
 ### Immune Profile (Transcriptomically Similar Patients)
 
 ```{r immune_profile_gs, echo=FALSE, out.width = "100%", out.height="100%"}
-fname <- file.path(output_dir, "immune_analysis", "immune_scores_topcor_pediatric.pdf")
+fname <- file.path(patient_output_dir, "immune_analysis", "immune_scores_topcor_pediatric.pdf")
 if(file.exists(fname)){
   knitr::include_graphics(fname)
 }
 ```
 
-ssGSEA (PBTA HGAT) (P5) {data-navmenu="Pediatric Tumors Analysis"}
+ssGSEA (P5) {data-navmenu="Pediatric Tumors Analysis"}
 ===
 Row {data-height=700}
 ---
 
-### ssGSEA (PBTA HGAT samples)
+### ssGSEA (Transcriptomically Similar Patients)
 
 ```{r ssgsea_hgg, echo=FALSE, out.width = "100%", out.height="100%"}
-fname <- file.path(output_dir, "transcriptomically_similar_analysis", "ssgsea_scores_pediatric.pdf")
+fname <- file.path(patient_output_dir, "transcriptomically_similar_analysis", "ssgsea_scores_pediatric.pdf")
 if(file.exists(fname)){
   knitr::include_graphics(fname) 
 }
@@ -331,10 +341,10 @@ Shared pathways (P5) {data-navmenu="Pediatric Tumors Analysis"}
 Row {data-height=500}
 ---
 
-### Shared pathways 
+### Shared pathways (Transcriptomically Similar Patients)
 
 ```{r shared_pathways_pediatric, echo=FALSE, out.width = "100%", out.height="100%"}
-fname <- file.path(output_dir, "transcriptomically_similar_analysis", "pathway_analysis_pediatric.pdf")
+fname <- file.path(patient_output_dir, "transcriptomically_similar_analysis", "pathway_analysis_pediatric.pdf")
 if(file.exists(fname)){
   knitr::include_graphics(fname) 
 }
@@ -348,7 +358,7 @@ Row {data-height=500}
 ### Shared Mutations (Transcriptomically Similar Patients)
 
 ```{r shared_mutations_pediatric, echo=FALSE, out.width = "100%", out.height="100%"}
-fname <- file.path(output_dir, "transcriptomically_similar_analysis", "mutational_shared_pediatric.pdf")
+fname <- file.path(patient_output_dir, "transcriptomically_similar_analysis", "shared_mutations_pediatric.pdf")
 if(file.exists(fname)){
   knitr::include_graphics(fname) 
 }
@@ -362,7 +372,7 @@ Row {data-height=500}
 ### Shared Mutations AA changes (Transcriptomically Similar Patients)
 
 ```{r lollipop_shared_pediatric, echo=FALSE, out.width = "100%", out.height="100%"}
-fname <- file.path(output_dir, "transcriptomically_similar_analysis", "lollipop_shared_pediatric.pdf")
+fname <- file.path(patient_output_dir, "transcriptomically_similar_analysis", "shared_mutations_lollipop_pediatric.pdf")
 if(file.exists(fname)){
   knitr::include_graphics(fname) 
 }
@@ -376,7 +386,7 @@ Row {data-height=500}
 ### Recurrent Mutations (Transcriptomically Similar Patients)
 
 ```{r recurrent_mutations_pediatric, echo=FALSE, out.width = "100%", out.height="100%"}
-fname <- file.path(output_dir, "transcriptomically_similar_analysis", "mutational_recurrent_pediatric.pdf")
+fname <- file.path(patient_output_dir, "transcriptomically_similar_analysis", "recurrent_mutations_pediatric.pdf")
 if(file.exists(fname)){
   knitr::include_graphics(fname) 
 }
@@ -390,7 +400,7 @@ Row {data-height=500}
 ### Recurrent Mutations AA changes (Transcriptomically Similar Patients)
 
 ```{r lollipop_recurrent_pediatric, echo=FALSE, out.width = "100%", out.height="100%"}
-fname <- file.path(output_dir, "transcriptomically_similar_analysis", "lollipop_recurrent_pediatric.pdf")
+fname <- file.path(patient_output_dir, "transcriptomically_similar_analysis", "recurrent_mutations_lollipop_pediatric.pdf")
 if(file.exists(fname)){
   knitr::include_graphics(fname) 
 }
@@ -404,7 +414,7 @@ Row {data-height=500}
 ### Shared CNV (Transcriptomically Similar Patients)
 
 ```{r shared_cnv_pediatric, echo=FALSE, out.width = "100%", out.height="100%"}
-fname <- file.path(output_dir, "transcriptomically_similar_analysis", "mutational_cnv_shared_pediatric.pdf")
+fname <- file.path(patient_output_dir, "transcriptomically_similar_analysis", "shared_mutational_cnv_pediatric.pdf")
 if(file.exists(fname)){
   knitr::include_graphics(fname) 
 }
@@ -418,15 +428,15 @@ Row {data-height=500}
 ### Recurrent CNV (Transcriptomically Similar Patients)
 
 ```{r recurrent_cnv_pediatric, echo=FALSE, out.width = "100%", out.height="100%"}
-fname <- file.path(output_dir, "transcriptomically_similar_analysis",
-                   "mutational_cnv_recurrent_pediatric.pdf")
+fname <- file.path(patient_output_dir, "transcriptomically_similar_analysis",
+                   "recurrent_mutational_cnv_pediatric.pdf")
 if(file.exists(fname)){
   knitr::include_graphics(fname) 
 }
 ```
 
 
-Transcriptomically Similar Samples (TCGA) (P6) {data-navmenu="Adult Tumors Analysis"}
+Transcriptomically Similar Samples (P6) {data-navmenu="Adult Tumors Analysis"}
 ===
 Row {data-height=700}
 ---
@@ -434,7 +444,7 @@ Row {data-height=700}
 ### Nearest-Neighbor Analysis
 
 ```{r dimred_plot_tcga, fig.width = 14, fig.height = 10}
-fname <- file.path(output_dir, "transcriptomically_similar_analysis", "dim_reduction_plot_adult.rds")
+fname <- file.path(patient_output_dir, "transcriptomically_similar_analysis", "dim_reduction_plot_adult.rds")
 if(file.exists(fname)){
   dim_reduction_plot_adult <- readRDS(fname)
   ggplotly(dim_reduction_plot_adult, tooltip = "text")
@@ -444,22 +454,22 @@ if(file.exists(fname)){
 ### Transcriptomically Similar Patients
 
 ```{r similar_patients_tcga}
-fname <- file.path(output_dir, "transcriptomically_similar_analysis", "transciptomically_similar_adult.rds")
+fname <- file.path(patient_output_dir, "transcriptomically_similar_analysis", "transciptomically_similar_adult.rds")
 if(file.exists(fname)){
   transciptomically_similar_adult <- readRDS(fname)
   view_dt_minimal(transciptomically_similar_adult)
 }
 ```
 
-Survival (TCGA) (6) {data-navmenu="Adult Tumors Analysis"}
+Survival (6) {data-navmenu="Adult Tumors Analysis"}
 ===
 Row {data-height=700}
 ---
 
-### Survival (TCGA)
+### Survival (Transcriptomically Similar Patients)
 
 ```{r km_plot_tcga, echo=FALSE, out.width = "100%", out.height="100%"}
-fname <- file.path(output_dir, "survival_analysis", "kaplan_meier_adult.pdf")
+fname <- file.path(patient_output_dir, "survival_analysis", "kaplan_meier_adult.pdf")
 if(file.exists(fname)){
   knitr::include_graphics(fname)
 }
@@ -470,10 +480,10 @@ Shared pathways (P6) {data-navmenu="Adult Tumors Analysis"}
 Row {data-height=500}
 ---
 
-### Shared pathways 
+### Shared pathways (Transcriptomically Similar Patients)
 
 ```{r shared_pathways_adult, echo=FALSE, out.width = "100%", out.height="100%"}
-fname <- file.path(output_dir, "transcriptomically_similar_analysis", "pathway_analysis_adult.pdf")
+fname <- file.path(patient_output_dir, "transcriptomically_similar_analysis", "pathway_analysis_adult.pdf")
 if(file.exists(fname)){
   knitr::include_graphics(fname) 
 }
@@ -487,7 +497,7 @@ Row {data-height=500}
 ### Shared Mutations (Transcriptomically Similar Patients)
 
 ```{r shared_mutations_adult, echo=FALSE, out.width = "100%", out.height="100%"}
-fname <- file.path(output_dir, "transcriptomically_similar_analysis", "mutational_shared_adult.pdf")
+fname <- file.path(patient_output_dir, "transcriptomically_similar_analysis", "shared_mutations_adult.pdf")
 if(file.exists(fname)){
   knitr::include_graphics(fname) 
 }
@@ -501,7 +511,7 @@ Row {data-height=500}
 ### Shared Mutations AA changes (Transcriptomically Similar Patients)
 
 ```{r lollipop_shared_adult, echo=FALSE, out.width = "100%", out.height="100%"}
-fname <- file.path(output_dir, "transcriptomically_similar_analysis", "lollipop_shared_adult.pdf")
+fname <- file.path(patient_output_dir, "transcriptomically_similar_analysis", "shared_mutations_lollipop_adult.pdf")
 if(file.exists(fname)){
   knitr::include_graphics(fname) 
 }
@@ -515,7 +525,7 @@ Row {data-height=500}
 ### Recurrent Mutations (Transcriptomically Similar Patients)
 
 ```{r recurrent_mutations_adult, echo=FALSE, out.width = "100%", out.height="100%"}
-fname <- file.path(output_dir, "transcriptomically_similar_analysis", "mutational_recurrent_adult.pdf")
+fname <- file.path(patient_output_dir, "transcriptomically_similar_analysis", "recurrent_mutations_adult.pdf")
 if(file.exists(fname)){
   knitr::include_graphics(fname) 
 }
@@ -529,7 +539,7 @@ Row {data-height=500}
 ### Recurrent Mutations AA changes (Transcriptomically Similar Patients)
 
 ```{r lollipop_recurrent_adult, echo=FALSE, out.width = "100%", out.height="100%"}
-fname <- file.path(output_dir, "transcriptomically_similar_analysis", "lollipop_recurrent_adult.pdf")
+fname <- file.path(patient_output_dir, "transcriptomically_similar_analysis", "recurrent_mutations_lollipop_adult.pdf")
 if(file.exists(fname)){
   knitr::include_graphics(fname) 
 }
@@ -543,7 +553,7 @@ Row {data-height=500}
 ### Shared CNV (Transcriptomically Similar Patients)
 
 ```{r shared_cnv_adult, echo=FALSE, out.width = "100%", out.height="100%"}
-fname <- file.path(output_dir, "transcriptomically_similar_analysis", "mutational_cnv_shared_adult.pdf")
+fname <- file.path(patient_output_dir, "transcriptomically_similar_analysis", "shared_mutational_cnv_adult.pdf")
 if(file.exists(fname)){
   knitr::include_graphics(fname) 
 }
@@ -557,7 +567,7 @@ Row {data-height=500}
 ### Recurrent CNV (Transcriptomically Similar Patients)
 
 ```{r recurrent_cnv_adult, echo=FALSE, out.width = "100%", out.height="100%"}
-fname <- file.path(output_dir, "transcriptomically_similar_analysis", "mutational_cnv_recurrent_adult.pdf")
+fname <- file.path(patient_output_dir, "transcriptomically_similar_analysis", "recurrent_mutational_cnv_adult.pdf")
 if(file.exists(fname)){
   knitr::include_graphics(fname) 
 }
@@ -571,7 +581,7 @@ Row {data-height=700}
 ### Circos
 
 ```{r circos, fig.width = 7, fig.height = 6}
-fname <- file.path(output_dir, "genomic_landscape_plots", "circos_plot.png")
+fname <- file.path(patient_output_dir, "genomic_landscape_plots", "circos_plot.png")
 if(file.exists(fname)){
  knitr::include_graphics(fname)
 }
@@ -585,7 +595,9 @@ Row {data-height=700}
 ### Network View
 
 ```{r plot_network, fig.width = 8, fig.height = 6}
-if(exists("network_plot_output")){
+fname <- file.path(patient_output_dir, "genomic_landscape_plots", "network_plot_output.rds")
+if(file.exists(fname)){
+  network_plot_output <- readRDS(fname)
   network_plot_output
 }
 ```
@@ -605,34 +617,6 @@ if(file.exists(fname)){
 }
 ```
 
-<!-- PHGG: Expression and CNV Heatmap  (P8) {data-navmenu="Heatmaps"} -->
-<!-- === -->
-<!-- Row {data-height=700} -->
-<!-- --- -->
-
-<!-- ### Expression-CNV Heatmap (PHGG) -->
-
-<!-- ```{r heatmap_phgg, echo=FALSE} -->
-<!-- fname <- file.path(patient_dir, "output", "complexheatmap_phgg.png") -->
-<!-- if(file.exists(fname)){ -->
-<!--   knitr::include_graphics(fname)   -->
-<!-- } -->
-<!-- ``` -->
-
-<!-- CGS: Expression and CNV Heatmap (P8) {data-navmenu="Heatmaps"} -->
-<!-- === -->
-<!-- Row -->
-<!-- --- -->
-
-<!-- ### Expression-CNV Heatmap (CGS) -->
-
-<!-- ```{r heatmap_cgs, echo=FALSE} -->
-<!-- fname <- file.path(patient_dir, "output", "complexheatmap_cgs.png") -->
-<!-- if(file.exists(fname)){ -->
-<!--   knitr::include_graphics(fname) -->
-<!-- } -->
-<!-- ``` -->
-
 Oncogrid (HGG-DMG)  (P9)
 ===
 Row {data-height=700}
@@ -641,7 +625,7 @@ Row {data-height=700}
 ### Oncogrid (HGG-DMG)
 
 ```{r oncogrid_hgg_dmg, echo=FALSE, out.width = "100%", out.height="100%"}
-fname <- file.path(output_dir, "oncogrid_analysis", "complexheatmap_oncogrid.pdf")
+fname <- file.path(patient_output_dir, "oncogrid_analysis", "complexheatmap_oncogrid.pdf")
 if(file.exists(fname)){
   knitr::include_graphics(fname)
 }
@@ -655,7 +639,10 @@ Row {data-height=700}
 ### Drug Recommendations
 
 ```{r targeted_findings}
-if(exists("oncokb_output")){
+fname <- file.path(patient_output_dir, "oncokb_analysis",
+                   paste0('oncokb_merged_', snv_caller, '_annotated_actgenes.txt'))
+if(file.exists(fname)){
+  oncokb_output <- read.delim(fname)
   view_dt_minimal(oncokb_output)
 }
 ```
@@ -668,7 +655,7 @@ Row {data-height=700}
 ### DGE
 
 ```{r transcriptome_drug_rec}
-fname <- file.path(output_dir, "drug_recommendations", "transcriptome_drug_rec.rds")
+fname <- file.path(patient_output_dir, "drug_recommendations", "transcriptome_drug_rec.rds")
 if(file.exists(fname)){
   transcriptome_drug_rec_output <- readRDS(fname)
   view_dt_minimal(transcriptome_drug_rec_output)
@@ -683,7 +670,7 @@ Row {data-height=700}
 ### DGE Plots
 
 ```{r dge_plots, echo=FALSE, out.width = "100%", out.height="100%"}
-fname <- file.path(output_dir, "drug_recommendations", "drug_dge_density_plots", 
+fname <- file.path(patient_output_dir, "drug_recommendations", "drug_dge_density_plots", 
                    "top_drug_dge_density_plots.pdf")
 if(file.exists(fname)){
  knitr::include_graphics(fname)
@@ -698,49 +685,49 @@ Row {data-height=700}
 ### Drug Signatures 
 
 ```{r drug_signatures, echo=FALSE, out.width = "100%", out.height="100%"}
-fname <- file.path(output_dir, "drug_recommendations", "drug_pathways_barplot.pdf")
+fname <- file.path(patient_output_dir, "drug_recommendations", "drug_pathways_barplot.pdf")
 if(file.exists(fname)){
   knitr::include_graphics(fname)
 }
 ```
 
-Drug-Gene Network: GTEx Brain (P10) {data-navmenu="Drug Recommendations"}
+Drug-Gene Network: Normal tissues (P10) {data-navmenu="Drug Recommendations"}
 ===
 Row {data-height=700}
 ---
 
-### GTEx Brain
+### Normal tissues
 
-```{r drug_gene_network_gtex, echo=FALSE, out.width = "100%", out.height="100%"}
-fname <- file.path(output_dir, "drug_recommendations", "GTExBrain_dsea_go_mf_output.pdf")
+```{r drug_gene_network_normal_tissue, echo=FALSE, out.width = "100%", out.height="100%"}
+fname <- file.path(patient_output_dir, "drug_recommendations", "patient_vs_normals_dsea_go_mf_output.pdf")
 if(file.exists(fname)){
   knitr::include_graphics(fname)
 }
 ```
 
-Drug-Gene Network: PBTA HGAT (P10) {data-navmenu="Drug Recommendations"}
+Drug-Gene Network: Pediatric tumors (P10) {data-navmenu="Drug Recommendations"}
 ===
 Row {data-height=700}
 ---
 
-### PBTA HGAT
+### Pediatric tumors
 
-```{r drug_gene_network_pbta_hgg, echo=FALSE, out.width = "100%", out.height="100%"}
-fname <- file.path(output_dir, "drug_recommendations", "PBTA_HGG_dsea_go_mf_output.pdf")
+```{r drug_gene_network_pediatric, echo=FALSE, out.width = "100%", out.height="100%"}
+fname <- file.path(patient_output_dir, "drug_recommendations", "patient_vs_pediatric_dsea_go_mf_output.pdf")
 if(file.exists(fname)){
  knitr::include_graphics(fname) 
 }
 ```
 
-Drug-Gene Network: PBTA (P10) {data-navmenu="Drug Recommendations"}
+Drug-Gene Network: Adult tumors (P10) {data-navmenu="Drug Recommendations"}
 ===
 Row {data-height=700}
 ---
 
-### PBTA
+### Adult tumors
 
-```{r drug_gene_network_pbta, echo=FALSE, out.width = "100%", out.height="100%"}
-fname <- file.path(output_dir, "drug_recommendations", "PBTA_ALL_dsea_go_mf_output.pdf")
+```{r drug_gene_network_adult, echo=FALSE, out.width = "100%", out.height="100%"}
+fname <- file.path(patient_output_dir, "drug_recommendations", "patient_vs_adult_dsea_go_mf_output.pdf")
 if(file.exists(fname)){
   knitr::include_graphics(fname)
 }
@@ -754,7 +741,7 @@ Row {data-height=700}
 ### Synergistic Drug Pairs
 
 ```{r synergistic_drug_pairs, echo=FALSE, out.width = "100%", out.height="100%"}
-fname <- file.path(output_dir, "drug_synergy", "combined_qSig_synergy_score_top10.pdf")
+fname <- file.path(patient_output_dir, "drug_synergy", "combined_qSig_synergy_score_top10.pdf")
 if(file.exists(fname)){
   knitr::include_graphics(fname)
 }
