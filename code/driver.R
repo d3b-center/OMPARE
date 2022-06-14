@@ -279,19 +279,19 @@ run_driver <- function(patient, patient_cancer_type, snv_caller, patient_dir){
   # genomic landscape plots
   source(file.path(code_dir, "genomic_landscape_plots", "p7_circos_plot.R"))
   
-  ## page 9
+  ## page 8
   output_dir <- file.path(patient_dir, "output", "oncogrid_analysis")
   fname <- file.path(output_dir, "complexheatmap_oncogrid.pdf")
   if(!file.exists(fname)){
     source(file.path(code_dir, "oncogrid_analysis", "p9_oncogrid.R"))
   }
   
-  ## page 10
+  ## page 9
   # targeted findings
   output_dir <- file.path(patient_dir, "output", "oncokb_analysis")
   fname <- file.path(output_dir, paste0('oncokb_merged_', snv_caller, '_annotated_actgenes.txt'))
   if(!file.exists(fname)){
-    source(file.path(code_dir, "oncokb_analysis", 'p10_run_oncokb.R'))
+    source(file.path(code_dir, "oncokb_analysis", 'p9_run_oncokb.R'))
   } else {
     oncokb_output <- read.delim(fname, stringsAsFactors = F)
   }

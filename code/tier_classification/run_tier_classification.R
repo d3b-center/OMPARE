@@ -25,6 +25,12 @@ if(snv_caller != "all"){
   oncokb_anno <- readr::read_tsv(file.path(input_dir, paste0("oncokb_consensus_annotated.txt")))
 }
 
+# combined and add CITATIONS field
+oncokb_anno <- oncokb_anno %>%
+  unite(., col = "CITATIONS",  MUTATION_EFFECT_CITATIONS, DX_CITATIONS, PX_CITATIONS, TX_CITATIONS, na.rm=TRUE, sep = ", ") %>% # create comma separated values in case of HGVSp and "Oncogenic Mutations"
+  mutate(CITATIONS = strsplit(CITATIONS, ", ")) %>% 
+  unnest(CITATIONS)  # split into new rows
+  
 # Read in cancer genes list from OMPARE knowledge base
 cancer_genes <- readRDS(file.path(data_dir, 'cancer_gene_list.rds'))
 

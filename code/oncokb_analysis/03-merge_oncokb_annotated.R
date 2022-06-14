@@ -48,7 +48,7 @@ mutation <- mutation %>%
   unite(., col = "ALTERATION",  ALTERATION, ALTERATION_v2, na.rm=TRUE, sep = ", ") %>% # create comma separated values in case of HGVSp and "Oncogenic Mutations"
   mutate(ALTERATION = strsplit(ALTERATION, ", ")) %>% 
   unnest(ALTERATION) %>% # split into new rows
-  unite(., col = "CITATIONS",  DX_CITATIONS, PX_CITATIONS, TX_CITATIONS, na.rm=TRUE, sep = ", ") %>% # create comma separated values in case of HGVSp and "Oncogenic Mutations"
+  unite(., col = "CITATIONS",  MUTATION_EFFECT_CITATIONS, DX_CITATIONS, PX_CITATIONS, TX_CITATIONS, na.rm=TRUE, sep = ", ") %>% # create comma separated values in case of HGVSp and "Oncogenic Mutations"
   mutate(CITATIONS = strsplit(CITATIONS, ", ")) %>% 
   unnest(CITATIONS) %>% # split into new rows
   dplyr::select(GENE, ALTERATION, GENE_IN_ONCOKB, VARIANT_IN_ONCOKB, ONCOGENIC, MUTATION_EFFECT, HIGHEST_LEVEL, CITATIONS, HIGHEST_DX_LEVEL, HIGHEST_PX_LEVEL) %>%
@@ -63,7 +63,7 @@ cnv <- cnv %>%
   unite(., col = "ALTERATION",  ALTERATION, ALTERATION_v2, na.rm=TRUE, sep = ", ") %>% # create comma separated values of "Amplification/Deletion" and "Oncogenic Mutations"
   mutate(ALTERATION = strsplit(ALTERATION, ", ")) %>% 
   unnest(ALTERATION) %>% # split into new rows
-  unite(., col = "CITATIONS",  DX_CITATIONS, PX_CITATIONS, TX_CITATIONS, na.rm=TRUE, sep = ", ") %>% # create comma separated values in case of HGVSp and "Oncogenic Mutations"
+  unite(., col = "CITATIONS",  MUTATION_EFFECT_CITATIONS, DX_CITATIONS, PX_CITATIONS, TX_CITATIONS, na.rm=TRUE, sep = ", ") %>% # create comma separated values in case of HGVSp and "Oncogenic Mutations"
   mutate(CITATIONS = strsplit(CITATIONS, ", ")) %>% 
   unnest(CITATIONS) %>% # split into new rows
   dplyr::select(GENE,	ALTERATION, GENE_IN_ONCOKB, VARIANT_IN_ONCOKB, ONCOGENIC, MUTATION_EFFECT, HIGHEST_LEVEL, CITATIONS, HIGHEST_DX_LEVEL, HIGHEST_PX_LEVEL) %>%
@@ -75,7 +75,7 @@ fusion <- fusion %>%
   mutate(GENE = strsplit(as.character(Fusion), "-")) %>% 
   unnest(GENE) %>%
   mutate(ALTERATION = 'Fusion') %>%
-  unite(., col = "CITATIONS",  DX_CITATIONS, PX_CITATIONS, TX_CITATIONS, na.rm=TRUE, sep = ", ") %>% # create comma separated values in case of HGVSp and "Oncogenic Mutations"
+  unite(., col = "CITATIONS",  MUTATION_EFFECT_CITATIONS, DX_CITATIONS, PX_CITATIONS, TX_CITATIONS, na.rm=TRUE, sep = ", ") %>% # create comma separated values in case of HGVSp and "Oncogenic Mutations"
   mutate(CITATIONS = strsplit(CITATIONS, ", ")) %>% 
   unnest(CITATIONS) %>% # split into new rows
   dplyr::select(GENE,	ALTERATION, GENE_IN_ONCOKB, VARIANT_IN_ONCOKB, ONCOGENIC, MUTATION_EFFECT, HIGHEST_LEVEL, CITATIONS, HIGHEST_DX_LEVEL, HIGHEST_PX_LEVEL) %>%

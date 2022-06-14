@@ -86,7 +86,7 @@ for(i in 1:length(snv_caller)){
   source(driver_script)
   run_driver(patient = patient, 
              patient_cancer_type = patient_cancer_type, 
-             snv_caller = snv_caller, 
+             snv_caller = snv_caller[i], 
              patient_dir = patient_dir)
   
   # generate html reports
