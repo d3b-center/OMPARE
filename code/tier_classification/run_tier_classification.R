@@ -24,6 +24,8 @@ if(snv_caller != "all"){
 } else {
   oncokb_anno <- readr::read_tsv(file.path(input_dir, paste0("oncokb_consensus_annotated.txt")))
 }
+rnaseq_analysis_output <- readRDS(file.path(patient_dir, "output", "rnaseq_analysis", "rnaseq_analysis_output.rds"))
+all_findings_output <- readRDS(file.path(patient_dir, "output", paste0("all_findings_output_", snv_caller, ".rds")))
 
 # combined and add CITATIONS field
 oncokb_anno <- oncokb_anno %>%

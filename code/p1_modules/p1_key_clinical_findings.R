@@ -6,6 +6,10 @@ module_dir <- file.path(root_dir, "code", "p1_modules")
 output_dir <- file.path(patient_dir, "output")
 dir.create(output_dir, recursive = T, showWarnings = F)
 
+# input data
+rnaseq_analysis_output <- readRDS(file.path(output_dir, "rnaseq_analysis", "rnaseq_analysis_output.rds"))
+all_findings_output <- readRDS(file.path(output_dir, paste0("all_findings_output_", snv_caller, ".rds")))
+
 # source functions
 source(file.path(module_dir, "utils", 'key_clinical_findings.R'))
 

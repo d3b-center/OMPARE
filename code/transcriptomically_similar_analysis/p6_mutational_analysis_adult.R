@@ -10,13 +10,16 @@ source(file.path(module_dir, "utils", 'recurrent_alterations_plots.R'))
 source(file.path(module_dir, "utils", 'shared_alterations_plots.R'))
 
 # load inputs
+adult_cancer_dir <- file.path(data_dir, "adult_data")
 nn_tpm_input <- file.path(output_dir, "adult_nn_tpm.rds")
 nn_tpm_input <- readRDS(nn_tpm_input)
+all_findings_output <- readRDS(file.path(patient_dir, "output", paste0("all_findings_output_", snv_caller, ".rds")))
+key_clinical_findings_output <- readRDS(file.path(patient_dir, "output", paste0("key_clinical_findings_output_", snv_caller, ".rds")))
 adult_patient_clinical <-  file.path(output_dir, "adult_patient_combined_clinical_input.rds")
 adult_patient_clinical <- readRDS(adult_patient_clinical)
 
 # recurrent alterations
-fname <- file.path(output_dir, "mutational_analysis_adult.rds")
+fname <- file.path(output_dir, paste0(snv_caller, "_mutational_analysis_adult.rds"))
 mutational_analysis_adult <- mutational_analysis(nn_tpm_input = nn_tpm_input, 
                                                  ref_cancer_dir = adult_cancer_dir,
                                                  all_findings_output = all_findings_output,
@@ -33,11 +36,11 @@ recurrent_alterations_plots(ref_cancer_dir = adult_cancer_dir,
                             patient_maf = filtered_maf, 
                             patient_cnv = filtered_cnv, 
                             mutational_analysis_output = mutational_analysis_adult, 
-                            prefix = "adult")
+                            suffix = paste0("adult_", snv_caller))
 
 # shared alterations
 shared_alterations_plots(ref_cancer_dir = adult_cancer_dir, 
                          patient_maf = filtered_maf, 
                          patient_cnv = filtered_cnv,
                          mutational_analysis_output = mutational_analysis_adult, 
-                         prefix = "adult")
+                         suffix = paste0("adult_", snv_caller))

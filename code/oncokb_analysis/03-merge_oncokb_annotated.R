@@ -20,7 +20,11 @@ root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
 data_dir <- file.path(root_dir, "data")
 
 # input files
-maf_file <- file.path(output_dir, paste0('oncokb_', snv_caller, '_annotated.txt'))
+if(snv_caller == "all"){
+  maf_file <- file.path(output_dir, paste0('oncokb_consensus_annotated.txt'))
+} else {
+  maf_file <- file.path(output_dir, paste0('oncokb_', snv_caller, '_annotated.txt'))
+}
 cnv_file <- file.path(output_dir, 'oncokb_cnv_annotated.txt')
 fusion_file <- file.path(output_dir, 'oncokb_fusion_annotated.txt')
 

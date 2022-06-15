@@ -3,7 +3,7 @@ suppressPackageStartupMessages({
   library(maftools)
 })
 
-shared_alterations_plots <- function(ref_cancer_dir, patient_maf, patient_cnv, mutational_analysis_output, prefix){
+shared_alterations_plots <- function(ref_cancer_dir, patient_maf, patient_cnv, mutational_analysis_output, suffix){
   
   # ref tumors maf
   ref_maf <- list.files(path = ref_cancer_dir, pattern = "mutation_filtered.rds", full.names = T)
@@ -33,7 +33,7 @@ shared_alterations_plots <- function(ref_cancer_dir, patient_maf, patient_cnv, m
   maf_object <- read.maf(maf = combined_maf_shared)
   
   # 1) plot maf summary
-  pdf(file = file.path(output_dir, paste0("shared_mutations_", prefix, ".pdf")))
+  pdf(file = file.path(output_dir, paste0("shared_mutations_", suffix, ".pdf")))
   plotmafSummary(maf = maf_object, rmOutlier = TRUE, addStat = 'median', dashboard = TRUE, titvRaw = FALSE)
   dev.off()
   
@@ -60,7 +60,7 @@ shared_alterations_plots <- function(ref_cancer_dir, patient_maf, patient_cnv, m
   
   names(top10_gene_list_position) <- top10_gene_list 
   
-  pdf(file.path(output_dir, paste0("shared_mutations_lollipop_", prefix, ".pdf")))
+  pdf(file.path(output_dir, paste0("shared_mutations_lollipop_", suffix, ".pdf")))
   lapply(top10_gene_list, function(x){
     lollipopPlot(
       maf = maf_object,
@@ -117,7 +117,7 @@ shared_alterations_plots <- function(ref_cancer_dir, patient_maf, patient_cnv, m
   maf_object_shared_cnv <- read.maf(maf = combined_maf_matched_shared_cnv, cnTable = combined_cnv_shared)
   
   # plot oncoplot 
-  pdf(file.path(output_dir, paste0("shared_mutational_cnv_", prefix, ".pdf")))
+  pdf(file.path(output_dir, paste0("shared_mutational_cnv_", suffix, ".pdf")))
   oncoplot(maf = maf_object_shared_cnv, top = 10)
   dev.off()
 }

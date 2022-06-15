@@ -13,6 +13,9 @@ cancer_hotspots <- readRDS(file.path(data_dir, "cancer_hotspots.rds"))
 # cancer genes
 cancer_genes <- readRDS(file.path(data_dir, "cancer_gene_list.rds"))
 
+# input data
+rnaseq_analysis_output <- readRDS(file.path(output_dir, "rnaseq_analysis", "rnaseq_analysis_output.rds"))
+
 # source functions
 source(file.path(module_dir, "utils", 'all_findings.R'))
 source(file.path(module_dir, "utils", "annotate_mutations.R"))
@@ -42,7 +45,7 @@ all_findings_output <- all_findings(sample_info = sample_info,
                                     annotated_maf = annotated_maf, 
                                     filtered_fusions = filtered_fusions, 
                                     filtered_cnv = filtered_cnv, 
-                                    tpm_data = tpm_data, 
+                                    rnaseq_analysis_output = rnaseq_analysis_output, 
                                     snv_caller = snv_caller)
 saveRDS(all_findings_output, file = fname)
 

@@ -14,7 +14,7 @@ gencode_gtf <- gencode_gtf %>%
   dplyr::select(gene_id, gene_name, gene_type) %>%
   unique()
 
-all_findings <- function(sample_info, annotated_maf, filtered_fusions, filtered_cnv, tpm_data, snv_caller) {
+all_findings <- function(sample_info, annotated_maf, filtered_fusions, filtered_cnv, rnaseq_analysis_output, snv_caller) {
   
   # Add Mutations
   if(!is.null(annotated_maf)){
@@ -94,14 +94,14 @@ all_findings <- function(sample_info, annotated_maf, filtered_fusions, filtered_
   }
   
   # for RNA data
-  if(!is.null(tpm_data)){
+  if(!is.null(rnaseq_analysis_output)){
     rna_sample <- sample_info %>%
       filter(experimental_strategy == "RNA-Seq") %>%
       dplyr::select(Kids_First_Biospecimen_ID, sample_id, cohort, cohort_participant_id)
   }
   
   # Add Expression
-  if(!is.null(tpm_data)){
+  if(!is.null(rnaseq_analysis_output)){
     tmpExp <- rnaseq_analysis_output$diffexpr.top20 %>%
       rownames_to_column("Aberration") %>%
       mutate(Type = c(rep("Outlier-High (mRNA)", 20), rep("Outlier-Low (mRNA)", 20)),
@@ -117,7 +117,7 @@ all_findings <- function(sample_info, annotated_maf, filtered_fusions, filtered_
   }
   
   # Add Pathway
-  if(!is.null(tpm_data)){
+  if(!is.null(rnaseq_analysis_output)){
     tmpPath <- rnaseq_analysis_output$pathways
     tmpPathUp <- tmpPath %>%
       filter(direction == "up") %>%

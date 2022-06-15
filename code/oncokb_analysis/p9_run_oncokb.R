@@ -49,4 +49,3 @@ system(cmd)
 # read output generated from running the above scripts
 fname <- file.path(output_dir, paste0('oncokb_merged_', snv_caller, '_annotated_actgenes.txt'))
 oncokb_output <- read.delim(fname, stringsAsFactors = F)
-

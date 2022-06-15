@@ -32,7 +32,11 @@ python <- "python3.7"
 
 # mutations
 maf_dir <- file.path(patient_dir, "simple-variants")
-maf_file <- list.files(path = maf_dir, pattern = snv_caller, full.names = T)
+if(snv_caller == "all"){
+  maf_file <- list.files(path = maf_dir, pattern = "consensus", full.names = T)
+} else {
+  maf_file <- list.files(path = maf_dir, pattern = snv_caller, full.names = T)
+}
 maf_out <- file.path(output_dir, paste0('oncokb_', snv_caller, '_annotated.txt'))
 command <- paste(python, maf_annotator, '-i', maf_file, '-o', maf_out, '-b', oncokb_token, '-q hgvsp_short')
 system(command)

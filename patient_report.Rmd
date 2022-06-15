@@ -358,8 +358,9 @@ Row {data-height=500}
 ### Shared Mutations (Transcriptomically Similar Patients)
 
 ```{r shared_mutations_pediatric, echo=FALSE, out.width = "100%", out.height="100%"}
-fname <- file.path(patient_output_dir, "transcriptomically_similar_analysis", "shared_mutations_pediatric.pdf")
-if(file.exists(fname)){
+fname <- file.path(patient_output_dir, "transcriptomically_similar_analysis", 
+                   paste0("shared_mutations_pediatric_", snv_caller, ".pdf"))
+if(file.exists(fname)){ 
   knitr::include_graphics(fname) 
 }
 ```
@@ -372,7 +373,8 @@ Row {data-height=500}
 ### Shared Mutations AA changes (Transcriptomically Similar Patients)
 
 ```{r lollipop_shared_pediatric, echo=FALSE, out.width = "100%", out.height="100%"}
-fname <- file.path(patient_output_dir, "transcriptomically_similar_analysis", "shared_mutations_lollipop_pediatric.pdf")
+fname <- file.path(patient_output_dir, "transcriptomically_similar_analysis", 
+                   paste0("shared_mutations_lollipop_pediatric_", snv_caller, ".pdf"))
 if(file.exists(fname)){
   knitr::include_graphics(fname) 
 }
@@ -386,7 +388,8 @@ Row {data-height=500}
 ### Recurrent Mutations (Transcriptomically Similar Patients)
 
 ```{r recurrent_mutations_pediatric, echo=FALSE, out.width = "100%", out.height="100%"}
-fname <- file.path(patient_output_dir, "transcriptomically_similar_analysis", "recurrent_mutations_pediatric.pdf")
+fname <- file.path(patient_output_dir, "transcriptomically_similar_analysis", 
+                   paste0("recurrent_mutations_pediatric_", snv_caller, ".pdf"))
 if(file.exists(fname)){
   knitr::include_graphics(fname) 
 }
@@ -400,7 +403,8 @@ Row {data-height=500}
 ### Recurrent Mutations AA changes (Transcriptomically Similar Patients)
 
 ```{r lollipop_recurrent_pediatric, echo=FALSE, out.width = "100%", out.height="100%"}
-fname <- file.path(patient_output_dir, "transcriptomically_similar_analysis", "recurrent_mutations_lollipop_pediatric.pdf")
+fname <- file.path(patient_output_dir, "transcriptomically_similar_analysis", 
+                   paste0("recurrent_mutations_lollipop_pediatric_", snv_caller, ".pdf"))
 if(file.exists(fname)){
   knitr::include_graphics(fname) 
 }
@@ -414,7 +418,8 @@ Row {data-height=500}
 ### Shared CNV (Transcriptomically Similar Patients)
 
 ```{r shared_cnv_pediatric, echo=FALSE, out.width = "100%", out.height="100%"}
-fname <- file.path(patient_output_dir, "transcriptomically_similar_analysis", "shared_mutational_cnv_pediatric.pdf")
+fname <- file.path(patient_output_dir, "transcriptomically_similar_analysis", 
+                   paste0("shared_mutational_cnv_pediatric_", snv_caller, ".pdf"))
 if(file.exists(fname)){
   knitr::include_graphics(fname) 
 }
@@ -429,7 +434,7 @@ Row {data-height=500}
 
 ```{r recurrent_cnv_pediatric, echo=FALSE, out.width = "100%", out.height="100%"}
 fname <- file.path(patient_output_dir, "transcriptomically_similar_analysis",
-                   "recurrent_mutational_cnv_pediatric.pdf")
+                   paste0("recurrent_mutational_cnv_pediatric_", snv_caller, ".pdf"))
 if(file.exists(fname)){
   knitr::include_graphics(fname) 
 }
@@ -497,7 +502,8 @@ Row {data-height=500}
 ### Shared Mutations (Transcriptomically Similar Patients)
 
 ```{r shared_mutations_adult, echo=FALSE, out.width = "100%", out.height="100%"}
-fname <- file.path(patient_output_dir, "transcriptomically_similar_analysis", "shared_mutations_adult.pdf")
+fname <- file.path(patient_output_dir, "transcriptomically_similar_analysis", 
+                   paste0("shared_mutations_adult_", snv_caller, ".pdf"))
 if(file.exists(fname)){
   knitr::include_graphics(fname) 
 }
@@ -511,7 +517,8 @@ Row {data-height=500}
 ### Shared Mutations AA changes (Transcriptomically Similar Patients)
 
 ```{r lollipop_shared_adult, echo=FALSE, out.width = "100%", out.height="100%"}
-fname <- file.path(patient_output_dir, "transcriptomically_similar_analysis", "shared_mutations_lollipop_adult.pdf")
+fname <- file.path(patient_output_dir, "transcriptomically_similar_analysis", 
+                   paste0("shared_mutations_lollipop_adult_", snv_caller, ".pdf"))
 if(file.exists(fname)){
   knitr::include_graphics(fname) 
 }
@@ -525,7 +532,8 @@ Row {data-height=500}
 ### Recurrent Mutations (Transcriptomically Similar Patients)
 
 ```{r recurrent_mutations_adult, echo=FALSE, out.width = "100%", out.height="100%"}
-fname <- file.path(patient_output_dir, "transcriptomically_similar_analysis", "recurrent_mutations_adult.pdf")
+fname <- file.path(patient_output_dir, "transcriptomically_similar_analysis", 
+                   paste0("recurrent_mutations_adult_", snv_caller, ".pdf"))
 if(file.exists(fname)){
   knitr::include_graphics(fname) 
 }
@@ -539,7 +547,8 @@ Row {data-height=500}
 ### Recurrent Mutations AA changes (Transcriptomically Similar Patients)
 
 ```{r lollipop_recurrent_adult, echo=FALSE, out.width = "100%", out.height="100%"}
-fname <- file.path(patient_output_dir, "transcriptomically_similar_analysis", "recurrent_mutations_lollipop_adult.pdf")
+fname <- file.path(patient_output_dir, "transcriptomically_similar_analysis", 
+                   paste0("recurrent_mutations_lollipop_adult_", snv_caller, ".pdf"))
 if(file.exists(fname)){
   knitr::include_graphics(fname) 
 }
@@ -553,7 +562,8 @@ Row {data-height=500}
 ### Shared CNV (Transcriptomically Similar Patients)
 
 ```{r shared_cnv_adult, echo=FALSE, out.width = "100%", out.height="100%"}
-fname <- file.path(patient_output_dir, "transcriptomically_similar_analysis", "shared_mutational_cnv_adult.pdf")
+fname <- file.path(patient_output_dir, "transcriptomically_similar_analysis", 
+                   paste0("shared_mutational_cnv_adult_", snv_caller, ".pdf"))
 if(file.exists(fname)){
   knitr::include_graphics(fname) 
 }
@@ -567,7 +577,8 @@ Row {data-height=500}
 ### Recurrent CNV (Transcriptomically Similar Patients)
 
 ```{r recurrent_cnv_adult, echo=FALSE, out.width = "100%", out.height="100%"}
-fname <- file.path(patient_output_dir, "transcriptomically_similar_analysis", "recurrent_mutational_cnv_adult.pdf")
+fname <- file.path(patient_output_dir, "transcriptomically_similar_analysis", 
+                   paste0("recurrent_mutational_cnv_adult_", snv_caller, ".pdf"))
 if(file.exists(fname)){
   knitr::include_graphics(fname) 
 }
@@ -581,7 +592,7 @@ Row {data-height=700}
 ### Circos
 
 ```{r circos, fig.width = 7, fig.height = 6}
-fname <- file.path(patient_output_dir, "genomic_landscape_plots", "circos_plot.png")
+fname <- file.path(patient_output_dir, "genomic_landscape_plots", paste0(snv_caller, "_circos_plot.png"))
 if(file.exists(fname)){
  knitr::include_graphics(fname)
 }
@@ -595,7 +606,7 @@ Row {data-height=700}
 ### Network View
 
 ```{r plot_network, fig.width = 8, fig.height = 6}
-fname <- file.path(patient_output_dir, "genomic_landscape_plots", "network_plot_output.rds")
+fname <- file.path(patient_output_dir, "genomic_landscape_plots", paste0(snv_caller, "_network_plot_output.rds"))
 if(file.exists(fname)){
   network_plot_output <- readRDS(fname)
   network_plot_output

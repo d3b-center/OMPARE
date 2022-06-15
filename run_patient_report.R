@@ -68,35 +68,36 @@ if(!is.null(source_dir)){
 
 # set snv_caller value
 if(rnaseq_only){
-  snv_caller <- NA
+  snv_caller_value <- NA
 } else {
-  snv_caller <- c("lancet", "mutect2", "vardict", "strelka2", "consensus", "all")
+  snv_caller_value <- c("lancet", "mutect2", "vardict", "strelka2", "consensus", "all")
 }
 
 # run driver and generate report for each snv_caller
-output_dir <- file.path(patient_dir, 'reports')
-for(i in 1:length(snv_caller)){
-  if(is.na(snv_caller[i])){
+for(i in 1:length(snv_caller_value)){
+  print(i)
+  snv_caller <- snv_caller_value[i]
+  if(is.na(snv_caller)){
     output_file <- paste0(patient, '.html')
   } else {
-    output_file <- paste0(patient, '_', snv_caller[i], '.html')
+    output_file <- paste0(patient, '_', snv_caller, '.html')
   }
   
   # call driver script to generate all outputs
   source(driver_script)
   run_driver(patient = patient, 
              patient_cancer_type = patient_cancer_type, 
-             snv_caller = snv_caller[i], 
+             snv_caller = snv_caller, 
              patient_dir = patient_dir)
   
   # generate html reports
   print("Run reports...")
+  output_dir <- file.path(patient_dir, 'reports')
   rmarkdown::render(input = input_file,
                     params = list(patient = patient,
                                   patient_dir = patient_dir,
                                   set_title = set_title), 
                     output_dir = output_dir, 
-                    intermediates_dir = output_dir,
                     output_file = output_file)
 }
 

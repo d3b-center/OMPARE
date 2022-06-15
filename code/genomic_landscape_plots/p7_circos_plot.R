@@ -15,10 +15,14 @@ cancer_genes <- readRDS(file.path(data_dir, 'cancer_gene_list.rds'))
 chr_map <- read.delim(file.path(data_dir, 'mart_export_genechr_mapping.txt'), stringsAsFactors = F, check.names = F)
 colnames(chr_map) <- c("hgnc_symbol", "gene_start", "gene_end", "chromosome")
 
+# read data
+rnaseq_analysis_output <- readRDS(file.path(patient_dir, "output", "rnaseq_analysis", "rnaseq_analysis_output.rds"))
+
 # circos plot
+fname <- file.path(file.path(output_dir, paste0(snv_caller, "_circos_plot.png")))
 circos_plot(chr_map = chr_map, 
             cancer_genes = cancer_genes, 
-            fname = file.path(output_dir, "circos_plot.png"),
+            fname = fname,
             filtered_mutations = filtered_maf, 
             rnaseq_analysis_output = rnaseq_analysis_output, 
             filtered_fusions = filtered_fusions)

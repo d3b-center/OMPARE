@@ -133,8 +133,10 @@ run_driver <- function(patient, patient_cancer_type, snv_caller, patient_dir){
   
   # transcriptomically similar analysis 
   source(file.path(code_dir, "transcriptomically_similar_analysis", 'transcriptomically_similar_patients.R'))
+  output_dir <- file.path(patient_dir, "output", "transcriptomically_similar_analysis")
   ## prepare pediatric tumors i.e. pbta + pnoc008 data for downstream functions
-  if(snv_caller == "lancet"){
+  fname <-  file.path(output_dir, paste0("pediatric_all_nn_table.rds"))
+  if(!file.exists(fname)){
     tns_similar_analysis(ref_cancer_dir = pediatric_cancer_all_dir,
                          patient_dir = patient_dir,
                          sample_info = sample_info, 
@@ -143,7 +145,8 @@ run_driver <- function(patient, patient_cancer_type, snv_caller, patient_dir){
   } 
   
   ## prepare pediatric tumors i.e. pbta hgat + pnoc008 data for downstream functions
-  if(snv_caller == "lancet"){
+  fname <-  file.path(output_dir, paste0("pediatric_nn_table.rds"))
+  if(!file.exists(fname)){
     tns_similar_analysis(ref_cancer_dir = pediatric_cancer_dir,
                          patient_dir = patient_dir,
                          sample_info = sample_info, 
@@ -151,7 +154,9 @@ run_driver <- function(patient, patient_cancer_type, snv_caller, patient_dir){
                          prefix = "pediatric")
   } 
   
-  if(snv_caller == "lancet"){
+  # prepare adult tumors i.e. tcga + pnoc008 data for downstream functions
+  fname <-  file.path(output_dir, paste0("adult_nn_table.rds"))
+  if(!file.exists(fname)){
     tns_similar_analysis(ref_cancer_dir = adult_cancer_dir,
                          patient_dir = patient_dir,
                          sample_info = sample_info, 
@@ -223,10 +228,10 @@ run_driver <- function(patient, patient_cancer_type, snv_caller, patient_dir){
   
   # mutational analysis
   output_dir <- file.path(patient_dir, "output", "transcriptomically_similar_analysis")
-  fname <- file.path(output_dir, "mutational_analysis_pediatric.rds")
+  fname <- file.path(output_dir, paste0(snv_caller, "_mutational_analysis_pediatric.rds"))
   if(!file.exists(fname)){
     source(file.path(code_dir, "transcriptomically_similar_analysis", 'p5_mutational_analysis_pediatric.R'))
-  }
+  } 
   
   # pathway analysis
   output_dir <- file.path(patient_dir, "output", "transcriptomically_similar_analysis")
@@ -263,7 +268,7 @@ run_driver <- function(patient, patient_cancer_type, snv_caller, patient_dir){
   
   # mutational analysis
   output_dir <- file.path(patient_dir, "output", "transcriptomically_similar_analysis")
-  fname <- file.path(output_dir, "mutational_analysis_adult.rds")
+  fname <- file.path(output_dir, paste0(snv_caller, "_mutational_analysis_adult.rds"))
   if(!file.exists(fname)){
     source(file.path(code_dir, "transcriptomically_similar_analysis", 'p6_mutational_analysis_adult.R'))
   }
@@ -277,7 +282,11 @@ run_driver <- function(patient, patient_cancer_type, snv_caller, patient_dir){
   
   ## page 7
   # genomic landscape plots
-  source(file.path(code_dir, "genomic_landscape_plots", "p7_circos_plot.R"))
+  output_dir <- file.path(patient_dir, "output", "genomic_landscape_plots")
+  fname <- file.path(file.path(output_dir, paste0(snv_caller, "_circos_plot.png")))
+  if(!file.exists(fname)){
+    source(file.path(code_dir, "genomic_landscape_plots", "p7_circos_plot.R"))
+  }
   
   ## page 8
   output_dir <- file.path(patient_dir, "output", "oncogrid_analysis")
@@ -331,7 +340,11 @@ run_driver <- function(patient, patient_cancer_type, snv_caller, patient_dir){
   # network plot - changes with snv caller (page 7)
   # this is dependent on the output of transcriptome based drug recommendations
   # so needs to be called after drug recommendations
-  source(file.path(code_dir, "genomic_landscape_plots", "p7_network_plot.R"))
+  output_dir <- file.path(patient_dir, "output", "genomic_landscape_plots")
+  fname <- file.path(file.path(output_dir, paste0(snv_caller, "_network_plot_output.rds")))
+  if(!file.exists(fname)){
+    source(file.path(code_dir, "genomic_landscape_plots", "p7_network_plot.R"))
+  }
   
   # run CEMiTool to annotate hub genes in drug recommendations output
   output_dir <- file.path(patient_dir, "output", "drug_recommendations")
@@ -361,8 +374,3 @@ run_driver <- function(patient, patient_cancer_type, snv_caller, patient_dir){
     source(file.path(code_dir, "drug_synergy", 'run_synergy.R'))
   }
 }
-
-
-
-# Note: snv_caller == "lancet" condition is used for scripts that generate multiple outputs 
-# which are not necessarily saved to files but are used for downstream analysis

@@ -3,7 +3,7 @@ suppressPackageStartupMessages({
   library(maftools)
 })
 
-recurrent_alterations_plots <- function(ref_cancer_dir, patient_maf = filtered_maf, patient_cnv = filtered_cnv, mutational_analysis_output, prefix){
+recurrent_alterations_plots <- function(ref_cancer_dir, patient_maf, patient_cnv, mutational_analysis_output, suffix){
   
   # ref tumors maf
   ref_maf <- list.files(path = ref_cancer_dir, pattern = "mutation_filtered.rds", full.names = T)
@@ -41,7 +41,7 @@ recurrent_alterations_plots <- function(ref_cancer_dir, patient_maf = filtered_m
   maf_object <- read.maf(maf = combined_maf_recurrent)
   
   # 1) plot maf summary 
-  pdf(file = file.path(output_dir, paste0("recurrent_mutations_", prefix, ".pdf")))
+  pdf(file = file.path(output_dir, paste0("recurrent_mutations_", suffix, ".pdf")))
   plotmafSummary(maf = maf_object, rmOutlier = TRUE, addStat = 'median', dashboard = TRUE, titvRaw = FALSE)
   dev.off()
   
@@ -67,7 +67,7 @@ recurrent_alterations_plots <- function(ref_cancer_dir, patient_maf = filtered_m
   })
   names(top10_gene_list_position) <- top10_gene_list 
   
-  pdf(file.path(output_dir, paste0("recurrent_mutations_lollipop_", prefix, ".pdf")))
+  pdf(file.path(output_dir, paste0("recurrent_mutations_lollipop_", suffix, ".pdf")))
   lapply(top10_gene_list, function(x){
     lollipopPlot(
       maf = maf_object,
@@ -124,7 +124,7 @@ recurrent_alterations_plots <- function(ref_cancer_dir, patient_maf = filtered_m
   maf_object_recurrent_cnv <- read.maf(maf = combined_maf_matched_recurrent_cnv, cnTable = combined_cnv_recurrent)
   
   # plot oncoplot 
-  pdf(file.path(output_dir, paste0("recurrent_mutational_cnv_", prefix, ".pdf")))
+  pdf(file.path(output_dir, paste0("recurrent_mutational_cnv_", suffix, ".pdf")))
   oncoplot(maf = maf_object_recurrent_cnv, top = 10)
   dev.off()
 }
