@@ -11,7 +11,7 @@ params:
   patient_dir:
     value: "results/C3508206"
   snv_caller:
-    value: lancet
+    value: consensus
 editor_options: 
   chunk_output_type: console
 ---
@@ -86,7 +86,8 @@ Row {data-height=500}
 ### Key Clinical Findings
     
 ```{r key_findings}
-fname <- file.path(patient_output_dir, "tier_classification", paste0("key_clinical_findings_output_", snv_caller, ".tsv"))
+fname <- file.path(patient_output_dir, "tier_classification", 
+                   paste0("key_clinical_findings_output_", snv_caller, ".tsv"))
 if(file.exists(fname)){
   key_clinical_findings_output <- read_tsv(fname)
   view_dt_minimal(key_clinical_findings_output)
@@ -152,7 +153,8 @@ Row {data-height=700}
 ### All Findings
     
 ```{r all_findings}
-fname <- file.path(patient_output_dir, "tier_classification", paste0("all_findings_output_", snv_caller, ".tsv"))
+fname <- file.path(patient_output_dir, "tier_classification", 
+                   paste0("all_findings_output_", snv_caller, ".tsv"))
 if(file.exists(fname)){
   all_findings_output <- read_tsv(fname)
   view_dt_minimal(all_findings_output)

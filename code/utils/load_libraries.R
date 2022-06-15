@@ -58,6 +58,7 @@ suppressPackageStartupMessages({
   library(scales)
   library(signatureSearch)
   library(sna)
+  library(StatMatch)
   library(stringr)
   library(survival)
   library(survminer)

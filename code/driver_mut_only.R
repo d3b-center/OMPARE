@@ -31,7 +31,7 @@ run_driver <- function(patient, patient_cancer_type, snv_caller, patient_dir){
   
   # all findings table  
   output_dir <- file.path(patient_dir, "output")
-  fname <- file.path(output_dir, "all_findings_output.rds")
+  fname <- file.path(output_dir, paste0("all_findings_output_", snv_caller, ".rds"))
   if(!file.exists(fname)){
     source(file.path(code_dir, "p1_modules", 'p1_all_findings.R'))
   } else {
@@ -40,7 +40,7 @@ run_driver <- function(patient, patient_cancer_type, snv_caller, patient_dir){
   
   # key findings table 
   output_dir <- file.path(patient_dir, "output")
-  fname <- file.path(output_dir, "key_clinical_findings_output.rds")
+  fname <- file.path(output_dir, paste0("key_clinical_findings_output_", snv_caller, ".rds"))
   if(!file.exists(fname)){
     source(file.path(code_dir, "p1_modules", 'p1_key_clinical_findings.R'))
   } else{

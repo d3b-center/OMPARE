@@ -1,6 +1,5 @@
 # Author: Komal S. Rathi
 # Function: driver script to call all functions and generate output
-# NOTE: we will save the output of all modules which are independent of the somatic mutation caller
 
 # set directories
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
@@ -292,7 +291,7 @@ run_driver <- function(patient, patient_cancer_type, snv_caller, patient_dir){
   output_dir <- file.path(patient_dir, "output", "oncogrid_analysis")
   fname <- file.path(output_dir, "complexheatmap_oncogrid.pdf")
   if(!file.exists(fname)){
-    source(file.path(code_dir, "oncogrid_analysis", "p9_oncogrid.R"))
+    source(file.path(code_dir, "oncogrid_analysis", "p8_oncogrid.R"))
   }
   
   ## page 9

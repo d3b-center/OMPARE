@@ -14,7 +14,11 @@ cancer_hotspots <- readRDS(file.path(data_dir, "cancer_hotspots.rds"))
 cancer_genes <- readRDS(file.path(data_dir, "cancer_gene_list.rds"))
 
 # input data
-rnaseq_analysis_output <- readRDS(file.path(output_dir, "rnaseq_analysis", "rnaseq_analysis_output.rds"))
+if(file.exists(file.path(output_dir, "rnaseq_analysis", "rnaseq_analysis_output.rds"))){
+  rnaseq_analysis_output <- readRDS(file.path(output_dir, "rnaseq_analysis", "rnaseq_analysis_output.rds"))
+} else {
+  rnaseq_analysis_output <- NULL
+}
 
 # source functions
 source(file.path(module_dir, "utils", 'all_findings.R'))

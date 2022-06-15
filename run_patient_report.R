@@ -70,12 +70,11 @@ if(!is.null(source_dir)){
 if(rnaseq_only){
   snv_caller_value <- NA
 } else {
-  snv_caller_value <- c("lancet", "mutect2", "vardict", "strelka2", "consensus", "all")
+  snv_caller_value <- "consensus"
 }
 
 # run driver and generate report for each snv_caller
 for(i in 1:length(snv_caller_value)){
-  print(i)
   snv_caller <- snv_caller_value[i]
   if(is.na(snv_caller)){
     output_file <- paste0(patient, '.html')

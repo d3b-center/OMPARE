@@ -18,13 +18,22 @@ source(file.path(module_dir, "utils", "tier_classification.R"))
 source(file.path(module_dir, "utils", "civic_tier_anno.R"))
 
 # Read in files necessary for analyses
+# oncokb analysis
 input_dir <- file.path(patient_dir, "output", "oncokb_analysis")
 if(snv_caller != "all"){
   oncokb_anno <- readr::read_tsv(file.path(input_dir, paste0("oncokb_", snv_caller, "_annotated.txt")))
 } else {
   oncokb_anno <- readr::read_tsv(file.path(input_dir, paste0("oncokb_consensus_annotated.txt")))
 }
-rnaseq_analysis_output <- readRDS(file.path(patient_dir, "output", "rnaseq_analysis", "rnaseq_analysis_output.rds"))
+
+# rnaseq analyses output
+if(file.exists(file.path(output_dir, "rnaseq_analysis", "rnaseq_analysis_output.rds"))){
+  rnaseq_analysis_output <- readRDS(file.path(output_dir, "rnaseq_analysis", "rnaseq_analysis_output.rds"))
+} else {
+  rnaseq_analysis_output <- NULL
+}
+
+# all findings output
 all_findings_output <- readRDS(file.path(patient_dir, "output", paste0("all_findings_output_", snv_caller, ".rds")))
 
 # combined and add CITATIONS field
