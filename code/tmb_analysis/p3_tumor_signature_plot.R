@@ -15,7 +15,7 @@ source(file.path(module_dir, "utils", 'tumor_signature_plot.R'))
 fname <- file.path(output_dir, "tumor_signature_output.rds")
 
 # mutational signatures
-signatures <- readAlexandrovSignatures(file.path(data_dir, 'signatures_probabilities.txt'))
+signatures <- readAlexandrovSignatures(file.path(data_dir, 'tumor_signatures_probabilities.txt'))
 
 # input maf file
 patient_maf <- list.files(path = file.path(patient_dir, "simple-variants"), pattern = "consensus", full.names = T)

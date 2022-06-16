@@ -14,7 +14,7 @@ data_dir <- file.path(root_dir, "data")
 cancer_genes <- readRDS(file.path(data_dir, "cancer_gene_list.rds"))
 source('code/utils/filter_mutations.R')
 
-read_patient_data <- function(pediatric_cancer_dir = file.path(data_dir, "pnoc008"), patient_of_interest, mut_only = FALSE, rnaseq_only = FALSE){
+read_patient_data <- function(pediatric_cancer_dir, patient_of_interest, mut_only = FALSE, rnaseq_only = FALSE){
   
   # patient dir
   patient_dir <- file.path('results', patient_of_interest)

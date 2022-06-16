@@ -8,7 +8,7 @@ dir.create(output_dir, recursive = T, showWarnings = F)
 source(file.path(module_dir, "utils", 'disease_specific_information.R'))
 
 # HGG-specific genes
-disease_specific_fields <- read.delim(file.path(root_dir, "data", 'DiseaseSpecificFields.txt'))
+disease_specific_fields <- read.delim(file.path(root_dir, "data", 'disease_specific_fields.txt'))
 
 # call function
 fname <- file.path(output_dir, "disease_specific_information_output.rds")
