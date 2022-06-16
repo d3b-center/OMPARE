@@ -6,6 +6,7 @@ scratch_dir = '/tmp/'
 
 # set root directory and other directories
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
+data_dir <- file.path(root_dir, "data")
 results_dir <- file.path(root_dir, 'tmb_normalization', 'results')
 ref_dir <- file.path(root_dir, 'tmb_normalization', 'references')
 
@@ -87,8 +88,8 @@ tcga_tmb_list <- lapply(tcga_bed_list, function(x){
 )
 tcga_tmb_combined <- do.call(rbind,tcga_tmb_list)
 
-# update file with new filters
-write.table(tcga_tmb_combined, file = file.path(results_dir, 'TCGA_not_in_pbta_diseasetypes_and_samples_TMBscores.txt'), quote = F, sep = "\t", row.names = F)
+# update file with new filters and save to data directory
+write.table(tcga_tmb_combined, file = file.path(data_dir, 'tmb', 'TCGA_not_in_pbta_diseasetypes_and_samples_TMBscores.txt'), quote = F, sep = "\t", row.names = F)
 
 
 ##############################################################################
@@ -149,5 +150,5 @@ tcga_tmb_list <- lapply(tcga_bed_list, function(x){
 )
 tcga_tmb_combined <- do.call(rbind,tcga_tmb_list)
 
-# update file with new filters
-write.table(tcga_tmb_combined, file = file.path(results_dir, 'TCGA_in_pbta_diseasetypes_and_samples_TMBscores.txt'), quote = F, sep = "\t", row.names = F)
+# update file with new filters and save to data directory
+write.table(tcga_tmb_combined, file = file.path(data_dir, 'tmb', 'TCGA_in_pbta_diseasetypes_and_samples_TMBscores.txt'), quote = F, sep = "\t", row.names = F)
