@@ -11,7 +11,7 @@ utils_dir <- file.path(code_dir, "utils")
 source(file.path(utils_dir, "load_libraries.R"))
 `%>%` <- dplyr::`%>%`
 
-run_driver <- function(patient, patient_cancer_type, snv_caller, patient_dir){
+run_driver <- function(patient, patient_cancer_type, patient_dir){
   
   # directories
   normal_tissue_dir <- file.path(data_dir, "normal_data")
@@ -23,15 +23,14 @@ run_driver <- function(patient, patient_cancer_type, snv_caller, patient_dir){
   read_patient_data(pediatric_cancer_dir = pediatric_cancer_dir, 
                     patient_of_interest = patient,
                     mut_only = TRUE,
-                    rnaseq_only = FALSE,
-                    snv_caller = snv_caller)
+                    rnaseq_only = FALSE)
   
   # assign NULL to rnaseq_analysis_output
   rnaseq_analysis_output <- NULL
   
   # all findings table  
   output_dir <- file.path(patient_dir, "output")
-  fname <- file.path(output_dir, paste0("all_findings_output_", snv_caller, ".rds"))
+  fname <- file.path(output_dir, "all_findings_output.rds")
   if(!file.exists(fname)){
     source(file.path(code_dir, "p1_modules", 'p1_all_findings.R'))
   } else {
@@ -40,7 +39,7 @@ run_driver <- function(patient, patient_cancer_type, snv_caller, patient_dir){
   
   # key findings table 
   output_dir <- file.path(patient_dir, "output")
-  fname <- file.path(output_dir, paste0("key_clinical_findings_output_", snv_caller, ".rds"))
+  fname <- file.path(output_dir, "key_clinical_findings_output.rds"))
   if(!file.exists(fname)){
     source(file.path(code_dir, "p1_modules", 'p1_key_clinical_findings.R'))
   } else{
@@ -165,7 +164,7 @@ run_driver <- function(patient, patient_cancer_type, snv_caller, patient_dir){
   
   # targeted findings (uses unfiltered cnv, fusions and snv)
   output_dir <- file.path(patient_dir, "output", "oncokb_analysis")
-  fname <- file.path(output_dir, paste0('oncokb_merged_', snv_caller, '_annotated_actgenes.txt'))
+  fname <- file.path(output_dir, "oncokb_merged_consensus_annotated_actgenes.txt")
   if(!file.exists(fname)){
     source(file.path(code_dir, "oncokb_analysis", 'p9_run_oncokb.R'))
   } else {
@@ -175,7 +174,7 @@ run_driver <- function(patient, patient_cancer_type, snv_caller, patient_dir){
   # update all findings and key findings with snv/indel hotspots and tier classifications
   # this needs to be run after oncokb as it depends on its output
   output_dir <- file.path(patient_dir, "output", "tier_classification")
-  fname <- file.path(output_dir, paste0("key_clinical_findings_output_", snv_caller, ".tsv"))
+  fname <- file.path(output_dir, "key_clinical_findings_output.tsv")
   if(!file.exists(fname)){
     source(file.path(code_dir, 'tier_classification', 'run_tier_classification.R'))
   }

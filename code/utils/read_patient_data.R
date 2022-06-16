@@ -14,7 +14,7 @@ data_dir <- file.path(root_dir, "data")
 cancer_genes <- readRDS(file.path(data_dir, "cancer_gene_list.rds"))
 source('code/utils/filter_mutations.R')
 
-read_patient_data <- function(pediatric_cancer_dir = file.path(data_dir, "pnoc008"), patient_of_interest, snv_caller = "all", mut_only = FALSE, rnaseq_only = FALSE){
+read_patient_data <- function(pediatric_cancer_dir = file.path(data_dir, "pnoc008"), patient_of_interest, mut_only = FALSE, rnaseq_only = FALSE){
   
   # patient dir
   patient_dir <- file.path('results', patient_of_interest)
@@ -27,23 +27,11 @@ read_patient_data <- function(pediatric_cancer_dir = file.path(data_dir, "pnoc00
   readr::write_tsv(x = sample_info, file = file.path(root_dir, 'results', patient_of_interest, 'output', 'sample_info.tsv'))
   assign("sample_info", sample_info, envir = globalenv())
   
-  # filtered mutations (can be multiple with .maf extension)
-  # if snv_caller is all, then use all files except consensus
+  # filtered mutations (use only consensus)
   if(!rnaseq_only){
-    somatic.mut.pattern <- '*.maf'
-    maf_file <- list.files(path = file.path(patient_dir, 'simple-variants'), pattern = somatic.mut.pattern, recursive = TRUE, full.names = T)
-    if(snv_caller == "all"){ 
-      maf_file <- grep('consensus', maf_file, invert = TRUE, value = TRUE)
-    } else {
-      maf_file <- grep(snv_caller, maf_file, value = TRUE)
-    }
-    if(length(maf_file) >= 1){
-      maf_file <- lapply(maf_file, data.table::fread, skip = 1, stringsAsFactors = F)
-      full_maf <- data.table::rbindlist(maf_file, fill = TRUE)
-      full_maf <- as.data.frame(full_maf)
-      full_maf <- unique(full_maf)
-      filtered_maf <- filter_mutations(myMutData = full_maf, myCancerGenes = cancer_genes)
-    } 
+    maf_file <- list.files(path = file.path(patient_dir, 'simple-variants'), pattern = "consensus", recursive = TRUE, full.names = T)
+    full_maf <- data.table::fread(input = maf_file, skip = 1)
+    filtered_maf <- filter_mutations(myMutData = full_maf, myCancerGenes = cancer_genes)
   } else {
     filtered_maf <- NULL
   }

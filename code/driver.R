@@ -11,7 +11,7 @@ utils_dir <- file.path(code_dir, "utils")
 source(file.path(utils_dir, "load_libraries.R"))
 `%>%` <- dplyr::`%>%`
 
-run_driver <- function(patient, patient_cancer_type, snv_caller, patient_dir){
+run_driver <- function(patient, patient_cancer_type, patient_dir){
   
   # directories
   normal_tissue_dir <- file.path(data_dir, "normal_data")
@@ -24,8 +24,7 @@ run_driver <- function(patient, patient_cancer_type, snv_caller, patient_dir){
   read_patient_data(pediatric_cancer_dir = pediatric_cancer_dir,
                     patient_of_interest = patient,
                     mut_only = FALSE, 
-                    rnaseq_only = FALSE,
-                    snv_caller = snv_caller)
+                    rnaseq_only = FALSE)
   
   # run rna-seq analysis (output of this is required by several downstream scripts)
   output_dir <- file.path(patient_dir, "output", "rnaseq_analysis")
@@ -52,7 +51,7 @@ run_driver <- function(patient, patient_cancer_type, snv_caller, patient_dir){
   
   # all findings table  
   output_dir <- file.path(patient_dir, "output")
-  fname <- file.path(output_dir, paste0("all_findings_output_", snv_caller, ".rds"))
+  fname <- file.path(output_dir, paste0("all_findings_output.rds"))
   if(!file.exists(fname)){
     source(file.path(code_dir, "p1_modules", 'p1_all_findings.R'))
   } else {
@@ -61,7 +60,7 @@ run_driver <- function(patient, patient_cancer_type, snv_caller, patient_dir){
   
   # key findings table 
   output_dir <- file.path(patient_dir, "output")
-  fname <- file.path(output_dir, paste0("key_clinical_findings_output_", snv_caller, ".rds"))
+  fname <- file.path(output_dir, paste0("key_clinical_findings_output.rds"))
   if(!file.exists(fname)){
     source(file.path(code_dir, "p1_modules", 'p1_key_clinical_findings.R'))
   } else{
@@ -227,7 +226,7 @@ run_driver <- function(patient, patient_cancer_type, snv_caller, patient_dir){
   
   # mutational analysis
   output_dir <- file.path(patient_dir, "output", "transcriptomically_similar_analysis")
-  fname <- file.path(output_dir, paste0(snv_caller, "_mutational_analysis_pediatric.rds"))
+  fname <- file.path(output_dir, "mutational_analysis_pediatric.rds")
   if(!file.exists(fname)){
     source(file.path(code_dir, "transcriptomically_similar_analysis", 'p5_mutational_analysis_pediatric.R'))
   } 
@@ -267,7 +266,7 @@ run_driver <- function(patient, patient_cancer_type, snv_caller, patient_dir){
   
   # mutational analysis
   output_dir <- file.path(patient_dir, "output", "transcriptomically_similar_analysis")
-  fname <- file.path(output_dir, paste0(snv_caller, "_mutational_analysis_adult.rds"))
+  fname <- file.path(output_dir, "mutational_analysis_adult.rds")
   if(!file.exists(fname)){
     source(file.path(code_dir, "transcriptomically_similar_analysis", 'p6_mutational_analysis_adult.R'))
   }
@@ -282,7 +281,7 @@ run_driver <- function(patient, patient_cancer_type, snv_caller, patient_dir){
   ## page 7
   # genomic landscape plots
   output_dir <- file.path(patient_dir, "output", "genomic_landscape_plots")
-  fname <- file.path(file.path(output_dir, paste0(snv_caller, "_circos_plot.png")))
+  fname <- file.path(output_dir, "circos_plot.png")
   if(!file.exists(fname)){
     source(file.path(code_dir, "genomic_landscape_plots", "p7_circos_plot.R"))
   }
@@ -297,7 +296,7 @@ run_driver <- function(patient, patient_cancer_type, snv_caller, patient_dir){
   ## page 9
   # targeted findings
   output_dir <- file.path(patient_dir, "output", "oncokb_analysis")
-  fname <- file.path(output_dir, paste0('oncokb_merged_', snv_caller, '_annotated_actgenes.txt'))
+  fname <- file.path(output_dir, "oncokb_merged_consensus_annotated_actgenes.txt")
   if(!file.exists(fname)){
     source(file.path(code_dir, "oncokb_analysis", 'p9_run_oncokb.R'))
   } else {
@@ -307,7 +306,7 @@ run_driver <- function(patient, patient_cancer_type, snv_caller, patient_dir){
   # update all findings with snv/indel hotspots and tier classifications
   # this needs to be run after oncokb as it depends on its output
   output_dir <- file.path(patient_dir, "output", "tier_classification")
-  fname <- file.path(output_dir, paste0("key_clinical_findings_output_", snv_caller, ".tsv"))
+  fname <- file.path(output_dir, "key_clinical_findings_output.tsv")
   if(!file.exists(fname)){
     source(file.path(code_dir, 'tier_classification', 'run_tier_classification.R'))
   }
@@ -336,11 +335,11 @@ run_driver <- function(patient, patient_cancer_type, snv_caller, patient_dir){
     transcriptome_drug_rec_output <- readRDS(fname)
   }
   
-  # network plot - changes with snv caller (page 7)
+  # network plot (page 7)
   # this is dependent on the output of transcriptome based drug recommendations
   # so needs to be called after drug recommendations
   output_dir <- file.path(patient_dir, "output", "genomic_landscape_plots")
-  fname <- file.path(file.path(output_dir, paste0(snv_caller, "_network_plot_output.rds")))
+  fname <- file.path(output_dir, "network_plot_output.rds")
   if(!file.exists(fname)){
     source(file.path(code_dir, "genomic_landscape_plots", "p7_network_plot.R"))
   }

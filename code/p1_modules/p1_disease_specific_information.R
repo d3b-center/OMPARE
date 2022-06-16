@@ -13,6 +13,5 @@ disease_specific_fields <- read.delim(file.path(root_dir, "data", 'DiseaseSpecif
 # call function
 fname <- file.path(output_dir, "disease_specific_information_output.rds")
 disease_specific_information_output <- disease_specific_information(disease_specific_fields = disease_specific_fields,
-                                                                    snv_caller = snv_caller,  
                                                                     all_findings_output = all_findings_output)
 saveRDS(disease_specific_information_output, file = fname)

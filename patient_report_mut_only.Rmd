@@ -10,8 +10,6 @@ params:
     value: "C3508083"
   patient_dir:
     value: "results/C3508083"
-  snv_caller:
-    value: consensus
 editor_options: 
   chunk_output_type: console
 ---
@@ -45,7 +43,6 @@ knitr::opts_chunk$set(comment = NA)
 ```{r set_params}
 patient <- params$patient
 patient_dir <- params$patient_dir
-snv_caller <- params$snv_caller
 ```
 
 ```{r set_root_dir}
@@ -86,8 +83,7 @@ Row {data-height=500}
 ### Key Clinical Findings
     
 ```{r key_findings}
-fname <- file.path(patient_output_dir, "tier_classification", 
-                   paste0("key_clinical_findings_output_", snv_caller, ".tsv"))
+fname <- file.path(patient_output_dir, "tier_classification", "key_clinical_findings_output.tsv")
 if(file.exists(fname)){
   key_clinical_findings_output <- read_tsv(fname)
   view_dt_minimal(key_clinical_findings_output)
@@ -153,8 +149,7 @@ Row {data-height=700}
 ### All Findings
     
 ```{r all_findings}
-fname <- file.path(patient_output_dir, "tier_classification", 
-                   paste0("all_findings_output_", snv_caller, ".tsv"))
+fname <- file.path(patient_output_dir, "tier_classification", "all_findings_output.tsv")
 if(file.exists(fname)){
   all_findings_output <- read_tsv(fname)
   view_dt_minimal(all_findings_output)
@@ -386,8 +381,7 @@ Row {data-height=700}
 ### Drug Recommendations
 
 ```{r targeted_findings}
-fname <- file.path(patient_output_dir, "oncokb_analysis",
-                   paste0('oncokb_merged_', snv_caller, '_annotated_actgenes.txt'))
+fname <- file.path(patient_output_dir, "oncokb_analysis", "oncokb_merged_consensus_annotated_actgenes.txt")
 if(file.exists(fname)){
   oncokb_output <- read.delim(fname)
   view_dt_minimal(oncokb_output)

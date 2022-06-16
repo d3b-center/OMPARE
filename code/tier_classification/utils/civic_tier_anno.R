@@ -6,7 +6,7 @@ suppressPackageStartupMessages({
   library(data.table)
 })
 
-civic_annotation <- function(all_findings_output, civic_ref_dir, snv_caller, civic_output){
+civic_annotation <- function(all_findings_output, civic_ref_dir, civic_output){
   # give each entry an ID for easier match
   all_findings_output <- all_findings_output %>%
     tibble::rownames_to_column("findings_id")
@@ -280,7 +280,7 @@ civic_annotation <- function(all_findings_output, civic_ref_dir, snv_caller, civ
   all_findings_civic_annotated <- bind_rows(all_findings_annotated, 
                                             all_findings_non_annotated)
   all_findings_civic_annotated %>% 
-    write_tsv(file.path(civic_output, paste0("all_findings_output_civic_annotated_", snv_caller, ".tsv")))
+    write_tsv(file.path(civic_output, paste0("all_findings_output_civic_annotated.tsv")))
   
   # now find new files
   all_findings_civic_annotated_clean <- all_findings_civic_annotated %>% 

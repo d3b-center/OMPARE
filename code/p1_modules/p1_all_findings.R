@@ -25,31 +25,20 @@ source(file.path(module_dir, "utils", 'all_findings.R'))
 source(file.path(module_dir, "utils", "annotate_mutations.R"))
 
 # input maf file
-maf_file <- list.files(path = file.path(patient_dir, "simple-variants"), pattern = snv_caller, full.names = T)
-if(is.na(snv_caller)){
-  maf_file <- NULL
-  annotated_maf <- NULL
-} else if(snv_caller == "all"){ 
-  maf_file <- grep('consensus', maf_file, invert = TRUE, value = TRUE)
+maf_file <- list.files(path = file.path(patient_dir, "simple-variants"), pattern = "consensus", full.names = T)
+if(file.exists(maf_file)){
+  full_maf <- data.table::fread(maf_file, skip = 1)
+  annotated_maf <- annotate_mutations(myMutData = full_maf, myCancerGenes = cancer_genes, cancer_hotspots = cancer_hotspots)
 } else {
-  maf_file <- grep(snv_caller, maf_file, value = TRUE)
+  annotated_maf <- NULL
 }
 
-if(length(maf_file) >= 1){
-  maf_file <- lapply(maf_file, data.table::fread, skip = 1, stringsAsFactors = F)
-  full_maf <- data.table::rbindlist(maf_file, fill = TRUE)
-  full_maf <- as.data.frame(full_maf)
-  full_maf <- unique(full_maf)
-  annotated_maf <- annotate_mutations(myMutData = full_maf, myCancerGenes = cancer_genes, cancer_hotspots = cancer_hotspots)
-} 
-
 # output
-fname <- file.path(output_dir, paste0("all_findings_output_", snv_caller, ".rds"))
+fname <- file.path(output_dir, "all_findings_output.rds")
 all_findings_output <- all_findings(sample_info = sample_info,
                                     annotated_maf = annotated_maf, 
                                     filtered_fusions = filtered_fusions, 
                                     filtered_cnv = filtered_cnv, 
-                                    rnaseq_analysis_output = rnaseq_analysis_output, 
-                                    snv_caller = snv_caller)
+                                    rnaseq_analysis_output = rnaseq_analysis_output)
 saveRDS(all_findings_output, file = fname)
 

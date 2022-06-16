@@ -11,7 +11,7 @@ utils_dir <- file.path(code_dir, "utils")
 source(file.path(utils_dir, "load_libraries.R"))
 `%>%` <- dplyr::`%>%`
 
-run_driver <- function(patient, patient_cancer_type, snv_caller, patient_dir){
+run_driver <- function(patient, patient_cancer_type, patient_dir){
   
   # directories
   normal_tissue_dir <- file.path(data_dir, "normal_data")
@@ -23,8 +23,7 @@ run_driver <- function(patient, patient_cancer_type, snv_caller, patient_dir){
   read_patient_data(pediatric_cancer_dir = pediatric_cancer_dir, 
                     patient_of_interest = patient,
                     mut_only = FALSE,
-                    rnaseq_only = TRUE,
-                    snv_caller = snv_caller)
+                    rnaseq_only = TRUE)
   
   # run rna-seq analysis (output of this is required by several downstream scripts)
   output_dir <- file.path(patient_dir, "output", "rnaseq_analysis")
@@ -253,7 +252,7 @@ run_driver <- function(patient, patient_cancer_type, snv_caller, patient_dir){
     transcriptome_drug_rec_output <- readRDS(fname)
   }
   
-  # network plot - changes with snv caller (page 7)
+  # network plot (page 7)
   # this is dependent on the output of transcriptome based drug recommendations
   # so needs to be called after drug recommendations
   source(file.path(code_dir, "genomic_landscape_plots", "p7_network_plot.R"))

@@ -18,13 +18,8 @@ fname <- file.path(output_dir, "tumor_signature_output.rds")
 signatures <- readAlexandrovSignatures(file.path(data_dir, 'signatures_probabilities.txt'))
 
 # input maf file
-if(snv_caller == "all"){
-  patient_maf <- list.files(path = file.path(patient_dir, "simple-variants"), pattern = "consensus", full.names = T)
-  patient_maf <- data.table::fread(patient_maf)
-} else {
-  patient_maf <- list.files(path = file.path(patient_dir, "simple-variants"), pattern = snv_caller, full.names = T)
-  patient_maf <- data.table::fread(patient_maf)
-}
+patient_maf <- list.files(path = file.path(patient_dir, "simple-variants"), pattern = "consensus", full.names = T)
+patient_maf <- data.table::fread(patient_maf)
 
 # tumor signature plot
 tumor_signature_output <- tumor_signature_plot(maf_data = patient_maf, 

@@ -19,7 +19,7 @@ colnames(chr_map) <- c("hgnc_symbol", "gene_start", "gene_end", "chromosome")
 rnaseq_analysis_output <- readRDS(file.path(patient_dir, "output", "rnaseq_analysis", "rnaseq_analysis_output.rds"))
 
 # circos plot
-fname <- file.path(file.path(output_dir, paste0(snv_caller, "_circos_plot.png")))
+fname <- file.path(file.path(output_dir, "circos_plot.png"))
 circos_plot(chr_map = chr_map, 
             cancer_genes = cancer_genes, 
             fname = fname,

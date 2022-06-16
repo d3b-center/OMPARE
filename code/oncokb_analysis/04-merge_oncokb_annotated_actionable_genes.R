@@ -6,13 +6,10 @@ suppressPackageStartupMessages({
 
 # arguments
 option_list <- list(
-  make_option(c("--snv_caller"), type = "character",
-              help = "SNV caller pattern: lancet, vardict, consensus, strelka2, mutect2 and all"),
   make_option(c("--output_dir"), type = "character",
               help = "output directory")
 )
 opt <- parse_args(OptionParser(option_list = option_list))
-snv_caller <- opt$snv_caller
 output_dir <- opt$output_dir
 
 # set directories
@@ -28,11 +25,11 @@ act_genes <- act_genes %>%
 act_genes$Alterations <- gsub('.*Fusion$|^Fusions$', 'Fusion', act_genes$Alterations)
 
 # read annotated merged output
-merged_file <- file.path(output_dir, paste0('oncokb_merged_', snv_caller, '_annotated.txt'))
+merged_file <- file.path(output_dir, paste0('oncokb_merged_consensus_annotated.txt'))
 merged_file <- read.delim(merged_file, stringsAsFactors = F)
 
 # merge actionable genes with merged annotated oncokb output (no result)
-output_file <- file.path(output_dir, paste0('oncokb_merged_', snv_caller, '_annotated_actgenes.txt'))
+output_file <- file.path(output_dir, paste0('oncokb_merged_consensus_annotated_actgenes.txt'))
 final_file <- merged_file %>%
   inner_join(act_genes, by = c('GENE' = 'Gene', 'ALTERATION' = 'Alterations')) %>%
   unique()

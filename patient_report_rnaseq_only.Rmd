@@ -7,11 +7,9 @@ params:
   set_title:
     value: "Patient Report"
   patient:
-    value: "cohort_participant_id"
+    value: "D03216701R01L"
   patient_dir:
-    value: "results/patient_id"
-  snv_caller:
-    value: NULL
+    value: "results/D03216701R01L"
 editor_options: 
   chunk_output_type: console
 ---
@@ -45,7 +43,6 @@ knitr::opts_chunk$set(comment = NA)
 ```{r set_params}
 patient <- params$patient
 patient_dir <- params$patient_dir
-snv_caller <- params$snv_caller
 ```
 
 ```{r set_root_dir}
@@ -86,7 +83,7 @@ Row {data-height=500}
 ### Key Clinical Findings
     
 ```{r key_findings}
-fname <- file.path(patient_output_dir, "tier_classification", paste0("key_clinical_findings_output_", snv_caller, ".tsv"))
+fname <- file.path(patient_output_dir, "tier_classification", "key_clinical_findings_output.tsv")
 if(file.exists(fname)){
   key_clinical_findings_output <- read_tsv(fname)
   view_dt_minimal(key_clinical_findings_output)
@@ -141,7 +138,7 @@ Row {data-height=700}
 ### All Findings
     
 ```{r all_findings}
-fname <- file.path(patient_output_dir, "tier_classification", paste0("all_findings_output_", snv_caller, ".tsv"))
+fname <- file.path(patient_output_dir, "tier_classification", "all_findings_output.tsv")
 if(file.exists(fname)){
   all_findings_output <- read_tsv(fname)
   view_dt_minimal(all_findings_output)

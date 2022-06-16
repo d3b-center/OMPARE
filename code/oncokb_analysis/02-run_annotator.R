@@ -7,14 +7,11 @@ suppressPackageStartupMessages({
 option_list <- list(
   make_option(c("--patient_of_interest"), type = "character",
               help = "cohort participant id for patient of interest"),
-  make_option(c("--snv_caller"), type = "character",
-              help = "SNV caller pattern: lancet, vardict, consensus, strelka2, mutect2"),
   make_option(c("--output_dir"), type = "character",
               help = "output directory")
 )
 opt <- parse_args(OptionParser(option_list = option_list))
 patient_of_interest <- opt$patient_of_interest
-snv_caller <- opt$snv_caller
 output_dir <- opt$output_dir
 
 # set directories
@@ -31,13 +28,8 @@ fusion_annotator <- file.path(oncokb_tool, "FusionAnnotator.py")
 python <- "python3.7"
 
 # mutations
-maf_dir <- file.path(patient_dir, "simple-variants")
-if(snv_caller == "all"){
-  maf_file <- list.files(path = maf_dir, pattern = "consensus", full.names = T)
-} else {
-  maf_file <- list.files(path = maf_dir, pattern = snv_caller, full.names = T)
-}
-maf_out <- file.path(output_dir, paste0('oncokb_', snv_caller, '_annotated.txt'))
+maf_file <- list.files(path = file.path(patient_dir, "simple-variants"), pattern = "consensus", full.names = T)
+maf_out <- file.path(output_dir, paste0('oncokb_consensus_annotated.txt'))
 command <- paste(python, maf_annotator, '-i', maf_file, '-o', maf_out, '-b', oncokb_token, '-q hgvsp_short')
 system(command)
 

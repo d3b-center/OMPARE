@@ -13,13 +13,13 @@ source(file.path(module_dir, "utils", 'shared_alterations_plots.R'))
 pediatric_cancer_dir <- file.path(data_dir, "pediatric_data")
 nn_tpm_input <- file.path(output_dir, "pediatric_all_nn_tpm.rds")
 nn_tpm_input <- readRDS(nn_tpm_input)
-all_findings_output <- readRDS(file.path(patient_dir, "output", paste0("all_findings_output_", snv_caller, ".rds")))
-key_clinical_findings_output <- readRDS(file.path(patient_dir, "output", paste0("key_clinical_findings_output_", snv_caller, ".rds")))
+all_findings_output <- readRDS(file.path(patient_dir, "output", "all_findings_output.rds"))
+key_clinical_findings_output <- readRDS(file.path(patient_dir, "output", "key_clinical_findings_output.rds"))
 pediatric_patient_clinical <-  file.path(output_dir, "pediatric_all_patient_combined_clinical_input.rds")
 pediatric_patient_clinical <- readRDS(pediatric_patient_clinical)
 
 # recurrent alterations
-fname <- file.path(output_dir, paste0(snv_caller, "_mutational_analysis_pediatric.rds"))
+fname <- file.path(output_dir, "mutational_analysis_pediatric.rds")
 mutational_analysis_pediatric <- mutational_analysis(nn_tpm_input = nn_tpm_input, 
                                                      ref_cancer_dir = pediatric_cancer_dir,
                                                      all_findings_output = all_findings_output,
@@ -36,11 +36,11 @@ recurrent_alterations_plots(ref_cancer_dir = pediatric_cancer_dir,
                             patient_maf = filtered_maf, 
                             patient_cnv = filtered_cnv,
                             mutational_analysis_output = mutational_analysis_pediatric, 
-                            suffix = paste0("pediatric_", snv_caller))
+                            suffix = "pediatric")
 
 # shared alterations
 shared_alterations_plots(ref_cancer_dir = pediatric_cancer_dir, 
                          patient_maf = filtered_maf, 
                          patient_cnv = filtered_cnv,
                          mutational_analysis_output = mutational_analysis_pediatric, 
-                         suffix = paste0("pediatric_", snv_caller))
+                         suffix = "pediatric")

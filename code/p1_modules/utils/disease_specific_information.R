@@ -5,7 +5,7 @@ suppressPackageStartupMessages({
   library(dplyr)
 })
 
-disease_specific_information <- function(disease_specific_fields, snv_caller, all_findings_output) {
+disease_specific_information <- function(disease_specific_fields, all_findings_output) {
   
   # only up/down genes, fusions, mutations, vus, cnv
   tmpGeneFindings <- all_findings_output %>%

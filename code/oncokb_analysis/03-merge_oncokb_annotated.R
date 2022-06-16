@@ -6,13 +6,10 @@ suppressPackageStartupMessages({
 
 # arguments
 option_list <- list(
-  make_option(c("-s", "--snv_caller"), type = "character",
-              help = "SNV caller pattern: lancet, vardict, consensus, strelka2, mutect2 and all"),
   make_option(c("--output_dir"), type = "character",
               help = "output directory")
 )
 opt <- parse_args(OptionParser(option_list = option_list))
-snv_caller <- opt$snv_caller
 output_dir <- opt$output_dir
 
 # set directories
@@ -20,11 +17,7 @@ root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
 data_dir <- file.path(root_dir, "data")
 
 # input files
-if(snv_caller == "all"){
-  maf_file <- file.path(output_dir, paste0('oncokb_consensus_annotated.txt'))
-} else {
-  maf_file <- file.path(output_dir, paste0('oncokb_', snv_caller, '_annotated.txt'))
-}
+maf_file <- file.path(output_dir, paste0('oncokb_consensus_annotated.txt'))
 cnv_file <- file.path(output_dir, 'oncokb_cnv_annotated.txt')
 fusion_file <- file.path(output_dir, 'oncokb_fusion_annotated.txt')
 
@@ -86,7 +79,7 @@ fusion <- fusion %>%
   unique()
 
 # rbind all and write out
-output_file <- file.path(output_dir, paste0('oncokb_merged_', snv_caller, '_annotated.txt'))
+output_file <- file.path(output_dir, paste0('oncokb_merged_consensus_annotated.txt'))
 total <- rbind(mutation, cnv, fusion)
 total <- unique(total)
 total <- total %>%

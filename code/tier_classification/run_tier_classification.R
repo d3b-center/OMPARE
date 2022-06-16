@@ -20,11 +20,7 @@ source(file.path(module_dir, "utils", "civic_tier_anno.R"))
 # Read in files necessary for analyses
 # oncokb analysis
 input_dir <- file.path(patient_dir, "output", "oncokb_analysis")
-if(snv_caller != "all"){
-  oncokb_anno <- readr::read_tsv(file.path(input_dir, paste0("oncokb_", snv_caller, "_annotated.txt")))
-} else {
-  oncokb_anno <- readr::read_tsv(file.path(input_dir, paste0("oncokb_consensus_annotated.txt")))
-}
+oncokb_anno <- readr::read_tsv(file.path(input_dir, "oncokb_consensus_annotated.txt"))
 
 # rnaseq analyses output
 if(file.exists(file.path(output_dir, "rnaseq_analysis", "rnaseq_analysis_output.rds"))){
@@ -34,7 +30,7 @@ if(file.exists(file.path(output_dir, "rnaseq_analysis", "rnaseq_analysis_output.
 }
 
 # all findings output
-all_findings_output <- readRDS(file.path(patient_dir, "output", paste0("all_findings_output_", snv_caller, ".rds")))
+all_findings_output <- readRDS(file.path(patient_dir, "output", "all_findings_output.rds"))
 
 # combined and add CITATIONS field
 oncokb_anno <- oncokb_anno %>%
@@ -79,11 +75,10 @@ if(nrow(oncokb_anno) > 0){
 civic_ref_dir <- file.path(data_dir, "civic_data")
 all_findings_output <- civic_annotation(all_findings_output = all_findings_output,
                                         civic_ref_dir = civic_ref_dir, 
-                                        snv_caller = snv_caller,
                                         civic_output = output_dir)
 
 # save all outputs
-write_tsv(all_findings_output, file = file.path(output_dir, paste0("all_findings_output_", snv_caller, ".tsv")))
+write_tsv(all_findings_output, file = file.path(output_dir, "all_findings_output.tsv"))
 
 # key clinical findings is a subset so just call this function again
 # this will create key_clinical_findings_output with the tier and civic info
@@ -92,5 +87,5 @@ key_clinical_findings_output <- key_clinical_findings(rnaseq_analysis_output = r
                                                       all_findings_output = all_findings_output)
 
 # save key clinical findings
-write_tsv(key_clinical_findings_output, file = file.path(output_dir, paste0("key_clinical_findings_output_", snv_caller, ".tsv")))
+write_tsv(key_clinical_findings_output, file = file.path(output_dir, "key_clinical_findings_output.tsv"))
 

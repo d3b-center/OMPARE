@@ -14,7 +14,7 @@ gencode_gtf <- gencode_gtf %>%
   dplyr::select(gene_id, gene_name, gene_type) %>%
   unique()
 
-all_findings <- function(sample_info, annotated_maf, filtered_fusions, filtered_cnv, rnaseq_analysis_output, snv_caller) {
+all_findings <- function(sample_info, annotated_maf, filtered_fusions, filtered_cnv, rnaseq_analysis_output) {
   
   # Add Mutations
   if(!is.null(annotated_maf)){
@@ -44,16 +44,10 @@ all_findings <- function(sample_info, annotated_maf, filtered_fusions, filtered_
       dplyr::mutate(Existing_variation = str_detect(Existing_variation, 'COSM')) %>%
       dplyr::mutate(Existing_variation = ifelse(Existing_variation, "Cosmic_Variant", ""))
     
-    # now add Variant Properties depending on snv_caller
-    if(snv_caller == "all"){
-      tmpMut <- tmpMut %>%
-        dplyr::select(Aberration, Type, Details, SIFT, DOMAINS, Existing_variation, Kids_First_Biospecimen_ID, sample_id, cohort, cohort_participant_id) %>%
-        unique()
-    } else {
-      tmpMut <- tmpMut %>%
-        dplyr::select(Aberration, Type, Details, t_alt_count, t_depth, SIFT, DOMAINS, Existing_variation, Kids_First_Biospecimen_ID, sample_id, cohort, cohort_participant_id) %>%
-        unique()
-    }
+    # now add Variant Properties
+    tmpMut <- tmpMut %>%
+      dplyr::select(Aberration, Type, Details, t_alt_count, t_depth, SIFT, DOMAINS, Existing_variation, Kids_First_Biospecimen_ID, sample_id, cohort, cohort_participant_id) %>%
+      unique()
     
     # collapse into Variant_Properties
     tmpMut <- reshape2::melt(as.data.frame(tmpMut), id.vars = c('Aberration', 'Type', 'Details', 'Kids_First_Biospecimen_ID', 'sample_id', 'cohort', 'cohort_participant_id'))

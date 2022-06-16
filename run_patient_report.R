@@ -66,39 +66,28 @@ if(!is.null(source_dir)){
   system(cmd)
 }
 
-# set snv_caller value
+# output file
 if(rnaseq_only){
-  snv_caller_value <- NA
+  output_file <- paste0(patient, ".html")
 } else {
-  snv_caller_value <- "consensus"
+  output_file <- paste0(patient, "_consensus.html")
 }
 
-# run driver and generate report for each snv_caller
-for(i in 1:length(snv_caller_value)){
-  snv_caller <- snv_caller_value[i]
-  if(is.na(snv_caller)){
-    output_file <- paste0(patient, '.html')
-  } else {
-    output_file <- paste0(patient, '_', snv_caller, '.html')
-  }
-  
-  # call driver script to generate all outputs
-  source(driver_script)
-  run_driver(patient = patient, 
-             patient_cancer_type = patient_cancer_type, 
-             snv_caller = snv_caller, 
-             patient_dir = patient_dir)
-  
-  # generate html reports
-  print("Run reports...")
-  output_dir <- file.path(patient_dir, 'reports')
-  rmarkdown::render(input = input_file,
-                    params = list(patient = patient,
-                                  patient_dir = patient_dir,
-                                  set_title = set_title), 
-                    output_dir = output_dir, 
-                    output_file = output_file)
-}
+# call driver script to generate all outputs
+source(driver_script)
+run_driver(patient = patient, 
+           patient_cancer_type = patient_cancer_type, 
+           patient_dir = patient_dir)
+
+# generate html reports
+print("Run reports...")
+output_dir <- file.path(patient_dir, 'reports')
+rmarkdown::render(input = input_file,
+                  params = list(patient = patient,
+                                patient_dir = patient_dir,
+                                set_title = set_title), 
+                  output_dir = output_dir, 
+                  output_file = output_file)
 
 # sync to s3 (needs VPN)
 # exclude OpenPedCan-analysis and chembl folder as it is huge ~20GB and connection breaks before it is uploaded.

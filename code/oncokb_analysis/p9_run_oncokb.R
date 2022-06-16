@@ -24,28 +24,23 @@ system(cmd)
 
 # run annotator
 script <- file.path(module_dir, '02-run_annotator.R')
-if(snv_caller != "all"){
-  cmd <- paste('Rscript', script, 
-               '--patient_of_interest', patient, 
-               '--snv_caller', snv_caller,
-               '--output_dir', output_dir)
-  system(cmd)
-}
+cmd <- paste('Rscript', script, 
+             '--patient_of_interest', patient, 
+             '--output_dir', output_dir)
+system(cmd)
 
 # merge oncokb annotated outputs
 script <- file.path(module_dir, '03-merge_oncokb_annotated.R')
 cmd <- paste('Rscript', script, 
-             '--snv_caller', snv_caller,
              '--output_dir', output_dir)
 system(cmd)
 
 # merge oncokb annotated outputs with actionable genes
 script <- file.path(module_dir, '04-merge_oncokb_annotated_actionable_genes.R')
 cmd <- paste('Rscript', script, 
-             '--snv_caller', snv_caller,
              '--output_dir', output_dir)
 system(cmd)
 
 # read output generated from running the above scripts
-fname <- file.path(output_dir, paste0('oncokb_merged_', snv_caller, '_annotated_actgenes.txt'))
+fname <- file.path(output_dir, paste0('oncokb_merged_annotated_actgenes.txt'))
 oncokb_output <- read.delim(fname, stringsAsFactors = F)
