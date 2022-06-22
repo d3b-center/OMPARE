@@ -14,6 +14,12 @@ Omics Patient Report
    :keywords: omics, report, flexboard, 2019
    :description: Omics Patient Report
 
+
+NOTE:
+=====
+
+This repo is obsolete. Please refer to https://github.com/d3b-center/d3b-patient-report-analysis for up-to-date reporting code.
+
 Prerequisites
 =============
 
